@@ -3,7 +3,8 @@ import os
 
 virtenv = os.path.join(os.environ.get('OPENSHIFT_PYTHON_DIR', '.'), '/virtenv/')
 
-from application import application
+from application import app as application
+
 
 if __name__ == '__main__':
     from wsgiref.simple_server import make_server
