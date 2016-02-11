@@ -1,10 +1,10 @@
 from setuptools import setup
 
-setup(name='YourAppName',
+setup(name='Snomed Browser',
       version='1.0',
       description='OpenShift App',
-      author='Your Name',
-      author_email='example@example.com',
-      url='http://www.python.org/sigs/distutils-sig/',
-#      install_requires=['Django>=1.3'],
+      author='Group 5',
+      author_email='tddd96-grupp5@google.com',
+      url='http://snomed-group5.openshift.ida.liu.se/',
+      install_requires=['Flask'],
      )
