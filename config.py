@@ -1,0 +1,2 @@
+STATIC_FOLDER = 'static'
+STATIC_URL_PATH = ''

@@ -1,10 +1,5 @@
 from application import app
 
-
-@app.route("/")
-@app.route("/home")
-@app.route("/index")
-def index():
-    return "Hello World!"
+app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
 
