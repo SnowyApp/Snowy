@@ -2,7 +2,7 @@ from application import app, db
 from application.models import User,Token
 from flask import request, jsonify, abort, g
 from functools import wraps
-from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature,     SignatureExpired)    
+from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from sqlalchemy import and_
 
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
