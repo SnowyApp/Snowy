@@ -36,7 +36,7 @@ def login_required(func):
             abort(400)
         g.user= verify_auth_token(token)
         if not g.user:
-            return jsonify(message="Unauthorized"), 401
+            abort(401)
         return func(*args,**kwargs)
 
     return wrapper
@@ -120,6 +120,14 @@ def error400(err):
     Returns a JSON formated 400 error.
     """
     return jsonify(message=str(err)), 400
+
+
+@app.errorhandler(401)
+def error400(err):
+    """
+    Returns a JSON formated 401 error.
+    """
+    return jsonify(message=str(err)), 401
 
 
 @app.errorhandler(404)
