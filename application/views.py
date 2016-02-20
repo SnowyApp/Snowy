@@ -1,5 +1,5 @@
 from application import app,db
-from flask import request,jsonify
+from flask import request, jsonify, abort
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature,     SignatureExpired)    
 from sqlalchemy import and_
 from functools import wraps
@@ -41,7 +41,11 @@ def login_required(func):
 
 @app.route('/register', methods=['POST'])
 def create_user():
+    # The provided data must contain password and email
     data = request.get_json()
+    if not 'email' in data or not 'password' in data:
+        abort(400)
+
     user = User(data['email'], data['password'])
     db.session.add(user)
     db.session.commit()
