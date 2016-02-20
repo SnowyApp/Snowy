@@ -20,8 +20,9 @@ def verify_auth_token(token):
         return None
     except BadSignature:
         return None
-    user = User.query.filter(and_(User.email == data['email'], User.tokens.any(token=token)))
-    return user
+    user_query = User.query.filter(and_(User.email == data['email'], \
+            User.tokens.any(token=token)))
+    return user_query.first()
 
 
 def login_required(func):
@@ -34,6 +35,8 @@ def login_required(func):
         if not token:
             abort(400)
         g.user= verify_auth_token(token)
+        if not g.user:
+            return jsonify(message="Unauthorized"), 401
         return func(*args,**kwargs)
 
     return wrapper
@@ -41,6 +44,10 @@ def login_required(func):
 
 @app.route('/register', methods=['POST'])
 def create_user():
+    """
+    Creates a new user with the provided email and password.
+    A user with the provided email cannot exist before.
+    """
     # The provided data must contain password and email
     data = request.get_json()
     if not 'email' in data or not 'password' in data:
@@ -60,6 +67,9 @@ def create_user():
 
 @app.route('/login', methods=['POST'])
 def login():
+    """
+    Generates a token for the user, if the provided credentials are ok.
+    """
     # The provided data must contain password and email
     data = request.get_json()
     if not 'email' in data or not 'password' in data:
@@ -85,13 +95,23 @@ def login():
 @app.route('/verify', methods=['GET'])
 @login_required
 def verify():
+    """
+    Verifies that a user is logged in.
+    """
     return "ok"
 
 
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():
-    pass
+    """
+    Logs the user out by destroying the token.
+    """
+    token = request.headers.get('Authorization', None)
+    stored_token = Token.query.filter_by(token=token).first()
+    db.session.delete(stored_token)
+    db.session.commit()
+    return jsonify(message="Logged out")
 
 
 @app.errorhandler(400)

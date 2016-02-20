@@ -57,6 +57,17 @@ class TestApplication(unittest.TestCase):
         response = self.app.post('/login', data=json.dumps(user_data), headers=headers)
         
         self.assertEqual(response.status_code, 400)
+
+    def test_logout(self):
+        self.create_user()
+        response = self.login_user()
+        data = json.loads(response.data.decode('utf-8'))
+        response = self.app.post('/logout', headers={'Authorization': data['token']})
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get('/verify', headers={'Authorization': data['token']})
+        self.assertEqual(response.status_code, 401)
+        
         
 
 if __name__ == "__main__":
