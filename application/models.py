@@ -1,4 +1,4 @@
-from application import db
+from application import app, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
@@ -14,14 +14,15 @@ class User(db.Model):
 
     def __init__(self, email, password):
         self.email = email
+        # TODO: Update to use Flask-Scrypt hash + salt
         self.password = generate_password_hash(password)
 
     def check_password(self, plain_pass):
         """ Checks if the password matches the stored hash """
-        return self.check_password_hash(self.password, plain_pass)
+        return check_password_hash(self.password, plain_pass)
 
-    def generate_auth_token(self,experation=1024):
-        s = Serializer(app.config['SECRET_KEY'], expires_in=experation)
+    def generate_token(self,expiration=1024):
+        s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'email': self.email, 'hash': self.password})
 
 
@@ -31,7 +32,10 @@ class Token(db.Model):
     """
     __tablename__ = "token"
     id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.String, unique=True)
+    token = db.Column(db.String)
     user_email = db.Column(db.String, db.ForeignKey('user.email'))
 
     user = db.relationship("User", back_populates="tokens")
+
+    def __init__(self, token):
+        self.token = token
