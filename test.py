@@ -1,6 +1,6 @@
-import unittest
-import json
 import application 
+import json
+import unittest
 
 class TestApplication(unittest.TestCase):
     """
