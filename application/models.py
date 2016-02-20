@@ -6,10 +6,11 @@ class User(db.Model):
     """
     A user of the browser.
     """
-    email = db.Column(db.String, unique=True)
+    __tablename__ = "user"
+    email = db.Column(db.String, primary_key=True)
     password = db.Column(db.String)
 
-    tokens = relationship("Token", back_populates="user")
+    tokens = db.relationship("Token", back_populates="user")
 
     def __init__(self, email, password):
         self.email = email
@@ -28,7 +29,9 @@ class Token(db.Model):
     """
     Represents a user token.
     """
+    __tablename__ = "token"
+    id = db.Column(db.Integer, primary_key=True)
     token = db.Column(db.String, unique=True)
-    user_email = db.Column(db.String, ForeignKey('user.email'))
+    user_email = db.Column(db.String, db.ForeignKey('user.email'))
 
-    children = relationship("Token", back_populates="user")
+    user = db.relationship("User", back_populates="tokens")

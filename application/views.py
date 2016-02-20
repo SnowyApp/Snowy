@@ -1,6 +1,9 @@
-from application import app
+from application import app,db
+from flask import request,jsonify
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature,     SignatureExpired)    
 from sqlalchemy import and_
+from functools import wraps
+from application.models import User,Token
 
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
@@ -37,13 +40,15 @@ def login_required(func):
 
 
 @app.route('/register', methods=['POST'])
-@login_required
 def create_user():
-    pass
+    data = request.get_json()
+    user = User(data['email'], data['password'])
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'message': "ok"})
 
 
 @app.route('/login', methods=['POST'])
-@login_required
 def login():
     pass
 
