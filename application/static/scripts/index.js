@@ -9,6 +9,7 @@ var Container = React.createClass({
                 <TopDiv />
                 <NavigationHub onClickButton={this.displayMessage}/>
                 <Diagram />
+                <BottomDiv />
             </div>
         );
     }
@@ -42,11 +43,20 @@ var Diagram = React.createClass({
         return (
             <div className="diagram">
                 <img className="image" src={'static/img/Snomed_visuals.png'}/>
+                <p> Test text</p>
             </div>
         );
     }
 });
-
+var BottomDiv = React.createClass({
+    render: function() {
+        return (
+            <div className="bottom">
+                <p> Created by: </p>
+            </div>
+        );
+    }
+});
 
 ReactDOM.render(
     <Container />,
