@@ -123,7 +123,7 @@ def error400(err):
 
 
 @app.errorhandler(401)
-def error400(err):
+def error401(err):
     """
     Returns a JSON formated 401 error.
     """
@@ -131,7 +131,7 @@ def error400(err):
 
 
 @app.errorhandler(404)
-def error400(err):
+def error404(err):
     """
     Returns a JSON formated 404 error.
     """
@@ -139,7 +139,7 @@ def error400(err):
 
 
 @app.errorhandler(500)
-def error400(err):
+def error500(err):
     """
     Returns a JSON formated 500 error.
     """
