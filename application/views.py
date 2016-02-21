@@ -50,7 +50,7 @@ def create_user():
     """
     # The provided data must contain password and email
     data = request.get_json()
-    if not 'email' in data or not 'password' in data:
+    if 'email' not in data or 'password' not in data:
         return jsonify(message="Email or password not provided"), 400
 
     # Check so that the user doesn't exist.
