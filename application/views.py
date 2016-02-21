@@ -4,6 +4,7 @@ from flask import request, jsonify, abort, g
 from functools import wraps
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from sqlalchemy import and_
+from datetime import datetime
 
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
@@ -37,6 +38,10 @@ def login_required(func):
         g.user= verify_auth_token(token)
         if not g.user:
             abort(401)
+
+        # Update that the token has been acessed
+        token = Token.query.filter_by(token=token).first()
+        token.accessed = datetime.utcnow()
         return func(*args,**kwargs)
 
     return wrapper

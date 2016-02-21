@@ -1,3 +1,4 @@
+from datetime import datetime
 from application import app, db
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -34,8 +35,10 @@ class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     token = db.Column(db.String)
     user_email = db.Column(db.String, db.ForeignKey('user.email'))
+    accessed = db.Column(db.DateTime)
 
     user = db.relationship("User", back_populates="tokens")
 
     def __init__(self, token):
         self.token = token
+        self.accessed = datetime.utcnow()
