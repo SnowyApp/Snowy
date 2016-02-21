@@ -15,8 +15,7 @@ class User(db.Model):
 
     def __init__(self, email, password):
         self.email = email
-        # TODO: Update to use Flask-Scrypt hash + salt
-        self.password = generate_password_hash(password)
+        self.password = generate_password_hash(password, salt_length=12)
 
     def check_password(self, plain_pass):
         """ Checks if the password matches the stored hash """
