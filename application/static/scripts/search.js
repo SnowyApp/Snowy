@@ -1,5 +1,5 @@
 /*
-Simple search box. Currently searches a fake database and displays the results in a list
+Simple search box. Always searches on 'Asthma' at the moment
 */
 
 var Container = React.createClass({
@@ -16,24 +16,31 @@ var Container = React.createClass({
 Handles user input
 */
 var SearchBox = React.createClass({
-	//Called each time the input in the searchbox changes
 	doSearch: function() {
 		var query = this.refs.searchInput.getDOMNode().value;
 		this.props.doSearch(query);
 	},
+
 	render:function(){
-		return <input type="text" ref="searchInput" placeholder="Search..." value={this.props.query} onChange={this.doSearch}/>
+		return(
+            <div>
+                <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} />
+                <button onClick={this.doSearch} >Search</button>
+            </div>
+        )
 	}
 });
 
 /*
 Displays the results
+something is wrong with the layout
 */
 var TermTable = React.createClass({
     render:function(){
         //one term on each row
         var rows=[];
         this.props.data.forEach(function(term) {
+            console.log("term: ",term)
         rows.push(<tr><td>{term.name}</td><td>{term.id}</td></tr>)
         });
         return(
@@ -50,25 +57,40 @@ var TermTable = React.createClass({
     }
 });
 
-
 /*
 The main component
 */
 var Search = React.createClass({
+
+
     doSearch:function(queryText){
-        console.log(queryText)
-        //get query result
         var queryResult=[];
-        this.props.data.forEach(function(term){
-        	if(queryText)
-        		//Check if name or id matches any term in the "database"
-            	if(term.name.toLowerCase().indexOf(queryText)!=-1 || term.id.indexOf(queryText) !=-1)
-            	queryResult.push(term);
-        }); 
-        this.setState({
-            query:queryText,
-            searchData: queryResult
-        })
+
+        //TODO: change url to the correct one when we know it works
+        $.ajax({
+            type: "GET",
+            "method": "GET",
+            url: 'http://private-anon-8a3ca20dd-sctsnapshotrestapi.apiary-mock.com/api/snomed/en-edition/v20140731/descriptions?query=asthma&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true',
+            //url: 'http://browser.ihtsdotools.org/api/snomed/en-edition/v20140731/descriptions?query=asthma&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true',
+            dataType: "json",
+            error: function(){
+                console.log('Failed to access API')
+            },
+            success: function(result){
+                for (var i in result["matches"]){
+                    queryResult.push({
+                        name: result["matches"][i]["term"],
+                        id: result["matches"][i]["conceptId"]
+                    })
+                }
+                this.setState({
+                    query: queryText,
+                    searchData: queryResult
+                });
+            }.bind(this)
+
+        });
+
     },
     getInitialState:function(){
         return{
