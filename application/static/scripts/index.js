@@ -1,8 +1,4 @@
 var Container = React.createClass({
-    displayMessage: function(){
-        alert('Simon go to bed!')
-    },
-
     render: function() {
         return (
             <div className="contentContainer">
@@ -27,7 +23,10 @@ var NavigationHub = React.createClass({
         return (
             <div className="navigationContainer">
                 <div className="searchBar">
-                    <button onClick={this.props.onClickButton}> Placeholder for searchbar </button>
+                    <form>
+                        <Input type="text" ref="input" />
+                    </form>
+
                 </div>
                 <div className="navigation">
                     <p> Placeholder for navigation structure </p>
