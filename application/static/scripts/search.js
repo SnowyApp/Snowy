@@ -6,7 +6,7 @@ var Container = React.createClass({
     render: function() {
         return (
             <div className="contentContainer">
-                <Search data = {testData} />
+                <Search />
             </div>
         );
     }
@@ -32,20 +32,10 @@ var SearchBox = React.createClass({
 });
 
 /*
-Displays the results
+Displays the results with react-bootstrap table component
 */
 var TermTable = React.createClass({
     render:function(){
-        //one term on each row
-        var rows=[];
-        this.props.data.forEach(function(term) {
-            console.log("term: ",term)
-            rows.push(<tr>
-                        <td>{term.name}</td>
-                        <td>{term.id}</td>
-                    </tr>)
-        });
-
             return(
                 <BootstrapTable data={this.props.data} hover={true}>
                 <TableHeaderColumn dataField="id" isKey={true}>ID</TableHeaderColumn>
@@ -105,23 +95,6 @@ var Search = React.createClass({
         );
     }
 });
-
-//"Database" used for testing purposes
-var testData=[
-{
-    name:'Cancer',
-    id: '1'
-},
-{
-    name:'Lung',
-    id: '2'
-},
-{
-    name:'Aids',
-    id: '3'
-}];
-
-
 
 ReactDOM.render(
     <Container />,
