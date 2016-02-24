@@ -5,7 +5,6 @@ var Container = React.createClass({
                 <TopDiv />
                 <NavigationHub onClickButton={this.displayMessage}/>
                 <Diagram />
-                <BottomDiv />
             </div>
         );
     }
@@ -47,15 +46,7 @@ var Diagram = React.createClass({
         );
     }
 });
-var BottomDiv = React.createClass({
-    render: function() {
-        return (
-            <div className="bottom">
-                <p> Created by: </p>
-            </div>
-        );
-    }
-});
+
 
 ReactDOM.render(
     <Container />,
