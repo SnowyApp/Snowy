@@ -38,6 +38,11 @@ p, h1, h2, h3{
 .navigation{
     height: 90%;
 }
+
+#navContainer {
+    position: absolute;
+    width: 170px;
+}
 .diagram{
     float:left;
     height: 90%;
