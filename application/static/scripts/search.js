@@ -33,7 +33,6 @@ var SearchBox = React.createClass({
 
 /*
 Displays the results
-something is wrong with the layout
 */
 var TermTable = React.createClass({
     render:function(){
@@ -41,19 +40,18 @@ var TermTable = React.createClass({
         var rows=[];
         this.props.data.forEach(function(term) {
             console.log("term: ",term)
-        rows.push(<tr><td>{term.name}</td><td>{term.id}</td></tr>)
+            rows.push(<tr>
+                        <td>{term.name}</td>
+                        <td>{term.id}</td>
+                    </tr>)
         });
-        return(
-             <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Id</th>
-                    </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </table>
-        );
+
+            return(
+                <BootstrapTable data={this.props.data} hover={true}>
+                <TableHeaderColumn dataField="id" isKey={true}>ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
+                </BootstrapTable>
+            );
     }
 });
 
@@ -61,8 +59,6 @@ var TermTable = React.createClass({
 The main component
 */
 var Search = React.createClass({
-
-
     doSearch:function(queryText){
         var queryResult=[];
 
@@ -77,6 +73,7 @@ var Search = React.createClass({
                 console.log('Failed to access API')
             },
             success: function(result){
+                console.log("api success")
                 for (var i in result["matches"]){
                     queryResult.push({
                         name: result["matches"][i]["term"],
