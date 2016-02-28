@@ -36,14 +36,63 @@ var NavigationHub = React.createClass({
     }
 });
 
-var Diagram = React.createClass({
+var Concept = React.createClass({
     render: function() {
         return (
-            <div className="diagram">
-                <img className="image" src={'static/img/Snomed_visuals.png'}/>
-                <p> Test text</p>
+            <div className="rectangle concept">
+                <p>Concept Text</p>
+            </div>        
+        );
+    }
+});
+
+var DefinedConcept = React.createClass({
+    render: function() {
+        return (
+            <div className="rectangle concept defined-concept">
+                <p>Defined Concept Text</p>
             </div>
         );
+    }
+});
+
+var Attribute = React.createClass({
+   render: function() {
+        return (
+            <div clasName="rectangle attribute">
+                <p>Attribute</p>
+            </div>
+        );
+   } 
+});
+
+var isA = React.createClass({
+    render: function() {
+        return (
+            <div className="is-a"></div>
+        );
+    }
+});
+
+var Arrow = React.createClass({
+    render: function() {
+        return (
+            <div className="arrow"></div>
+        );
+    }
+});
+
+var Line = React.createClass({
+    render: function() {
+        return (
+            <div className="line"></div>
+        );
+    }
+});
+
+var Diagram = React.createClass({
+    render: function() {
+        return React.createElement(Concept);
     }
 });
 

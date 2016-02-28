@@ -1,0 +1,28 @@
+.rectangle {
+    border: 1px solid #333;
+    padding: 5px;
+}
+
+.concept { 
+    background-color: red; 
+}
+
+.defined-concept {
+    
+}
+
+.attribute {
+    border-radius: 10px;
+}
+
+.is-a {
+
+}
+
+.arrow {
+
+}
+
+.line {
+
+}
