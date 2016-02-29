@@ -25,7 +25,7 @@ var SearchBox = React.createClass({
 		return(
             <div>
                 <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} />
-                <button onClick={this.doSearch} >Search</button>
+                <Button onClick={this.doSearch} >Search</Button>
             </div>
         )
 	}
@@ -36,12 +36,19 @@ Displays the results with react-bootstrap table component
 */
 var TermTable = React.createClass({
     render:function(){
-            return(
-                <BootstrapTable data={this.props.data} hover={true}>
-                <TableHeaderColumn dataField="id" isKey={true}>ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
-                </BootstrapTable>
-            );
+        var COLUMN_WIDTH = "150";
+        var optionsProp = {
+            onRowClick: function(row){
+                //This is supposed to generate a diagram on the selected term
+                alert(row.name);
+            }
+        };
+        return(
+            <BootstrapTable data={this.props.data} hover={true} options={optionsProp}>
+            <TableHeaderColumn dataField="id" isKey={true} >ID</TableHeaderColumn>
+            <TableHeaderColumn dataField="name" >Name</TableHeaderColumn>
+            </BootstrapTable>
+        );
     }
 });
 
