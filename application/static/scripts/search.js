@@ -21,10 +21,16 @@ var SearchBox = React.createClass({
 		this.props.doSearch(query);
 	},
 
+    handleKeyPress: function(target) {
+        if(target.charCode==13){
+            this.doSearch();
+        }
+    },
+
 	render:function(){
 		return(
             <div>
-                <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} />
+                <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyPress={this.handleKeyPress} />
                 <Button onClick={this.doSearch} >Search</Button>
             </div>
         )
