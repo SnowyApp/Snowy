@@ -45,7 +45,7 @@ var Concept = React.createClass({
     },
     render: function() {
         return (
-            <div onClick = "" className="rectangle concept">
+            <div className={"rectangle concept ".concat(this.props.css)} >
                 <p>{this.props.node.name}</p>
             </div>        
         );
@@ -145,25 +145,25 @@ function drawNode(node, className) {
 
 function drawChildren(node) {
     return (
-        <div>
+        <article className="children" >
             { node.children.map(
                 function(child) {
                     return drawNode(child, "child");                              
                 }
             )}
-        </div>
+        </article>
     );
 }
 
 function drawParents(node) {
     return (
-        <div>
+        <article className="parents" >
             { node.parents.map(
                 function(elder) {
                     return drawNode(elder, "parent");
                 }
             )}
-        </div>
+        </article>
     );
 }
 
