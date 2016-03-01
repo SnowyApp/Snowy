@@ -39,7 +39,7 @@ var NavigationHub = React.createClass({
 var Concept = React.createClass({
     render: function() {
         return (
-            <div className="rectangle concept">
+            <div className={"rectangle concept ".concat(this.props.css)} >
                 <p>{this.props.node.name}</p>
             </div>        
         );
@@ -49,7 +49,7 @@ var Concept = React.createClass({
 var DefinedConcept = React.createClass({
     render: function() {
         return (
-            <div className="rectangle concept defined-concept">
+            <div className={"rectangle concept defined-concept ".concat(this.props.css)} >
                 <p>{this.props.node.name}</p>
             </div>
         );
@@ -59,7 +59,7 @@ var DefinedConcept = React.createClass({
 var Attribute = React.createClass({
    render: function() {
         return (
-            <div className="rectangle attribute">
+            <div className={"rectangle attribute ".concat(this.props.css)} >
                 <p>{this.props.node.name}</p>
             </div>
         );
@@ -90,12 +90,6 @@ var Line = React.createClass({
     }
 });
 
-var createDiagram = React.createClass({
-   render: function() {
-       var node = React.createElement(Concept);
-       return node;
-   }
-});
 var Diagram = React.createClass({
     render: function() {    
         var node = {};
@@ -119,26 +113,26 @@ function drawDiagram(node) {
     return (
         <section className="diagram">
             {drawParents(node)}
-            {drawNode(node)}
+            {drawNode(node, "origin")}
             {drawChildren(node)}
         </section>
     );
 }
 
-function drawNode(node) {
+function drawNode(node, className) {
     if (node.type == "concept") {
         return (
-            <Concept node={node} />
+            <Concept node={node} css={className} />
         );
     }
     else if (node.type == "defined-concept") {
         return (
-            <DefinedConcept node={node} />
+            <DefinedConcept node={node} css={className} />
         );
     }
     else if (node.type == "attribute") {
         return (
-            <Attribute node={node} />
+            <Attribute node={node} css={className}  />
         );
     }
 }
@@ -148,7 +142,7 @@ function drawChildren(node) {
         <div>
             { node.children.map(
                 function(child) {
-                    return drawNode(child);                              
+                    return drawNode(child, "child");                              
                 }
             )}
         </div>
@@ -160,7 +154,7 @@ function drawParents(node) {
         <div>
             { node.parents.map(
                 function(elder) {
-                    return drawNode(elder);
+                    return drawNode(elder, "parent");
                 }
             )}
         </div>
