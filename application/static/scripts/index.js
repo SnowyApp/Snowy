@@ -59,7 +59,7 @@ var DefinedConcept = React.createClass({
 var Attribute = React.createClass({
    render: function() {
         return (
-            <div clasName="rectangle attribute">
+            <div className="rectangle attribute">
                 <p>{this.props.node.name}</p>
             </div>
         );
