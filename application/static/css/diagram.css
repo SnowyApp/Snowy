@@ -1,19 +1,37 @@
+section {
+    border: 1px solid red;
+}
+
 .origin {
-
+    position: relative;
+    top: 50%;;
 }
 
-.child {
 
+.children {
+    position: absolute;
+    top: 75%;
+
+    width: 100%;
 }
 
-.parent {
-
+.parents {
+    position: absolute;
+    top: 25%;
+    width: 100%;
 }
 
+.children .rectangle, .parents .rectangle {
+    margin-right: 20px;
+}
+
+.children .rectangle:last-of-type,
+.parents .rectangle:last-of-type {
+    margin-right: 0px;
+}
 
 .rectangle {
-    display: inline-block;
-    margin: 15px;
+    display: inline-block;;
 
     min-width: 100px;
     height: 50px;
