@@ -44,9 +44,8 @@ var Concept = React.createClass({
         this.setState({clicked: !this.state.clicked});
     },
     render: function() {
-        var text = this.state.clicked ? 'like' : 'haven\'t liked';
         return (
-            <div className={"rectangle concept ".concat(this.props.css)} >
+            <div onClick = "" className="rectangle concept">
                 <p>{this.props.node.name}</p>
             </div>        
         );
