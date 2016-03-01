@@ -96,8 +96,8 @@ var Diagram = React.createClass({
         node.name = "Astma";
         node.id = 1;
         node.children = [ {id: 2, name: "Leukemi" }, {id: 3, name: "Ebola"}];
-        
-        return ( drawChildren(node) );
+        node.parents = [ {id: 4, name: "Feber" }, {id: 5, name: "Karies"}];        
+
     }
 });
 
@@ -108,7 +108,6 @@ function drawNode(node) {
 }
 
 function drawChildren(node) {
-    
     return (
         <div>
             { node.children.map(
@@ -120,7 +119,17 @@ function drawChildren(node) {
     );
 }
 
-
+function drawParents(node) {
+    return (
+        <div>
+            { node.parents.map(
+                function(elder) {
+                    return drawNode(elder);
+                }
+            )}
+        </div>
+    );
+}
 
 ReactDOM.render(
     <Container />,
