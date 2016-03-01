@@ -1,38 +1,47 @@
+.origin {
+
+}
+
+.child {
+
+}
+
+.parent {
+
+}
+
+
 .rectangle {
-    border: 1px solid #333;
+    display: inline-block;
+    margin: 15px;
+
+    min-width: 100px;
+    height: 50px;
     padding: 5px;
+
+    line-height: 30px;
+
+    text-align: center;   
+  
+    font-family: Helvetica, Arial, Sans-Serif;
+    font-size: small;
+    font-weight: bold;
 }
 
 .concept {
-    border: 5px double;
+    border: 1px solid;
     background-color: #99CCFF;
-    position: relative;
-    text-align: left;
-    display: inline-block;
-    font-family: Helvetica, Arial, Sans-Serif;
-    font-size: small;
-    margin: 10px;
 }
 
 .defined-concept {
-    border: 5px double;
+    border: 4px double;
     background-color: #CCCCFF;
-    position: relative;
-    text-align: left;
-    display: inline-block;
-    font-family: Helvetica, Arial, Sans-Serif;
-    font-size: small;
 }
 
 .attribute {
     border-radius: 10px;
-    border: 5px double;
+    border: 4px double;
     background-color: #FFFFCC;
-    position: relative;
-    text-align: left;
-    display: inline-block;
-    font-family: Helvetica, Arial, Sans-Serif;
-    font-size: small;
 }
 
 .is-a {
