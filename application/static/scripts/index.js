@@ -37,7 +37,14 @@ var NavigationHub = React.createClass({
 });
 
 var Concept = React.createClass({
+    getInitialState: function() {
+      return {clicked: false};
+    },
+    handleClick: function(event) {
+        this.setState({clicked: !this.state.clicked});
+    },
     render: function() {
+        var text = this.state.clicked ? 'like' : 'haven\'t liked';
         return (
             <div className={"rectangle concept ".concat(this.props.css)} >
                 <p>{this.props.node.name}</p>
