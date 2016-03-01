@@ -90,6 +90,12 @@ var Line = React.createClass({
     }
 });
 
+var createDiagram = React.createClass({
+   render: function() {
+       var node = React.createElement(Concept);
+       return node;
+   }
+});
 var Diagram = React.createClass({
     render: function() {    
         var node = {};
