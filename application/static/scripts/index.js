@@ -117,11 +117,11 @@ var Diagram = React.createClass({
 
 function drawDiagram(node) {
     return (
-        <div>
+        <section id=diagram>
             {drawParents(node)}
             {drawNode(node)}
             {drawChildren(node)}
-        </div>
+        </section>
     );
 }
 
