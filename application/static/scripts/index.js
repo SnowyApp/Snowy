@@ -95,8 +95,15 @@ var Diagram = React.createClass({
         var node = {};
         node.name = "Astma";
         node.id = 1;
-        node.children = [ {id: 2, name: "Leukemi" }, {id: 3, name: "Ebola"}];
-        node.parents = [ {id: 4, name: "Feber" }, {id: 5, name: "Karies"}];        
+        node.children = [ 
+            {id: 2, name: "Leukemi", type: "defined-concept"},
+            {id: 3, name: "Ebola", type: "concept"}
+        ];
+        node.parents = [ 
+            {id: 4, name: "Feber", type: "concept" },
+            {id: 5, name: "Karies", type: "attribute" }
+        ];        
+        node.type = "attribute";
 
         return ( drawDiagram(node) );
     }
@@ -113,9 +120,21 @@ function drawDiagram(node) {
 }
 
 function drawNode(node) {
-    return (
-        <Concept node={node} />
-    );
+    if (node.type == "concept") {
+        return (
+            <Concept node={node} />
+        );
+    }
+    else if (node.type == "defined-concept") {
+        return (
+            <DefinedConcept node={node} />
+        );
+    }
+    else if (node.type == "attribute") {
+        return (
+            <Attribute node={node} />
+        );
+    }
 }
 
 function drawChildren(node) {
