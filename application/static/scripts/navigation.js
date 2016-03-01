@@ -90,14 +90,48 @@ var dataArray = [data1, data2, data3, data4, data5, data6, data7]; //Dummy data 
 var Navigation = React.createClass({
     //Set current data set
     setDataSet: function(name){
+		//TODO: Ska göra anrop till api istället
         for(var i=0; i < this.props.data.length; i++){
             if(this.props.data[i].name === name){
                 this.setState({dataSet: this.props.data[i]});
                 break;
             }
         }
+		
     },
+	
+	
+	componentDidMount: function(){
 
+		var queryResult=[];
+
+        //TODO: change url to the correct one when we know it works
+        $.ajax({
+            type: "GET",
+            "method": "GET",
+            url: 'http://private-anon-f027ed251-sctsnapshotrestapi.apiary-mock.com/api/snomed/en-edition/v20140731/concepts/123037004/children?form=inferred%27%29',
+            //url: 'http://browser.ihtsdotools.org/api/snomed/en-edition/v20140731/descriptions?query=asthma&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true',
+            dataType: "json",
+            error: function(){
+                console.log('Failed to access API')
+            },
+            success: function(result){
+                console.log("api success")
+                for (var i in result){
+                    queryResult.push({
+                        name: result[i]["defaultTerm"],
+                        id: result[i]["conceptId"]
+                    })
+                }
+                this.setState({
+                    //dataSet: queryResult //Lägg till igen när api används
+                });
+            }.bind(this)
+
+        });
+	
+	},
+	
     //Handles clicks on the children (callback function)
     handleClick: function(e){
         this.state.history.push(this.state.dataSet.name);
@@ -114,7 +148,8 @@ var Navigation = React.createClass({
     getInitialState: function(){
         return (
             {
-                dataSet: this.props.data[0],
+				currentParent: 'SNOMED CT Concept',
+                dataSet: this.props.data[0], //[]
                 history: []
             }
         );
@@ -128,14 +163,14 @@ var Navigation = React.createClass({
             backArrow = {};
         }
         //Create NavigationItem's for all the children of the current parent node
-        var ItemArray = this.state.dataSet.children.map(function(child){
+        var ItemArray = this.state.dataSet.children.map(function(child){ //ta bort .children för api
             return(
                 <NavigationItem name={child.name} handleClickCallback={this.handleClick} />
             );
         }, this);
         return (
             <div className="list-group navigation">
-                    <a className="list-group-item active" onClick={this.upOneLevel} href="#"><span style={backArrow} className="glyphicon glyphicon-triangle-top" aria-hidden="true"></span> {this.state.dataSet.name}</a>
+                    <a className="list-group-item active" onClick={this.upOneLevel} href="#"><span style={backArrow} className="glyphicon glyphicon-triangle-top" aria-hidden="true"></span> {this.state.dataSet.name}</a> 
                     {ItemArray}
             </div>
         );
@@ -152,7 +187,7 @@ var NavigationItem = React.createClass({
     render: function(){
         return(
             <div>
-                <a className="list-group-item" onClick={this.handleClick.bind(this, this.props.name)} href='#'>{this.props.name}</a>
+                <a className="list-group-item" onClick={this.handleClick.bind(this, this.props.name)} href='#'>{this.props.name}<span style={{fontSize: "1.2em", position:"absolute", right:"10px", top:"25%"}} className="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
             </div>
         );
     }
