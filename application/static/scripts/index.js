@@ -40,7 +40,7 @@ var Concept = React.createClass({
     render: function() {
         return (
             <div className="rectangle concept">
-                <p>Concept Text</p>
+                <p>{this.props.node.name}</p>
             </div>        
         );
     }
@@ -91,10 +91,35 @@ var Line = React.createClass({
 });
 
 var Diagram = React.createClass({
-    render: function() {
-        return React.createElement(Concept);
+    render: function() {    
+        var node = {};
+        node.name = "Astma";
+        node.id = 1;
+        node.children = [ {id: 2, name: "Leukemi" }, {id: 3, name: "Ebola"}];
+        
+        return ( drawChildren(node) );
     }
 });
+
+function drawNode(node) {
+    return (
+        <Concept node={node} />
+    );
+}
+
+function drawChildren(node) {
+    
+    return (
+        <div>
+            { node.children.map(
+                function(child) {
+                    return drawNode(child);                              
+                }
+            )}
+        </div>
+    );
+}
+
 
 
 ReactDOM.render(
