@@ -50,7 +50,7 @@ var DefinedConcept = React.createClass({
     render: function() {
         return (
             <div className="rectangle concept defined-concept">
-                <p>Defined Concept Text</p>
+                <p>{this.props.node.name}</p>
             </div>
         );
     }
@@ -60,7 +60,7 @@ var Attribute = React.createClass({
    render: function() {
         return (
             <div clasName="rectangle attribute">
-                <p>Attribute</p>
+                <p>{this.props.node.name}</p>
             </div>
         );
    } 
