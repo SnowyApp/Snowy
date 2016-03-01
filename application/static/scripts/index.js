@@ -98,8 +98,19 @@ var Diagram = React.createClass({
         node.children = [ {id: 2, name: "Leukemi" }, {id: 3, name: "Ebola"}];
         node.parents = [ {id: 4, name: "Feber" }, {id: 5, name: "Karies"}];        
 
+        return ( drawDiagram(node) );
     }
 });
+
+function drawDiagram(node) {
+    return (
+        <div>
+            {drawParents(node)}
+            {drawNode(node)}
+            {drawChildren(node)}
+        </div>
+    );
+}
 
 function drawNode(node) {
     return (
