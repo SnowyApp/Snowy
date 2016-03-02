@@ -41,9 +41,11 @@ p, h1, h2, h3{
 
 #navContainer {
     position: absolute;
-    width: 350px;
+    width: 400px;
 	font-size: 10pt;
 	text-align: left;
+    overflow-y: auto;
+    height: 600px;
 }
 .diagram{
     float:left;
