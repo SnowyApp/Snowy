@@ -2,22 +2,13 @@ var Container = React.createClass({
     render: function() {
         return (
             <div className="contentContainer">
-                <TopDiv />
                 <NavigationHub onClickButton={this.displayMessage}/>
                 <Diagram />
             </div>
         );
     }
 });
-var TopDiv = React.createClass({
-    render: function() {
-        return (
-            <div className="top">
-                <h1> SNOMED CT BROWSER </h1>
-            </div>
-        );
-    }
-});
+
 var NavigationHub = React.createClass({
     render: function() {
         return (
