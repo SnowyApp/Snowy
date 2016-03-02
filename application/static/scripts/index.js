@@ -3,6 +3,7 @@ var Container = React.createClass({
         return (
             <div className="wrapper">
                 <NavigationHub onClickButton={this.displayMessage}/>
+                <SearchBar />
                 <Diagram />
             </div>
         );
@@ -12,16 +13,20 @@ var Container = React.createClass({
 var NavigationHub = React.createClass({
     render: function() {
         return (
-            <div className="navigation-container">
-                <div className="search-bar">
-                    <form>
-                        <Input type="text" ref="input" />
-                    </form>
+            <nav>
+                <p> Placeholder for navigation structure </p>
+            </nav>
+        );
+    }
+});
 
-                </div>
-                <nav>
-                    <p> Placeholder for navigation structure </p>
-                </nav>
+var SearchBar = React.createClass({
+    render: function() {
+        return (
+             <div className="search-bar">
+                <form>
+                    <Input type="text" ref="input" />
+                </form>
             </div>
         );
     }
