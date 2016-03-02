@@ -1,7 +1,7 @@
 var Container = React.createClass({
     render: function() {
         return (
-            <div className="contentContainer">
+            <div className="wrapper">
                 <NavigationHub onClickButton={this.displayMessage}/>
                 <Diagram />
             </div>
@@ -12,16 +12,16 @@ var Container = React.createClass({
 var NavigationHub = React.createClass({
     render: function() {
         return (
-            <div className="navigationContainer">
-                <div className="searchBar">
+            <div className="navigation-container">
+                <div className="search-bar">
                     <form>
                         <Input type="text" ref="input" />
                     </form>
 
                 </div>
-                <div className="navigation">
+                <nav>
                     <p> Placeholder for navigation structure </p>
-                </div>
+                </nav>
             </div>
         );
     }
