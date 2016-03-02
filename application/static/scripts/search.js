@@ -65,12 +65,21 @@ var Search = React.createClass({
     doSearch:function(queryText){
         var queryResult=[];
 
-        //TODO: change url to the correct one when we know it works
+        //Use this if you have the api locally
+        var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?query='+queryText+'&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
+
+        //Use this if Carl Brage's server is up
+        var brageUrl = 'http://79.136.62.204:3000/snomed/en-edition/v20150731/descriptions?query='+queryText+'&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
+
+        //Use this if none of the above work, can only search on asthma
+        var mockApi ='http://private-anon-8a3ca20dd-sctsnapshotrestapi.apiary-mock.com/api/snomed/en-edition/v20140731/descriptions?query=asthma&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
+
+
         $.ajax({
             type: "GET",
             "method": "GET",
-            url: 'http://private-anon-8a3ca20dd-sctsnapshotrestapi.apiary-mock.com/api/snomed/en-edition/v20140731/descriptions?query=asthma&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true',
-            //url: 'http://browser.ihtsdotools.org/api/snomed/en-edition/v20140731/descriptions?query=asthma&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true',
+            //Here goes the correct url
+            url: brageUrl,
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
