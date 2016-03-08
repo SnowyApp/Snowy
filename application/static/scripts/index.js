@@ -1,5 +1,6 @@
 var Diagram = require("./components/Diagram/index");
 var Search = require("./components/Search/index");
+var Navigation = require("./components/navigation/navigation");
 
 var Container = React.createClass({
     render: function() {
@@ -17,7 +18,9 @@ var NavigationHub = React.createClass({
     render: function() {
         return (
             <nav>
-                <p> Placeholder for navigation structure </p>
+                <div className="navContainer">
+                    <Navigation />
+                </div>
             </nav>
         );
     }
