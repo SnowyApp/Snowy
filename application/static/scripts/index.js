@@ -1,6 +1,6 @@
 var Diagram = require("./components/Diagram/index");
 var Search = require("./components/Search/index");
-var Navigation = require("./components/navigation/index");
+var Navigation = require("./components/Navigation/index");
 
 var Container = React.createClass({
     render: function() {
