@@ -8,8 +8,8 @@ module.exports = React.createClass({
 
     getDefaultProps: function() {
         return {
-            width: "70%",
-            height: "500px"
+            width: 300,
+            height: 300
         }
     },
 
