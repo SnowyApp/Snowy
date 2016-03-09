@@ -13,7 +13,7 @@ d3Chart.create = function(element, props, state) {
     svg.append("g")
         .attr("class", "nodes");
 
-    tree = d3.layout.tree().size([state.domain.height, state.domain.width]);
+    tree = d3.layout.tree().size([props.height, props.width]);
 
     this.update(element, state);
 };
