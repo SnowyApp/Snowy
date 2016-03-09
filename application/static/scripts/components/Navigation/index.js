@@ -16,8 +16,8 @@ var Navigation = React.createClass({
 		$.ajax({
             type: "GET",
             "method": "GET",
-            //url: 'http://79.136.62.204:3000/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true', //Carls server
-            url: 'http://private-anon-7ecef6fd0-snomedctsnapshotapi.apiary-mock.com/api/snomed/en-edition/v20160131/concepts/123037004/children?form=inferred', //Mock api
+            url: 'http://79.136.62.204:3000/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true', //Carls server
+            //url: 'http://private-anon-7ecef6fd0-snomedctsnapshotapi.apiary-mock.com/api/snomed/en-edition/v20160131/concepts/123037004/children?form=inferred', //Mock api
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
