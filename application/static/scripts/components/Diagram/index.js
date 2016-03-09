@@ -1,130 +1,25 @@
-var Concept = React.createClass({
-    getInitialState: function() {
-      return {clicked: false};
-    },
-    handleClick: function(event) {
-        this.setState({clicked: !this.state.clicked});
-    },
-    render: function() {
-        return (
-            <div className={"rectangle concept ".concat(this.props.css)} >
-                <p>{this.props.node.name}</p>
-            </div>        
-        );
-    }
-});
+var Chart = require("./Chart")
 
-var DefinedConcept = React.createClass({
-    render: function() {
-        return (
-            <div className={"rectangle concept defined-concept ".concat(this.props.css)} >
-                <p>{this.props.node.name}</p>
-            </div>
-        );
-    }
-});
-
-var Attribute = React.createClass({
-   render: function() {
-        return (
-            <div className={"rectangle attribute ".concat(this.props.css)} >
-                <p>{this.props.node.name}</p>
-            </div>
-        );
-   } 
-});
-
-var isA = React.createClass({
-    render: function() {
-        return (
-            <div className="is-a"></div>
-        );
-    }
-});
-
-var Arrow = React.createClass({
-    render: function() {
-        return (
-            <div className="arrow"></div>
-        );
-    }
-});
-
-var Line = React.createClass({
-    render: function() {
-        return (
-            <div className="line"></div>
-        );
-    }
-});
+var sampleData = [
+    {id: '5fbmzmtc', x: 7, y: 41, z: 6},
+    {id: 's4f8phwm', x: 11, y: 45, z: 9}
+];
 
 module.exports = React.createClass({
-    render: function() {    
-        var node = {};
-        node.name = "Astma";
-        node.id = 1;
-        node.children = [ 
-            {id: 2, name: "Leukemi", type: "defined-concept"},
-            {id: 3, name: "Ebola", type: "concept"}
-        ];
-        node.parents = [ 
-            {id: 4, name: "Feber", type: "concept" },
-            {id: 5, name: "Karies", type: "attribute" }
-        ];        
-        node.type = "attribute";
+    getInitialState: function() {
+        return {
+            data: sampleData,
+            domain: { x: [0, 30], y: [0, 100] }
+        };
+    },
 
-        return ( drawDiagram(node) );
+    render: function() {
+        return (
+            <div className="Diagram">
+                <Chart
+                    data={this.state.data}
+                    domain={this.state.domain} />
+            </div>
+        );
     }
 });
-
-function drawDiagram(node) {
-    return (
-        <section className="diagram">
-            {drawParents(node)}
-            {drawNode(node, "origin")}
-            {drawChildren(node)}
-        </section>
-    );
-}
-
-function drawNode(node, className) {
-    if (node.type == "concept") {
-        return (
-            <Concept node={node} css={className} />
-        );
-    }
-    else if (node.type == "defined-concept") {
-        return (
-            <DefinedConcept node={node} css={className} />
-        );
-    }
-    else if (node.type == "attribute") {
-        return (
-            <Attribute node={node} css={className}  />
-        );
-    }
-}
-
-function drawChildren(node) {
-    return (
-        <article className="children" >
-            { node.children.map(
-                function(child) {
-                    return drawNode(child, "child");                              
-                }
-            )}
-        </article>
-    );
-}
-
-function drawParents(node) {
-    return (
-        <article className="parents" >
-            { node.parents.map(
-                function(elder) {
-                    return drawNode(elder, "parent");
-                }
-            )}
-        </article>
-    );
-}
