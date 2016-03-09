@@ -1,6 +1,7 @@
 var d3Chart = module.exports = {};
 
 var i = 0;
+var tree;
 
 d3Chart.create = function(element, props, state) {
     // create svg element
@@ -10,7 +11,9 @@ d3Chart.create = function(element, props, state) {
         .attr("height", props.height);
 
     svg.append("g")
-        .attr("class", "d3-points");
+        .attr("class", "nodes");
+
+    tree = d3.layout.tree().size([state.domain.height, state.domain.width]);
 
     this.update(element, state);
 };
@@ -49,25 +52,24 @@ d3Chart._scales = function(element, domain) {
 };
 
 d3Chart._drawPoints = function(element, scales, data) {
-    var g = d3.select(element).selectAll(".d3-points");
+    var g = d3.select(element).selectAll(".nodes");
 
     // compute tree layout
-    var tree = d3.layout.tree().size([scales.height, scales.width]);
     var nodes = tree.nodes(data[0]).reverse(),
         links = tree.links(nodes);
 
     // normalize for fixed-depth
     nodes.forEach(function(d) { d.y = d.depth*100 });
 
-    // declare the nodes
-    var node = g.selectAll(".d3-point")
+    // declare the node
+    var node = g.selectAll(".node")
         .data(nodes, function(d) { return d.id || (d.id = ++i) });
 
     // Enter the nodes.
     var nodeEnter = node.enter().append("g")
         .attr("class", "node")
         .attr("transform", function(d) {
-            return "translate(" + d.x + "," + d.y + ")";
+            return "translate(" + d.x + ", " + d.y + ")";
         });
 
     nodeEnter.append("rect")
@@ -102,7 +104,7 @@ d3Chart._drawPoints = function(element, scales, data) {
         .style("fill-opacity", 1);
 
     // Declare the links…
-    var link = d3.select(element).selectAll("line.link")
+    var link = g.selectAll("line.link")
         .data(links, function(d) { return d.target.id; });
 
     // Enter the links.
