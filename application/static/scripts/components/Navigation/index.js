@@ -101,13 +101,14 @@ var Navigation = React.createClass({
             );
         }, this);
         return (
-            <div className="list-group navigation">
-                    <a className="list-group-item active" onClick={this.upOneLevel} href="#">
+            <ul className="nav nav-pills nav-stacked">
+                    <li role="presentation" className="active"><a onClick={this.upOneLevel} href="#">
                         <span style={backArrow} className="glyphicon glyphicon-triangle-top" aria-hidden="true"> </span> 
                         {this.state.currentParent}
-                    </a> 
+                        </a>
+                    </li> 
                     {ItemArray}
-            </div>
+            </ul>
         );
     }
 });
@@ -120,13 +121,11 @@ var NavigationItem = React.createClass({
     },
 
     render: function(){
-        var arrowStyle = {fontSize: "1.2em", position:"absolute", right:"10px", top:"25%"};
         return(
-            <div>
-                <a className="list-group-item" onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>{this.props.name}
-                    <span style={arrowStyle} className="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                </a>
-            </div>
+            <li role="presentation">
+                <a className="navLink" style={{paddingRight:"20px"}} onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>{this.props.name}</a>
+                <a className="arrowLink" href='#2'><span className="glyphicon glyphicon-arrow-right navArrow" aria-hidden="true"></span></a>
+            </li>
         );
     }
 });

@@ -53,6 +53,7 @@ nav {
 	font-size: 10pt;
 	text-align: left;
     overflow-y: auto;
+    background-color: white;
 }
 
 .diagram {
