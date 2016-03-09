@@ -28,7 +28,7 @@ section {
 .parents .rectangle:last-of-type {
     margin-right: 0px;
 }
- .node rect{
+.node rect {
      border-radius: 10px;
      border: 4px double;
  }
@@ -37,7 +37,8 @@ section {
     font-family: Helvetica, Arial, Sans-Serif;
     color: red;
     font-size: small;
-    font-weight: bold; }
+    font-weight: bold;
+}
 
 .link {
     fill: none;
@@ -53,8 +54,8 @@ section {
 
     line-height: 30px;
 
-    text-align: center;   
-  
+    text-align: center;
+
     font-family: Helvetica, Arial, Sans-Serif;
     font-size: small;
     font-weight: bold;
