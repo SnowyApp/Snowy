@@ -75,7 +75,7 @@ var Search = React.createClass({
             type: "GET",
             "method": "GET",
             //Here goes the correct url
-            url: localUrl,
+            url: brageUrl,
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
@@ -106,7 +106,6 @@ var Search = React.createClass({
     render:function(){
         return (
             <div className="Search">
-                <h3>Search Test</h3>
                 <SearchBox query={this.state.query} doSearch={this.doSearch}/>
                 <TermTable data={this.state.searchData}/>
             </div>
