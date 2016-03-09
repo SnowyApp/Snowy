@@ -1,5 +1,7 @@
 var d3Chart = module.exports = {};
 
+var i = 0;
+
 d3Chart.create = function(element, props, state) {
     // create svg element
     var svg = d3.select(element).append("svg")
@@ -49,18 +51,68 @@ d3Chart._scales = function(element, domain) {
 d3Chart._drawPoints = function(element, scales, data) {
     var g = d3.select(element).selectAll(".d3-points");
 
-    var point = g.selectAll(".d3-point") // d3-points?
-        .data(data, function(d) { return d.id; });
+    // compute tree layout
+    var tree = d3.layout.tree().size([scales.height, scales.width]);
+    var nodes = tree.nodes(data[0]).reverse(),
+        links = tree.links(nodes);
 
-    // ENTER
-    point.enter().append('circle')
-        .attr('class', 'd3-point');
+    // normalize for fixed-depth
+    nodes.forEach(function(d) { d.y = d.depth*100 });
 
-    // ENTER & UPDATE
-    point.attr('cx', function(d) { return scales.x(d.x); })
-        .attr('cy', function(d) { return scales.y(d.y); })
-        .attr('r', function(d) { return scales.z(d.z); });
+    // declare the nodes
+    var node = g.selectAll(".d3-point")
+        .data(nodes, function(d) { return d.id || (d.id = ++i) });
+
+    // Enter the nodes.
+    var nodeEnter = node.enter().append("g")
+        .attr("class", "node")
+        .attr("transform", function(d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+
+    nodeEnter.append("rect")
+        .attr("class", "node")
+        .attr('width', 20)
+        .attr('height', 10)
+        .attr('ry', function(d) {
+            return  d.expression == "attribute" ? '10px' : '0';
+        })
+        .attr('rx', function(d) {
+            return  d.expression == "attribute" ? '1px' : '0';
+        })
+        .style("fill", function(d) {
+            if (d.expression == "concept") {
+                return "#99CCFF";
+            } else if (d.expression == "defined-concept") {
+                return "#CCCCFF";
+            } else if (d.expression == "attribute") {
+                return "#FFFFCC"
+            } else {
+                return "black"}
+            }
+        )
+        .style('stroke','black')
+
+    nodeEnter.append("text")
+        .attr("y", function(d) {
+            return d.children || d._children ? -18 : 18; })
+        .attr("dy", ".35em")
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d.name; })
+        .style("fill-opacity", 1);
+
+    // Declare the links…
+    var link = d3.select(element).selectAll("line.link")
+        .data(links, function(d) { return d.target.id; });
+
+    // Enter the links.
+    link.enter().insert("line", "g")
+        .attr("class", "link")
+        .attr("x1", function(d) { return d.source.x + 10; })
+        .attr("y1", function(d) { return d.source.y + 10; })
+        .attr("x2", function(d) { return d.target.x + 10; })
+        .attr("y2", function(d) { return d.target.y + 5; });
 
     // EXIT
-    point.exit().remove();
+    node.exit().remove();
 };
