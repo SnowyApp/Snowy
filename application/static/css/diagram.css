@@ -28,7 +28,22 @@ section {
 .parents .rectangle:last-of-type {
     margin-right: 0px;
 }
+ .node rect{
+     border-radius: 10px;
+     border: 4px double;
+ }
 
+.node text {
+    font-family: Helvetica, Arial, Sans-Serif;
+    color: red;
+    font-size: small;
+    font-weight: bold; }
+
+.link {
+    fill: none;
+    stroke: black;
+    stroke-width: 2px;
+}
 .rectangle {
     display: inline-block;;
 

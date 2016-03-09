@@ -40,7 +40,7 @@ var treeData = [
 module.exports = React.createClass({
     getInitialState: function() {
         return {
-            data: sampleData,
+            data: treeData,
             domain: { x: [0, 30], y: [0, 100] }
         };
     },
