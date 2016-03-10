@@ -54,6 +54,7 @@ nav {
 	text-align: left;
     overflow-y: auto;
     background-color: white;
+    height: 100%;
 }
 
 .diagram {
