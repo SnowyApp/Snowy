@@ -57,7 +57,6 @@ var Navigation = React.createClass({
         });
     },
 	
-	
     componentDidMount: function(){
         this.setParent(this.props.rootNodeID);
     },
@@ -67,7 +66,7 @@ var Navigation = React.createClass({
         this.state.history.push(this.state.currentID);
         console.log(this.state.history);
         this.setParent(e.id);
-        
+
     },
 
     //Move up one level in the tree (from history)
