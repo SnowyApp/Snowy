@@ -94,7 +94,7 @@ var Navigation = React.createClass({
             backArrow = {};
         }
         //Create NavigationItem's for all the children of the current parent node
-        var ItemArray = this.state.termChildren.map(function(child){ //ta bort .children för api
+        var ItemArray = this.state.termChildren.map(function(child){
             return(
                 <NavigationItem key={child.id} id={child.id} name={child.name} handleClickCallback={this.handleClick} />
             );
