@@ -16,8 +16,7 @@ var Navigation = React.createClass({
 		$.ajax({
             type: "GET",
             "method": "GET",
-            //url: 'http://79.136.62.204:3000/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true', //Carls server
-            url: 'http://private-anon-7ecef6fd0-snomedctsnapshotapi.apiary-mock.com/api/snomed/en-edition/v20160131/concepts/123037004/children?form=inferred', //Mock api
+            url: 'http://79.136.62.204:3000/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true', //Carls server
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
@@ -55,18 +54,18 @@ var Navigation = React.createClass({
             }.bind(this)
         });
     },
-	
-	
+
+
 	componentDidMount: function(){
         this.setParent(138875005);
 	},
-	
+
     //Handles clicks on the children (callback function)
     handleClick: function(e){
         this.state.history.push(this.state.currentID);
         console.log(this.state.history);
         this.setParent(e.id);
-        
+
     },
 
     //Move up one level in the tree (from history)
@@ -103,9 +102,9 @@ var Navigation = React.createClass({
         return (
             <div className="list-group navigation">
                     <a className="list-group-item active" onClick={this.upOneLevel} href="#">
-                        <span style={backArrow} className="glyphicon glyphicon-triangle-top" aria-hidden="true"> </span> 
+                        <span style={backArrow} className="glyphicon glyphicon-triangle-top" aria-hidden="true"> </span>
                         {this.state.currentParent}
-                    </a> 
+                    </a>
                     {ItemArray}
             </div>
         );
