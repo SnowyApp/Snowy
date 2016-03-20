@@ -1,3 +1,4 @@
 __pycache__
 .idea
 application/static/node_modules/
+application/static/bundle.js
