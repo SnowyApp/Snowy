@@ -1,24 +1,6 @@
-*{
+* {
     margin: 0;
     padding: 0;
-}
-
-body {
-    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-    margin: 0 auto;
-    color: black;
-    text-align:center;
-
-}
-
-div{
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-}
-p, h1, h2, h3{
-    margin: 0 auto;
 }
 
 .wrapper {
@@ -26,44 +8,40 @@ p, h1, h2, h3{
 }
 
 nav {
-    float:left;
+    float: left;
     height: 100vh;
-    width: 30%;
-    max-width: 400px;
+
+    width: 25%;
+    max-width: 300px;
+
     border-style: solid;
-    border-width: 0px 2px 0px 0px;
+    border-width: 0 1px 0 0;
 
-    z-index: 100;
-}
-
-.search-bar {
-    position: fixed;
-    top: 0;
-    left: 30%;
-    width: 70%;
-    z-index: 50;
-}
-
-.search-bar form Input {
-    width: 150px;
-    margin: 5px auto;
-}
-
-
-nav {
-	font-size: 10pt;
-	text-align: left;
+    font-size: 10pt;
+    text-align: left;
     overflow-y: auto;
-    background-color: white;
-    height: 100%;
+    background-color: #fff;
+}
+
+section {
+    /* Positions section to left of nav */
+    overflow: auto;
+    height: 100vh;;
 }
 
 .diagram {
-    float:left;
-    height: 100vh;
-    width: 70%;
-    position: relative;
-    background-color: red;
+    height: 100%;
+    width: 100%;
+
+    padding-top: 150px;
 }
 
-.d3 {}
+.search {
+    /* stick search to the top */
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+
+    text-align: center;
+}
