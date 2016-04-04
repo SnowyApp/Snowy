@@ -1,11 +1,7 @@
 
 module.exports = React.createClass({
     render: function() {
-        return (
-            <div className="contentContainer">
-                <Search />
-            </div>
-        );
+        return <Search />;
     }
 });
 
