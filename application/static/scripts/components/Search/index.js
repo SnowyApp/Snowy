@@ -103,7 +103,7 @@ var Search = React.createClass({
     },
     render:function(){
         return (
-            <div className="Search">
+            <div className="search">
                 <SearchBox query={this.state.query} doSearch={this.doSearch}/>
                 <TermTable data={this.state.searchData}/>
             </div>
