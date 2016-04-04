@@ -2,7 +2,9 @@
 module.exports = React.createClass({
     render: function(){
         return (
-            <Navigation apiurl='http://79.136.62.204:3000'/>
+            <nav>
+                <Navigation apiurl='http://79.136.62.204:3000'/>
+            </nav>
         );
     }
 });

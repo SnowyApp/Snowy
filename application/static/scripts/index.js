@@ -6,27 +6,13 @@ var Container = React.createClass({
     render: function() {
         return (
             <div className="wrapper">
-                <NavigationHub onClickButton={this.displayMessage}/>
+                <Navigation />
                 <Search />
                 <Diagram />
             </div>
         );
     }
 });
-
-var NavigationHub = React.createClass({
-    render: function() {
-        return (
-            <nav>
-                <div className="navContainer">
-                    <Navigation />
-                </div>
-            </nav>
-        );
-    }
-});
-
-
 
 ReactDOM.render(
     <Container />,
