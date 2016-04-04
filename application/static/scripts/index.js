@@ -18,5 +18,5 @@ var Container = React.createClass({
 
 ReactDOM.render(
     <Container />,
-    document.body
+    document.getElementById('content')
 );
