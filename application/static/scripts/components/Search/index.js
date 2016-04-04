@@ -42,10 +42,12 @@ var TermTable = React.createClass({
             }
         };
         return(
-            <BootstrapTable data={this.props.data} hover={true} options={optionsProp}>
-            <TableHeaderColumn dataField="id" isKey={true} width="30">ID</TableHeaderColumn>
-            <TableHeaderColumn dataField="name" >Name</TableHeaderColumn>
-            </BootstrapTable>
+            <div className="search-results">
+                <BootstrapTable data={this.props.data} hover={true} options={optionsProp}>
+                <TableHeaderColumn dataField="id" isKey={true} width="30">ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="name" >Name</TableHeaderColumn>
+                </BootstrapTable>
+            </div>
         );
     }
 });
