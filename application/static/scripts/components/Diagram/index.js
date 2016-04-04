@@ -1,10 +1,5 @@
 var Chart = require("./Chart")
 
-var sampleData = [
-    {id: '5fbmzmtc', x: 7, y: 41, z: 6},
-    {id: 's4f8phwm', x: 11, y: 45, z: 9}
-];
-
 var treeData = [
     {
         "name": "Top Level",
