@@ -7,8 +7,10 @@ var Container = React.createClass({
         return (
             <div className="wrapper">
                 <Navigation />
-                <Search />
-                <Diagram />
+                <section>
+                    <Search />
+                    <Diagram />
+                </section>
             </div>
         );
     }
