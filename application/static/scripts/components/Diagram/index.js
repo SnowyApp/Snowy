@@ -1,5 +1,33 @@
-var Chart = require("./Chart")
+var Chart = require("./Chart");
 
+module.exports = React.createClass({
+    /**
+    * Set the state of data and domain to given props or default values if not
+    * given.
+    */
+    getInitialState: function() {
+        return {
+            data: this.props.data || treeData,
+            domain: this.props.data || { x: [0, 30], y: [0, 100] }
+        };
+    },
+
+    /**
+    * Render the diagram from the current state.
+    */
+    render: function() {
+        return (
+            <div className="Diagram">
+                <Chart
+                    data={this.state.data}
+                    domain={this.state.domain} />
+            </div>
+        );
+    }
+});
+
+// sample, default data
+// TODO: Remove as fast as correct formatted data is available.
 var treeData = [
     {
         "name": "Top Level",
@@ -31,22 +59,3 @@ var treeData = [
         ]
     }
 ];
-
-module.exports = React.createClass({
-    getInitialState: function() {
-        return {
-            data: treeData,
-            domain: { x: [0, 30], y: [0, 100] }
-        };
-    },
-
-    render: function() {
-        return (
-            <div className="Diagram">
-                <Chart
-                    data={this.state.data}
-                    domain={this.state.domain} />
-            </div>
-        );
-    }
-});
