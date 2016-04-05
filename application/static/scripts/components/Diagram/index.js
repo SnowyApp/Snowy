@@ -17,7 +17,7 @@ module.exports = React.createClass({
     */
     render: function() {
         return (
-            <div className="Diagram">
+            <div className="diagram">
                 <Chart
                     data={this.state.data}
                     domain={this.state.domain} />
