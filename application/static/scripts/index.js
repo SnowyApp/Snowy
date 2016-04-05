@@ -8,9 +8,21 @@ var Container = React.createClass({
             <div className="wrapper">
                 <Navigation />
                 <section>
-                    <Search />
+                    <Bar />
                     <Diagram />
                 </section>
+            </div>
+        );
+    }
+});
+
+var Bar = React.createClass({
+    render: function() {
+        return (
+            <div className="bar">
+                <Button>Export</Button>
+                <Search />
+                <Button>Login</Button>
             </div>
         );
     }
