@@ -69,7 +69,7 @@ d3Chart.create = function(element, props, state) {
      * depending of how many nodes and layers we have, neat.
      */
     tree = d3.layout.tree().size([props.height, props.width]);
-    
+
     /**
      * I think this is necessary for the D3 to play along with REACT.
      */
@@ -207,7 +207,7 @@ d3Chart._drawPoints = function(element, scales, data) {
                 return "black"}
             }
         )
-        .style('stroke','black')
+        .style('stroke','black');
     /**
      * This adds a text element to the same g element as the rectangle. The
      * current position has a few magic numbers now because there isn't any
