@@ -3,7 +3,7 @@ module.exports = React.createClass({
     render: function(){
         return (
             <nav>
-                <Navigation apiurl='http://79.136.62.204:3000'/>
+                <Navigation APIUrl='http://79.136.62.204:3000' rootNodeID='138875005'/>
             </nav>
         );
     }
@@ -18,7 +18,7 @@ var Navigation = React.createClass({
 		$.ajax({
             type: "GET",
             "method": "GET",
-            url: this.props.apiurl + '/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true',
+            url: this.props.APIUrl + '/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true',
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
@@ -43,7 +43,7 @@ var Navigation = React.createClass({
         $.ajax({
             type: "GET",
             "method": "GET",
-            url: this.props.apiurl + '/snomed/en-edition/v20150731/concepts/' + id,
+            url: this.props.APIUrl + '/snomed/en-edition/v20150731/concepts/' + id,
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
@@ -58,10 +58,10 @@ var Navigation = React.createClass({
     },
 	
 	
-	componentDidMount: function(){
-        this.setParent(138875005);
-	},
-	
+    componentDidMount: function(){
+        this.setParent(this.props.rootNodeID);
+    },
+
     //Handles clicks on the children (callback function)
     handleClick: function(e){
         this.state.history.push(this.state.currentID);
@@ -81,15 +81,16 @@ var Navigation = React.createClass({
     getInitialState: function(){
         return (
             {
-				currentParent: 'SNOMED CT Concept',
-                termChildren: [], //this.props.data[0]
+                currentParent: 'SNOMED CT Concept',
+                termChildren: [],
                 history: []
             }
         );
     },
 
     render: function() {
-        var backArrow; //Hide back arrow if there is no history
+        var backArrow;
+        //Hide back arrow if there is no history
         if(this.state.history.length === 0){
             backArrow = {display: 'none'};
         }else{
@@ -124,7 +125,7 @@ var NavigationItem = React.createClass({
     render: function(){
         return(
             <li role="presentation">
-                <a className="navLink" style={{paddingRight:"20px"}} onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>{this.props.name}</a>
+                <a className="navLink" onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>{this.props.name}</a>
                 <a className="arrowLink" href='#2'><span className="glyphicon glyphicon-arrow-right navArrow" aria-hidden="true"></span></a>
             </li>
         );
