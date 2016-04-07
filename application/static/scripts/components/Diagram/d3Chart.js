@@ -48,8 +48,7 @@ d3Chart.create = function(element, props, state) {
      */
     var svg = d3.select(element).append("svg")
         .attr("class", "d3")
-        .attr("width", props.width)
-        .attr("height", props.height);
+
     /**
      * To add more than one Shape or text element to the SVG-element you have
      * to put them in a g-element. We give this one the class nodes
