@@ -49,5 +49,20 @@ CREATE TABLE relationship(
   type_id VARCHAR(18) NOT NULL,
   characteristic_type_id VARCHAR(18) NOT NULL,
   modifier_id VARCHAR(18) NOT NULL,
-  CONSTRAINT relationship_pk PRIMARY KEY(id, effectivetime, active)
+  CONSTRAINT relationship_pk PRIMARY KEY(id, effective_time, active)
+);
+
+DROP TABLE IF EXISTS stated_relationship cascade;
+CREATE TABlE stated_relationship(
+  id VARCHAR(18) NOT NULL,
+  effective_time CHAR(8) NOT NULL,
+  active INTEGER noT NULL,
+  module_id VARCHAR(18) NOT NULL,
+  source_id VARCHAR(18) NOT NULL,
+  destination_id VARCHAR(18) NOT NULL,
+  relationship_group VARCHAR(18) NOT NULL,
+  type_id VARCHAR(18) NOT NULL,
+  characteristic_type_id VARCHAR(18) NOT NULL,
+  modifier_id VARCHAR(18) NOT NULL,
+  CONSTRAINT stated_relationship_pk PRIMARY KEY(id, effective_time, active)
 );
