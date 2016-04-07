@@ -2,10 +2,10 @@ DROP TABLE IF EXISTS concepts CASCADE;
 CREATE TABLE CONCEPTS(
   id VARCHAR(18) NOT NULL,
   effective_time VARCHAR(8) NOT NULL,
-  active INTEGER(1) NOT NULL,
+  active INTEGER NOT NULL,
   module_id VARCHAR(18) NOT NULL,
   definition_status_id VARCHAR(18) NOT NULL,
-  CONSTRAINT concepts_pk PRIMARY KEY(id, effectivetime, active)
+  CONSTRAINT concepts_pk PRIMARY KEY(id, effective_time, active)
 );
 
 DROP TABLE IF EXISTS description CASCADE;
@@ -19,7 +19,7 @@ CREATE TABLE DESCRIPTION(
   type_id VARCHAR(18) NOT NULL,
   term VARCHAR(255) NOT NULL,
   case_significance_id VARCHAR(18) NOT NULL,
-  CONSTRAINT description_pk PRIMARY KEY(id, effectivetime, active)
+  CONSTRAINT description_pk PRIMARY KEY(id, effective_time, active)
 );
 
 DROP TABLE IF EXISTS text_definition CASCADE;
@@ -33,7 +33,7 @@ CREATE TABLE TEXT_DEFINITION(
   type_id VARCHAR(18) NOT NULL,
   term VARCHAR(255) NOT NULL,
   case_significance_id VARCHAR(18) NOT NULL,
-  CONSTRAINT description_pk PRIMARY KEY(id, effectivetime, active)
+  CONSTRAINT text_definition_pk PRIMARY KEY(id, effective_time, active)
 );
 
 
