@@ -20,8 +20,10 @@ var d3Chart = module.exports = {};
 var i = 0;
 var tree;
 
-var NODE_WIDTH = 100;
-var NODE_HEIGHT = 50;
+const NODE_WIDTH = 100;
+const NODE_HEIGHT = 50;
+
+const WIDTH_MARGIN = 500;
 
 /**
  * This will be used to "inject" an SVG-element to our webpage that you can
@@ -50,7 +52,7 @@ d3Chart.create = function(element, props, state) {
      * It just is a different way of writing, it is the D3-way!
      */
     var svg = d3.select(element).append("svg")
-        .attr("class", "d3")
+        .attr("class", "d3");
 
     /**
      * To add more than one Shape or text element to the SVG-element you have
@@ -190,7 +192,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      */
     nodeEnter.append("rect")
         .attr("class", "node")
-        .attr('x', 500)
+        .attr('x', WIDTH_MARGIN)
         .attr('width', NODE_WIDTH)
         .attr('height', NODE_HEIGHT)
         .attr('ry', function(d) {
@@ -224,7 +226,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      */
     nodeEnter.append("text")
         .attr("y", NODE_HEIGHT/2)
-        .attr("x", NODE_WIDTH/2 + 500)
+        .attr("x", NODE_WIDTH/2 + WIDTH_MARGIN)
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
@@ -248,9 +250,9 @@ d3Chart._drawPoints = function(element, scales, data) {
     */
     link.enter().insert("line", "g")
         .attr("class", "link")
-        .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+500; })
+        .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-        .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+500; })
+        .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y2", function(d) { return d.target.y + 0; });
 
     node.exit().remove();
