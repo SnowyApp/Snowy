@@ -9,8 +9,8 @@
 }
 
 .node rect {
-     border-radius: 10px;
-     border: 4px double;
+    border-radius: 10px;
+    border: 4px double;
  }
 
 .node text {
