@@ -1,0 +1,101 @@
+.profileContent {
+    margin: 13px
+}
+
+hr.favorites {
+    margin-top: -8px;
+    padding-top: 0px;
+
+}
+
+a.favorites, a.favorites:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/*
+    #############
+    # Table CSS #
+    #############
+*/
+
+table.favorites {
+    width: 100%;
+}
+
+td.favorites, tr.favorites, th.favorites {
+    padding: 2px;
+    padding-left: 5px;
+}
+
+/* Table headers */
+
+th.favorites#Namn {
+    width: 63%
+}
+
+th.favorites#ID {
+    width: 21%
+}
+
+th.favorites#Tillagd {
+    width: 12%
+}
+
+th.favorites#Tabort {
+    width: 4%;
+}
+
+th.favorites, td.favorites {
+    border-bottom: 1px solid #ddd;
+}
+
+th.favorites {
+    height: 30px;
+    font-size: 1.35em;
+    background-color: #337ab7;
+    color: white;
+    cursor: pointer;
+}
+
+th.favorites:first-child{
+  border-radius:3px 0 0 0;
+}
+
+th.favorites:last-child{
+  border-radius:0 3px 0 0;
+}
+
+/*
+tr.favorites, th.favorites {
+    cursor: pointer;
+}
+*/
+
+/* Table rows */
+
+tr.favorites:hover {
+    background-color: #d9edf7;
+}
+
+tr.favorites {
+    height: 35px;
+}
+
+/* Table elements */
+
+td.favorites {
+    font-size: 1.3em;
+}
+
+td.favorites#RemoveGlyph {
+    text-align: center;
+    color: red;
+}
+
+td.favorites#RemoveGlyph:hover {
+    color: red;
+    cursor: pointer;
+    font-size: 1.45em;
+}
