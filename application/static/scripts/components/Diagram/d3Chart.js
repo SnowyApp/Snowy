@@ -20,6 +20,9 @@ var d3Chart = module.exports = {};
 var i = 0;
 var tree;
 
+var NODE_WIDTH = 100;
+var NODE_HEIGHT = 50;
+
 /**
  * This will be used to "inject" an SVG-element to our webpage that you can
  * already do with
@@ -187,8 +190,8 @@ d3Chart._drawPoints = function(element, scales, data) {
      */
     nodeEnter.append("rect")
         .attr("class", "node")
-        .attr('width', 20)
-        .attr('height', 10)
+        .attr('width', NODE_WIDTH)
+        .attr('height', NODE_HEIGHT)
         .attr('ry', function(d) {
             return  d.expression == "attribute" ? '10px' : '0';
         })
@@ -219,8 +222,8 @@ d3Chart._drawPoints = function(element, scales, data) {
      *
      */
     nodeEnter.append("text")
-        .attr("y", function(d) {
-            return d.children || d._children ? -18 : 18; })
+        .attr("y", NODE_HEIGHT/2)
+        .attr("x", NODE_WIDTH/2)
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
@@ -244,10 +247,10 @@ d3Chart._drawPoints = function(element, scales, data) {
     */
     link.enter().insert("line", "g")
         .attr("class", "link")
-        .attr("x1", function(d) { return d.source.x + 10; })
-        .attr("y1", function(d) { return d.source.y + 10; })
-        .attr("x2", function(d) { return d.target.x + 10; })
-        .attr("y2", function(d) { return d.target.y + 5; });
+        .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2; })
+        .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
+        .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2; })
+        .attr("y2", function(d) { return d.target.y + 0; });
 
     node.exit().remove();
 };

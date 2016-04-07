@@ -8,7 +8,7 @@ module.exports = React.createClass({
     getInitialState: function() {
         return {
             data: this.props.data || treeData,
-            domain: this.props.data || { x: [0, 30], y: [0, 100] }
+            domain: this.props.data || { x: [0, 100], y: [0, 100] }
         };
     },
 
