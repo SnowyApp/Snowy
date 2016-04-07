@@ -40,7 +40,7 @@ module.exports = React.createClass({
 
     render: function() {
         return (
-            <div className="Chart"></div>
+            <div className="chart"></div>
         );
     }
 });
