@@ -70,7 +70,7 @@ d3Chart.create = function(element, props, state) {
      * That way it will automatically space out the nodes and layers
      * depending of how many nodes and layers we have, neat.
      */
-    tree = d3.layout.tree().size([props.height, props.width]);
+    tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
 
     /**
      * I think this is necessary for the D3 to play along with REACT.
@@ -146,7 +146,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      * the nodes and positions for the links (lines) between them.
      * @type {*|Array.<T>}
      */
-    var nodes = tree.nodes(root).reverse(),
+    var nodes = tree.nodes(root),
         links = tree.links(nodes);
 
     /**
@@ -190,6 +190,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      */
     nodeEnter.append("rect")
         .attr("class", "node")
+        .attr('x', 500)
         .attr('width', NODE_WIDTH)
         .attr('height', NODE_HEIGHT)
         .attr('ry', function(d) {
@@ -223,7 +224,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      */
     nodeEnter.append("text")
         .attr("y", NODE_HEIGHT/2)
-        .attr("x", NODE_WIDTH/2)
+        .attr("x", NODE_WIDTH/2 + 500)
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
@@ -247,9 +248,9 @@ d3Chart._drawPoints = function(element, scales, data) {
     */
     link.enter().insert("line", "g")
         .attr("class", "link")
-        .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2; })
+        .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+500; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-        .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2; })
+        .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+500; })
         .attr("y2", function(d) { return d.target.y + 0; });
 
     node.exit().remove();
