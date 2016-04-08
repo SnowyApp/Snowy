@@ -151,6 +151,25 @@ d3Chart._drawPoints = function(element, scales, data) {
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
 
+    var node_drag = d3.behavior.drag()
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
+
+    function dragstart(d, i) {
+    }
+
+    function dragmove(d, i) {
+        d.px += d3.event.dx;
+        d.py += d3.event.dy;
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        tick();
+    }
+
+    function dragend(d, i) {
+    }
+
     /**
      * This manually sets the distance between the nodes
      */
@@ -180,7 +199,8 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("class", "node")
         .attr("transform", function(d) {
             return "translate(" + d.x + ", " + d.y + ")";
-        });
+        })
+        .call(node_drag);
     /**
      * Now we add a rectangle element and use conditional expressions to
      * style them. The ry and rx elements are used to give the eclipse shape
@@ -256,4 +276,13 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("y2", function(d) { return d.target.y + 0; });
 
     node.exit().remove();
+
+    function tick() {
+        link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+            .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
+            .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN;})
+            .attr("y2", function(d) { return d.target.y; });
+
+        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    }
 };
