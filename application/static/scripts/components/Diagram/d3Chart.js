@@ -260,7 +260,8 @@ d3Chart._drawPoints = function(element, scales, data) {
     *   d.source.x + 10 y2 = d.source.y + 5>
     * </g>
     */
-    link.enter().insert("line", "g")
+    link.enter().append("g")
+        .append("line")
         .attr("class", "link")
         .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
