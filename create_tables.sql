@@ -17,7 +17,7 @@ CREATE TABLE description(
     concept_id VARCHAR(18) NOT NULL,
     language_code VARCHAR(2) NOT NULL,
     type_id VARCHAR(18) NOT NULL,
-    term VARCHAR(512) NOT NULL,
+    term VARCHAR(1024) NOT NULL,
     case_significance_id VARCHAR(18) NOT NULL,
     CONSTRAINT description_pk PRIMARY KEY(id, effective_time, active)
 );
@@ -31,7 +31,7 @@ CREATE TABLE text_definition(
     concept_id VARCHAR(18) NOT NULL,
     language_code VARCHAR(2) NOT NULL,
     type_id VARCHAR(18) NOT NULL,
-    term VARCHAR(512) NOT NULL,
+    term VARCHAR(1024) NOT NULL,
     case_significance_id VARCHAR(18) NOT NULL,
     CONSTRAINT text_definition_pk PRIMARY KEY(id, effective_time, active)
 );
