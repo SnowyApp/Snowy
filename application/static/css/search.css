@@ -1,5 +1,6 @@
 .search-results {
-    display: none;
+    display: block;
+    background-color: white;
 }
 
 .search input {
