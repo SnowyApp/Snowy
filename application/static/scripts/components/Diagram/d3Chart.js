@@ -152,12 +152,7 @@ d3Chart._drawPoints = function(element, scales, data) {
         links = tree.links(nodes);
 
     var node_drag = d3.behavior.drag()
-        .on("dragstart", dragstart)
         .on("drag", dragmove)
-        .on("dragend", dragend);
-
-    function dragstart(d, i) {
-    }
 
     function dragmove(d, i) {
         d.px += d3.event.dx;
@@ -165,9 +160,6 @@ d3Chart._drawPoints = function(element, scales, data) {
         d.x += d3.event.dx;
         d.y += d3.event.dy;
         tick();
-    }
-
-    function dragend(d, i) {
     }
 
     /**
@@ -274,6 +266,11 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y2", function(d) { return d.target.y + 0; });
+
+    var node_drag = d3.behavior.drag()
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
 
     node.exit().remove();
 
