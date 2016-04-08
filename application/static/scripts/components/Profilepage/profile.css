@@ -1,5 +1,6 @@
+/* Probably wanna add overflow: auto to this later */
 .profileContent {
-    margin: 13px
+    margin: 13px;
 }
 
 hr.favorites {
@@ -13,6 +14,14 @@ a.favorites, a.favorites:hover {
     text-decoration: none;
 }
 
+.sortArrow {
+    font-size: 0.8em;
+}
+
+/* Remove dotted outline after clicking tabs */
+.tabItem > a:focus {
+    outline: none;
+}
 
 /*
     #############
@@ -98,4 +107,11 @@ td.favorites#RemoveGlyph:hover {
     color: red;
     cursor: pointer;
     font-size: 1.45em;
+}
+
+/* Accordion */
+
+.accordionHeader {
+    background-color: #337ab7 !important;
+    color: white !important;
 }

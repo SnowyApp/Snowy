@@ -15,14 +15,62 @@
         {
             ID: 362981000,
             name: "Qualifier value",
-            dateAdded: new Date("March 6, 2016 11:32:10")
+            dateAdded: new Date("March 5, 2016 11:32:10")
         },
         {
             ID: 71388002,
             name: "Procedure",
             dateAdded: new Date("March 6, 2016 11:32:11")
+        },
+        {
+            ID: 71388004,
+            name: "Procedure",
+            dateAdded: new Date("March 7, 2016 11:32:11")
         }
     ];
+/*
+,
+        {
+            ID: 71388005,
+            name: "Procedure",
+            dateAdded: new Date("March 6, 2016 11:32:11")
+        },
+        {
+            ID: 71388006,
+            name: "Procedure",
+            dateAdded: new Date("March 6, 2016 11:32:11")
+        },
+        {
+            ID: 71388007,
+            name: "Procedure",
+            dateAdded: new Date("March 6, 2016 11:32:11")
+        },
+        {
+            ID: 71388008,
+            name: "Procedure",
+            dateAdded: new Date("March 6, 2016 11:32:11")
+        },
+        {
+            ID: 71388009,
+            name: "Procedure",
+            dateAdded: new Date("March 6, 2016 11:32:11")
+        },
+        {
+            ID: 71388012,
+            name: "Procedure",
+            dateAdded: new Date("March 6, 2016 11:32:11")
+        },
+        {
+            ID: 71388022,
+            name: "Procedure",
+            dateAdded: new Date("March 6, 2016 11:32:11")
+        },
+        {
+            ID: 71388032,
+            name: "Procedure",
+            dateAdded: new Date("March 6, 2016 11:32:11")
+        }
+*/
 
 var ProfilePage = React.createClass({
     //Initial state of the component
@@ -34,6 +82,7 @@ var ProfilePage = React.createClass({
         );
     },
 
+    //Set current tab
     changeTab: function(tab){    
         this.setState({
             currentTab: tab
@@ -78,12 +127,25 @@ var ProfilePage = React.createClass({
         });
         return data;
     },
+    
+    //Remove and object from array with .ID == ID
+    removeByID: function(array, ID){
+        //Find the object and remove it from the array
+        for(var i = 0; i < array.length; i++){              
+            if(array[i].ID == ID){
+                array.splice(i, 1);
+                break;
+            }
+        }
+        return array;
+    },
 
     render: function(){
+        //Only render the current tab
         var content;
         switch(this.state.currentTab){
             case 'Termer':
-                content = <TermPage terms={dummyTerms} nameSort={this.sortByName} IDSort={this.sortByID} dateSort={this.sortByDate}/>;
+                content = <TermPage terms={dummyTerms} openTerm={this.props.openTerm} removeID={this.removeByID} nameSort={this.sortByName} IDSort={this.sortByID} dateSort={this.sortByDate}/>;
                 break;
             case 'Diagram':
                 content = <DiagramPage />;
@@ -109,16 +171,23 @@ var TermPage = React.createClass({
     getInitialState: function(){
         return (
             {
-                sortBy: 'Namn',
-                ascending: true,
                 terms: this.props.terms
             }
         );
     },
 
+    componentDidMount: function(){
+        this.setState({
+            terms: this.props.dateSort(this.state.terms, false),
+            sortBy: 'Tillagd',
+            ascending: false
+        });
+    },
+
     //Sort terms by fav
     sortBy: function(header){
         var asc = true;
+        //If already sorting by header, invert order
         if(this.state.sortBy == header){
             var asc = !this.state.ascending;
         }
@@ -149,39 +218,75 @@ var TermPage = React.createClass({
 
     },
 
+    //Remove element from the term table
+    removeTerm: function(ID){
+        //Remove element locally (for responsiveness)
+        this.setState({
+            terms: this.props.removeID(this.state.terms, ID)
+        });
+        //TODO: Remove element from database
+    },
+
     render: function(){
-        var TermArray = this.props.terms.map(function(term){
-            //Date
+        //Generate the table rows
+        var TermArray = this.state.terms.map(function(term){
+            //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
             var day = ("0" + term.dateAdded.getDate()).slice(-2);
             var month = ("0" + term.dateAdded.getMonth()).slice(-2);
             var year = term.dateAdded.getUTCFullYear();
-            //Time
-            var hours = ("0" + term.dateAdded.getHours()).slice(-2);
-            var minutes = ("0" + term.dateAdded.getMinutes()).slice(-2);
-            var seconds = ("0" + term.dateAdded.getSeconds()).slice(-2);
-            var time = hours + ":" + minutes + ":" + seconds;
             
             var dateString = year + "-" + month + "-" + day;
+
             return(
-                <tr className="favorites">
-                    <td className="favorites"> <a className="favorites" href="#">{term.name}</a></td>
-                    <td className="favorites"> <a className="favorites" href="#">{term.ID}</a></td>
-                    <td className="favorites">{dateString}</td>
-                    <td id="RemoveGlyph" className="favorites"><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                </tr>
+                <Term key={term.ID} term={term} openTerm={this.props.openTerm} removeTerm={this.removeTerm} date={dateString} />
             );
         }, this);
+
+        //Render the correct sorting arrows
+        var nameSortArrow = null;
+        var IDSortArrow = null;
+        var dateSortArrow = null;
+        switch(this.state.sortBy){
+            case "Namn":
+                if(this.state.ascending == true){
+                    nameSortArrow = <span className="glyphicon glyphicon-triangle-bottom sortArrow" aria-hidden="true"></span>;
+                }
+                else{
+                    nameSortArrow = <span className="glyphicon glyphicon-triangle-top sortArrow" aria-hidden="true"></span>;
+                }
+                break;
+            case "ID":
+                if(this.state.ascending == true){
+                    IDSortArrow = <span className="glyphicon glyphicon-triangle-bottom sortArrow" aria-hidden="true"></span>;
+                }
+                else{
+                    IDSortArrow = <span className="glyphicon glyphicon-triangle-top sortArrow" aria-hidden="true"></span>;
+                }
+                break;
+            case "Tillagd":
+                if(this.state.ascending == true){
+                    dateSortArrow = <span className="glyphicon glyphicon-triangle-bottom sortArrow" aria-hidden="true"></span>;
+                }
+                else{
+                    dateSortArrow = <span className="glyphicon glyphicon-triangle-top sortArrow" aria-hidden="true"></span>;
+                }
+                break;
+        }
 
         return(
             <div>
                 <h1>Favorittermer</h1>
                 <hr className="favorites"></hr>
                 <table className="favorites">
+                    <thead>
+                        <tr>
+                            <th id="Namn" className="favorites" onClick={this.sortBy.bind(this, "Namn")}>Namn {nameSortArrow}</th>
+                            <th id="ID" className="favorites" onClick={this.sortBy.bind(this, "ID")}>ID {IDSortArrow}</th>
+                            <th id="Tillagd" className="favorites" onClick={this.sortBy.bind(this, "Tillagd")}>Tillagd {dateSortArrow}</th>
+                            <th id="Tabort" className="favorites"></th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <th id="Namn" className="favorites" onClick={this.sortBy.bind(this, "Namn")}>Namn</th>
-                        <th id="ID" className="favorites" onClick={this.sortBy.bind(this, "ID")}>ID</th>
-                        <th id="Tillagd" className="favorites" onClick={this.sortBy.bind(this, "Tillagd")}>Tillagd</th>
-                        <th id="Tabort" className="favorites"></th>
                         {TermArray}
                     </tbody>
                 </table>
@@ -190,10 +295,53 @@ var TermPage = React.createClass({
     }
 });
 
+var Term = React.createClass({
+    render: function(){
+        return(
+            <tr className="favorites">
+                <td className="favorites"> <a className="favorites" href="#" onClick={this.props.openTerm.bind(null, this.props.term.ID)}>{this.props.term.name}</a></td>
+                <td className="favorites"> <a className="favorites" href="#" onClick={this.props.openTerm.bind(null, this.props.term.ID)}>{this.props.term.ID}</a></td>
+                <td className="favorites">{this.props.date}</td>
+                <td id="RemoveGlyph" onClick={this.props.removeTerm.bind(null, this.props.term.ID)} className="favorites"><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
+            </tr>
+        );
+    }
+});
+
 var DiagramPage = React.createClass({
     render: function(){
         return(
-            <h1>Diagram</h1>
+            <div>
+                <h1>Diagram</h1>
+                <hr className="favorites"></hr>
+            
+                <DiagramElement name="Diagram 1 (2016-03-04)" id="1337"/>
+                <DiagramElement name="Diagram 2 (2016-03-04)" id="1338"/>
+                <DiagramElement name="Diagram 3 (2016-03-04)" id="1339"/>
+            </div>
+        );
+    }
+});
+
+var DiagramElement = React.createClass({
+    render: function(){
+        return(
+            <div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div className="panel panel-default">
+                    <div className="panel-heading accordionHeader" role="tab" id="headingOne">
+                        <h4 className="panel-title">
+                            <a role="button" className="collapsed" data-toggle="collapse" href={"#" + this.props.id} aria-expanded="false" aria-controls="collapseOne">
+                                {this.props.name}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id={this.props.id} className="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div className="panel-body">
+                            Barn: 1
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
     }
 });
@@ -205,7 +353,6 @@ var AccountPage = React.createClass({
         );
     }
 });
-
 
 
 //Tab navigation for profile page
@@ -224,20 +371,21 @@ var NavBar = React.createClass({
 //Tab in the navbar
 var NavBarItem = React.createClass({
     render: function(){
-        var navBarItemClass = (this.props.active ? 'active' : null);
+        var navBarItemClass = (this.props.active ? 'active' : null) + " tabItem"; //Highlight active tab
         return(
             <li role="presentation" className={navBarItemClass}>
-                <a href="#" onClick={this.props.onSelect.bind(this, this.props.name)} >{this.props.name}</a>
+                <a href="#" onClick={this.props.onSelect.bind(null, this.props.name)}>{this.props.name}</a>
             </li>
         );
     }
 });
 
-
-// onClick={this.changeTab.bind(this, 'Termer')}
+function openTerm(ID){
+    console.log(ID);
+}
 
 ReactDOM.render(
-    <ProfilePage />,
+    <ProfilePage openTerm={openTerm}/>, //Replace openTerm with function that opens up selected term
     document.getElementById('content')
 );
 
