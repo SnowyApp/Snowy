@@ -20,6 +20,8 @@ var d3Chart = module.exports = {};
 var i = 0;
 var tree;
 
+var menuOptions = ["Help", "Me", "Please"];
+
 const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
 
@@ -139,7 +141,7 @@ d3Chart._drawPoints = function(element, scales, data) {
     var root = data[0];
     /**
      * I don't think this g element is necessary actually but I don't want
-     * to remove it now and change the some line since I am too lazy to test it.
+     * to remove it now since I am too lazy to test it.
      */
     var g = d3.select(element).selectAll(".nodes");
 
@@ -152,11 +154,9 @@ d3Chart._drawPoints = function(element, scales, data) {
         links = tree.links(nodes);
 
     var node_drag = d3.behavior.drag()
-        .on("drag", dragmove)
+        .on('drag', dragmove)
 
     function dragmove(d, i) {
-        d.px += d3.event.dx;
-        d.py += d3.event.dy;
         d.x += d3.event.dx;
         d.y += d3.event.dy;
         tick();
@@ -202,8 +202,8 @@ d3Chart._drawPoints = function(element, scales, data) {
      * < rect class = node width = 20 height = 10 ry = 10px rx = 1px
      *   style="fill:#FFFFCC;stroke:black" />
      */
-    nodeEnter.append("rect")
-        .attr("class", "node")
+    nodeEnter.append('rect')
+        .attr('class', 'node')
         .attr('x', WIDTH_MARGIN)
         .attr('width', NODE_WIDTH)
         .attr('height', NODE_HEIGHT)
@@ -213,7 +213,7 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr('rx', function(d) {
             return  d.expression == "attribute" ? '1px' : '0';
         })
-        .style("fill", function(d) {
+        .style('fill', function(d) {
             if (d.expression == "concept") {
                 return "#99CCFF";
             } else if (d.expression == "defined-concept") {
@@ -244,6 +244,30 @@ d3Chart._drawPoints = function(element, scales, data) {
         .text(function(d) { return d.name; })
         .style("fill-opacity", 1);
 
+    d3.select(element)
+        .on('contextmenu', function (d,i) {
+            var d3_target = d3.select(d3.event.target);
+
+            console.log("Testing...!");
+            if(d3_target.classed('node')){
+
+                console.log("Hello world!");
+                d3.event.preventDefault();
+
+                //console.log('canvas');
+                //var canvas = d3.select(".canvas");
+
+                console.log('mouseposition');
+                var mousePosition = d3.mouse(this);
+
+                console.log('popup');
+                nodeEnter.append('div')
+                    .attr("class", "popup")
+                    .attr('width',100)
+                    .attr('height', 100);
+            }
+        });
+
     /**
      * Creates link which will be an array of objects with class line.link
      * and contain all the links generated and the unique id it has been given
@@ -260,26 +284,24 @@ d3Chart._drawPoints = function(element, scales, data) {
     *   d.source.x + 10 y2 = d.source.y + 5>
     * </g>
     */
-    link.enter().insert("line", "g")
+    link.enter().append('g')
+        .append('line')
         .attr("class", "link")
         .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y2", function(d) { return d.target.y + 0; });
 
-    var node_drag = d3.behavior.drag()
-        .on("dragstart", dragstart)
-        .on("drag", dragmove)
-        .on("dragend", dragend);
-
-    node.exit().remove();
-
     function tick() {
-        link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
             .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-            .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN;})
+            .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
             .attr("y2", function(d) { return d.target.y; });
 
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
+
+
+
+    node.exit().remove();
 };
