@@ -3,16 +3,42 @@ from application import app, db
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(db.Model):
+import psycopg2
+
+DB_NAME = "snomedct"
+DB_USER = "simon"
+
+
+def connect_db():
+    """
+    Connects to the database.
+    """
+    return psycopg2.connect("dbname=" + DB_NAME + " user=" + DB_USER)
+
+
+def get_db():
+    """
+    Returns the database connection. If no database connection 
+    exists, a new one is created.
+    """
+    if not hasattr(g, 'postgres_db'):
+        g.postgres_db = connect_db()
+    return g.postgres_db
+
+
+@app.teardown_appcontext
+def close_db(error):
+    """
+    Closes the database again at the end of the request.
+    """
+    if hasattr(g, 'postgres_db'):
+        g.postgres_db.close()
+
+
+class User():
     """
     A user of the browser.
     """
-    __tablename__ = "user"
-    email = db.Column(db.String, primary_key=True)
-    password = db.Column(db.String)
-
-    tokens = db.relationship("Token", back_populates="user")
-
     def __init__(self, email, password):
         self.email = email
         self.password = generate_password_hash(password, salt_length=12)
@@ -25,19 +51,17 @@ class User(db.Model):
         s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'email': self.email, 'hash': self.password})
 
+    @staticmethod
+    def create_user(email):
+        cur = get_db().cursor()
+
 
 class Token(db.Model):
     """
     Represents a user token.
     """
-    __tablename__ = "token"
-    id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.String)
-    user_email = db.Column(db.String, db.ForeignKey('user.email'))
-    accessed = db.Column(db.DateTime)
 
-    user = db.relationship("User", back_populates="tokens")
-
-    def __init__(self, token):
+    def __init__(self, token, user_email):
         self.token = token
-        self.accessed = datetime.utcnow()
+        self.user_email = user_email
+
