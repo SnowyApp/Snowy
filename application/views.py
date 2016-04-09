@@ -107,9 +107,7 @@ def logout():
     Logs the user out by destroying the token.
     """
     token = request.headers.get('Authorization', None)
-    stored_token = Token.query.filter_by(token=token).first()
-    db.session.delete(stored_token)
-    db.session.commit()
+    Token(token, "").delete_from_db()
     return jsonify(message="Logged out")
 
 

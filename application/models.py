@@ -10,10 +10,11 @@ DB_NAME = "snomedct"
 DB_USER = "simon"
 
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
-SELECT_USER_QUERY = "SELECT email, password_hash from usr WHERE email=%s;"
+SELECT_USER_QUERY = "SELECT email, password_hash FROM usr WHERE email=%s;"
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
-SELECT_TOKEN_QUERY = "SELECT * from token WHERE token=%s AND user_email=%s;"
+SELECT_TOKEN_QUERY = "SELECT * FROM token WHERE token=%s AND user_email=%s;"
+DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 
 def connect_db():
     """
@@ -136,3 +137,15 @@ class Token():
         Retrieves the user for the given token.
         """
         return User.get_user(self.user_email)
+
+    def delete_from_db(self):
+        """
+        Deletes the token from the database.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(DELETE_TOKEN_STATEMENT, (self.token,))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(str(e))
