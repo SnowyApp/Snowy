@@ -21,9 +21,11 @@ def verify_auth_token(token):
         return None
     except BadSignature:
         return None
-    user_query = User.query.filter(and_(User.email == data['email'], \
-            User.tokens.any(token=token)))
-    return user_query.first()
+    token = Token(token, data['email'])
+    if token.is_valid_token():
+        return token.retrieve_user()
+    else:
+        return None
 
 
 def login_required(func):
