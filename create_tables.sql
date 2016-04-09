@@ -1,15 +1,15 @@
-DROP TABLE IF EXISTS concepts CASCADE;
-CREATE TABLE CONCEPTS(
+DROP TABLE IF EXISTS concept CASCADE;
+CREATE TABLE concept(
     id BIGINT NOT NULL,
     effective_time BIGINT NOT NULL,
     active INTEGER NOT NULL,
     module_id BIGINT NOT NULL,
     definition_status_id BIGINT NOT NULL,
-    CONSTRAINT concepts_pk PRIMARY KEY(id, effective_time, active)
+    CONSTRAINT concept_pk PRIMARY KEY(id, effective_time, active)
 );
 
-DROP TABLE IF EXISTS descriptions CASCADE;
-CREATE TABLE descriptions(
+DROP TABLE IF EXISTS description CASCADE;
+CREATE TABLE description(
     id BIGINT NOT NULL,
     effective_time BIGINT NOT NULL,
     active INTEGER NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE descriptions(
     type_id BIGINT NOT NULL,
     term VARCHAR(1024) NOT NULL,
     case_significance_id BIGINT NOT NULL,
-    CONSTRAINT descriptions_pk PRIMARY KEY(id, effective_time, active)
+    CONSTRAINT description_pk PRIMARY KEY(id, effective_time, active)
 );
 
 DROP TABLE IF EXISTS text_definition CASCADE;
@@ -67,11 +67,11 @@ CREATE TABlE stated_relationship(
     CONSTRAINT stated_relationship_pk PRIMARY KEY(id, effective_time, active)
 );
 
-COPY concepts(id, effective_time, active, module_id, definition_status_id)
+COPY concept(id, effective_time, active, module_id, definition_status_id)
 FROM '/Users/simon/Projects/browser/SnomedCT_RF2Release_INT_20150731/Full/Terminology/sct2_Concept_Full_INT_20150731.txt'
 WITH (FORMAT csv, HEADER true, DELIMITER '	');
 
-COPY descriptions(id, effective_time, active, module_id, concept_id, language_code, type_id, term, case_significance_id)
+COPY description(id, effective_time, active, module_id, concept_id, language_code, type_id, term, case_significance_id)
 FROM '/Users/simon/Projects/browser/SnomedCT_RF2Release_INT_20150731/Full/Terminology/sct2_Description_Full-en_INT_20150731.txt'
 WITH (FORMAT csv, HEADER true, DELIMITER '	');
 
