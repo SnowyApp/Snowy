@@ -52,6 +52,8 @@ d3Chart.create = function(element, props, state) {
      * It just is a different way of writing, it is the D3-way!
      */
     var svg = d3.select(element).append("svg")
+        .attr("width", 1000)
+        .attr("height", 500)
         .attr("class", "d3");
 
     /**
@@ -260,23 +262,26 @@ d3Chart._drawPoints = function(element, scales, data) {
     *   d.source.x + 10 y2 = d.source.y + 5>
     * </g>
     */
-    link.enter().append("g")
-        .append("line")
+    var linkEnter = link.enter()
+        .append("g")
         .attr("class", "link")
+        .append("line")
+        .attr("class", "line")
         .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y2", function(d) { return d.target.y + 0; });
 
-    var node_drag = d3.behavior.drag()
+   /* var node_drag = d3.behavior.drag()
         .on("dragstart", dragstart)
         .on("drag", dragmove)
         .on("dragend", dragend);
-
+    */
     node.exit().remove();
 
     function tick() {
-        link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        linkEnter
+            .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
             .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
             .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN;})
             .attr("y2", function(d) { return d.target.y; });
