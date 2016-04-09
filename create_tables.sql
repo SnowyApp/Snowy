@@ -79,3 +79,67 @@ CREATE TABlE stated_relationship(
     modifier_id BIGINT NOT NULL,
     CONSTRAINT stated_relationship_pk PRIMARY KEY(id, effective_time, active)
 );
+
+DROP TABLE IF EXISTS language_refset CASCADE;
+CREATE TABLE language_refset(
+    id UUID NOT NULL,
+    effective_time BIGINT NOT NULL,
+    active INTEGER NOT NULL,
+    module_id BIGINT NOT NULL,
+    refset_id BIGINT NOT NULL,
+    referenced_component_id BIGINT NOT NULL,
+    acceptability_id BIGINT NOT NULL,
+    CONSTRAINT language_refset_pk PRIMARY KEY(id, effective_time, active)
+);
+
+DROP TABLE IF EXISTS association_refset CASCADE;
+CREATE TABLE association_refset(
+    id UUID NOT NULL,
+    effective_time BIGINT NOT NULL,
+    active INTEGER NOT NULL,
+    module_id BIGINT NOT NULL,
+    refset_id BIGINT NOT NULL,
+    referenced_component_id BIGINT NOT NULL,
+    target_component_id BIGINT NOT NULL,
+    CONSTRAINT association_refset_pk PRIMARY KEY(id, effective_time, active)
+);
+
+DROP TABLE IF EXISTS attribute_value_refset CASCADE;
+CREATE TABLE attribute_value_refset(
+    id UUID NOT NULL,
+    effective_time BIGINT NOT NULL,
+    active INTEGER NOT NULL,
+    module_id BIGINT NOT NULL,
+    refset_id BIGINT NOT NULL,
+    referenced_component_id BIGINT NOT NULL,
+    value_id BIGINT NOT NULL,
+    CONSTRAINT attribute_value_refset_pk PRIMARY KEY(id, effective_time, active)
+);
+
+DROP TABLE IF EXISTS simple_refset CASCADE;
+CREATE TABLE simple_refset(
+    id UUID NOT NULL,
+    effective_time BIGINT NOT NULL,
+    active INTEGER NOT NULL,
+    module_id BIGINT NOT NULL,
+    refset_id BIGINT NOT NULL,
+    referenced_component_id BIGINT NOT NULL,
+    CONSTRAINT simple_refset_pk PRIMARY KEY(id, effective_time, active)
+);
+
+DROP TABLE IF EXISTS complex_map_refset CASCADE;
+CREATE TABLE complex_map_refset(
+    id UUID NOT NULL,
+    effective_time BIGINT NOT NULL,
+    active INTEGER NOT NULL,
+    module_id BIGINT NOT NULL,
+    refset_id BIGINT NOT NULL,
+    referenced_component_id BIGINT NOT NULL,
+    map_group SMALLINT NOT NULL,
+    map_priority SMALLINT NOT NULL,
+    map_rule BIGINT,
+    map_advice BIGINT,
+    map_target VARCHAR(32),
+    correlation_id BIGINT NOT NULL,
+    CONSTRAINT complex_map_refset_pk PRIMARY KEY(id, effective_time, active)
+);
