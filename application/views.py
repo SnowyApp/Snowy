@@ -59,14 +59,11 @@ def create_user():
         return jsonify(message="Email or password not provided"), 400
 
     # Check so that the user doesn't exist.
-    user = User.query.get(data['email'])
-    if user:
+    if User.user_registered(data['email']):
         return jsonify(message="User already exists"), 400
 
     # Create the new user and return OK
-    user = User(data['email'], data['password'])
-    db.session.add(user)
-    db.session.commit()
+    User.create_user(data['email'], data['password'])
     return jsonify({'message': "ok"})
 
 
