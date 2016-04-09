@@ -270,7 +270,8 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y2", function(d) { return d.target.y + 0; });
+        .attr("y2", function(d) { return d.target.y + 0; })
+        .attr("style", "stroke:rgb(0,0,0);stroke-width:2");
 
    /* var node_drag = d3.behavior.drag()
         .on("dragstart", dragstart)
@@ -285,6 +286,7 @@ d3Chart._drawPoints = function(element, scales, data) {
             .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
             .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN;})
             .attr("y2", function(d) { return d.target.y; });
+
 
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
