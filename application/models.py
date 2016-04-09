@@ -105,6 +105,9 @@ class Token():
         self.user_email = user_email
 
     def store_token(self):
+        """
+        Inserts the token into the database.
+        """
         cur = get_db().cursor()
         try:
             cur.execute(INSERT_TOKEN_STATEMENT, (self.token, self.user_email))
