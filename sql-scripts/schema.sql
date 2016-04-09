@@ -6,9 +6,9 @@ CREATE TABLE usr(
 
 DROP TABLE IF EXISTS token CASCADE;
 CREATE TABLE token(
-    id INTEGER PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     token TEXT NOT NULL,
-    user_email TEXT NOT NULL
+    user_email TEXT NOT NULL REFERENCES usr (email)
 );
 
 DROP TABLE IF EXISTS concept CASCADE;
