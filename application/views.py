@@ -41,9 +41,6 @@ def login_required(func):
         if not g.user:
             abort(401)
 
-        # Update that the token has been acessed
-        token = Token.query.filter_by(token=token).first()
-        token.accessed = datetime.utcnow()
         return func(*args,**kwargs)
 
     return wrapper
