@@ -12,6 +12,8 @@ DB_USER = "simon"
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
 SELECT_USER_QUERY = "SELECT email, password_hash from usr WHERE email=%s;"
 
+INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
+
 def connect_db():
     """
     Connects to the database.
@@ -48,11 +50,11 @@ class User():
 
     def check_password(self, plain_pass):
         """ Checks if the password matches the stored hash """
-        return check_password_hash(self.password, plain_pass)
+        return check_password_hash(self.password_hash, plain_pass)
 
     def generate_token(self,expiration=1024):
         s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'email': self.email, 'hash': self.password})
+        return s.dumps({'email': self.email, 'hash': self.password_hash})
 
     @staticmethod
     def create_user(email, password):
@@ -64,16 +66,23 @@ class User():
             cur.close()
             return User(email, p_hash)
         except Exception as e:
-            print("FALLS: " + str(e))
             return None
 
     @staticmethod
     def user_registered(email):
         cur = get_db().cursor()
-        cur.execute("SELECT email, password_hash from usr WHERE email=%s;", (email,))
-        registered = cur.fetchone() is not None
+        cur.execute(SELECT_USER_QUERY, (email,))
+        user_data = cur.fetchone()
         cur.close()
-        return registered
+        return user_data is not None
+
+    @staticmethod
+    def get_user(email):
+        cur = get_db().cursor()
+        cur.execute(SELECT_USER_QUERY, (email,))
+        user_data = cur.fetchone()
+        cur.close()
+        return User(user_data[0], user_data[1])
 
 
 class Token():
@@ -85,3 +94,12 @@ class Token():
         self.token = token
         self.user_email = user_email
 
+    def store_token(self):
+        cur = get_db().cursor()
+        try:
+            cur.execute(INSERT_TOKEN_STATEMENT, (self.token, self.user_email))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(str(e))
+            pass

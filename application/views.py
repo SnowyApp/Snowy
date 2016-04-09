@@ -77,7 +77,7 @@ def login():
     if not 'email' in data or not 'password' in data:
         return jsonify(message="Email or password not provided"), 400
 
-    user = User.query.get(data['email'])
+    user = User.get_user(data['email'])
     if not user:
         return jsonify(message="Wrong user or password"), 400
 
@@ -85,13 +85,10 @@ def login():
         return jsonify(message="Wrong user or password"), 400
 
     # Generate a new token and store it in the database
-    token = token=user.generate_token()
-    stored_token = Token(token=token.decode('utf-8'))
-    db.session.add(stored_token)
-    user.tokens.append(stored_token)
-    db.session.commit()
-
-    return jsonify(token=stored_token.token)
+    token = user.generate_token()
+    token = Token(token.decode('utf-8'), user.email)
+    token.store_token()
+    return jsonify(token=token.token)
 
 
 @app.route('/verify', methods=['GET'])
