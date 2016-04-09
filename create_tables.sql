@@ -1,3 +1,16 @@
+DROP TABLE IF EXISTS usr CASCADE;
+CREATE TABLE usr(
+    email TEXT NOT NULL PRIMARY KEY,
+    password_hash TEXT NOT NULL
+);
+
+DROP TABLE IF EXISTS token CASCADE;
+CREATE TABLE token(
+    id INTEGER PRIMARY KEY,
+    token TEXT NOT NULL,
+    user_email TEXT NOT NULL
+);
+
 DROP TABLE IF EXISTS concept CASCADE;
 CREATE TABLE concept(
     id BIGINT NOT NULL,
@@ -17,7 +30,7 @@ CREATE TABLE description(
     concept_id BIGINT NOT NULL,
     language_code VARCHAR(2) NOT NULL,
     type_id BIGINT NOT NULL,
-    term VARCHAR(1024) NOT NULL,
+    term TEXT NOT NULL,
     case_significance_id BIGINT NOT NULL,
     CONSTRAINT description_pk PRIMARY KEY(id, effective_time, active)
 );
@@ -31,7 +44,7 @@ CREATE TABLE text_definition(
     concept_id BIGINT NOT NULL,
     language_code VARCHAR(2) NOT NULL,
     type_id BIGINT NOT NULL,
-    term VARCHAR(1024) NOT NULL,
+    term TEXT NOT NULL,
     case_significance_id BIGINT NOT NULL,
     CONSTRAINT text_definition_pk PRIMARY KEY(id, effective_time, active)
 );
