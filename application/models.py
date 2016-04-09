@@ -58,6 +58,9 @@ class User():
 
     @staticmethod
     def create_user(email, password):
+        """
+        Creates a user in the database with an email and password.
+        """
         cur = get_db().cursor()
         p_hash = generate_password_hash(password, salt_length=12)
         try:
@@ -70,6 +73,10 @@ class User():
 
     @staticmethod
     def user_registered(email):
+        """
+        Returns True if a user with the provided email is
+        registered. False otherwise.
+        """
         cur = get_db().cursor()
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
@@ -78,6 +85,9 @@ class User():
 
     @staticmethod
     def get_user(email):
+        """
+        Retrieves the user with the provided email.
+        """
         cur = get_db().cursor()
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
