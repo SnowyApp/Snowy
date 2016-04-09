@@ -13,7 +13,7 @@ INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);
 SELECT_USER_QUERY = "SELECT email, password_hash from usr WHERE email=%s;"
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
-SELECT_TOKEN_STATEMENT = "SELECT * from token WHERE token=%s AND user_email=%s;"
+SELECT_TOKEN_QUERY = "SELECT * from token WHERE token=%s AND user_email=%s;"
 
 def connect_db():
     """
@@ -117,7 +117,7 @@ class Token():
         except Exception as e:
             pass
 
-    def valid_token(self):
+    def is_valid_token(self):
         """
         Checks if the token is valid.
         """
@@ -128,7 +128,8 @@ class Token():
             cur.close()
             return token_data is not None
         except Exception as e:
-            pass
+            print(str(e))
+            return None
 
     def retrieve_user(self):
         """

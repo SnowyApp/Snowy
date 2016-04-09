@@ -22,9 +22,12 @@ def verify_auth_token(token):
     except BadSignature:
         return None
     token = Token(token, data['email'])
+    print(token.token)
+    print(token.user_email)
     if token.is_valid_token():
         return token.retrieve_user()
     else:
+        print("INVALID")
         return None
 
 
