@@ -55,6 +55,9 @@ class User():
         return check_password_hash(self.password_hash, plain_pass)
 
     def generate_token(self,expiration=1024):
+        """
+        Generates a token for the user.
+        """
         s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'email': self.email, 'hash': self.password_hash})
 
