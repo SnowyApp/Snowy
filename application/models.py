@@ -2,12 +2,15 @@ from datetime import datetime
 from application import app, db
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import g
 
 import psycopg2
 
 DB_NAME = "snomedct"
 DB_USER = "simon"
 
+INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
+SELECT_USER_QUERY = "SELECT email, password_hash from usr WHERE email=%s;"
 
 def connect_db():
     """
@@ -39,9 +42,9 @@ class User():
     """
     A user of the browser.
     """
-    def __init__(self, email, password):
+    def __init__(self, email, password_hash):
         self.email = email
-        self.password = generate_password_hash(password, salt_length=12)
+        self.password_hash = password_hash
 
     def check_password(self, plain_pass):
         """ Checks if the password matches the stored hash """
@@ -52,11 +55,28 @@ class User():
         return s.dumps({'email': self.email, 'hash': self.password})
 
     @staticmethod
-    def create_user(email):
+    def create_user(email, password):
         cur = get_db().cursor()
+        p_hash = generate_password_hash(password, salt_length=12)
+        try:
+            cur.execute(INSERT_USER_STATEMENT, (email, p_hash))
+            get_db().commit()
+            cur.close()
+            return User(email, p_hash)
+        except Exception as e:
+            print("FALLS: " + str(e))
+            return None
+
+    @staticmethod
+    def user_registered(email):
+        cur = get_db().cursor()
+        cur.execute("SELECT email, password_hash from usr WHERE email=%s;", (email,))
+        registered = cur.fetchone() is not None
+        cur.close()
+        return registered
 
 
-class Token(db.Model):
+class Token():
     """
     Represents a user token.
     """
