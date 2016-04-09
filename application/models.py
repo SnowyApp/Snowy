@@ -114,5 +114,4 @@ class Token():
             get_db().commit()
             cur.close()
         except Exception as e:
-            print(str(e))
             pass
