@@ -162,6 +162,33 @@ d3Chart._drawPoints = function(element, scales, data) {
         tick();
     }
 
+    var context = d3.select(element)
+        .on('contextmenu', function (d,i) {
+            var d3_target = d3.select(d3.event.target);
+
+            console.log("Testing...!");
+            if(d3_target.classed('node')){
+
+                console.log("Hello world!");
+                d3.event.preventDefault();
+
+                console.log('canvas');
+                var canvas = d3.select('.chart');
+
+                console.log('mouseposition');
+                var mousePosition = d3.mouse(this);
+
+                console.log('popup');
+                var popup = canvas.append('div')
+                    .attr('class', 'popup')
+                    .style('left', mousePosition[0] + 'px')
+                    .style('top', mousePosition[1] + 'px');
+
+                popup.append('h2')
+                    .text("Hello, world!");
+            }
+        });
+
     /**
      * This manually sets the distance between the nodes
      */
@@ -186,8 +213,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      *     rectangle and text go here...
      * </g>
      */
-    var nodeEnter = node.enter()
-        .append("g")
+    var nodeEnter = node.enter().append("g")
         .attr("class", "node")
         .attr("transform", function(d) {
             return "translate(" + d.x + ", " + d.y + ")";
@@ -243,30 +269,6 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
         .style("fill-opacity", 1);
-/*
-    d3.select(element)
-        .on('contextmenu', function (d,i) {
-            var d3_target = d3.select(d3.event.target);
-
-            console.log("Testing...!");
-            if(d3_target.classed('node')){
-
-                console.log("Hello world!");
-                d3.event.preventDefault();
-
-                //console.log('canvas');
-                //var canvas = d3.select(".canvas");
-
-                console.log('mouseposition');
-                var mousePosition = d3.mouse(this);
-
-                console.log('popup');
-                nodeEnter.append('div')
-                    .attr("class", "popup")
-                    .attr('width',100)
-                    .attr('height', 100);
-            }
-        });*/
 
     /**
      * Creates link which will be an array of objects with class line.link
@@ -299,8 +301,5 @@ d3Chart._drawPoints = function(element, scales, data) {
 
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
-
-
-
     node.exit().remove();
 };
