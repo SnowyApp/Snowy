@@ -129,7 +129,7 @@ def favorite_term():
                 not 'active' in data or not isinstance(data['active'], int):
             return jsonify(message="The concepts data is not providid accurately"), 400
         
-        g.user.add_favorite_term(data['id'], data['effective_time'], data['active'], data['term'])
+        g.user.add_favorite_term(data['id'], data['term'])
         return jsonify(message="ok")
     else:
         return json.dumps(g.user.get_favorite_terms())
