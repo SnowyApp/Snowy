@@ -16,6 +16,8 @@ INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);
 SELECT_TOKEN_QUERY = "SELECT * FROM token WHERE token=%s AND user_email=%s;"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 
+INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, effective_time, active, user_email, term) VALUES(%s, %s, %s, %s, %s)"
+
 def connect_db():
     """
     Connects to the database.
@@ -61,6 +63,18 @@ class User():
         s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'email': self.email, 'hash': self.password_hash})
 
+    def add_favorite_term(self, id, effective_time, active, term):
+        """
+        Adds a favorite term for the user in the database.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (id, effective_time, active, self.email, term))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
+ 
     @staticmethod
     def create_user(email, password):
         """
