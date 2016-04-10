@@ -1,9 +1,11 @@
+-- A table that stores the user data
 DROP TABLE IF EXISTS usr CASCADE;
 CREATE TABLE usr(
     email TEXT NOT NULL PRIMARY KEY,
     password_hash TEXT NOT NULL
 );
 
+-- A table that stores the tokens for logins
 DROP TABLE IF EXISTS token CASCADE;
 CREATE TABLE token(
     id BIGSERIAL PRIMARY KEY,
@@ -11,6 +13,7 @@ CREATE TABLE token(
     user_email TEXT NOT NULL REFERENCES usr (email)
 );
 
+-- A table that stores the concept data
 DROP TABLE IF EXISTS concept CASCADE;
 CREATE TABLE concept(
     id BIGINT NOT NULL,
@@ -21,6 +24,7 @@ CREATE TABLE concept(
     CONSTRAINT concept_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that stores the description data
 DROP TABLE IF EXISTS description CASCADE;
 CREATE TABLE description(
     id BIGINT NOT NULL,
@@ -35,6 +39,7 @@ CREATE TABLE description(
     CONSTRAINT description_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that stores the text_definition data
 DROP TABLE IF EXISTS text_definition CASCADE;
 CREATE TABLE text_definition(
     id BIGINT NOT NULL,
@@ -50,6 +55,7 @@ CREATE TABLE text_definition(
 );
 
 
+-- A table that stores the relationship data
 DROP TABLE IF EXISTS relationship CASCADE;
 CREATE TABLE relationship(
     id BIGINT NOT NULL,
@@ -65,6 +71,7 @@ CREATE TABLE relationship(
     CONSTRAINT relationship_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that stores the stated relationship
 DROP TABLE IF EXISTS stated_relationship cascade;
 CREATE TABlE stated_relationship(
     id BIGINT NOT NULL,
@@ -80,6 +87,7 @@ CREATE TABlE stated_relationship(
     CONSTRAINT stated_relationship_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that stores the language_refset
 DROP TABLE IF EXISTS language_refset CASCADE;
 CREATE TABLE language_refset(
     id UUID NOT NULL,
@@ -92,6 +100,7 @@ CREATE TABLE language_refset(
     CONSTRAINT language_refset_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that stores the association refset
 DROP TABLE IF EXISTS association_refset CASCADE;
 CREATE TABLE association_refset(
     id UUID NOT NULL,
@@ -104,6 +113,7 @@ CREATE TABLE association_refset(
     CONSTRAINT association_refset_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that stores the attribute value refset
 DROP TABLE IF EXISTS attribute_value_refset CASCADE;
 CREATE TABLE attribute_value_refset(
     id UUID NOT NULL,
@@ -116,6 +126,7 @@ CREATE TABLE attribute_value_refset(
     CONSTRAINT attribute_value_refset_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that stores the simple refset
 DROP TABLE IF EXISTS simple_refset CASCADE;
 CREATE TABLE simple_refset(
     id UUID NOT NULL,
@@ -127,6 +138,7 @@ CREATE TABLE simple_refset(
     CONSTRAINT simple_refset_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that stores the complex map refset
 DROP TABLE IF EXISTS complex_map_refset CASCADE;
 CREATE TABLE complex_map_refset(
     id UUID NOT NULL,
@@ -144,6 +156,7 @@ CREATE TABLE complex_map_refset(
     CONSTRAINT complex_map_refset_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that displays the favorite term relation
 DROP TABLE IF EXISTS favorite_term CASCADE;
 CREATE TABLE favorite_term(
     concept_id BIGINT NOT NULL,
@@ -159,6 +172,7 @@ CREATE TABLE favorite_term(
         FOREIGN KEY (user_email) REFERENCES usr (email)
 );
 
+-- Procedure that adds a favorite term for a user
 CREATE OR REPLACE FUNCTION add_favorite_term(cid BIGINT, email TEXT, term TEXT) 
 RETURNS void AS $$
 DECLARE
