@@ -20,6 +20,7 @@ INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_em
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
+GET_CONCEPT_PROCEDURE = "get_concept"
 
 def connect_db():
     """
@@ -184,3 +185,26 @@ class Token():
             cur.close()
         except Exception as e:
             print(str(e))
+
+
+class Concept():
+    
+    def __init__(self, cid, effective_time, active, term):
+        self.id = cid
+        self.effective_time = effective_time
+        self.active = active
+        self.term = term
+
+    @staticmethod
+    def get_concept(cid):
+        cur = get_db().cursor()
+        try:
+            cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
+            data = cur.fetchone()
+            return Concept(data[0], data[1], data[2], data[3])
+        except Exception as e:
+            print(e)
+            return None
+
+    def __str__(self):
+        return "<Concept " + str(self.id) + ": " + self.term + ">"
