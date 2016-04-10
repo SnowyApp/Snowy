@@ -183,3 +183,21 @@ BEGIN
         VALUES (cid, latest_concept.effective_time, latest_concept.active, email, term);
 END;
 $$ LANGUAGE plpgsql;
+
+-- Create a new type that stores concept data
+DROP TYPE IF EXISTS concept_result CASCADE;
+CREATE TYPE concept_result AS (id BIGINT, effective_time BIGINT, active INTEGER, term TEXT);
+
+CREATE OR REPLACE FUNCTION get_concept(cid BIGINT)
+RETURNS concept_result AS $$
+DECLARE
+    result concept_result;
+BEGIN
+    SELECT concept_id, effective_time, active, term INTO result
+        FROM description
+        WHERE concept_id=cid AND active = 1 AND type_id = 900000000000003001 
+        ORDER BY effective_time DESC
+        LIMIT 1;
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;
