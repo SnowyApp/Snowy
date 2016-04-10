@@ -16,8 +16,10 @@ INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);
 SELECT_TOKEN_QUERY = "SELECT * FROM token WHERE token=%s AND user_email=%s;"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 
-INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, effective_time, active, user_email, term) VALUES(%s, %s, %s, %s, %s);"
+INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term) VALUES(%s, %s, %s, %s, %s);"
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
+
+SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
 
 def connect_db():
     """
@@ -64,13 +66,13 @@ class User():
         s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'email': self.email, 'hash': self.password_hash})
 
-    def add_favorite_term(self, id, effective_time, active, term):
+    def add_favorite_term(self, cid, term):
         """
         Adds a favorite term for the user in the database.
         """
         cur = get_db().cursor()
         try:
-            cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (id, effective_time, active, self.email, term))
+            cur.callproc("add_favorite_term", (cid, self.email, term))
             get_db().commit()
             cur.close()
         except Exception as e:
@@ -85,7 +87,7 @@ class User():
             cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
             result = []
             for data in cur.fetchall():
-                result += [{"id": data[0], "effective_time": data[1], "active": data[2], "date": str(data[4]), "term": data[5]}]
+                result += [{"id": data[0], "favorite_date": str(data[4]), "term": data[5]}]
             return result
         except Exception as e:
             print(e)
