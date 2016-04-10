@@ -16,8 +16,8 @@ INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);
 SELECT_TOKEN_QUERY = "SELECT * FROM token WHERE token=%s AND user_email=%s;"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 
-INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term) VALUES(%s, %s, %s, %s, %s);"
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
+ADD_FAVORITE_TERM_PROCEDURE = "add_favorite_term"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
 GET_CONCEPT_PROCEDURE = "get_concept"
