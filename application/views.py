@@ -144,8 +144,12 @@ def get_concept(cid):
     return jsonify(concept.to_json())
 
 @app.route('/get_children/<int:cid>', methods=['GET'])
-def get_chirldren(cid):
+def get_children(cid):
     return json.dumps([concept.to_json() for concept in Concept.get_children(cid)])
+
+@app.route('/get_relations/<int:cid>', methods=['GET'])
+def get_relations(cid):
+    return json.dumps([concept.to_json() for concept in Concept.get_relations(cid)])
 
 @app.errorhandler(400)
 def error400(err):
