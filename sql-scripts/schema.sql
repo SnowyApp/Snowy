@@ -150,7 +150,7 @@ CREATE TABLE favorite_term(
     effective_time BIGINT NOT NULL,
     active INTEGER NOT NULL,
     user_email TEXT NOT NULL,
-    date_added DATE NOT NULL,
+    date_added DATE NOT NULL DEFAULT CURRENT_DATE,
     term_name TEXT NOT NULL,
     CONSTRAINT favorite_term_concept_fk 
         FOREIGN KEY (concept_id, effective_time, active) REFERENCES
