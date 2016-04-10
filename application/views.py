@@ -134,6 +134,7 @@ def favorite_term():
     else:
         return json.dumps(g.user.get_favorite_terms())
 
+
 @app.route('/concept/<int:cid>', methods=['POST', 'GET'])
 def get_concept(cid):
     concept = Concept.get_concept(cid)
