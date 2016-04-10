@@ -209,6 +209,9 @@ class Concept():
 
     @staticmethod
     def fetch_relations(cid, query):
+        """
+        Fetch data on relations. 
+        """
         cur = get_db().cursor()
         try:
             cur.execute(query, (cid,))
