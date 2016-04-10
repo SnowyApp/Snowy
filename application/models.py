@@ -207,10 +207,24 @@ class Concept():
         try:
             cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
             data = cur.fetchone()
+            
+            # The user didn't send a valid concept id
+            if data is None:
+                return None
+
             return Concept(data[0], data[1], data[2], data[3])
         except Exception as e:
             print(e)
             return None
+
+    def to_json(self):
+        """
+        Returns a JSON representation of the concept.
+        """
+        return {"id": self.id,
+                "effective_time": self.effective_time,
+                "active": self.active,
+                "term": self.term}
 
     def __str__(self):
         """
