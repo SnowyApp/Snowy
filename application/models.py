@@ -20,10 +20,15 @@ SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 ADD_FAVORITE_TERM_PROCEDURE = "add_favorite_term"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
-SELECT_CHILDREN_QUERY = """SELECT B.type_id,B.source_id, B.type_id, A.term 
+SELECT_CHILDREN_QUERY = """SELECT B.source_id,A.effective_time, A.active, A.term 
                                 FROM relationship B JOIN description A 
                                 ON B.source_id=a.concept_id 
                                 WHERE B.destination_id=%s and b.active=1;"""
+
+SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.effective_time, B.active, B.term 
+                                FROM relationship A JOIN description B ON A.destination_id=B.concept_id 
+                                JOIN language_refset C ON B.id=C.referenced_component_id 
+                                WHERE A.source_id=%s AND A.active=1 AND B.type_id=900000000000003001;"""
 GET_CONCEPT_PROCEDURE = "get_concept"
 
 def connect_db():
@@ -218,6 +223,23 @@ class Concept():
         except Exception as e:
             print(e)
             return None
+
+    @staticmethod
+    def get_relations(cid):
+        """
+        Returns the relations for the given concept.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(SELECT_RELATIONS_QUERY, (cid,))
+            result = []
+            for data in cur.fetchall():
+                result += [Concept(data[0], data[1], data[2], data[3])]
+            return result
+        except Exception as e:
+            print(e)
+            return None
+
 
     @staticmethod
     def get_concept(cid):
