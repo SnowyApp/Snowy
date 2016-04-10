@@ -207,39 +207,32 @@ class Concept():
         self.active = active
         self.term = term
 
+    @staticmethod
+    def fetch_relations(cid, query):
+        cur = get_db().cursor()
+        try:
+            cur.execute(query, (cid,))
+            result = []
+            for data in cur.fetchall():
+                result += [Concept(data[0], data[1], data[2], data[3])]
+            return result
+        except Exception as e:
+            print(e)
+            return None
 
     @staticmethod
     def get_children(cid):
         """
         Returns the children of the concept. 
         """
-        cur = get_db().cursor()
-        try:
-            cur.execute(SELECT_CHILDREN_QUERY, (cid,))
-            result = []
-            for data in cur.fetchall():
-                result += [Concept(data[0], data[1], data[2], data[3])]
-            return result
-        except Exception as e:
-            print(e)
-            return None
+        return Concept.fetch_relations(cid, SELECT_CHILDREN_QUERY)
 
     @staticmethod
     def get_relations(cid):
         """
         Returns the relations for the given concept.
         """
-        cur = get_db().cursor()
-        try:
-            cur.execute(SELECT_RELATIONS_QUERY, (cid,))
-            result = []
-            for data in cur.fetchall():
-                result += [Concept(data[0], data[1], data[2], data[3])]
-            return result
-        except Exception as e:
-            print(e)
-            return None
-
+        return Concept.fetch_relations(cid, SELECT_RELATIONS_QUERY)
 
     @staticmethod
     def get_concept(cid):
