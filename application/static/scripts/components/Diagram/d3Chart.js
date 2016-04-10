@@ -243,7 +243,7 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
         .style("fill-opacity", 1);
-
+/*
     d3.select(element)
         .on('contextmenu', function (d,i) {
             var d3_target = d3.select(d3.event.target);
@@ -266,7 +266,7 @@ d3Chart._drawPoints = function(element, scales, data) {
                     .attr('width',100)
                     .attr('height', 100);
             }
-        });
+        });*/
 
     /**
      * Creates link which will be an array of objects with class line.link
@@ -284,8 +284,7 @@ d3Chart._drawPoints = function(element, scales, data) {
     *   d.source.x + 10 y2 = d.source.y + 5>
     * </g>
     */
-    link.enter().append('g')
-        .append('line')
+    link.enter().insert('line','g')
         .attr("class", "link")
         .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
