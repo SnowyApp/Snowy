@@ -1,5 +1,5 @@
 from application import app, db
-from application.models import User,Token
+from application.models import User,Token,Concept
 from flask import request, jsonify, abort, g
 from functools import wraps
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
@@ -133,6 +133,15 @@ def favorite_term():
         return jsonify(message="ok")
     else:
         return json.dumps(g.user.get_favorite_terms())
+
+@app.route('/concept/<int:cid>', methods=['POST', 'GET'])
+def get_concept(cid):
+    concept = Concept.get_concept(cid)
+    if not concept:
+        return jsonify(message="Invalid concept id"), 400
+
+    return jsonify(concept.to_json())
+
 
 @app.errorhandler(400)
 def error400(err):
