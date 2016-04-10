@@ -16,7 +16,8 @@ INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);
 SELECT_TOKEN_QUERY = "SELECT * FROM token WHERE token=%s AND user_email=%s;"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 
-INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, effective_time, active, user_email, term) VALUES(%s, %s, %s, %s, %s)"
+INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, effective_time, active, user_email, term) VALUES(%s, %s, %s, %s, %s);"
+SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 
 def connect_db():
     """
@@ -74,6 +75,21 @@ class User():
             cur.close()
         except Exception as e:
             print(e)
+
+    def get_favorite_terms(self):
+        """
+        Retrievs all the favorite terms for the user in the database.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
+            result = []
+            for data in cur.fetchall():
+                result += [{"id": data[0], "effective_time": data[1], "active": data[2], "date": str(data[4]), "term": data[5]}]
+            return result
+        except Exception as e:
+            print(e)
+            return None
  
     @staticmethod
     def create_user(email, password):
