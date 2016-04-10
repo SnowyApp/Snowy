@@ -20,6 +20,10 @@ SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 ADD_FAVORITE_TERM_PROCEDURE = "add_favorite_term"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
+SELECT_CHILDREN_QUERY = """SELECT B.type_id,B.source_id, B.type_id, A.term 
+                                FROM relationship B JOIN description A 
+                                ON B.source_id=a.concept_id 
+                                WHERE B.destination_id=%s and b.active=1;"""
 GET_CONCEPT_PROCEDURE = "get_concept"
 
 def connect_db():
@@ -197,6 +201,23 @@ class Concept():
         self.effective_time = effective_time
         self.active = active
         self.term = term
+
+
+    @staticmethod
+    def get_children(cid):
+        """
+        Returns the children of the concept. 
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(SELECT_CHILDREN_QUERY, (cid,))
+            result = []
+            for data in cur.fetchall():
+                result += [Concept(data[0], data[1], data[2], data[3])]
+            return result
+        except Exception as e:
+            print(e)
+            return None
 
     @staticmethod
     def get_concept(cid):
