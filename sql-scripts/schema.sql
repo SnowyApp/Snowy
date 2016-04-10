@@ -158,3 +158,14 @@ CREATE TABLE favorite_term(
     CONSTRAINT favorite_term_user_fk 
         FOREIGN KEY (user_email) REFERENCES usr (email)
 );
+
+CREATE OR REPLACE FUNCTION add_favorite_term(cid BIGINT, email TEXT, term TEXT) 
+RETURNS void AS $$
+DECLARE
+	latest_concept RECORD;
+BEGIN
+    SELECT * FROM concept INTO latest_concept WHERE active=1 AND id=cid ORDER BY effective_time DESC LIMIT 1;
+    INSERT INTO favorite_term (concept_id, effective_time, active, user_email, term)
+        VALUES (cid, latest_concept.effective_time, latest_concept.active, email, term);
+END;
+$$ LANGUAGE plpgsql;
