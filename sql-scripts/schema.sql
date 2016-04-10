@@ -143,3 +143,18 @@ CREATE TABLE complex_map_refset(
     correlation_id BIGINT NOT NULL,
     CONSTRAINT complex_map_refset_pk PRIMARY KEY(id, effective_time, active)
 );
+
+DROP TABLE IF EXISTS favorite_term CASCADE;
+CREATE TABLE favorite_term(
+    concept_id BIGINT NOT NULL,
+    effective_time BIGINT NOT NULL,
+    active INTEGER NOT NULL,
+    user_email TEXT NOT NULL,
+    date_added DATE NOT NULL,
+    term_name TEXT NOT NULL,
+    CONSTRAINT favorite_term_concept_fk 
+        FOREIGN KEY (concept_id, effective_time, active) REFERENCES
+        concept (id, effective_time, active),
+    CONSTRAINT favorite_term_user_fk 
+        FOREIGN KEY (user_email) REFERENCES usr (email)
+);
