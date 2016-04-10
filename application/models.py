@@ -188,6 +188,9 @@ class Token():
 
 
 class Concept():
+    """
+    Represents a concept in the Snomed CT database
+    """
     
     def __init__(self, cid, effective_time, active, term):
         self.id = cid
@@ -197,6 +200,9 @@ class Concept():
 
     @staticmethod
     def get_concept(cid):
+        """
+        Returns the concept with the given concept id.
+        """
         cur = get_db().cursor()
         try:
             cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
@@ -207,4 +213,7 @@ class Concept():
             return None
 
     def __str__(self):
+        """
+        Returns a string representation of the concept 
+        """
         return "<Concept " + str(self.id) + ": " + self.term + ">"
