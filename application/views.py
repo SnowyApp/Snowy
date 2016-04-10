@@ -111,6 +111,24 @@ def logout():
     return jsonify(message="Logged out")
 
 
+@app.route('/favorite_term', methods=['POST'])
+@login_required
+def favorite_term():
+    """
+    Saves a term as the users favorite.
+    """
+    data = request.get_json()
+
+    # Check so that the data is valid
+    if not 'id' in data or not isinstance(data['id'], int) or \
+            not 'term' in data or not isinstance(data['term'], str) or \
+            not 'effective_time' in data or not isinstance(data['effective_time'], int) or \
+            not 'active' in data or not isinstance(data['active'], int):
+        return jsonify(message="The concepts data is not providid accurately"), 400
+    
+    g.user.add_favorite_term(data['id'], data['effective_time'], data['active'], data['term'])
+    return jsonify(message="ok")
+
 @app.errorhandler(400)
 def error400(err):
     """
