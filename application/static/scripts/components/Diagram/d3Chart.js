@@ -25,6 +25,7 @@ const NODE_HEIGHT = 50;
 
 const WIDTH_MARGIN = 500;
 
+
 /**
  * This will be used to "inject" an SVG-element to our webpage that you can
  * already do with
@@ -51,22 +52,47 @@ d3Chart.create = function(element, props, state) {
      *
      * It just is a different way of writing, it is the D3-way!
      */
+    var width = element.offsetWidth;
+    var height = element.offsetHeight;
+
+    var zoom = d3.behavior.zoom()
+        .scaleExtent([1, 10])
+        .on("zoom", zoomed);
+
     var svg = d3.select(element).append("svg")
-        .attr("width", 1000)
-        .attr("height", 500)
-        .attr("class", "d3");
+          .attr("width", "100%")
+          .attr("height", "100%")
+          .attr("class", "d3")
+        .append("g")
+        .attr("class" , "outer")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("transform", "translate(" + 0 + "," + 0 + ")")
+        .call(zoom)
+
+    var rect = svg.append("rect")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("class", "scrollable")
+        .style("fill", "none")
+        .style("pointer-events", "all");
 
     /**
      * To add more than one Shape or text element to the SVG-element you have
      * to put them in a g-element. We give this one the class nodes
      *
      * <svg class = d3 width = props.width height = props.height>
-     *      <g class = nodes/>
+     *      <g class = diagram/>
      *      </g>
      * </svg>
      */
-    svg.append("g")
-        .attr("class", "nodes");
+    var g = svg.append("g")
+        .attr("class", "diagram")
+
+
+    function zoomed() {
+        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
 
     /**
      * The tree variable will now grow and sprout to a real tree-object with
@@ -143,7 +169,8 @@ d3Chart._drawPoints = function(element, scales, data) {
      * I don't think this g element is necessary actually but I don't want
      * to remove it now and change the some line since I am too lazy to test it.
      */
-    var g = d3.select(element).selectAll(".nodes");
+    var g = d3.select(element).selectAll(".diagram");
+
 
     /**
      * nodes and links will become arrays which contains the data for all
@@ -153,8 +180,12 @@ d3Chart._drawPoints = function(element, scales, data) {
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
 
-    var node_drag = d3.behavior.drag()
+
+    var drag = d3.behavior.drag()
+        .origin(function(d) { return d; })
+        .on("dragstart", dragstarted)
         .on("drag", dragmove)
+        .on("dragend", dragended);
 
     function dragmove(d, i) {
         d.px += d3.event.dx;
@@ -194,7 +225,7 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("transform", function(d) {
             return "translate(" + d.x + ", " + d.y + ")";
         })
-        .call(node_drag);
+        .call(drag);
     /**
      * Now we add a rectangle element and use conditional expressions to
      * style them. The ry and rx elements are used to give the eclipse shape
@@ -289,5 +320,20 @@ d3Chart._drawPoints = function(element, scales, data) {
 
 
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    }
+
+
+
+    function dragstarted(d) {
+        d3.event.sourceEvent.stopPropagation();
+        d3.select(this).classed("dragging", true);
+    }
+
+    function dragged(d) {
+        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    }
+
+    function dragended(d) {
+        d3.select(this).classed("dragging", false);
     }
 };
