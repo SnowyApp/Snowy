@@ -1,10 +1,10 @@
-from application import app, db
+from application import app, db, es
 from application.models import User,Token,Concept
+from datetime import datetime
 from flask import request, jsonify, abort, g
 from functools import wraps
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from sqlalchemy import and_
-from datetime import datetime
 
 import json
 
@@ -143,13 +143,32 @@ def get_concept(cid):
 
     return jsonify(concept.to_json())
 
+
 @app.route('/get_children/<int:cid>', methods=['GET'])
 def get_children(cid):
     return json.dumps([concept.to_json() for concept in Concept.get_children(cid)])
 
+
 @app.route('/get_relations/<int:cid>', methods=['GET'])
 def get_relations(cid):
     return json.dumps([concept.to_json() for concept in Concept.get_relations(cid)])
+
+
+@app.route('/search/<search_term>', methods=['GET'])
+def search(search_term):
+    query = {
+            "query": {
+                "multi_match": {
+                    "fields": ["id", "term"],
+                    "query": search_term,
+                    "type": "cross_fields",
+                    "use_dis_max": False
+                }
+            },
+            "size": 10
+        }
+    return jsonify(es.search(index="desc", body=query))
+
 
 @app.errorhandler(400)
 def error400(err):
