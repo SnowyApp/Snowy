@@ -1,18 +1,19 @@
 
 module.exports = React.createClass({
+
     render: function() {
         return <Search />;
     }
 });
 
 /*
-Handles user input
-*/
+ Handles user input
+ */
 var SearchBox = React.createClass({
-	doSearch: function() {
-		var query = ReactDOM.findDOMNode(this.refs.searchInput).value;
-		this.props.doSearch(query);
-	},
+    doSearch: function() {
+        var query = ReactDOM.findDOMNode(this.refs.searchInput).value;
+        this.props.doSearch(query);
+    },
 
     handleKeyPress: function(target) {
         if(target.charCode==13){
@@ -20,19 +21,19 @@ var SearchBox = React.createClass({
         }
     },
 
-	render:function(){
-		return(
+    render:function(){
+        return(
             <div>
                 <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyPress={this.handleKeyPress} />
                 <Button onClick={this.doSearch} >Search</Button>
             </div>
         )
-	}
+    }
 });
 
 /*
-Displays the results with react-bootstrap table component
-*/
+ Displays the results with react-bootstrap table component
+ */
 var TermTable = React.createClass({
     render:function(){
         var optionsProp = {
@@ -44,8 +45,8 @@ var TermTable = React.createClass({
         return(
             <div className="search-results">
                 <BootstrapTable data={this.props.data} hover={true} options={optionsProp}>
-                <TableHeaderColumn dataField="id" isKey={true} width="30">ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="name" >Name</TableHeaderColumn>
+                    <TableHeaderColumn dataField="id" isKey={true} width="30">ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField="name" >Name</TableHeaderColumn>
                 </BootstrapTable>
             </div>
         );
@@ -53,8 +54,8 @@ var TermTable = React.createClass({
 });
 
 /*
-The main component
-*/
+ The main component
+ */
 var Search = React.createClass({
     doSearch:function(queryText){
         var queryResult=[];
@@ -79,12 +80,12 @@ var Search = React.createClass({
                 console.log('Failed to access API')
             },
             success: function(result){
-                console.log("api success")
+                console.log("api success");
                 for (var i in result["matches"]){
                     queryResult.push({
                         name: result["matches"][i]["term"],
                         id: result["matches"][i]["conceptId"]
-                    })
+                    });
                 }
                 this.setState({
                     query: queryText,
