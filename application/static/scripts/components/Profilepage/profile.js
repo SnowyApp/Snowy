@@ -352,7 +352,7 @@ var DiagramPage = React.createClass({
             });
     },
     
-        //Remove element from the term table
+    //Remove element from the diagram table
     removeDiagram: function(ID){
         //Remove element locally (for responsiveness)
         this.setState({
