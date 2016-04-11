@@ -25,14 +25,14 @@ var Bar = React.createClass({
                 'xlink': 'http://www.w3.org/1999/xlink',
                 version: '1.1'
             })
-            .node().outerHTML;
+            .node().parentNode.innerHTML;
 
         var blob = new Blob([html], {type: "image/svg+xml"}),
             url = window.URL.createObjectURL(blob);
 
         var link = document.createElement("a");
         link.download = "test.svg";
-        link.href = "data:application/xml;charset=utf-8," + url;
+        link.href = url;
         link.click();
     },
     exportPNG: function(){
