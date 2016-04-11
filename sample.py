@@ -8,5 +8,6 @@ requests.post(url + "/register", json=user)
 data = requests.post(url + "/login", json=user)
 auth = {"Authorization": json.loads(data.text)["token"]}
 
-response = json.loads(requests.get(url + "/search/cancer").text)
+def search(term):
+    return json.loads(requests.get(url + "/search/cancer").text)['hits']['hits']
 
