@@ -8,6 +8,10 @@
     height: 100%;
 }
 
+.node_selected {
+
+}
+
 .node rect {
     border-radius: 10px;
     border: 4px double;
