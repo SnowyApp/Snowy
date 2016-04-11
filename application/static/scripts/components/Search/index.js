@@ -22,7 +22,7 @@ var SearchBox = React.createClass({
 
 	render:function(){
 		return(
-            <div>
+            <div id = "searchbar">
                 <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyPress={this.handleKeyPress} />
                 <Button onClick={this.doSearch} >Search</Button>
             </div>

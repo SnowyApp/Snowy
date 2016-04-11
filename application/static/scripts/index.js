@@ -55,11 +55,17 @@ var Bar = React.createClass({
     render: function() {
         return (
             <div className="bar">
-                <Button onClick={this.exportSVG}>Export as SVG</Button>
-                <Button onClick={this.exportPNG}>Export as PNG</Button>
                 <Search />
-                <Button>Login</Button>
+                <ButtonToolbar id = "buttons">
+                    <SplitButton bsStyle = "primary" title = "Export" id = "Export">
+                        <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
+                        <MenuItem divider />
+                        <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
+                    </SplitButton>
+                    <Button bsStyle = "primary">Login</Button>
+                </ButtonToolbar>
             </div>
+
         );
     }
 });

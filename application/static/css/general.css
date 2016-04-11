@@ -46,7 +46,7 @@ section {
     width: 100%;
 
     /* place the bar at the top of the parent at all times */
-    position: fixed;
+
     top: 0;
     z-index: 100;
 
@@ -61,7 +61,18 @@ section {
 }
 
 .search {
-    width: 500px;
-
+    width: 80%;
     float:left;
+    text-align: center;
+}
+
+#buttons {
+  width: 20%;
+    float:left;
+}
+#searchbar{
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+    width: auto;
 }
