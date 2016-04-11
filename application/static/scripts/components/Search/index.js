@@ -1,3 +1,6 @@
+var Select = require('react-select');
+
+
 
 module.exports = React.createClass({
 
@@ -10,13 +13,11 @@ module.exports = React.createClass({
  Handles user input
  */
 var SearchBox = React.createClass({
-
     getInitialState:function(){
         return{
             timeout:null,
         }
     },
-
     doSearch: function() {
         var query = ReactDOM.findDOMNode(this.refs.searchInput).value;
         if(query.length > 2){
@@ -49,18 +50,37 @@ var SearchBox = React.createClass({
  Displays the results with react-bootstrap table component
  */
 var TermTable = React.createClass({
+    getInitialState:function(){
+        return{
+            hideTable: true,
+        }
+    },
+
+    componentWillReceiveProps: function(nextProps){
+        var hide = true;
+        if(nextProps.data.length > 0){
+            hide = false;
+        }
+        this.setState({
+            hideTable: hide
+        });
+    },
+
     render:function(){
+
         var optionsProp = {
             onRowClick: function(row){
                 //This is supposed to generate a diagram on the selected term
-                alert(row.name);
-            }
+                this.setState({
+                    hideTable: true
+                });
+            }.bind(this)
         };
         return(
             <div className="search-results">
                 <BootstrapTable data={this.props.data} hover={true} options={optionsProp}>
-                    <TableHeaderColumn dataField="id" isKey={true} width="30">ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField="name" >Name</TableHeaderColumn>
+                    <TableHeaderColumn dataField="id" isKey={true} width="100" hidden = {true}>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField="name" hidden = {this.state.hideTable}>Name</TableHeaderColumn>
                 </BootstrapTable>
             </div>
         );
@@ -120,8 +140,9 @@ var Search = React.createClass({
         return (
             <div className="search">
                 <SearchBox query={this.state.query} doSearch={this.doSearch}/>
-                <TermTable data={this.state.searchData}/>
+                <TermTable data={this.state.searchData} />
             </div>
         );
     }
 });
+
