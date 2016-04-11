@@ -1,78 +1,47 @@
-(function(root, factory) {
-	if (typeof module === 'object' && module.exports) {
-		module.exports = function(d3) {
-			d3.contextMenu = factory(d3);
-			return d3.contextMenu;
-		};
-	} else {
-		root.d3.contextMenu = factory(root.d3);
-	}
-}(	this, 
-	function(d3) {
-		return function (menu, opts) {
+d3.contextMenu = function (menu, openCallback) {
 
-			var openCallback,
-				closeCallback;
+    // create the div element that will hold the context menu
+    d3.selectAll('.d3-context-menu').data([1])
+        .enter()
+        .append('div')
+        .attr('class', 'd3-context-menu');
 
-			if (typeof opts === 'function') {
-				openCallback = opts;
-			} else {
-				opts = opts || {};
-				openCallback = opts.onOpen;
-				closeCallback = opts.onClose;
-			}
+    // close menu
+    d3.select('body').on('click.d3-context-menu', function() {
+        d3.select('.d3-context-menu').style('display', 'none');
+    });
 
-			// create the div element that will hold the context menu
-			d3.selectAll('.d3-context-menu').data([1])
-				.enter()
-				.append('div')
-				.attr('class', 'd3-context-menu');
+    // this gets executed when a contextmenu event occurs
+    return function(data, index) {
+        var elm = this;
 
-			// close menu
-			d3.select('body').on('click.d3-context-menu', function() {
-				d3.select('.d3-context-menu').style('display', 'none');
-				if (closeCallback) {
-					closeCallback();
-				}
-			});
+        d3.selectAll('.d3-context-menu').html('');
+        var list = d3.selectAll('.d3-context-menu').append('ul');
+        list.selectAll('li').data(menu).enter()
+            .append('li')
+            .html(function(d) {
+                return (typeof d.title === 'string') ? d.title : d.title(data);
+            })
+            .on('click', function(d, i) {
+                d.action(elm, data, index);
+                d3.select('.d3-context-menu').style('display', 'none');
+            });
 
-			// this gets executed when a contextmenu event occurs
-			return function(data, index) {
-				var elm = this;
+        // the openCallback allows an action to fire before the menu is displayed
+        // an example usage would be closing a tooltip
+        if (openCallback) {
+            if (openCallback(data, index) === false) {
+                return;
+            }
+        }
 
-				d3.selectAll('.d3-context-menu').html('');
-				var list = d3.selectAll('.d3-context-menu').append('ul');
-				list.selectAll('li').data(typeof menu === 'function' ? menu(data) : menu).enter()
-					.append('li')
-					.html(function(d) {
-						return (typeof d.title === 'string') ? d.title : d.title(data);
-					})
-					.on('click', function(d, i) {
-						d.action(elm, data, index);
-						d3.select('.d3-context-menu').style('display', 'none');
+        // display context menu
+        d3.select('.d3-context-menu')
+            .style('left', (d3.event.pageX - 2) + 'px')
+            .style('top', (d3.event.pageY - 2) + 'px')
+            .style('display', 'block');
 
-						if (closeCallback) {
-							closeCallback();
-						}
-					});
-
-				// the openCallback allows an action to fire before the menu is displayed
-				// an example usage would be closing a tooltip
-				if (openCallback) {
-					if (openCallback(data, index) === false) {
-						return;
-					}
-				}
-
-				// display context menu
-				d3.select('.d3-context-menu')
-					.style('left', (d3.event.pageX - 2) + 'px')
-					.style('top', (d3.event.pageY - 2) + 'px')
-					.style('display', 'block');
-
-				d3.event.preventDefault();
-				d3.event.stopPropagation();
-			};
-		};
-	}
-));
+        d3.event.preventDefault();
+        d3.event.stopPropagation();
+    };
+};
