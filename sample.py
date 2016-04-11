@@ -8,5 +8,5 @@ requests.post(url + "/register", json=user)
 data = requests.post(url + "/login", json=user)
 auth = {"Authorization": json.loads(data.text)["token"]}
 
-print(json.loads(requests.get(url + "/get_relations/16763008").text))
+response = json.loads(requests.get(url + "/search/cancer").text)
 
