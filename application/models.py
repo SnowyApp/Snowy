@@ -1,5 +1,5 @@
 from datetime import datetime
-from application import app, db
+from application import app
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import g

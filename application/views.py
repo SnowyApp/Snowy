@@ -1,10 +1,9 @@
-from application import app, db, es
+from application import app, es
 from application.models import User,Token,Concept
 from datetime import datetime
 from flask import request, jsonify, abort, g
 from functools import wraps
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
-from sqlalchemy import and_
 
 import json
 
@@ -137,6 +136,9 @@ def favorite_term():
 
 @app.route('/concept/<int:cid>', methods=['POST', 'GET'])
 def get_concept(cid):
+    """
+    Returns the concept for the specified id
+    """
     concept = Concept.get_concept(cid)
     if not concept:
         return jsonify(message="Invalid concept id"), 400
@@ -146,16 +148,25 @@ def get_concept(cid):
 
 @app.route('/get_children/<int:cid>', methods=['GET'])
 def get_children(cid):
+    """
+    Returns the children for the specified id.
+    """
     return json.dumps([concept.to_json() for concept in Concept.get_children(cid)])
 
 
 @app.route('/get_relations/<int:cid>', methods=['GET'])
 def get_relations(cid):
+    """
+    Returns the relations for the given id.
+    """
     return json.dumps([concept.to_json() for concept in Concept.get_relations(cid)])
 
 
 @app.route('/search/<search_term>', methods=['GET'])
 def search(search_term):
+    """
+    Searches the database for the given term.
+    """
     query = {
             "query": {
                 "multi_match": {
