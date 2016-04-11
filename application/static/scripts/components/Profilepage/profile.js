@@ -28,6 +28,40 @@
             dateAdded: new Date("March 7, 2016 11:32:11")
         }
     ];
+    
+    var dummyDiagrams = 
+    [
+        {
+            ID: 308916002,
+            name: "Environment",
+            dateAdded: new Date("March 3, 2016 12:53:26"),
+            parameters: {
+                            p1: "stuff1",
+                            p2: "stuff2",
+                            p3: "stuff3"
+                        }
+        },
+        {
+            ID: 99991999,
+            name: "beastmode",
+            dateAdded: new Date("March 2, 2016 12:53:26"),
+            parameters: {
+                            p1: "stuff1",
+                            p2: "stuff2",
+                            p3: "stuff3"
+                        }
+        },
+        {
+            ID: 52300011,
+            name: "extra$$",
+            dateAdded: new Date("March 1, 2016 12:53:26"),
+            parameters: {
+                            p1: "stuff1",
+                            p2: "stuff2",
+                            p3: "stuff3"
+                        }
+        }
+    ];
 /*
 ,
         {
@@ -128,7 +162,7 @@ var ProfilePage = React.createClass({
         return data;
     },
     
-    //Remove and object from array with .ID == ID
+    //Remove an object from array with .ID == ID
     removeByID: function(array, ID){
         //Find the object and remove it from the array
         for(var i = 0; i < array.length; i++){              
@@ -148,7 +182,7 @@ var ProfilePage = React.createClass({
                 content = <TermPage terms={dummyTerms} openTerm={this.props.openTerm} removeID={this.removeByID} nameSort={this.sortByName} IDSort={this.sortByID} dateSort={this.sortByDate}/>;
                 break;
             case 'Diagram':
-                content = <DiagramPage />;
+                content = <DiagramPage removeID={this.removeByID}/>;
                 break;
             case 'Konto':
                 content = <AccountPage />;
@@ -308,16 +342,44 @@ var Term = React.createClass({
     }
 });
 
+
+
 var DiagramPage = React.createClass({
+
+    getInitialState: function(){
+        return({
+            diagrams: dummyDiagrams
+            });
+    },
+    
+        //Remove element from the term table
+    removeDiagram: function(ID){
+        //Remove element locally (for responsiveness)
+        this.setState({
+            diagrams: this.props.removeID(this.state.diagrams, ID)
+        });
+        //TODO: Remove element from database
+    },
+    
     render: function(){
+            //Generate the table rows
+        var diagramArray = this.state.diagrams.map(function(diagram){
+            //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
+            var day = ("0" + diagram.dateAdded.getDate()).slice(-2);
+            var month = ("0" + diagram.dateAdded.getMonth()).slice(-2);
+            var year = diagram.dateAdded.getUTCFullYear();
+            
+            var dateString = year + "-" + month + "-" + day;
+
+            return(
+                <DiagramElement key={diagram.ID} name={diagram.name} id={diagram.ID} date={dateString} parameters={diagram.parameters} removeID={this.removeDiagram}/>
+            );
+        }, this);
         return(
             <div>
                 <h1>Diagram</h1>
                 <hr className="favorites"></hr>
-            
-                <DiagramElement name="Diagram 1 (2016-03-04)" id="1337"/>
-                <DiagramElement name="Diagram 2 (2016-03-04)" id="1338"/>
-                <DiagramElement name="Diagram 3 (2016-03-04)" id="1339"/>
+                {diagramArray}
             </div>
         );
     }
@@ -330,14 +392,50 @@ var DiagramElement = React.createClass({
                 <div className="panel panel-default">
                     <div className="panel-heading accordionHeader" role="tab" id="headingOne">
                         <h4 className="panel-title">
-                            <a role="button" className="collapsed" data-toggle="collapse" href={"#" + this.props.id} aria-expanded="false" aria-controls="collapseOne">
-                                {this.props.name}
-                            </a>
+                            <table className="favorites">
+                                <tbody>
+                                    <tr>                                    
+                                        <td className="diagramName" >
+                                            <a role="button" className="collapsed diagramName" data-toggle="collapse" href={"#" + this.props.id} aria-expanded="false" aria-controls="collapseOne">
+                                                {this.props.name}
+                                            </a>
+                                        </td> 
+                                        <td className="diagramRemove">
+                                            <span className="glyphicon glyphicon-remove removeLink" aria-hidden="true" onClick={this.props.removeID.bind(null, this.props.id)}></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
                         </h4>
                     </div>
                     <div id={this.props.id} className="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                         <div className="panel-body">
-                            Barn: 1
+                            <table className="favorites">
+                                <tbody>
+                                    <tr>                                    
+                                        <td>ID:</td>
+                                        <td>{this.props.id}</td>
+                                    </tr>
+                                    <tr>                                    
+                                        <td>Datum:</td>
+                                        <td>{this.props.date}</td>
+                                    </tr>
+                                    <tr>                                    
+                                        <td>Parameter 1:</td>
+                                        <td>{this.props.parameters.p1}</td>
+                                    </tr>
+                                    <tr>                                    
+                                        <td>Parameter 2:</td>
+                                        <td>{this.props.parameters.p2}</td>
+                                    </tr>      
+                                    <tr>                                    
+                                        <td>Parameter 3:</td>
+                                        <td>{this.props.parameters.p3}</td>
+                                    </tr>                                       
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

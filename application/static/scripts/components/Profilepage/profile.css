@@ -98,20 +98,57 @@ td.favorites {
     font-size: 1.3em;
 }
 
-td.favorites#RemoveGlyph {
+#RemoveGlyph {
     text-align: center;
     color: red;
 }
 
-td.favorites#RemoveGlyph:hover {
+#RemoveGlyph:hover {
     color: red;
     cursor: pointer;
     font-size: 1.45em;
+	
 }
 
+/* Diagram */
+
+.removeLink {
+    color: red;
+    margin: -3px;
+    
+}
+
+.removeLink:hover{
+    
+    cursor: pointer;
+    font-size: 1.3em;
+}
+
+td.diagramName {
+    width: 97%;
+    font-size: 1.30em;
+    color: white;
+}
+
+a.diagramName {
+    color: white;
+}
+a.diagramName:hover {
+    text-decoration: none;
+}
+td.removeDiagram{
+    width: 3%;
+    text-align: center !important;
+    
+}
+
+
 /* Accordion */
+
+
 
 .accordionHeader {
     background-color: #337ab7 !important;
     color: white !important;
+    font-size: 1.45em;
 }
