@@ -3,7 +3,7 @@
     margin: 13px;
 }
 
-hr.favorites {
+#profileHr {
     margin-top: -8px;
     padding-top: 0px;
 
@@ -23,11 +23,7 @@ a.favorites, a.favorites:hover {
     outline: none;
 }
 
-/*
-    #############
-    # Table CSS #
-    #############
-*/
+
 
 table.favorites {
     width: 100%;
@@ -38,23 +34,72 @@ td.favorites, tr.favorites, th.favorites {
     padding-left: 5px;
 }
 
+/*
+    #############
+    # Term page #
+    #############
+*/
+
 /* Table headers */
 
-th.favorites#Namn {
+th.favorites#Term_name {
     width: 63%
 }
 
-th.favorites#ID {
+th.favorites#Term_id {
     width: 21%
 }
 
-th.favorites#Tillagd {
+th.favorites#Term_date {
     width: 12%
 }
 
-th.favorites#Tabort {
+th.favorites#Term_remove {
     width: 4%;
 }
+
+/*
+    ################
+    # Diagram page #
+    ################
+*/
+
+/* Table headers */
+
+th.favorites#Diagram_name {
+    width: 80%
+}
+
+th.favorites#Diagram_acc {
+    width: 4%
+}
+
+th.favorites#Diagram_date {
+    width: 12%
+}
+
+th.favorites#Diagram_remove {
+    width: 4%;
+}
+
+.diagramHidden {
+    background-color: #F5F5F5;
+    padding: 19px;
+}
+
+.diagramHidden > table {
+    width: 50%;
+}
+
+.diagramAccordion {
+    padding: 0;
+}
+
+#infoGlyph {
+    color: orange;
+}
+
+/* ############ */
 
 th.favorites, td.favorites {
     border-bottom: 1px solid #ddd;
@@ -98,20 +143,23 @@ td.favorites {
     font-size: 1.3em;
 }
 
-td.favorites#RemoveGlyph {
-    text-align: center;
+#removeGlyph {
     color: red;
 }
 
-td.favorites#RemoveGlyph:hover {
-    color: red;
+.glyph {
+    text-align: center;
+}
+
+.glyph:hover {
     cursor: pointer;
     font-size: 1.45em;
 }
 
-/* Accordion */
 
-.accordionHeader {
-    background-color: #337ab7 !important;
-    color: white !important;
-}
+
+
+
+
+
+
