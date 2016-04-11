@@ -201,13 +201,3 @@ BEGIN
     RETURN result;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION get_children(cid BIGINT)
-RETURNS concept_result AS $$
-BEGIN
-    RETURN QUERY SELECT A.concept_id, A.effective_time, A.active, A.term
-        FROM description A JOIN relationship B
-        ON A.concept_id = B.source_id
-        WHERE B.destination_id = cid AND B.type_id = 116680003;
-END;
-$$ LANGUAGE plpgsql;
