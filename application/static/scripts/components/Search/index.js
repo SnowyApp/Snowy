@@ -93,11 +93,13 @@ var TermTable = React.createClass({
 var Search = React.createClass({
     doSearch:function(queryText){
         var queryResult=[];
+        var baseUrl = this.props.url;
+        var url = baseUrl.replace("query=","query="+queryText);
         $.ajax({
             type: "GET",
             "method": "GET",
             //Here goes the correct url
-            url: this.props.url,
+            url: url,
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
