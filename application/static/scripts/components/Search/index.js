@@ -1,6 +1,4 @@
-var Select = require('react-select');
-
-
+import PageClick from 'react-page-click';
 
 module.exports = React.createClass({
 
@@ -69,6 +67,12 @@ var TermTable = React.createClass({
         });
     },
 
+    handleBlur: function(){
+        this.setState({
+            hideTable: true
+        });
+    },
+
     render:function(){
 
         var optionsProp = {
@@ -81,10 +85,12 @@ var TermTable = React.createClass({
         };
         return(
             <div className="search-results">
-                <BootstrapTable data={this.props.data} hover={true} options={optionsProp}>
-                    <TableHeaderColumn dataField="id" isKey={true} width="100" hidden = {true}>ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField="name" hidden = {this.state.hideTable}>Name</TableHeaderColumn>
-                </BootstrapTable>
+                <PageClick onClick={this.handleBlur}>
+                    <BootstrapTable data={this.props.data} hover={true} options={optionsProp} >
+                        <TableHeaderColumn dataField="id" isKey={true} width="100" hidden = {true}>ID</TableHeaderColumn>
+                        <TableHeaderColumn dataField="name" hidden = {this.state.hideTable}>Name</TableHeaderColumn>
+                    </BootstrapTable>
+                </PageClick>
             </div>
         );
     }
