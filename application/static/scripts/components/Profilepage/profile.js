@@ -111,7 +111,7 @@ var ProfilePage = React.createClass({
     getInitialState: function(){
         return (
             {
-                currentTab: 'Diagram'
+                currentTab: 'Konto'
             }
         );
     },
@@ -309,8 +309,8 @@ var TermPage = React.createClass({
 
         return(
             <div>
-                <h1>Favorittermer</h1>
-                <hr id="profileHr"></hr>
+                <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> Favorittermer</h1>
+                <hr className="profileHr"/>
                 <table className="favorites">
                     <thead>
                         <tr>
@@ -390,14 +390,11 @@ var DiagramPage = React.createClass({
     
     //Remove element from the diagram table
     removeDiagram: function(id){
-        console.log(id);
-        console.log(this.state.diagrams);
         //Remove element locally (for responsiveness)
         var tempDiagrams = this.props.removeid(this.state.diagrams, id);
         this.setState({
             diagrams: tempDiagrams
         });
-        console.log(this.state.diagrams);
         //TODO: Remove element from database
     },
     
@@ -440,8 +437,8 @@ var DiagramPage = React.createClass({
 
         return(
             <div>
-                <h1>Diagram</h1>
-                <hr id="profileHr"></hr>
+                <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> Diagram</h1>
+                <hr className="profileHr"/>
                 <table className="favorites">
                     <thead>
                         <tr>
@@ -462,19 +459,32 @@ var DiagramPage = React.createClass({
 var DiagramElement = React.createClass({
     getInitialState: function(){
         return ({
-            isOpen: false
+            isOpen: false,
+            buttonEnabled: true
         });
     },
 
+    //Toggles accordion body
     openAcc: function(){
-        this.setState({
-            isOpen: !this.state.isOpen
-        })
+        var disableTime = 400;
+        if(this.state.buttonEnabled){
+            //Update states and disable this function for a short time to prevent problems from clicking too fast
+            this.setState({
+                isOpen: !this.state.isOpen,
+                buttonEnabled: false
+            })
+        }
+        //Reenable function after disableTime ms 
+        setTimeout($.proxy(function(){
+            this.setState({
+                buttonEnabled: true
+            })
+        }, this), disableTime);
     },
 
     render: function(){
+        //Different background colors depending on if the accordion is expanded
         var openCSS = (this.state.isOpen ? {backgroundColor: "#d9edf7"} : null);
-        console.log(openCSS);
         return(
             <tbody>
                 <tr style={openCSS} className="favorites">
@@ -528,27 +538,159 @@ var DiagramElement = React.createClass({
     }
 });
 
+
 var AccountPage = React.createClass({
+    getInitialState: function(){
+        return ({
+            nameOpen: false,
+            passwordOpen: false,
+            nameEnabled: true,
+            passwordEnabled: true
+        });
+    },
+
+    //Toggles between +/- expand glyph
+    openAcc: function(acc){
+        var disableTime = 400;
+        //Check what field was expanded
+        if(acc == "name" && this.state.nameEnabled){
+            //Update states and disable this function for a short time to prevent problems from clicking too fast
+            this.setState({
+                nameOpen: !this.state.nameOpen,
+                nameEnabled: false 
+            });
+            //Reenable function after disableTime ms
+            setTimeout($.proxy(function(){
+                this.setState({
+                    nameEnabled: true
+                })
+            }, this), disableTime);
+        }
+        else if(acc == "password" && this.state.passwordEnabled){
+            this.setState({
+                passwordOpen: !this.state.passwordOpen,
+                passwordEnabled: false
+            });
+            //Disable this function for a short time to prevent problems from clicking too fast
+            setTimeout($.proxy(function(){
+                this.setState({
+                    passwordEnabled: true
+                })
+            }, this), disableTime);
+        }
+    },
+
     render: function(){
+        // +/- expand glyphs based on state
+        var expandName = (this.state.nameOpen ? <span className="glyphicon glyphicon-minus expandGlyph" aria-hidden="true"></span> : <span className="glyphicon glyphicon-plus expandGlyph" aria-hidden="true"></span>);
+        var expandPassword = (this.state.passwordOpen ? <span className="glyphicon glyphicon-minus expandGlyph" aria-hidden="true"></span> : <span className="glyphicon glyphicon-plus expandGlyph" aria-hidden="true"></span>);
+
         return(
             <div>
-                <h1>Konto</h1>
-                <hr id="profileHr"></hr>
+                <h1><span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> Konto</h1>
+                <hr className="profileHr"/>
+
+                <form className="form-horizontal">
+
+                    <div className="accSettingsRow col-sm-12">
+                        <div className="col-sm-11">
+                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
+                                Namn
+                            </a>
+                        </div>
+                        <div className="col-sm-1">
+                            <a data-toggle="collapse" onClick={this.openAcc.bind(null, "name")} href="#nameCollapse" aria-expanded="false">
+                                {expandName}
+                            </a>
+                        </div>
+
+                        <div className="collapse col-sm-12 hiddenSettings" id="nameCollapse">
+                            <div className="customWell">
+                                <div className="form-group">
+                                    <label htmlFor="inputEmail3" className="col-sm-3 control-label ">Användarnamn</label>
+                                    <div className="col-sm-7">
+                                        <input type="email" className="form-control" id="inputEmail3" placeholder="Email" />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="inputEmail3" className="col-sm-3 control-label ">Email</label>
+                                    <div className="col-sm-7">
+                                        <input type="email" className="form-control" id="inputEmail3" placeholder="Email" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="accSettingsRow col-sm-12">
+                        <div className="col-sm-11">
+                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
+                                Lösenord
+                            </a>
+                        </div>
+                        <div className="col-sm-1">
+                            <a data-toggle="collapse" onClick={this.openAcc.bind(null, "password")} href="#passwordCollapse" aria-expanded="false">
+                                {expandPassword}
+                            </a>
+                        </div>
+                    
+                        <div className="collapse col-sm-12 hiddenSettings" id="passwordCollapse">
+                            <div className="customWell">
+                                <div className="form-group">
+                                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Nytt lösenord</label>
+                                    <div className="col-sm-7">
+                                        <input type="password" className="form-control" id="inputPassword3" placeholder="Password" />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Upprepa</label>
+                                    <div className="col-sm-7">
+                                        <input type="password" className="form-control" id="inputPassword3" placeholder="Password" />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Nuvarande lösenord</label>
+                                    <div className="col-sm-7">
+                                        <input type="password" className="form-control" id="inputPassword3" placeholder="Password" />
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <div className="col-sm-offset-9 col-sm-2">
+                                        <button type="submit" className="btn btn-default">Sign in</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
             </div>
         );
     }
 });
 
-
 //Tab navigation for profile page
 var NavBar = React.createClass({
     render: function(){
         return(
-            <ul className="nav nav-tabs">
-                <NavBarItem name="Termer" active={this.props.currentTab === 'Termer'} onSelect={this.props.changeActiveTab}/>
-                <NavBarItem name="Diagram" active={this.props.currentTab === 'Diagram'} onSelect={this.props.changeActiveTab}/>
-                <NavBarItem name="Konto" active={this.props.currentTab === 'Konto'} onSelect={this.props.changeActiveTab}/>
-            </ul>
+            <div>
+                <ul className="nav nav-tabs">
+                    <NavBarItem name="Termer" active={this.props.currentTab === 'Termer'} onSelect={this.props.changeActiveTab}/>
+                    <NavBarItem name="Diagram" active={this.props.currentTab === 'Diagram'} onSelect={this.props.changeActiveTab}/>
+                    <NavBarItem name="Konto" active={this.props.currentTab === 'Konto'} onSelect={this.props.changeActiveTab}/>
+                </ul>
+                <div className="btn-group langDropdown">
+                    <button type="button" className="btn btn-default">Språk</button>
+                    <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span className="caret"></span>
+                    <span className="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul className="dropdown-menu">
+                        <li><a href="#"><img className="langFlag" src="flags/flag_eng.png"/> English</a></li>
+                        <li><a href="#"><img className="langFlag" src="flags/flag_swe.png"/> Svenska</a></li>
+                    </ul>
+                </div>
+            </div>
         );
     }
 });
