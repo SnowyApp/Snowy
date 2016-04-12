@@ -42,6 +42,8 @@ const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
 const WIDTH_MARGIN = 500;
 
+const DURATION = 750;
+
 /**
  * This will be used to "inject" an SVG-element to our webpage that you can
  * already do with
@@ -287,6 +289,20 @@ d3Chart._drawPoints = function(data) {
     var link = g.selectAll("line.link")
         .data(links, function(d) { return d.target.id; });
 
+    var nodeExit = node.exit().transition()
+        .duration(DURATION)
+        .attr("transform", function(d) {
+            return "translate(" + d.parent.x + "," + d.parent.y + ")"; })
+        .style('fill-opacity', 1e-6)
+        .remove();
+
+    nodeExit.select('rect')
+        .attr('width', NODE_WIDTH)
+        .attr('height', NODE_HEIGHT);
+
+    nodeExit.select('text')
+        .style("fill-opacity", 1e-6);
+
     /**
     * "Enters" the nodes by creating a new g-element inside the bigger
     * g-element same as the nodes
@@ -304,6 +320,14 @@ d3Chart._drawPoints = function(data) {
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y2", function(d) { return d.target.y + 0; })
         .attr("style", "stroke:rgb(0,0,0);stroke-width:2");
+
+    link.exit().transition()
+        .duration(DURATION)
+        .attr("x1", function(d) { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        .attr("y1", function(d) { return data.parent.y + NODE_HEIGHT; })
+        .attr("x2", function(d) { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        .attr("y2", function(d) { return data.parent.y + 0; })
+        .remove();
 
     /**
      * Function for recalculating values of links and nodes
@@ -335,12 +359,9 @@ d3Chart._drawPoints = function(data) {
     }
     /**
      * Function for the event dragended
-     * @param d
      */
     function dragended(d) {
         d3.select(this).classed("dragging", false);
     }
-    node.exit().remove();
-    link.exit().remove();
 };
 
