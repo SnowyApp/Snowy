@@ -1,14 +1,10 @@
 /**
- * Okay, so these comments will work a little bit like a small tutorial for how
+ * These comments will work a little bit like a small tutorial for how
  * d3 works and why the code looks like it does. The way you "inject" a D3
  * diagram is basically the same for all different types and this will show
  * how to create a tree-structure.
  */
 
-/**
- * Emil or Carl will comment here because I have no idea why this is needed.
- * @type {{}}
- */
 var d3Chart = module.exports = {};
 
 /**
@@ -22,9 +18,7 @@ var tree;
 
 const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
-
 const WIDTH_MARGIN = 500;
-
 
 /**
  * This will be used to "inject" an SVG-element to our webpage that you can
@@ -35,30 +29,33 @@ const WIDTH_MARGIN = 500;
  *      .
  * </svg>
  *
- * Again, Carl or Emil will comment what the input is for.
  * @param element
  * @param props
  * @param state
  */
 d3Chart.create = function(element, props, state) {
+
     /**
-     * So this code right here just append an SVG element to the page that
-     * looks like this
-     * <svg class = d3 width = props.width height = props.height>
+     * Sets the variable zoom to the function zoomed. scaleExtent sets
+     * minimum and maximum values for zooming.
+     */
+    var zoom = d3.behavior.zoom()
+        //.scaleExtent([1, 10])
+        .on("zoom", zoomed);
+
+    function zoomed() {
+        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
+
+    /**
+     * We append an SVG element to the page and set it's class to d3.
+     * Width and height must be 100% so that it resizes with the browser.
+     * <svg class = d3 width = 100% height = 1005>
      *     .
      *     .
      *     .
      * </svg>
-     *
-     * It just is a different way of writing, it is the D3-way!
      */
-    var width = element.offsetWidth;
-    var height = element.offsetHeight;
-
-    var zoom = d3.behavior.zoom()
-        .scaleExtent([1, 10])
-        .on("zoom", zoomed);
-
     var svg = d3.select(element).append("svg")
           .attr("width", "100%")
           .attr("height", "100%")
@@ -70,6 +67,10 @@ d3Chart.create = function(element, props, state) {
         .attr("transform", "translate(" + 0 + "," + 0 + ")")
         .call(zoom)
 
+    /**
+     * We append a rect to the SVG element so that we can move the diagram around,
+     * it tracks the movement of the entire diagram.
+     */
     var rect = svg.append("rect")
         .attr("width", "100%")
         .attr("height", "100%")
@@ -79,7 +80,7 @@ d3Chart.create = function(element, props, state) {
 
     /**
      * To add more than one Shape or text element to the SVG-element you have
-     * to put them in a g-element. We give this one the class nodes
+     * to put them in a g-element. We give this one the class diagram
      *
      * <svg class = d3 width = props.width height = props.height>
      *      <g class = diagram/>
@@ -88,11 +89,6 @@ d3Chart.create = function(element, props, state) {
      */
     var g = svg.append("g")
         .attr("class", "diagram")
-
-
-    function zoomed() {
-        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    }
 
     /**
      * The tree variable will now grow and sprout to a real tree-object with
@@ -166,8 +162,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      */
     var root = data[0];
     /**
-     * I don't think this g element is necessary actually but I don't want
-     * to remove it now and change the some line since I am too lazy to test it.
+     * Select all the groups with class name diagram and save it to variable g
      */
     var g = d3.select(element).selectAll(".diagram");
 
@@ -181,12 +176,20 @@ d3Chart._drawPoints = function(element, scales, data) {
         links = tree.links(nodes);
 
 
+    /**
+     * Defines behavior for dragging elements.
+     */
     var drag = d3.behavior.drag()
         .origin(function(d) { return d; })
         .on("dragstart", dragstarted)
         .on("drag", dragmove)
         .on("dragend", dragended);
 
+    /**
+     * Function for dragging an element.
+     * @param d
+     * @param i
+     */
     function dragmove(d, i) {
         d.px += d3.event.dx;
         d.py += d3.event.dy;
@@ -304,13 +307,12 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("y2", function(d) { return d.target.y + 0; })
         .attr("style", "stroke:rgb(0,0,0);stroke-width:2");
 
-   /* var node_drag = d3.behavior.drag()
-        .on("dragstart", dragstart)
-        .on("drag", dragmove)
-        .on("dragend", dragend);
-    */
+
     node.exit().remove();
 
+    /**
+     * Function for recalculating values of links and nodes
+     */
     function tick() {
         linkEnter
             .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
@@ -322,17 +324,25 @@ d3Chart._drawPoints = function(element, scales, data) {
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
 
-
-
+    /**
+     * Function for the event dragstarted
+     * @param d
+     */
     function dragstarted(d) {
         d3.event.sourceEvent.stopPropagation();
         d3.select(this).classed("dragging", true);
     }
-
+    /**
+     * Function for the event dragged. Currently replaced by function dragmove.
+     * @param d
+     */
     function dragged(d) {
         d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
     }
-
+    /**
+     * Function for the event dragended
+     * @param d
+     */
     function dragended(d) {
         d3.select(this).classed("dragging", false);
     }
