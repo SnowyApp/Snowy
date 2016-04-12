@@ -173,7 +173,7 @@ d3Chart._scales = function(element, domain) {
 
 d3Chart._drawPoints = function(data) {
 
-    var g = d3.select('body').selectAll(".diagram");
+    var g = d3.select('chart').selectAll(".diagram");
 
 
     /**
