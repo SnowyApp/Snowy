@@ -7,14 +7,36 @@
 
 var d3Chart = module.exports = {};
 
+var contextMenu = require('./d3-context-menu');
+
+// context menu
+
+var menuData = [
+    {
+        title: 'Remove Node',
+        action: function(elm, d, i) {
+            if (d.parent) {
+
+                // find child and remove it
+                for (var ii = 0; ii < d.parent.children.length; ii++) {
+                    if (d.parent.children[ii].name === d.name) {
+                        d.parent.children.splice(ii, 1);
+                        break;
+                    }
+                }
+            }
+            d3Chart._drawPoints(d);
+        }
+    }
+];
+
 /**
  * These var:s are in order a index i that will give each node in our tree a
  * unique ID. The tree var is where we will store the info of the tree. It
  * will become kind of like an object.
- * @type {number}
  */
 var i = 0;
-var tree;
+var tree,root;
 
 const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
@@ -28,12 +50,16 @@ const WIDTH_MARGIN = 500;
  *      .
  *      .
  * </svg>
+<<<<<<< HEAD
  *
  * @param element
  * @param props
  * @param state
  */
+
 d3Chart.create = function(element, props, state) {
+
+    root = state.data[0];
 
     /**
      * Sets the variable zoom to the function zoomed. scaleExtent sets
@@ -98,21 +124,14 @@ d3Chart.create = function(element, props, state) {
      */
     tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
 
-    /**
-     * I think this is necessary for the D3 to play along with REACT.
-     */
-    this.update(element, state);
+    this.update(element, root);
 };
 
 /**
  * Called when we want to redraw the tree
- * @param element
- * @param state
  */
-d3Chart.update = function(element, state) {
-    // recalculate scales
-    var scales = this._scales(element, state.domain);
-    this._drawPoints(element, scales, state.data);
+d3Chart.update = function(element, root) {
+    this._drawPoints(root);
 };
 
 d3Chart.destroy = function(element) {
@@ -150,21 +169,11 @@ d3Chart._scales = function(element, domain) {
 /**
  * This functions adds the nodes and the lines between the nodes and styles
  * them in the way we want.
- * @param element
- * @param scales
- * @param data
- * @private
  */
-d3Chart._drawPoints = function(element, scales, data) {
-    /**
-     * The root will contain the first datapoint in the array data, we will
-     * later tell the tree to start drawing from here
-     */
-    var root = data[0];
-    /**
-     * Select all the groups with class name diagram and save it to variable g
-     */
-    var g = d3.select(element).selectAll(".diagram");
+
+d3Chart._drawPoints = function(data) {
+
+    var g = d3.select('body').selectAll(".diagram");
 
 
     /**
@@ -172,6 +181,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      * the nodes and positions for the links (lines) between them.
      * @type {*|Array.<T>}
      */
+
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
 
@@ -191,24 +201,23 @@ d3Chart._drawPoints = function(element, scales, data) {
      * @param i
      */
     function dragmove(d, i) {
-        d.px += d3.event.dx;
-        d.py += d3.event.dy;
         d.x += d3.event.dx;
         d.y += d3.event.dy;
         tick();
     }
-
     /**
      * This manually sets the distance between the nodes
      */
-    nodes.forEach(function(d) { d.y = d.depth*100 });
+
+    nodes.forEach(function(d) {
+        d.y = d.depth*100; });
 
     /**
      * Declares a node to the g element or var that we created. I think this
      * part can be skipped. But it also gives every node a unique id, which
      * is nice.
      */
-    var node = g.selectAll(".node")
+    var node = g.selectAll("g.node")
         .data(nodes, function(d) { return d.id || (d.id = ++i) });
 
     /**
@@ -222,13 +231,13 @@ d3Chart._drawPoints = function(element, scales, data) {
      *     rectangle and text go here...
      * </g>
      */
-    var nodeEnter = node.enter()
-        .append("g")
+    var nodeEnter = node.enter().append("g")
         .attr("class", "node")
         .attr("transform", function(d) {
             return "translate(" + d.x + ", " + d.y + ")";
         })
-        .call(drag);
+        .call(drag)
+        .on('contextmenu', d3.contextMenu(menuData));
     /**
      * Now we add a rectangle element and use conditional expressions to
      * style them. The ry and rx elements are used to give the eclipse shape
@@ -238,29 +247,14 @@ d3Chart._drawPoints = function(element, scales, data) {
      * < rect class = node width = 20 height = 10 ry = 10px rx = 1px
      *   style="fill:#FFFFCC;stroke:black" />
      */
-    nodeEnter.append("rect")
-        .attr("class", "node")
+    nodeEnter.append('rect')
+        .attr('class', 'node')
         .attr('x', WIDTH_MARGIN)
         .attr('width', NODE_WIDTH)
         .attr('height', NODE_HEIGHT)
-        .attr('ry', function(d) {
-            return  d.expression == "attribute" ? '10px' : '0';
-        })
-        .attr('rx', function(d) {
-            return  d.expression == "attribute" ? '1px' : '0';
-        })
-        .style("fill", function(d) {
-            if (d.expression == "concept") {
-                return "#99CCFF";
-            } else if (d.expression == "defined-concept") {
-                return "#CCCCFF";
-            } else if (d.expression == "attribute") {
-                return "#FFFFCC"
-            } else {
-                return "black"}
-            }
-        )
+        .style('fill', '#FFF')
         .style('stroke','black');
+
     /**
      * This adds a text element to the same g element as the rectangle. The
      * current position has a few magic numbers now because there isn't any
@@ -286,6 +280,7 @@ d3Chart._drawPoints = function(element, scales, data) {
      */
     var link = g.selectAll("line.link")
         .data(links, function(d) { return d.target.id; });
+
     /**
     * "Enters" the nodes by creating a new g-element inside the bigger
     * g-element same as the nodes
@@ -307,17 +302,13 @@ d3Chart._drawPoints = function(element, scales, data) {
         .attr("y2", function(d) { return d.target.y + 0; })
         .attr("style", "stroke:rgb(0,0,0);stroke-width:2");
 
-
-    node.exit().remove();
-
     /**
      * Function for recalculating values of links and nodes
      */
     function tick() {
-        linkEnter
-            .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        linkEnter.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
             .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-            .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN;})
+            .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
             .attr("y2", function(d) { return d.target.y; });
 
 
@@ -346,4 +337,7 @@ d3Chart._drawPoints = function(element, scales, data) {
     function dragended(d) {
         d3.select(this).classed("dragging", false);
     }
+    node.exit().remove();
+    link.exit().remove();
 };
+

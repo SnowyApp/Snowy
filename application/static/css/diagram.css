@@ -50,3 +50,20 @@
     border: 4px double;
     background-color: #FFFFCC;
 }
+
+.popup {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #fff;
+    width: 200px;
+    border: 1px #ccc solid;
+    border-radius: 6px;
+    box-shadow: #333 2px 2px 4px;
+    padding: 8px;
+    font-family: Helvetica, Arial, Sans-Serif;
+}
+
+.canvas {
+    position: absolute;
+}
