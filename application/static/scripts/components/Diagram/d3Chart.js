@@ -25,7 +25,7 @@ var menuData = [
                     }
                 }
             }
-            d3Chart._drawPoints(d);
+            d3Chart._drawPoints('body');
         }
     }
 ];
@@ -86,23 +86,27 @@ d3Chart.create = function(element, props, state) {
           .attr("width", "100%")
           .attr("height", "100%")
           .attr("class", "d3")
+            .call(zoom)
+        /*
         .append("g")
         .attr("class" , "outer")
         .attr("width", "100%")
         .attr("height", "100%")
         .attr("transform", "translate(" + 0 + "," + 0 + ")")
-        .call(zoom)
+        */
 
     /**
      * We append a rect to the SVG element so that we can move the diagram around,
      * it tracks the movement of the entire diagram.
      */
+    /*
     var rect = svg.append("rect")
         .attr("width", "100%")
         .attr("height", "100%")
         .attr("class", "scrollable")
         .style("fill", "none")
         .style("pointer-events", "all");
+        */
 
     /**
      * To add more than one Shape or text element to the SVG-element you have
@@ -114,7 +118,7 @@ d3Chart.create = function(element, props, state) {
      * </svg>
      */
     var g = svg.append("g")
-        .attr("class", "diagram")
+        .attr("class", "nodes")
 
     /**
      * The tree variable will now grow and sprout to a real tree-object with
@@ -131,7 +135,7 @@ d3Chart.create = function(element, props, state) {
  * Called when we want to redraw the tree
  */
 d3Chart.update = function(element, root) {
-    this._drawPoints(root);
+    this._drawPoints(element, root);
 };
 
 d3Chart.destroy = function(element) {
@@ -171,9 +175,9 @@ d3Chart._scales = function(element, domain) {
  * them in the way we want.
  */
 
-d3Chart._drawPoints = function(data) {
+d3Chart._drawPoints = function(element, data) {
 
-    var g = d3.select('chart').selectAll(".diagram");
+    var g = d3.select(element).selectAll(".nodes");
 
 
     /**
@@ -291,10 +295,7 @@ d3Chart._drawPoints = function(data) {
     *   d.source.x + 10 y2 = d.source.y + 5>
     * </g>
     */
-    var linkEnter = link.enter()
-        .append("g")
-        .attr("class", "link")
-        .append("line")
+    link.enter().insert('line', 'g')
         .attr("class", "line")
         .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
@@ -306,7 +307,7 @@ d3Chart._drawPoints = function(data) {
      * Function for recalculating values of links and nodes
      */
     function tick() {
-        linkEnter.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
+        link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
             .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
             .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
             .attr("y2", function(d) { return d.target.y; });
