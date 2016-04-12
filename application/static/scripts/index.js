@@ -1,6 +1,7 @@
 var Diagram = require("./components/Diagram/index");
 var Search = require("./components/Search/index");
 var Navigation = require("./components/Navigation/index");
+var Chart = require('./components/Diagram/Chart');
 
 var Container = React.createClass({
     render: function() {
@@ -17,16 +18,59 @@ var Container = React.createClass({
 });
 
 var Bar = React.createClass({
+    exportSVG: function(){
+        var html = d3.select("svg")
+            .attr({
+                'xmlns': 'http://www.w3.org/2000/svg',
+                'xlink': 'http://www.w3.org/1999/xlink',
+                version: '1.1'
+            })
+            .node().parentNode.innerHTML;
+
+        var blob = new Blob([html], {type: "image/svg+xml"}),
+            url = window.URL.createObjectURL(blob);
+
+        var link = document.createElement("a");
+        link.download = "test.svg";
+        link.href = url;
+        link.click();
+    },
+    exportPNG: function(){
+        //var canvasId = "canvas";
+        var canvas = document.createElement("canvas");
+
+        //Load the canvas element with our svg
+        canvg(canvas, document.getElementsByClassName("chart")[0].innerHTML.trim());
+
+        //Convert the svg to png
+        Canvas2Image.convertToPNG(canvas);
+
+        var dataString = canvas.toDataURL();
+        var link = document.createElement("a");
+        link.download = "image.png";
+        link.href = dataString;
+        link.click();
+
+    },
     render: function() {
         return (
             <div className="bar">
-                <Button>Export</Button>
                 <Search />
-                <Button>Login</Button>
+                <ButtonToolbar id = "buttons">
+                    <SplitButton bsStyle = "primary" title = "Export" id = "Export">
+                        <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
+                        <MenuItem divider />
+                        <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
+                    </SplitButton>
+                    <Button bsStyle = "primary">Login</Button>
+                </ButtonToolbar>
             </div>
+
         );
     }
 });
+
+
 
 ReactDOM.render(
     <Container />,

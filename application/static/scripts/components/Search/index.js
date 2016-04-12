@@ -10,7 +10,7 @@ Handles user input
 */
 var SearchBox = React.createClass({
 	doSearch: function() {
-		var query = this.refs.searchInput.getDOMNode().value;
+        var query = ReactDOM.findDOMNode(this.refs.searchInput).value;
 		this.props.doSearch(query);
 	},
 
@@ -22,7 +22,7 @@ var SearchBox = React.createClass({
 
 	render:function(){
 		return(
-            <div>
+            <div id = "searchbar">
                 <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyPress={this.handleKeyPress} />
                 <Button onClick={this.doSearch} >Search</Button>
             </div>
