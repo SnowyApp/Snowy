@@ -7,6 +7,8 @@
 
 var d3Chart = module.exports = {};
 
+var contextMenu = require('./d3-context-menu');
+
 // context menu
 
 var menuData = [
