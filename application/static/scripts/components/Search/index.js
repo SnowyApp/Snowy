@@ -29,13 +29,16 @@ var SearchBox = React.createClass({
             clearTimeout(this.timeout)
             this.timeout = null
         }
-        this.timeout = setTimeout(function() {
+        if (target.keyCode == 13){
             this.doSearch();
-            this.timeout = null;
-        }.bind(this), 300);
+        }
+        else{
+            this.timeout = setTimeout(function() {
+                this.doSearch();
+                this.timeout = null;
+            }.bind(this), 300);
+        }
     },
-
-
     render:function(){
         return(
             <div>
