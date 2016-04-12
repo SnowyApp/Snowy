@@ -25,7 +25,7 @@ var menuData = [
                     }
                 }
             }
-            d3Chart._drawPoints('body');
+            d3Chart._drawPoints(d);
         }
     }
 ];
@@ -69,9 +69,6 @@ d3Chart.create = function(element, props, state) {
         //.scaleExtent([1, 10])
         .on("zoom", zoomed);
 
-    function zoomed() {
-        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    }
 
     /**
      * We append an SVG element to the page and set it's class to d3.
@@ -83,8 +80,8 @@ d3Chart.create = function(element, props, state) {
      * </svg>
      */
     var svg = d3.select(element).append("svg")
-          .attr("width", "100%")
-          .attr("height", "100%")
+         // .attr("width", "100%")
+          //.attr("height", "100%")
           .attr("class", "d3")
             .call(zoom)
         /*
@@ -118,7 +115,11 @@ d3Chart.create = function(element, props, state) {
      * </svg>
      */
     var g = svg.append("g")
-        .attr("class", "nodes")
+        .attr("class", "nodes");
+
+    function zoomed() {
+        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
 
     /**
      * The tree variable will now grow and sprout to a real tree-object with
@@ -135,7 +136,7 @@ d3Chart.create = function(element, props, state) {
  * Called when we want to redraw the tree
  */
 d3Chart.update = function(element, root) {
-    this._drawPoints(element, root);
+    this._drawPoints(root);
 };
 
 d3Chart.destroy = function(element) {
@@ -175,10 +176,11 @@ d3Chart._scales = function(element, domain) {
  * them in the way we want.
  */
 
-d3Chart._drawPoints = function(element, data) {
+d3Chart._drawPoints = function(data) {
 
-    var g = d3.select(element).selectAll(".nodes");
+    var g = d3.select('body').selectAll(".nodes");
 
+    //root = data[0];
 
     /**
      * nodes and links will become arrays which contains the data for all
@@ -194,7 +196,7 @@ d3Chart._drawPoints = function(element, data) {
      * Defines behavior for dragging elements.
      */
     var drag = d3.behavior.drag()
-        .origin(function(d) { return d; })
+       // .origin(function(d) { return d; })
         .on("dragstart", dragstarted)
         .on("drag", dragmove)
         .on("dragend", dragended);
@@ -240,8 +242,8 @@ d3Chart._drawPoints = function(element, data) {
         .attr("transform", function(d) {
             return "translate(" + d.x + ", " + d.y + ")";
         })
-        .call(drag)
-        .on('contextmenu', d3.contextMenu(menuData));
+        .on('contextmenu', d3.contextMenu(menuData))
+        .call(drag);
     /**
      * Now we add a rectangle element and use conditional expressions to
      * style them. The ry and rx elements are used to give the eclipse shape
@@ -296,7 +298,7 @@ d3Chart._drawPoints = function(element, data) {
     * </g>
     */
     link.enter().insert('line', 'g')
-        .attr("class", "line")
+        .attr("class", "link")
         .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
