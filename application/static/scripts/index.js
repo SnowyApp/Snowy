@@ -14,12 +14,23 @@ var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/
 
 
 var Container = React.createClass({
+    getInitialState: function(){
+        return{
+            selectedTerm: null
+        }
+    },
+    //Gets called when the user selects an element in the search result
+    updateSelectedTerm: function(newSelectedTerm){
+        this.setState({
+            selectedTerm: newSelectedTerm
+        });
+    },
     render: function() {
         return (
             <div className="wrapper">
                 <Navigation />
                 <section>
-                    <Bar />
+                    <Bar update={this.updateSelectedTerm}/>
                     <Diagram />
                 </section>
             </div>
@@ -32,7 +43,7 @@ var Bar = React.createClass({
         return (
             <div className="bar">
                 <Button>Export</Button>
-                <Search url={mockApi}/>
+                <Search url={mockApi} update={this.props.update}/>
                 <Button>Login</Button>
             </div>
         );

@@ -3,7 +3,7 @@ import PageClick from 'react-page-click';
 module.exports = React.createClass({
 
     render: function() {
-        return <Search url = {this.props.url}/>;
+        return <Search url = {this.props.url} update = {this.props.update}/>;
     }
 });
 
@@ -53,10 +53,9 @@ var SearchBox = React.createClass({
 var TermTable = React.createClass({
     getInitialState:function(){
         return{
-            hideTable: true,
+            hideTable: true
         }
     },
-
     componentWillReceiveProps: function(nextProps){
         var hide = true;
         if(nextProps.data.length > 0){
@@ -66,32 +65,31 @@ var TermTable = React.createClass({
             hideTable: hide
         });
     },
-
     handleBlur: function(){
         this.setState({
             hideTable: true
         });
     },
-
     render:function(){
-
         var optionsProp = {
             onRowClick: function(row){
-                //This is supposed to generate a diagram on the selected term
                 this.setState({
                     hideTable: true
                 });
+                //Sends back the selected term to the container class
+                this.props.update(row.name)
             }.bind(this)
         };
         return(
-            <div className="search-results">
-                <PageClick onClick={this.handleBlur}>
+            <PageClick onClick={this.handleBlur}>
+                <div className="search-results">
                     <BootstrapTable data={this.props.data} hover={true} options={optionsProp} >
                         <TableHeaderColumn dataField="id" isKey={true} width="100" hidden = {true}>ID</TableHeaderColumn>
                         <TableHeaderColumn dataField="name" hidden = {this.state.hideTable}>Name</TableHeaderColumn>
                     </BootstrapTable>
-                </PageClick>
-            </div>
+                </div>
+            </PageClick>
+
         );
     }
 });
@@ -112,7 +110,6 @@ var Search = React.createClass({
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
-                console.log(this.props.url)
             },
             success: function(result){
                 console.log("api success");
@@ -141,7 +138,7 @@ var Search = React.createClass({
         return (
             <div className="search">
                 <SearchBox query={this.state.query} doSearch={this.doSearch}/>
-                <TermTable data={this.state.searchData} />
+                <TermTable data={this.state.searchData} update={this.props.update} />
             </div>
         );
     }
