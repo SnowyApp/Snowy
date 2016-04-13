@@ -67,7 +67,7 @@ d3Chart.create = function(element, props, state) {
      */
     var zoom = d3.behavior.zoom()
         //.scaleExtent([1, 10])
-        .on("zoom", zoomed);
+        .on("zoom", zoomed)        ;
 
 
     /**
@@ -83,7 +83,7 @@ d3Chart.create = function(element, props, state) {
          // .attr("width", "100%")
           //.attr("height", "100%")
           .attr("class", "d3")
-            .call(zoom)
+            .call(zoom).on("dblclick.zoom", null);
         /*
         .append("g")
         .attr("class" , "outer")
