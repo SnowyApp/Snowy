@@ -22,6 +22,7 @@ var SearchBox = React.createClass({
             this.props.doSearch(query);
         }
     },
+    //Automatic search if no keypress detected for 0.3s after typing. Instant search on enter.
     handleKeyPress: function(target) {
         if(this.timeout){
             clearTimeout(this.timeout)
@@ -56,6 +57,7 @@ var TermTable = React.createClass({
             hideTable: true
         }
     },
+    //Called when the user clicks outside the table
     handleBlur: function(){
         this.props.clearData();
     },
@@ -64,10 +66,13 @@ var TermTable = React.createClass({
             onRowClick: function(row){
                 //Sends back the selected term to the container class
                 this.props.update(row.name)
+
                 this.props.clearData();
 
             }.bind(this)
         };
+
+        //Only display the result table if there is a result
         var emptyTable = true;
         if(this.props.data.length >0){
             emptyTable = false;
