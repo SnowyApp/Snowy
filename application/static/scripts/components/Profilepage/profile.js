@@ -1,67 +1,103 @@
 
 //Dummy data
-    var dummyTerms = 
-    [
-        {
-            id: 308916002,
-            name: "Environment",
-            dateAdded: new Date("March 3, 2016 12:53:26")
-        },
-        {
-            id: 363787002,
-            name: "Observable entity",
-            dateAdded: new Date("May 4, 2015 12:33:23")
-        },
-        {
-            id: 362981000,
-            name: "Qualifier value",
-            dateAdded: new Date("March 5, 2016 11:32:10")
-        },
-        {
-            id: 71388002,
-            name: "Procedure",
-            dateAdded: new Date("March 6, 2016 11:32:11")
-        },
-        {
-            id: 71388004,
-            name: "Procedure",
-            dateAdded: new Date("March 7, 2016 11:32:11")
-        }
-    ];
-    
-    var dummyDiagrams = 
-    [
-        {
-            id: 308916002,
-            name: "Environment",
-            dateAdded: new Date("March 3, 2016 12:53:26"),
-            parameters: {
-                            p1: "stuff1",
-                            p2: "stuff2",
-                            p3: "stuff3"
-                        }
-        },
-        {
-            id: 999919999,
-            name: "beastmode",
-            dateAdded: new Date("March 2, 2016 12:53:26"),
-            parameters: {
-                            p1: "stuff1",
-                            p2: "stuff2",
-                            p3: "stuff3"
-                        }
-        },
-        {
-            id: 523000113,
-            name: "Axtra",
-            dateAdded: new Date("March 1, 2016 12:53:26"),
-            parameters: {
-                            p1: "stuff1",
-                            p2: "stuff2",
-                            p3: "stuff3"
-                        }
-        }
-    ];
+var dummyTerms = 
+[
+    {
+        id: 308916002,
+        name: "Environment",
+        dateAdded: new Date("March 3, 2016 12:53:26")
+    },
+    {
+        id: 363787002,
+        name: "Observable entity",
+        dateAdded: new Date("May 4, 2015 12:33:23")
+    },
+    {
+        id: 362981000,
+        name: "Qualifier value",
+        dateAdded: new Date("March 5, 2016 11:32:10")
+    },
+    {
+        id: 71388002,
+        name: "Procedure",
+        dateAdded: new Date("March 6, 2016 11:32:11")
+    },
+    {
+        id: 71388004,
+        name: "Procedure",
+        dateAdded: new Date("March 7, 2016 11:32:11")
+    }
+];
+
+var dummyDiagrams = 
+[
+    {
+        id: 308916002,
+        name: "Environment",
+        dateAdded: new Date("March 3, 2016 12:53:26"),
+        parameters: {
+                        p1: "stuff1",
+                        p2: "stuff2",
+                        p3: "stuff3"
+                    }
+    },
+    {
+        id: 999919999,
+        name: "beastmode",
+        dateAdded: new Date("March 2, 2016 12:53:26"),
+        parameters: {
+                        p1: "stuff1",
+                        p2: "stuff2",
+                        p3: "stuff3"
+                    }
+    },
+    {
+        id: 523000113,
+        name: "Axtra",
+        dateAdded: new Date("March 1, 2016 12:53:26"),
+        parameters: {
+                        p1: "stuff1",
+                        p2: "stuff2",
+                        p3: "stuff3"
+                    }
+    },
+    {
+        id: 523000114,
+        name: "Axtra",
+        dateAdded: new Date("March 1, 2016 12:53:26"),
+        parameters: {
+                        p1: "stuff1",
+                        p2: "stuff2",
+                        p3: "stuff3"
+                    }
+    },
+    {
+        id: 523000115,
+        name: "Axtra",
+        dateAdded: new Date("March 1, 2016 12:53:26"),
+        parameters: {
+                        p1: "stuff1",
+                        p2: "stuff2",
+                        p3: "stuff3"
+                    }
+    },
+    {
+        id: 523000116,
+        name: "Axtra",
+        dateAdded: new Date("March 1, 2016 12:53:26"),
+        parameters: {
+                        p1: "stuff1",
+                        p2: "stuff2",
+                        p3: "stuff3"
+                    }
+    }
+];
+
+var fakeUser = {
+    id: 1337,
+    username: "Arnold",
+    email: "arnold@schwarzenegger.com"
+}
 /*
 ,
         {
@@ -505,31 +541,33 @@ var DiagramElement = React.createClass({
                 </tr>
                 <tr>
                     <td colSpan="4">
-                        <div id={this.props.id} className="panel-collapse collapse diagramHidden" role="tabpanel">
-                            <table className="diagramHidden">
-                                <tbody>
-                                    <tr>                                    
-                                        <td>id:</td>
-                                        <td>{this.props.id}</td>
-                                    </tr>
-                                    <tr>                                    
-                                        <td>Datum:</td>
-                                        <td>{this.props.date}</td>
-                                    </tr>
-                                    <tr>                                    
-                                        <td>Parameter 1:</td>
-                                        <td>{this.props.parameters.p1}</td>
-                                    </tr>
-                                    <tr>                                    
-                                        <td>Parameter 2:</td>
-                                        <td>{this.props.parameters.p2}</td>
-                                    </tr>      
-                                    <tr>                                    
-                                        <td>Parameter 3:</td>
-                                        <td>{this.props.parameters.p3}</td>
-                                    </tr>                                       
-                                </tbody>
-                            </table>
+                        <div id={this.props.id} className="panel-collapse collapse" role="tabpanel">
+                            <div className="diagramHidden">
+                                <table className="diagramHidden">
+                                    <tbody>
+                                        <tr>                                    
+                                            <td>id:</td>
+                                            <td>{this.props.id}</td>
+                                        </tr>
+                                        <tr>                                    
+                                            <td>Datum:</td>
+                                            <td>{this.props.date}</td>
+                                        </tr>
+                                        <tr>                                    
+                                            <td>Parameter 1:</td>
+                                            <td>{this.props.parameters.p1}</td>
+                                        </tr>
+                                        <tr>                                    
+                                            <td>Parameter 2:</td>
+                                            <td>{this.props.parameters.p2}</td>
+                                        </tr>      
+                                        <tr>                                    
+                                            <td>Parameter 3:</td>
+                                            <td>{this.props.parameters.p3}</td>
+                                        </tr>                                       
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -582,8 +620,8 @@ var AccountPage = React.createClass({
 
     render: function(){
         // +/- expand glyphs based on state
-        var expandName = (this.state.nameOpen ? <span className="glyphicon glyphicon-minus expandGlyph" aria-hidden="true"></span> : <span className="glyphicon glyphicon-plus expandGlyph" aria-hidden="true"></span>);
-        var expandPassword = (this.state.passwordOpen ? <span className="glyphicon glyphicon-minus expandGlyph" aria-hidden="true"></span> : <span className="glyphicon glyphicon-plus expandGlyph" aria-hidden="true"></span>);
+        var expandNameClass = "glyphicon expandGlyph " + (this.state.nameOpen ? "glyphicon-minus" : "glyphicon-plus");
+        var expandPasswordClass = "glyphicon expandGlyph " + (this.state.passwordOpen ? "glyphicon-minus" : "glyphicon-plus");
 
         return(
             <div>
@@ -592,6 +630,7 @@ var AccountPage = React.createClass({
 
                 <form className="form-horizontal">
 
+                    {/* NAME ROW */}
                     <div className="accSettingsRow col-sm-12">
                         <div className="col-sm-11">
                             <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
@@ -600,63 +639,50 @@ var AccountPage = React.createClass({
                         </div>
                         <div className="col-sm-1">
                             <a data-toggle="collapse" onClick={this.openAcc.bind(null, "name")} href="#nameCollapse" aria-expanded="false">
-                                {expandName}
+                                <span className={expandNameClass} aria-hidden="true"></span>
                             </a>
                         </div>
 
+                        {/* HIDDEN NAME DIV */}
                         <div className="collapse col-sm-12 hiddenSettings" id="nameCollapse">
                             <div className="customWell">
+                                <InputField fieldName="Användarnamn" defaultValue={fakeUser.username} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{3,15}$" />
+                                <InputField fieldName="Email" defaultValue={fakeUser.email} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$" />
                                 <div className="form-group">
-                                    <label htmlFor="inputEmail3" className="col-sm-3 control-label ">Användarnamn</label>
-                                    <div className="col-sm-7">
-                                        <input type="email" className="form-control" id="inputEmail3" placeholder="Email" />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="inputEmail3" className="col-sm-3 control-label ">Email</label>
-                                    <div className="col-sm-7">
-                                        <input type="email" className="form-control" id="inputEmail3" placeholder="Email" />
+                                    <div className="col-sm-offset-3 col-sm-2">
+                                        <button type="submit" className="btn btn-success">Uppdatera</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {/* PASSWORD ROW */}
                     <div className="accSettingsRow col-sm-12">
                         <div className="col-sm-11">
-                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
+                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse" aria-expanded="false">
                                 Lösenord
                             </a>
                         </div>
                         <div className="col-sm-1">
                             <a data-toggle="collapse" onClick={this.openAcc.bind(null, "password")} href="#passwordCollapse" aria-expanded="false">
-                                {expandPassword}
+                                <span className={expandPasswordClass} aria-hidden="true"></span>
                             </a>
                         </div>
-                    
-                        <div className="collapse col-sm-12 hiddenSettings" id="passwordCollapse">
+
+                        {/* HIDDEN PASSWORD DIV */}
+                        <div className="col-sm-12 hiddenSettings" id="passwordCollapse">
                             <div className="customWell">
-                                <div className="form-group">
-                                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Nytt lösenord</label>
-                                    <div className="col-sm-7">
-                                        <input type="password" className="form-control" id="inputPassword3" placeholder="Password" />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Upprepa</label>
-                                    <div className="col-sm-7">
-                                        <input type="password" className="form-control" id="inputPassword3" placeholder="Password" />
-                                    </div>
-                                </div>
+                                <PasswordFields />
                                 <div className="form-group">
                                     <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Nuvarande lösenord</label>
                                     <div className="col-sm-7">
-                                        <input type="password" className="form-control" id="inputPassword3" placeholder="Password" />
+                                        <input type="password" className="form-control" id="inputPassword3" placeholder="" />
                                     </div>
                                 </div>
-
                                 <div className="form-group">
-                                    <div className="col-sm-offset-9 col-sm-2">
-                                        <button type="submit" className="btn btn-default">Sign in</button>
+                                    <div className="col-sm-offset-3 col-sm-2">
+                                        <button type="submit" className="btn btn-success">Uppdatera</button>
                                     </div>
                                 </div>
                             </div>
@@ -668,6 +694,169 @@ var AccountPage = React.createClass({
         );
     }
 });
+
+var PasswordFields = React.createClass({
+    getInitialState: function(){
+        return({
+            hasChanged: false,
+            passwordStrength: 0
+        });
+    },
+
+    validateField: function(event){
+        var input = event.target.value; //Value from input field
+        var passwordStrength = 1;
+
+        var STR1_MIN_LENGTH = 7;
+        var STR2_MIN_LENGTH = 9;
+        var STR3_MIN_LENGTH = 11;
+        var STR4_MIN_LENGTH = 13;
+
+        var pwStrengthRegex = [
+            /(?=.*[a-zåäö])(?=.*[A-ZÅÄÖ])./,    //Upper & lower case letters
+            /[0-9]+/,                           //Digits
+            /[^(A-Za-z0-9ÅÄÖåäö)]+/             //Other character (not letter or digit)
+        ]
+
+        //Check the input against all the regex and increment passwordStrength for each fulfilled condition
+        for(var i = 0; i < 3; i++){
+            if(pwStrengthRegex[i].test(input)){
+                passwordStrength++;
+            }
+        }
+
+        //Check if the password fulfills the conditions for each strength level
+        if(input.length >= STR4_MIN_LENGTH && passwordStrength >= 4){
+            this.setState({
+                passwordStrength: 4,
+                hasChanged: true
+            });
+        } else if(input.length >= STR3_MIN_LENGTH && passwordStrength >= 3){
+            this.setState({
+                passwordStrength: 3,
+                hasChanged: true
+            });
+        } else if(input.length >= STR2_MIN_LENGTH && passwordStrength >= 2){
+            this.setState({
+                passwordStrength: 2,
+                hasChanged: true
+            });
+        } else if(input.length >= STR1_MIN_LENGTH){
+            this.setState({
+                passwordStrength: 1,
+                hasChanged: true
+            });
+        } else {
+            this.setState({
+                passwordStrength: 0,
+                hasChanged: true
+            });
+        }
+    },
+    
+    render: function(){
+        var pwStrengthBarClass = "progress-bar pwStrengthBar";
+        
+        var barStyle = [
+            {backgroundColor: "gray"},
+            {backgroundColor: "gray"},
+            {backgroundColor: "gray"},
+            {backgroundColor: "gray"}
+        ];
+        for(var i = 0; i < this.state.passwordStrength; i++){
+            switch(this.state.passwordStrength){
+            case 1:
+                barStyle[i] = {backgroundColor: "#d9534f"};
+                break;
+            case 2:
+                barStyle[i] = {backgroundColor: "#f0ad4e"};
+                break;
+            case 3:
+                barStyle[i] = {backgroundColor: "rgb(166, 192, 96)"};
+                break;
+            case 4:
+                barStyle[i] = {backgroundColor: "#5cb85c"};
+                break;
+        }    
+        }
+        
+        return(
+            <div>
+                <div className="form-group">
+                    <label htmlFor="inputPassword3" className="col-sm-3 control-label">Nytt lösenord</label>
+                    <div className="col-sm-7">
+                        <input type="password" className="form-control" id="inputPassword3" onChange={this.validateField} placeholder="" />
+                    </div>
+                </div>
+
+                <div className="col-sm-7 col-sm-offset-3" >
+                    <div className="progress validationBar">
+                        <div className={pwStrengthBarClass} style={barStyle[0]} role="progressbar"></div>
+                        <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                        <div className={pwStrengthBarClass} style={barStyle[1]} role="progressbar"></div>
+                        <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                        <div className={pwStrengthBarClass} style={barStyle[2]} role="progressbar"></div>
+                        <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                        <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
+                    </div>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Upprepa</label>
+                    <div className="col-sm-7">
+                        <input type="password" className="form-control" id="inputPassword3" placeholder="" />
+                    </div>
+                </div>
+                
+            </div>
+        );
+    }
+});
+
+//Tab in the navbar
+var InputField = React.createClass({
+    getInitialState: function(){
+        return({
+            hasChanged: false,
+            isValid: true 
+        });
+    },
+
+    validateField: function(event){
+        var input = event.target.value;
+        var re = new RegExp(this.props.regEx);
+        if(re.test(input)){
+            this.setState({
+                isValid: true,
+                hasChanged: true
+            });
+        } else{
+            this.setState({
+                isValid: false,
+                hasChanged: true
+            });
+        }
+    },
+    
+    render: function(){
+        var divState = "form-group";
+        var glyphState = null;        
+        if(this.state.hasChanged){
+            var divState = divState + " has-feedback " + (this.state.isValid ? "has-success" : "has-error");
+            var glyphState = "glyphicon form-control-feedback " + (this.state.isValid ? "glyphicon-ok" : "glyphicon-remove");
+        }
+        return(
+            <div className={divState}>
+                <label htmlFor={this.props.fieldName} className="col-sm-3 control-label ">{this.props.fieldName}</label>
+                <div className="col-sm-7">
+                    <input type="text" id={this.props.fieldName} className="form-control" defaultValue={this.props.defaultValue} onChange={this.validateField}/>
+                    <span className={glyphState}></span>
+                </div>
+            </div>
+        );
+    }
+});
+
 
 //Tab navigation for profile page
 var NavBar = React.createClass({
