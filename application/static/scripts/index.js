@@ -28,6 +28,22 @@ var Container = React.createClass({
 });
 
 var Bar = React.createClass({
+    render: function() {
+        return (
+            <div className="bar">
+                <Search />
+                <ButtonToolbar id = "buttons">
+                    <Export />
+                    <Button bsStyle = "primary" onClick={this.registerUser}>Register</Button>
+                    <Button bsStyle = "primary" onClick={this.loginUser}>Login</Button>
+                </ButtonToolbar>
+            </div>
+
+        );
+    }
+});
+
+var Export = React.createClass({
     exportSVG: function(){
         var html = d3.select("svg")
             .attr({
@@ -39,7 +55,7 @@ var Bar = React.createClass({
 
         var blob = new Blob([html], {type: "image/svg+xml"}),
             url = window.URL.createObjectURL(blob);
-
+        // Append the image data to a link
         var link = document.createElement("a");
         link.download = "test.svg";
         link.href = url;
@@ -48,13 +64,11 @@ var Bar = React.createClass({
     exportPNG: function(){
         //var canvasId = "canvas";
         var canvas = document.createElement("canvas");
-
         //Load the canvas element with our svg
         canvg(canvas, document.getElementsByClassName("chart")[0].innerHTML.trim());
-
         //Convert the svg to png
         Canvas2Image.convertToPNG(canvas);
-
+        // Append the image data to a link
         var dataString = canvas.toDataURL();
         var link = document.createElement("a");
         link.download = "image.png";
@@ -62,25 +76,16 @@ var Bar = React.createClass({
         link.click();
 
     },
-    render: function() {
+    render: function(){
         return (
-            <div className="bar">
-                <Search />
-                <ButtonToolbar id = "buttons">
-                    <SplitButton bsStyle = "primary" title = "Export" id = "Export">
-                        <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
-                        <MenuItem divider />
-                        <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
-                    </SplitButton>
-                    <Button bsStyle = "primary">Register</Button>
-                    <Button bsStyle = "primary">Login</Button>
-                </ButtonToolbar>
-            </div>
-
+        <SplitButton bsStyle="primary" title="Export" id="Export">
+            <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
+            <MenuItem divider/>
+            <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
+        </SplitButton>
         );
     }
 });
-
 
 
 ReactDOM.render(
