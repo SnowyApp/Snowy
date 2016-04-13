@@ -4,6 +4,16 @@ var Navigation = require("./components/Navigation/index");
 var Chart = require('./components/Diagram/Chart');
 
 var Container = React.createClass({
+    getInitialState: function(){
+        return{
+            url: ''
+        };
+    },
+    handleUrlChange: function(e){
+        this.setState({
+            url: e.target.value
+        });
+    },
     render: function() {
         return (
             <div className="wrapper">
@@ -62,6 +72,7 @@ var Bar = React.createClass({
                         <MenuItem divider />
                         <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
                     </SplitButton>
+                    <Button bsStyle = "primary">Register</Button>
                     <Button bsStyle = "primary">Login</Button>
                 </ButtonToolbar>
             </div>
