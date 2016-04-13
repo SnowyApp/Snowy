@@ -6,7 +6,9 @@ var Chart = require('./components/Diagram/Chart');
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            url: ''
+            serverUrl: 'http://79.136.62.204:3000/',
+            APIedition: '',
+            APIrelease: ''
         };
     },
     handleUrlChange: function(e){
@@ -17,10 +19,10 @@ var Container = React.createClass({
     render: function() {
         return (
             <div className="wrapper">
-                <Navigation />
+                <Navigation/>
                 <section>
                     <Bar />
-                    <Diagram />
+                    <Diagram/>
                 </section>
             </div>
         );
@@ -28,6 +30,11 @@ var Container = React.createClass({
 });
 
 var Bar = React.createClass({
+    getInitialState: function(){
+      return{
+
+      };
+    },
     render: function() {
         return (
             <div className="bar">
