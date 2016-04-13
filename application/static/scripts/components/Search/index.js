@@ -56,36 +56,28 @@ var TermTable = React.createClass({
             hideTable: true
         }
     },
-    componentWillReceiveProps: function(nextProps){
-        var hide = true;
-        if(nextProps.data.length > 0){
-            hide = false;
-        }
-        this.setState({
-            hideTable: hide
-        });
-    },
     handleBlur: function(){
-        this.setState({
-            hideTable: true
-        });
+        this.props.clearData();
     },
     render:function(){
         var optionsProp = {
             onRowClick: function(row){
-                this.setState({
-                    hideTable: true
-                });
                 //Sends back the selected term to the container class
                 this.props.update(row.name)
+                this.props.clearData();
+
             }.bind(this)
         };
+        var emptyTable = true;
+        if(this.props.data.length >0){
+            emptyTable = false;
+        }
         return(
             <PageClick onClick={this.handleBlur}>
                 <div className="search-results">
                     <BootstrapTable data={this.props.data} hover={true} options={optionsProp} >
                         <TableHeaderColumn dataField="id" isKey={true} width="100" hidden = {true}>ID</TableHeaderColumn>
-                        <TableHeaderColumn dataField="name" hidden = {this.state.hideTable}>Name</TableHeaderColumn>
+                        <TableHeaderColumn dataField="name" hidden = {emptyTable}>Name</TableHeaderColumn>
                     </BootstrapTable>
                 </div>
             </PageClick>
@@ -98,6 +90,12 @@ var TermTable = React.createClass({
  The main component
  */
 var Search = React.createClass({
+    getInitialState:function(){
+        return{
+            query:'',
+            searchData: []
+        }
+    },
     doSearch:function(queryText){
         var queryResult=[];
         var baseUrl = this.props.url;
@@ -105,14 +103,12 @@ var Search = React.createClass({
         $.ajax({
             type: "GET",
             "method": "GET",
-            //Here goes the correct url
             url: url,
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
             },
             success: function(result){
-                console.log("api success");
                 for (var i in result["matches"]){
                     queryResult.push({
                         name: result["matches"][i]["term"],
@@ -126,19 +122,18 @@ var Search = React.createClass({
             }.bind(this)
 
         });
-
     },
-    getInitialState:function(){
-        return{
-            query:'',
+    clearData: function(){
+        this.setState({
+            query: this.state.query,
             searchData: []
-        }
+        });
     },
     render:function(){
         return (
             <div className="search">
                 <SearchBox query={this.state.query} doSearch={this.doSearch}/>
-                <TermTable data={this.state.searchData} update={this.props.update} />
+                <TermTable data={this.state.searchData} update={this.props.update} clearData={this.clearData} />
             </div>
         );
     }
