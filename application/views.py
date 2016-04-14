@@ -1,10 +1,11 @@
-from application import app, db
-from application.models import User,Token
+from application import app, es
+from application.models import User,Token,Concept
+from datetime import datetime
 from flask import request, jsonify, abort, g
 from functools import wraps
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
-from sqlalchemy import and_
-from datetime import datetime
+
+import json
 
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
@@ -21,9 +22,11 @@ def verify_auth_token(token):
         return None
     except BadSignature:
         return None
-    user_query = User.query.filter(and_(User.email == data['email'], \
-            User.tokens.any(token=token)))
-    return user_query.first()
+    token = Token(token, data['email'])
+    if token.is_valid_token():
+        return token.retrieve_user()
+    else:
+        return None
 
 
 def login_required(func):
@@ -39,9 +42,6 @@ def login_required(func):
         if not g.user:
             abort(401)
 
-        # Update that the token has been acessed
-        token = Token.query.filter_by(token=token).first()
-        token.accessed = datetime.utcnow()
         return func(*args,**kwargs)
 
     return wrapper
@@ -55,18 +55,16 @@ def create_user():
     """
     # The provided data must contain password and email
     data = request.get_json()
-    if 'email' not in data or 'password' not in data:
+    if 'email' not in data or not isinstance(data['email'], str) \
+            or 'password' not in data or not isinstance(data['password'], str):
         return jsonify(message="Email or password not provided"), 400
 
     # Check so that the user doesn't exist.
-    user = User.query.get(data['email'])
-    if user:
+    if User.user_registered(data['email']):
         return jsonify(message="User already exists"), 400
 
     # Create the new user and return OK
-    user = User(data['email'], data['password'])
-    db.session.add(user)
-    db.session.commit()
+    User.create_user(data['email'], data['password'])
     return jsonify({'message': "ok"})
 
 
@@ -80,7 +78,7 @@ def login():
     if not 'email' in data or not 'password' in data:
         return jsonify(message="Email or password not provided"), 400
 
-    user = User.query.get(data['email'])
+    user = User.get_user(data['email'])
     if not user:
         return jsonify(message="Wrong user or password"), 400
 
@@ -88,13 +86,10 @@ def login():
         return jsonify(message="Wrong user or password"), 400
 
     # Generate a new token and store it in the database
-    token = token=user.generate_token()
-    stored_token = Token(token=token.decode('utf-8'))
-    db.session.add(stored_token)
-    user.tokens.append(stored_token)
-    db.session.commit()
-
-    return jsonify(token=stored_token.token)
+    token = user.generate_token()
+    token = Token(token.decode('utf-8'), user.email)
+    token.store_token()
+    return jsonify(token=token.token)
 
 
 @app.route('/verify', methods=['GET'])
@@ -113,10 +108,93 @@ def logout():
     Logs the user out by destroying the token.
     """
     token = request.headers.get('Authorization', None)
-    stored_token = Token.query.filter_by(token=token).first()
-    db.session.delete(stored_token)
-    db.session.commit()
+    Token(token, "").delete_from_db()
     return jsonify(message="Logged out")
+
+
+@app.route('/update_info', methods=['POST'])
+@login_required
+def update_info():
+    """
+    Updates information for the user.
+    """
+    data = request.get_json()
+    if not 'first_name' in data or not isinstance(data['first_name'], str) or \
+        not 'last_name' in data or not isinstance(data['last_name'], str) or \
+        not 'language' in data or not isinstance(data['language'], str):
+        return jsonify(message="Incomplete information")
+    
+    g.user.update_info(data['first_name'], data['last_name'], data['language'])
+    return jsonify(message="ok")
+
+
+@app.route('/favorite_term', methods=['POST', 'GET'])
+@login_required
+def favorite_term():
+    """
+    Saves a term as the users favorite.
+    """
+    if request.method == "POST":
+        data = request.get_json()
+
+        # Check so that the data is valid
+        if not 'id' in data or not isinstance(data['id'], int) or \
+                not 'term' in data or not isinstance(data['term'], str) or \
+                not 'effective_time' in data or not isinstance(data['effective_time'], int) or \
+                not 'active' in data or not isinstance(data['active'], int):
+            return jsonify(message="The concepts data is not providid accurately"), 400
+        
+        g.user.add_favorite_term(data['id'], data['term'])
+        return jsonify(message="ok")
+    else:
+        return json.dumps(g.user.get_favorite_terms())
+
+
+@app.route('/concept/<int:cid>', methods=['POST', 'GET'])
+def get_concept(cid):
+    """
+    Returns the concept for the specified id
+    """
+    concept = Concept.get_concept(cid)
+    if not concept:
+        return jsonify(message="Invalid concept id"), 400
+
+    return jsonify(concept.to_json())
+
+
+@app.route('/get_children/<int:cid>', methods=['GET'])
+def get_children(cid):
+    """
+    Returns the children for the specified id.
+    """
+    return json.dumps([concept.to_json() for concept in Concept.get_children(cid)])
+
+
+@app.route('/get_relations/<int:cid>', methods=['GET'])
+def get_relations(cid):
+    """
+    Returns the relations for the given id.
+    """
+    return json.dumps([concept.to_json() for concept in Concept.get_relations(cid)])
+
+
+@app.route('/search/<search_term>', methods=['GET'])
+def search(search_term):
+    """
+    Searches the database for the given term.
+    """
+    query = {
+            "query": {
+                "multi_match": {
+                    "fields": ["id", "term"],
+                    "query": search_term,
+                    "type": "cross_fields",
+                    "use_dis_max": False
+                }
+            },
+            "size": 10
+        }
+    return jsonify(es.search(index="desc", body=query))
 
 
 @app.errorhandler(400)
