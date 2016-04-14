@@ -2,6 +2,9 @@
 DROP TABLE IF EXISTS usr CASCADE;
 CREATE TABLE usr(
     email TEXT NOT NULL PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    language_setting VARCHAR(2),
     password_hash TEXT NOT NULL
 );
 
