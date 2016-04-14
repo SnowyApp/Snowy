@@ -4,7 +4,7 @@
     z-index: 99;
     position: relative;
     width: 250px;
-
+    margin-left: 150px;
 }
 
 .search input {
