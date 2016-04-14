@@ -40,31 +40,64 @@ module.exports = React.createClass({
 // TODO: Remove as fast as correct formatted data is available.
 var treeData1 = [
     {
-        "name": "Top Level",
+        "name": "Rot",
         "parent": "null",
         "expression": "concept",
         "children": [
             {
-                "name": "Level 2: A",
-                "parent": "Top Level",
+                "name": "Sjukdom",
+                "parent": "Rot",
                 "expression": "defined-concept",
                 "children": [
                     {
-                        "name": "Son of A",
-                        "parent": "Level 2: A",
-                        "expression": "attribute"
-                    },
-                    {
-                        "name": "Daughter of A",
-                        "parent": "Level 2: A",
-                        "expression": "concept"
+                        "name": "Inflammationssjukdom",
+                        "parent": "Sjukdom",
+                        "expression": "attribute",
+                        "children": [
+                            {
+                                "name": "Lunginflammation",
+                                "parent": "Inflammantionssjukdom",
+                                "expression": "attribute"
+                            },
+                            {
+                                "name": "Inflammation i knäled",
+                                "parent": "Inflammantionssjukdom",
+                                "expression": "attribute"
+                            }
+                        ]
                     }
                 ]
             },
             {
-                "name": "Level 2: B",
-                "parent": "Top Level",
-                "expression": "attribute"
+                "name": "Kroppsstruktur",
+                "parent": "Rot",
+                "expression": "defined-concept",
+                "children": [
+                    {
+                        "name": "Andningssystemet",
+                        "parent": "Kroppstruktur",
+                        "expression": "attribute",
+                        "children": [
+                            {
+                                "name": "Lunga",
+                                "parent": "Andningssystemet",
+                                "expression": "attribute"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Led",
+                "parent": "Kroppsstruktur",
+                "expression": "defined-concept",
+                "children": [
+                    {
+                        "name": "Knäled",
+                        "parent": "Led",
+                        "expression": "attribute"
+                    }
+                ]
             }
         ]
     }
@@ -72,7 +105,7 @@ var treeData1 = [
 
 var treeData2 = [
     {
-        "name": "Top Level 2",
+        "name": "Top Level",
         "parent": "null",
         "expression": "concept",
         "children": [
