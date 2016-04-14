@@ -10,14 +10,14 @@
         <!-- Bootstrap css -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
 
-
-        <link rel="stylesheet" href="css/general.css" />
-        <link rel="stylesheet" href="css/diagram.css" />
-        <link rel="stylesheet" href="css/navigation.css" />
-        <link rel="stylesheet" href="css/search.css" />
+        <link rel="stylesheet" href="static/css/general.css" />
+        <link rel="stylesheet" href="static/css/diagram.css" />
+        <link rel="stylesheet" href="static/css/navigation.css" />
+        <link rel="stylesheet" href="static/css/search.css" />
+        <link rel="stylesheet" href="static/css/d3-context-menu.css" />
 
         <!-- React-bootstrap table css -->
-        <link rel="stylesheet" href="react-bootstrap/react-bootstrap-table.min.css">
+        <link rel="stylesheet" href="static/react-bootstrap/react-bootstrap-table.min.css">
 
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
@@ -36,16 +36,22 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.28.3/react-bootstrap.js"></script>
 
         <!-- React-bootstrap table -->
-        <script src="react-bootstrap/react-bootstrap-table.min.js" ></script>
+        <script src="static/react-bootstrap/react-bootstrap-table.min.js" ></script>
         <script> Object.keys(ReactBootstrap).forEach(function (name) { window[name] = ReactBootstrap[name]; }); </script>
 
         <!-- D3 latest release-->
         <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+        <script type="text/javascript" src="http://gabelerner.github.io/canvg/rgbcolor.js"></script>
+        <script type="text/javascript" src="http://gabelerner.github.io/canvg/StackBlur.js"></script>
+        <script type="text/javascript" src="http://gabelerner.github.io/canvg/canvg.js"></script>
+
+        <script src="static/canvas2image/canvas2image.js" ></script>
     </head>
     <body>
 
         <div id="content"></div>
-        <script src="bundle.js"></script>
+        <script src="static/bundle.js"></script>
 
     </body>
 </html>
