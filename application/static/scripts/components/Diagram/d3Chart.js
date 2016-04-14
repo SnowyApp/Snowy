@@ -42,6 +42,8 @@ const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
 const WIDTH_MARGIN = 500;
 
+const DURATION = 750;
+
 /**
  * This will be used to "inject" an SVG-element to our webpage that you can
  * already do with
@@ -50,11 +52,6 @@ const WIDTH_MARGIN = 500;
  *      .
  *      .
  * </svg>
-<<<<<<< HEAD
- *
- * @param element
- * @param props
- * @param state
  */
 
 d3Chart.create = function(element, props, state) {
@@ -67,7 +64,7 @@ d3Chart.create = function(element, props, state) {
      */
     var zoom = d3.behavior.zoom()
         //.scaleExtent([1, 10])
-        .on("zoom", zoomed)        ;
+        .on("zoom", zoomed);
 
 
     /**
@@ -80,30 +77,8 @@ d3Chart.create = function(element, props, state) {
      * </svg>
      */
     var svg = d3.select(element).append("svg")
-         // .attr("width", "100%")
-          //.attr("height", "100%")
-          .attr("class", "d3")
-            .call(zoom).on("dblclick.zoom", null);
-        /*
-        .append("g")
-        .attr("class" , "outer")
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .attr("transform", "translate(" + 0 + "," + 0 + ")")
-        */
-
-    /**
-     * We append a rect to the SVG element so that we can move the diagram around,
-     * it tracks the movement of the entire diagram.
-     */
-    /*
-    var rect = svg.append("rect")
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .attr("class", "scrollable")
-        .style("fill", "none")
-        .style("pointer-events", "all");
-        */
+        .attr("class", "d3")
+        .call(zoom);
 
     /**
      * To add more than one Shape or text element to the SVG-element you have
@@ -144,10 +119,6 @@ d3Chart.destroy = function(element) {
 };
 /**
  * This will set some scaling according to the sizes of the element
- * @param element
- * @param domain
- * @returns {*}
- * @private
  */
 d3Chart._scales = function(element, domain) {
     if (!domain) {
@@ -182,10 +153,26 @@ d3Chart._drawPoints = function(data) {
 
     //root = data[0];
 
+    // build the arrow.
+    var arrow = g.append("svg:defs").selectAll("marker")
+            .data(["start"])
+        .enter().append("svg:marker")    // This section adds in the arrows
+            .attr("id", String)
+            .attr("viewBox", "-5 -5 10 10")
+            .attr("refX", -5)
+            .attr("refY", 0)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+        .append("svg:path")
+            .attr("d", "M -5,0 L 4,-3 L 4,3 Z")
+            .attr('stroke', 'black')
+            .attr('fill', 'white');
+
+
     /**
      * nodes and links will become arrays which contains the data for all
      * the nodes and positions for the links (lines) between them.
-     * @type {*|Array.<T>}
      */
 
     var nodes = tree.nodes(root),
@@ -201,16 +188,6 @@ d3Chart._drawPoints = function(data) {
         .on("drag", dragmove)
         .on("dragend", dragended);
 
-    /**
-     * Function for dragging an element.
-     * @param d
-     * @param i
-     */
-    function dragmove(d, i) {
-        d.x += d3.event.dx;
-        d.y += d3.event.dy;
-        tick();
-    }
     /**
      * This manually sets the distance between the nodes
      */
@@ -303,7 +280,30 @@ d3Chart._drawPoints = function(data) {
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y2", function(d) { return d.target.y + 0; })
-        .attr("style", "stroke:rgb(0,0,0);stroke-width:2");
+        .style("style", "stroke:rgb(0,0,0);stroke-width:2")
+        .style("marker-start", "url(#start)"); // add the arrow to the link end
+
+    var nodeExit = node.exit().transition()
+        .duration(DURATION)
+        .attr("transform", function(d) {
+            return "translate(" + d.parent.x + "," + d.parent.y + ")"; })
+        .style('fill-opacity', 1e-6)
+        .remove();
+
+    nodeExit.select('rect')
+        .attr('width', NODE_WIDTH)
+        .attr('height', NODE_HEIGHT);
+
+    nodeExit.select('text')
+        .style("fill-opacity", 1e-6);
+
+    link.exit().transition()
+        .duration(DURATION)
+        .attr("x1", function(d) { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        .attr("y1", function(d) { return data.parent.y + NODE_HEIGHT; })
+        .attr("x2", function(d) { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        .attr("y2", function(d) { return data.parent.y + 0; })
+        .remove();
 
     /**
      * Function for recalculating values of links and nodes
@@ -326,6 +326,15 @@ d3Chart._drawPoints = function(data) {
         d3.event.sourceEvent.stopPropagation();
         d3.select(this).classed("dragging", true);
     }
+
+    /**
+     * Function for dragging an element.
+     */
+    function dragmove(d, i) {
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        tick();
+    }
     /**
      * Function for the event dragged. Currently replaced by function dragmove.
      * @param d
@@ -335,12 +344,9 @@ d3Chart._drawPoints = function(data) {
     }
     /**
      * Function for the event dragended
-     * @param d
      */
     function dragended(d) {
         d3.select(this).classed("dragging", false);
     }
-    node.exit().remove();
-    link.exit().remove();
 };
 
