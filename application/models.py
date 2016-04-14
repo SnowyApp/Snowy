@@ -13,8 +13,8 @@ INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);
 SELECT_USER_QUERY = "SELECT email, password_hash FROM usr WHERE email=%s;"
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
-SELECT_TOKEN_QUERY = "SELECT * FROM token WHERE token=%s AND user_email=%s;"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
+VALID_TOKEN_PROCEDURE = "is_valid_token"
 
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 ADD_FAVORITE_TERM_PROCEDURE = "add_favorite_term"
@@ -169,7 +169,7 @@ class Token():
         """
         cur = get_db().cursor()
         try:
-            cur.execute(SELECT_TOKEN_QUERY, (self.token, self.user_email))
+            cur.callproc(VALID_TOKEN_PROCEDURE, (self.token, self.user_email))
             token_data = cur.fetchone()
             cur.close()
             return token_data is not None
