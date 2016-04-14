@@ -60,10 +60,8 @@ var TermTable = React.createClass({
         var optionsProp = {
             onRowClick: function(row){
                 //Sends back the selected term to the container class
-                this.props.update(row.name)
-
+                this.props.update(row.id);
                 this.props.clearData();
-
             }.bind(this)
         };
 
