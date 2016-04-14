@@ -200,7 +200,7 @@ DECLARE
 BEGIN
     SELECT concept_id, effective_time, active, term INTO result
         FROM description
-        WHERE concept_id=cid AND active = 1 AND type_id = 900000000000003001 
+        WHERE concept_id=cid AND active = 1 
         ORDER BY effective_time DESC
         LIMIT 1;
     RETURN result;
