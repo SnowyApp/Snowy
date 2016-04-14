@@ -2,6 +2,9 @@
 DROP TABLE IF EXISTS usr CASCADE;
 CREATE TABLE usr(
     email TEXT NOT NULL PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    language VARCHAR(2),
     password_hash TEXT NOT NULL
 );
 
@@ -10,7 +13,8 @@ DROP TABLE IF EXISTS token CASCADE;
 CREATE TABLE token(
     id BIGSERIAL PRIMARY KEY,
     token TEXT NOT NULL,
-    user_email TEXT NOT NULL REFERENCES usr (email)
+    user_email TEXT NOT NULL REFERENCES usr (email),
+    accessed TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- A table that stores the concept data
@@ -188,6 +192,7 @@ $$ LANGUAGE plpgsql;
 DROP TYPE IF EXISTS concept_result CASCADE;
 CREATE TYPE concept_result AS (id BIGINT, effective_time BIGINT, active INTEGER, term TEXT);
 
+DROP FUNCTION IF EXISTS get_concept(BIGINT);
 CREATE OR REPLACE FUNCTION get_concept(cid BIGINT)
 RETURNS concept_result AS $$
 DECLARE
@@ -195,9 +200,24 @@ DECLARE
 BEGIN
     SELECT concept_id, effective_time, active, term INTO result
         FROM description
-        WHERE concept_id=cid AND active = 1
+        WHERE concept_id=cid AND active = 1 AND type_id = 900000000000003001 
         ORDER BY effective_time DESC
         LIMIT 1;
     RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Procedure that checks if a token is valid
+DROP FUNCTION IF EXISTS is_valid_token(text, text);
+CREATE OR REPLACE FUNCTION is_valid_token(token_info TEXT, email TEXT)
+RETURNS INT AS $$
+DECLARE
+    result INT;
+    token_id BIGINT;
+BEGIN
+    SELECT id INTO token_id FROM token WHERE token=token_info AND user_email=email;
+    UPDATE token SET accessed = NOW() WHERE id=token_id;
+    RETURN token_id;
 END;
 $$ LANGUAGE plpgsql;

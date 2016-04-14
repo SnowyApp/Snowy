@@ -1,7 +1,11 @@
 
 module.exports = React.createClass({
     render: function() {
-        return <Search />;
+        return (
+            <div className="contentContainer">
+                <Search />
+            </div>
+        );
     }
 });
 
@@ -42,12 +46,10 @@ var TermTable = React.createClass({
             }
         };
         return(
-            <div className="search-results">
-                <BootstrapTable data={this.props.data} hover={true} options={optionsProp}>
-                <TableHeaderColumn dataField="id" isKey={true} width="30">ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="name" >Name</TableHeaderColumn>
-                </BootstrapTable>
-            </div>
+            <BootstrapTable data={this.props.data} hover={true} options={optionsProp}>
+            <TableHeaderColumn dataField="id" isKey={true} width="30">ID</TableHeaderColumn>
+            <TableHeaderColumn dataField="name" >Name</TableHeaderColumn>
+            </BootstrapTable>
         );
     }
 });
@@ -103,7 +105,7 @@ var Search = React.createClass({
     },
     render:function(){
         return (
-            <div className="search">
+            <div className="Search">
                 <SearchBox query={this.state.query} doSearch={this.doSearch}/>
                 <TermTable data={this.state.searchData}/>
             </div>

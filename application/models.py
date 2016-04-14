@@ -1,5 +1,5 @@
 from datetime import datetime
-from application import app, db
+from application import app
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import g
@@ -10,11 +10,13 @@ DB_NAME = "snomedct"
 DB_USER = "simon"
 
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
-SELECT_USER_QUERY = "SELECT email, password_hash FROM usr WHERE email=%s;"
+SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, language FROM usr WHERE email=%s;"
+UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, language=%s WHERE email=%s ;"
+
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
-SELECT_TOKEN_QUERY = "SELECT * FROM token WHERE token=%s AND user_email=%s;"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
+VALID_TOKEN_PROCEDURE = "is_valid_token"
 
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 ADD_FAVORITE_TERM_PROCEDURE = "add_favorite_term"
@@ -61,9 +63,12 @@ class User():
     """
     A user of the browser.
     """
-    def __init__(self, email, password_hash):
+    def __init__(self, email, password_hash, first_name = "", last_name = "", language = "en"):
         self.email = email
         self.password_hash = password_hash
+        self.first_name = first_name
+        self.last_name = last_name
+        self.language = language
 
     def check_password(self, plain_pass):
         """ Checks if the password matches the stored hash """
@@ -102,6 +107,21 @@ class User():
         except Exception as e:
             print(e)
             return None
+
+    def update_info(self, first_name, last_name, language):
+        """
+        Update the first name, last name and language setting for the user.
+        Returns True if the operation succeeded, False otherwise.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, language, self.email))
+            get_db().commit()
+            cur.close()
+            return True
+        except Exception as e:
+            print(str(e))
+            return False
  
     @staticmethod
     def create_user(email, password):
@@ -139,7 +159,7 @@ class User():
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
-        return User(user_data[0], user_data[1])
+        return User(user_data[0], user_data[1], user_data[2], user_data[3], user_data[4])
 
 
 class Token():
@@ -169,7 +189,7 @@ class Token():
         """
         cur = get_db().cursor()
         try:
-            cur.execute(SELECT_TOKEN_QUERY, (self.token, self.user_email))
+            cur.callproc(VALID_TOKEN_PROCEDURE, (self.token, self.user_email))
             token_data = cur.fetchone()
             cur.close()
             return token_data is not None

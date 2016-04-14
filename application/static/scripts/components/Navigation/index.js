@@ -2,9 +2,7 @@
 module.exports = React.createClass({
     render: function(){
         return (
-            <nav>
-                <Navigation APIUrl='http://79.136.62.204:3000' rootNodeID='138875005'/>
-            </nav>
+            <Navigation />
         );
     }
 });
@@ -18,7 +16,7 @@ var Navigation = React.createClass({
 		$.ajax({
             type: "GET",
             "method": "GET",
-            url: this.props.APIUrl + '/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true',
+            url: 'http://79.136.62.204:3000/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true', //Carls server
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
@@ -43,7 +41,7 @@ var Navigation = React.createClass({
         $.ajax({
             type: "GET",
             "method": "GET",
-            url: this.props.APIUrl + '/snomed/en-edition/v20150731/concepts/' + id,
+            url: 'http://79.136.62.204:3000/snomed/en-edition/v20150731/concepts/' + id,
             dataType: "json",
             error: function(){
                 console.log('Failed to access API')
@@ -56,10 +54,11 @@ var Navigation = React.createClass({
             }.bind(this)
         });
     },
-	
-    componentDidMount: function(){
-        this.setParent(this.props.rootNodeID);
-    },
+
+
+	componentDidMount: function(){
+        this.setParent(138875005);
+	},
 
     //Handles clicks on the children (callback function)
     handleClick: function(e){
@@ -80,36 +79,34 @@ var Navigation = React.createClass({
     getInitialState: function(){
         return (
             {
-                currentParent: 'SNOMED CT Concept',
-                termChildren: [],
+				currentParent: 'SNOMED CT Concept',
+                termChildren: [], //this.props.data[0]
                 history: []
             }
         );
     },
 
     render: function() {
-        var backArrow;
-        //Hide back arrow if there is no history
+        var backArrow; //Hide back arrow if there is no history
         if(this.state.history.length === 0){
             backArrow = {display: 'none'};
         }else{
             backArrow = {};
         }
         //Create NavigationItem's for all the children of the current parent node
-        var ItemArray = this.state.termChildren.map(function(child){
+        var ItemArray = this.state.termChildren.map(function(child){ //ta bort .children för api
             return(
                 <NavigationItem key={child.id} id={child.id} name={child.name} handleClickCallback={this.handleClick} />
             );
         }, this);
         return (
-            <ul className="nav nav-pills nav-stacked">
-                    <li role="presentation" className="active"><a onClick={this.upOneLevel} href="#">
-                        <span style={backArrow} className="glyphicon glyphicon-triangle-top" aria-hidden="true"> </span> 
+            <div className="list-group navigation">
+                    <a className="list-group-item active" onClick={this.upOneLevel} href="#">
+                        <span style={backArrow} className="glyphicon glyphicon-triangle-top" aria-hidden="true"> </span>
                         {this.state.currentParent}
-                        </a>
-                    </li> 
+                    </a>
                     {ItemArray}
-            </ul>
+            </div>
         );
     }
 });
@@ -122,11 +119,13 @@ var NavigationItem = React.createClass({
     },
 
     render: function(){
+        var arrowStyle = {fontSize: "1.2em", position:"absolute", right:"10px", top:"25%"};
         return(
-            <li role="presentation">
-                <a className="navLink" onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>{this.props.name}</a>
-                <a className="arrowLink" href='#2'><span className="glyphicon glyphicon-arrow-right navArrow" aria-hidden="true"></span></a>
-            </li>
+            <div>
+                <a className="list-group-item" onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>{this.props.name}
+                    <span style={arrowStyle} className="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                </a>
+            </div>
         );
     }
 });
