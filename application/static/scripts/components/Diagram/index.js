@@ -84,18 +84,18 @@ var treeData1 = [
                                 "expression": "attribute"
                             }
                         ]
-                    }
-                ]
-            },
-            {
-                "name": "Led",
-                "parent": "Kroppsstruktur",
-                "expression": "defined-concept",
-                "children": [
+                    },
                     {
-                        "name": "Knäled",
-                        "parent": "Led",
-                        "expression": "attribute"
+                        "name": "Led",
+                        "parent": "Kroppsstruktur",
+                        "expression": "defined-concept",
+                        "children": [
+                            {
+                                "name": "Knäled",
+                                "parent": "Led",
+                                "expression": "attribute"
+                            }
+                        ]
                     }
                 ]
             }
