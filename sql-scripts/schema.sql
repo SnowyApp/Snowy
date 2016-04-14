@@ -10,7 +10,8 @@ DROP TABLE IF EXISTS token CASCADE;
 CREATE TABLE token(
     id BIGSERIAL PRIMARY KEY,
     token TEXT NOT NULL,
-    user_email TEXT NOT NULL REFERENCES usr (email)
+    user_email TEXT NOT NULL REFERENCES usr (email),
+    accessed TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- A table that stores the concept data
@@ -199,5 +200,19 @@ BEGIN
         ORDER BY effective_time DESC
         LIMIT 1;
     RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Procedure that checks if a token is valid
+CREATE OR REPLACE FUNCTION is_valid_token(token TEXT, email TEXT)
+RETURNS INT AS $$
+DECLARE
+    result INT;
+    id BIGINT;
+BEGIN
+    SELECT id INTO id FROM token WHERE token=token AND user_email=email;
+    UPDATE token SET accessed = NOW() WHERE id=id;
+    RETURN id;
 END;
 $$ LANGUAGE plpgsql;
