@@ -55,7 +55,6 @@ const DURATION = 750;
  */
 
 d3Chart.create = function(element, props, state) {
-    console.log("Create");
     root = state.data[0];
 
     /**
@@ -110,7 +109,6 @@ d3Chart.create = function(element, props, state) {
  * Called when we want to redraw the tree
  */
 d3Chart.update = function(element, state) {
-    console.log("update");
     root = state.data[0];
     console.log(root);
     this._drawPoints(root);
