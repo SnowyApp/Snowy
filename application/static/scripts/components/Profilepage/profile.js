@@ -628,98 +628,143 @@ var AccountPage = React.createClass({
                 <h1><span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> Konto</h1>
                 <hr className="profileHr"/>
 
-                <form className="form-horizontal">
+                {/* NAME ROW */}
+                <div className="accSettingsRow col-sm-12">
+                    <div className="col-sm-11">
+                        <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
+                            Namn
+                        </a>
+                    </div>
+                    <div className="col-sm-1">
+                        <a data-toggle="collapse" onClick={this.openAcc.bind(null, "name")} href="#nameCollapse" aria-expanded="false">
+                            <span className={expandNameClass} aria-hidden="true"></span>
+                        </a>
+                    </div>
 
-                    {/* NAME ROW */}
-                    <div className="accSettingsRow col-sm-12">
-                        <div className="col-sm-11">
-                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
-                                Namn
-                            </a>
+                    {/* HIDDEN NAME DIV */}
+                    <div className="collapse col-sm-12 hiddenSettings" id="nameCollapse">
+                        <div className="customWell">
+                            <ChangeNameAndEmailForm />
                         </div>
-                        <div className="col-sm-1">
-                            <a data-toggle="collapse" onClick={this.openAcc.bind(null, "name")} href="#nameCollapse" aria-expanded="false">
-                                <span className={expandNameClass} aria-hidden="true"></span>
-                            </a>
-                        </div>
+                    </div>
+                </div>
 
-                        {/* HIDDEN NAME DIV */}
-                        <div className="collapse col-sm-12 hiddenSettings" id="nameCollapse">
-                            <div className="customWell">
-                                <InputField fieldName="Användarnamn" defaultValue={fakeUser.username} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{3,15}$" />
-                                <InputField fieldName="Email" defaultValue={fakeUser.email} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$" />
-                                <div className="form-group">
-                                    <div className="col-sm-offset-3 col-sm-2">
-                                        <button type="submit" className="btn btn-success">Uppdatera</button>
-                                    </div>
-                                </div>
-                            </div>
+                {/* PASSWORD ROW */}
+                <div className="accSettingsRow col-sm-12">
+                    <div className="col-sm-11">
+                        <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse" aria-expanded="false">
+                            Lösenord
+                        </a>
+                    </div>
+                    <div className="col-sm-1">
+                        <a data-toggle="collapse" onClick={this.openAcc.bind(null, "password")} href="#passwordCollapse" aria-expanded="false">
+                            <span className={expandPasswordClass} aria-hidden="true"></span>
+                        </a>
+                    </div>
+
+                    {/* HIDDEN PASSWORD DIV */}
+                    <div className="collapse col-sm-12 hiddenSettings" id="passwordCollapse">
+                        <div className="customWell">
+                            <ChangePasswordForm />
                         </div>
                     </div>
 
-                    {/* PASSWORD ROW */}
-                    <div className="accSettingsRow col-sm-12">
-                        <div className="col-sm-11">
-                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse" aria-expanded="false">
-                                Lösenord
-                            </a>
-                        </div>
-                        <div className="col-sm-1">
-                            <a data-toggle="collapse" onClick={this.openAcc.bind(null, "password")} href="#passwordCollapse" aria-expanded="false">
-                                <span className={expandPasswordClass} aria-hidden="true"></span>
-                            </a>
-                        </div>
-
-                        {/* HIDDEN PASSWORD DIV */}
-                        <div className="col-sm-12 hiddenSettings" id="passwordCollapse">
-                            <div className="customWell">
-                                <PasswordFields />
-                                <div className="form-group">
-                                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Nuvarande lösenord</label>
-                                    <div className="col-sm-7">
-                                        <input type="password" className="form-control" id="inputPassword3" placeholder="" />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <div className="col-sm-offset-3 col-sm-2">
-                                        <button type="submit" className="btn btn-success">Uppdatera</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </form>
+                </div>
             </div>
         );
     }
 });
 
-var PasswordFields = React.createClass({
+//Form for changing username and email
+var ChangeNameAndEmailForm = React.createClass({
+    handleSubmit: function(e){
+        e.preventDefault();
+    },
+
+    render: function(){
+        return(
+            <form className="form-horizontal" onSubmit={this.handleSubmit}>
+                <InputField fieldName="username" fieldDescription="Användarnamn" defaultValue={fakeUser.username} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{3,15}$" />
+                <InputField fieldName="email" fieldDescription="Email" defaultValue={fakeUser.email} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$" />
+                <div className="form-group">
+                    <div className="col-sm-offset-3 col-sm-2">
+                        <button type="submit" className="btn btn-success">Uppdatera</button>
+                    </div>
+                </div>
+            </form>
+        );
+    }
+});
+
+
+var ChangePasswordForm = React.createClass({
     getInitialState: function(){
         return({
+            newPassword: "",
+            repeatPassword: "",
+            currPassword: "",
+            matchingPasswords: false,
             hasChanged: false,
-            passwordStrength: 0
+            passwordStrength: 0,
+            errorMessage: "",
+            successMessage: ""
         });
     },
 
-    validateField: function(event){
-        var input = event.target.value; //Value from input field
-        var passwordStrength = 1;
+    //Handles the submit of the form
+    handleSubmit: function(e){
+        e.preventDefault();
+        //TODO: Calls to database goes here
+        //inputs can be found in the states (newPassword, currPassword)        
 
+        if(this.state.currPassword != "12345"){
+            this.setState({
+                errorMessage: "Fel lösenord!",
+                successMessage: ""
+            });
+        }
+        //Success    
+        else {
+            this.setState({
+                errorMessage: "",
+                successMessage: "Ditt lösenord har uppdaterats.",
+                hasChanged: false,
+                newPassword: "",
+                repeatPassword: "",
+                currPassword: "",
+                passwordStrength: 0
+            });
+            document.getElementById("newPassword").value = "";
+            document.getElementById("repeatPassword").value = "";
+            document.getElementById("currPassword").value = "";
+        }
+    },
+
+    //Checks the strength of the password (0-4)
+    checkPasswordStrength: function(event){
+        var input = event.target.value; //Value from input field
+        var passwordStrength = 0;
+
+        //Update state and provide a callback function for when the state is updated to check if the passwords are matching
+        this.setState({
+            newPassword: input
+        }, this.checkMatchingPasswords);
+
+        //Minimum length to reach each password strength level
         var STR1_MIN_LENGTH = 7;
         var STR2_MIN_LENGTH = 9;
         var STR3_MIN_LENGTH = 11;
         var STR4_MIN_LENGTH = 13;
 
         var pwStrengthRegex = [
-            /(?=.*[a-zåäö])(?=.*[A-ZÅÄÖ])./,    //Upper & lower case letters
+            /[A-ZÅÄÖ]/,                         //Upper case letters
+            /[a-zåäö]/,                         //Lower case letters
             /[0-9]+/,                           //Digits
             /[^(A-Za-z0-9ÅÄÖåäö)]+/             //Other character (not letter or digit)
         ]
 
         //Check the input against all the regex and increment passwordStrength for each fulfilled condition
-        for(var i = 0; i < 3; i++){
+        for(var i = 0; i < 4; i++){
             if(pwStrengthRegex[i].test(input)){
                 passwordStrength++;
             }
@@ -753,9 +798,63 @@ var PasswordFields = React.createClass({
             });
         }
     },
+
+    //Updates the repeatedPassword state to match the input field
+    updateRepeatedPassword: function(event){
+        var input = event.target.value;
+        //Update state and provide a callback function for when the state is updated to check if the passwords are matching
+        this.setState({
+            repeatPassword: input
+        }, this.checkMatchingPasswords);
+    },
+
+    //Check if the two password fields match
+    checkMatchingPasswords: function(){
+        this.setState({
+            matchingPasswords: (this.state.newPassword == this.state.repeatPassword)
+        });
+    },
+
+    //Updates the currPassword state to match input
+    updateCurrPasswordState: function(event){
+        var input = event.target.value;
+        this.setState({
+            currPassword: input
+        });
+    },
     
     render: function(){
+        //Password strength
+        var passwordDivState = "form-group"
+        var passwordGlyphState = null;
+        if(this.state.newPassword.length > 0){
+            passwordDivState = passwordDivState + " has-feedback " + (this.state.passwordStrength > 0 ? "has-success" : "has-error");
+            passwordGlyphState = "glyphicon form-control-feedback " + (this.state.passwordStrength > 0 ? "glyphicon-ok" : "glyphicon-remove");
+        }
+
         var pwStrengthBarClass = "progress-bar pwStrengthBar";
+        var pwStrengthText = [
+            {
+                className: "pwStrengthText pwStrength0Color",
+                text: "Väldigt svagt"
+            },
+            {
+                className: "pwStrengthText pwStrength1Color",
+                text: "Svagt"
+            },
+            {
+                className: "pwStrengthText pwStrength2Color",
+                text: "Medel"
+            },
+            {
+                className: "pwStrengthText pwStrength3Color",
+                text: "Starkt"
+            },
+            {
+                className: "pwStrengthText pwStrength4Color",
+                text: "Väldigt starkt"
+            }
+        ];
         
         var barStyle = [
             {backgroundColor: "gray"},
@@ -763,6 +862,7 @@ var PasswordFields = React.createClass({
             {backgroundColor: "gray"},
             {backgroundColor: "gray"}
         ];
+
         for(var i = 0; i < this.state.passwordStrength; i++){
             switch(this.state.passwordStrength){
             case 1:
@@ -772,20 +872,38 @@ var PasswordFields = React.createClass({
                 barStyle[i] = {backgroundColor: "#f0ad4e"};
                 break;
             case 3:
-                barStyle[i] = {backgroundColor: "rgb(166, 192, 96)"};
+                barStyle[i] = {backgroundColor: "#a6c060"}; 
                 break;
             case 4:
                 barStyle[i] = {backgroundColor: "#5cb85c"};
                 break;
-        }    
+            }    
         }
         
+        //Matching passwords
+        var repeatDivState = "form-group"
+        var repeatGlyphState = null;
+        if(this.state.repeatPassword.length > 0){
+            repeatDivState = repeatDivState + " has-feedback " + (this.state.matchingPasswords ? "has-success" : "has-error");
+            repeatGlyphState = "glyphicon form-control-feedback " + (this.state.matchingPasswords ? "glyphicon-ok" : "glyphicon-remove");
+        }
+        //Disable submit button if insufficient information is provided
+        var disableSubmit = (this.state.newPassword == this.state.repeatPassword && this.state.passwordStrength > 0 && this.state.currPassword.length > 0 ? "" : "disabled");
+
+        var message = "";
+        if(this.state.successMessage.length > 0){
+            message = <span className="col-sm-6 successMessage">{this.state.successMessage}</span>;
+        } else if(this.state.errorMessage.length > 0){
+            message = <span className="col-sm-6 errorMessage">{this.state.errorMessage}</span>;
+        }
+
         return(
-            <div>
-                <div className="form-group">
-                    <label htmlFor="inputPassword3" className="col-sm-3 control-label">Nytt lösenord</label>
+            <form className="form-horizontal" onSubmit={this.handleSubmit}>
+                <div className={passwordDivState}>
+                    <label htmlFor="newPassword" className="col-sm-3 control-label">Nytt lösenord</label>
                     <div className="col-sm-7">
-                        <input type="password" className="form-control" id="inputPassword3" onChange={this.validateField} placeholder="" />
+                        <input type="password" id="newPassword" className="form-control" onChange={this.checkPasswordStrength} />
+                        <span className={passwordGlyphState}></span>
                     </div>
                 </div>
 
@@ -799,21 +917,36 @@ var PasswordFields = React.createClass({
                         <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
                         <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
                     </div>
+                    <div className={pwStrengthText[this.state.passwordStrength].className}>{(this.state.newPassword.length > 0 ? pwStrengthText[this.state.passwordStrength].text : "")}</div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Upprepa</label>
+                <div className={repeatDivState}>
+                    <label htmlFor="repeatPassword" className="col-sm-3 control-label">Upprepa</label>
                     <div className="col-sm-7">
-                        <input type="password" className="form-control" id="inputPassword3" placeholder="" />
+                        <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
+                        <span className={repeatGlyphState}></span>
                     </div>
                 </div>
+            
+                <div className="form-group">
+                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Nuvarande lösenord</label>
+                    <div className="col-sm-7">
+                        <input type="password" id="currPassword" className="form-control" onChange={this.updateCurrPasswordState}/>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <div clasösenordsName="col-sm-offset-3 col-sm-2">
+                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>Uppdatera</button>
+                    </div>
+                    {message}
+                </div>
                 
-            </div>
+            </form>
         );
     }
 });
 
-//Tab in the navbar
+
 var InputField = React.createClass({
     getInitialState: function(){
         return({
@@ -842,14 +975,14 @@ var InputField = React.createClass({
         var divState = "form-group";
         var glyphState = null;        
         if(this.state.hasChanged){
-            var divState = divState + " has-feedback " + (this.state.isValid ? "has-success" : "has-error");
-            var glyphState = "glyphicon form-control-feedback " + (this.state.isValid ? "glyphicon-ok" : "glyphicon-remove");
+            divState = divState + " has-feedback " + (this.state.isValid ? "has-success" : "has-error");
+            glyphState = "glyphicon form-control-feedback " + (this.state.isValid ? "glyphicon-ok" : "glyphicon-remove");
         }
         return(
             <div className={divState}>
-                <label htmlFor={this.props.fieldName} className="col-sm-3 control-label ">{this.props.fieldName}</label>
+                <label htmlFor={this.props.fieldName} className="col-sm-3 control-label ">{this.props.fieldDescription}</label>
                 <div className="col-sm-7">
-                    <input type="text" id={this.props.fieldName} className="form-control" defaultValue={this.props.defaultValue} onChange={this.validateField}/>
+                    <input type="text" id={this.props.fieldName} name={this.props.fieldName} className="form-control" defaultValue={this.props.defaultValue} onChange={this.validateField}/>
                     <span className={glyphState}></span>
                 </div>
             </div>
