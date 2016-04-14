@@ -15,7 +15,7 @@ var menuData = [
     {
         title: 'Remove Node',
         action: function(elm, d, i) {
-            if (d.parent) {
+            if (d.parent && d.parent.children !== undefined) {
 
                 // find child and remove it
                 for (var ii = 0; ii < d.parent.children.length; ii++) {
@@ -36,7 +36,7 @@ var menuData = [
  * will become kind of like an object.
  */
 var i = 0;
-var tree,root;
+var tree,root,svg;
 
 const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
@@ -63,7 +63,6 @@ d3Chart.create = function(element, props, state) {
      * minimum and maximum values for zooming.
      */
     var zoom = d3.behavior.zoom()
-        //.scaleExtent([1, 10])
         .on("zoom", zoomed);
 
 
@@ -76,7 +75,7 @@ d3Chart.create = function(element, props, state) {
      *     .
      * </svg>
      */
-    var svg = d3.select(element).append("svg")
+    svg = d3.select(element).append("svg")
         .attr("class", "d3")
         .call(zoom);
 
@@ -117,8 +116,8 @@ d3Chart.update = function(element, state) {
     this._drawPoints(root);
 };
 
-d3Chart.destroy = function(element) {
-    // Clean-up
+d3Chart.destroy = function() {
+    svg.remove();
 };
 /**
  * This will set some scaling according to the sizes of the element
@@ -151,10 +150,11 @@ d3Chart._scales = function(element, domain) {
  */
 
 d3Chart._drawPoints = function(data) {
+    if(!root){
+        return null;
+    }
 
     var g = d3.select('body').selectAll(".nodes");
-
-    //root = data[0];
 
     // build the arrow.
     var arrow = g.append("svg:defs").selectAll("marker")
@@ -180,8 +180,6 @@ d3Chart._drawPoints = function(data) {
 
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
-    console.log("Nodes");
-    console.log(nodes);
     /**
      * Defines behavior for dragging elements.
      */
@@ -236,8 +234,8 @@ d3Chart._drawPoints = function(data) {
      */
     nodeEnter.append('rect')
         .attr('class', 'node')
-        .attr('x', WIDTH_MARGIN)
-        .attr('width', NODE_WIDTH)
+        .attr('x', function (d) {return WIDTH_MARGIN - d.name.length*1.5 })
+        .attr('width', function(d){return NODE_WIDTH + d.name.length*3})
         .attr('height', NODE_HEIGHT)
         .style('fill', '#FFF')
         .style('stroke','black');

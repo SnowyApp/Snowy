@@ -34,8 +34,7 @@ module.exports = React.createClass({
     },
 
     componentWillUnmount: function() {
-        var element = ReactDOM.findDOMNode(this);
-        d3Chart.destroy(element);
+        d3Chart.destroy();
     },
 
     render: function() {
