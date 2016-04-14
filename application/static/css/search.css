@@ -3,6 +3,8 @@
     background-color: white;
     z-index: 99;
     position: relative;
+    width: 250px;
+
 }
 
 .search input {

@@ -81,8 +81,8 @@ var TermTable = React.createClass({
             <PageClick onClick={this.handleBlur}>
                 <div className="search-results">
                     <BootstrapTable data={this.props.data} hover={true} options={optionsProp} >
-                        <TableHeaderColumn dataField="id" isKey={true} width="100" hidden = {true}>ID</TableHeaderColumn>
-                        <TableHeaderColumn dataField="name" hidden = {emptyTable}>Name</TableHeaderColumn>
+                        <TableHeaderColumn dataField="id"  width="100" hidden = {true}>ID</TableHeaderColumn>
+                        <TableHeaderColumn dataField="name" isKey={true} hidden = {emptyTable}>Name</TableHeaderColumn>
                     </BootstrapTable>
                 </div>
             </PageClick>

@@ -56,7 +56,7 @@ var Bar = React.createClass({
     render: function() {
         return (
             <div className="bar">
-                <Search url ={brageUrl} update={this.props.update}/>
+                <Search url ={mockApi} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
                     <Button bsStyle = "primary" onClick={this.registerUser}>Register</Button>
