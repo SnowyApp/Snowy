@@ -112,6 +112,22 @@ def logout():
     return jsonify(message="Logged out")
 
 
+@app.route('/update_info', methods=['POST'])
+@login_required
+def update_info():
+    """
+    Updates information for the user.
+    """
+    data = request.get_json()
+    if not 'first_name' in data or not isinstance(data['first_name'], str) or \
+        not 'last_name' in data or not isinstance(data['last_name'], str) or \
+        not 'language' in data or not isinstance(data['language'], str):
+        return jsonify(message="Incomplete information")
+    
+    g.user.update_info(data['first_name'], data['last_name'], data['language'])
+    return jsonify(message="ok")
+
+
 @app.route('/favorite_term', methods=['POST', 'GET'])
 @login_required
 def favorite_term():
