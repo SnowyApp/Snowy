@@ -12,7 +12,6 @@ module.exports = React.createClass({
             height: 300
         }
     },
-
     componentDidMount: function() {
         var element = ReactDOM.findDOMNode(this);
         d3Chart.create(element, {
@@ -40,7 +39,7 @@ module.exports = React.createClass({
 
     render: function() {
         return (
-            <div className="Chart"></div>
+            <div className="chart"></div>
         );
     }
 });

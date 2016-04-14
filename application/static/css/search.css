@@ -1,5 +1,8 @@
 .search-results {
-    display: none;
+    display: block;
+    background-color: white;
+    z-index: 99;
+    position: relative;
 }
 
 .search input {
