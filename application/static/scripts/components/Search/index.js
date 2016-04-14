@@ -52,11 +52,6 @@ var SearchBox = React.createClass({
  Displays the results with react-bootstrap table component
  */
 var TermTable = React.createClass({
-    getInitialState:function(){
-        return{
-            hideTable: true
-        }
-    },
     //Called when the user clicks outside the table
     handleBlur: function(){
         this.props.clearData();
@@ -73,16 +68,20 @@ var TermTable = React.createClass({
         };
 
         //Only display the result table if there is a result
-        var emptyTable = true;
+        var style={
+            display: "none"
+        };
         if(this.props.data.length >0){
-            emptyTable = false;
+            style={
+              display: "block"
+            };
         }
         return(
             <PageClick onClick={this.handleBlur}>
-                <div className="search-results">
+                <div className="search-results" style={style}>
                     <BootstrapTable data={this.props.data} hover={true} options={optionsProp} >
                         <TableHeaderColumn dataField="id"  width="100" hidden = {true}>ID</TableHeaderColumn>
-                        <TableHeaderColumn dataField="name" isKey={true} hidden = {emptyTable}>Name</TableHeaderColumn>
+                        <TableHeaderColumn dataField="name" isKey={true} hidden = {false}>Name</TableHeaderColumn>
                     </BootstrapTable>
                 </div>
             </PageClick>
