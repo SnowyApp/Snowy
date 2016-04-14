@@ -55,7 +55,7 @@ const DURATION = 750;
  */
 
 d3Chart.create = function(element, props, state) {
-
+    console.log("Create");
     root = state.data[0];
 
     /**
@@ -104,13 +104,16 @@ d3Chart.create = function(element, props, state) {
      */
     tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
 
-    this.update(element, root);
+    this._drawPoints(root);
 };
 
 /**
  * Called when we want to redraw the tree
  */
-d3Chart.update = function(element, root) {
+d3Chart.update = function(element, state) {
+    console.log("update");
+    root = state.data[0];
+    console.log(root);
     this._drawPoints(root);
 };
 
@@ -177,8 +180,8 @@ d3Chart._drawPoints = function(data) {
 
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
-
-
+    console.log("Nodes");
+    console.log(nodes);
     /**
      * Defines behavior for dragging elements.
      */
@@ -200,7 +203,8 @@ d3Chart._drawPoints = function(data) {
      * part can be skipped. But it also gives every node a unique id, which
      * is nice.
      */
-    var node = g.selectAll("g.node")
+    var node = g.selectAll("g.node").remove();
+    node = g.selectAll("g.node")
         .data(nodes, function(d) { return d.id || (d.id = ++i) });
 
     /**
@@ -261,7 +265,8 @@ d3Chart._drawPoints = function(data) {
      * Creates link which will be an array of objects with class line.link
      * and contain all the links generated and the unique id it has been given
      */
-    var link = g.selectAll("line.link")
+    var link = g.selectAll("line.link").remove();
+    link = g.selectAll("line.link")
         .data(links, function(d) { return d.target.id; });
 
     /**
