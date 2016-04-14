@@ -17,10 +17,10 @@ var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            serverUrl: 'http://79.136.62.204:3000/',
+            serverUrl: 'http://localhost:5000',
             APIedition: '',
             APIrelease: '',
-            selectedTerm: null
+            selectedTerm: "138875005"
         };
     },
     handleUrlChange: function(e){
@@ -40,7 +40,10 @@ var Container = React.createClass({
                 <Navigation/>
                 <section>
                     <Bar update={this.updateSelectedTerm}/>
-                    <Diagram />
+                    <Diagram 
+                        sctid={this.state.selectedTerm}
+                        url={this.state.serverUrl}
+                    />
                 </section>
             </div>
         );
