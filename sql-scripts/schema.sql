@@ -192,6 +192,7 @@ $$ LANGUAGE plpgsql;
 DROP TYPE IF EXISTS concept_result CASCADE;
 CREATE TYPE concept_result AS (id BIGINT, effective_time BIGINT, active INTEGER, term TEXT);
 
+DROP FUNCTION IF EXISTS get_concept(BIGINT);
 CREATE OR REPLACE FUNCTION get_concept(cid BIGINT)
 RETURNS concept_result AS $$
 DECLARE
@@ -208,14 +209,15 @@ $$ LANGUAGE plpgsql;
 
 
 -- Procedure that checks if a token is valid
-CREATE OR REPLACE FUNCTION is_valid_token(token TEXT, email TEXT)
+DROP FUNCTION IF EXISTS is_valid_token(text, text);
+CREATE OR REPLACE FUNCTION is_valid_token(token_info TEXT, email TEXT)
 RETURNS INT AS $$
 DECLARE
     result INT;
-    id BIGINT;
+    token_id BIGINT;
 BEGIN
-    SELECT id INTO id FROM token WHERE token=token AND user_email=email;
-    UPDATE token SET accessed = NOW() WHERE id=id;
-    RETURN id;
+    SELECT id INTO token_id FROM token WHERE token=token_info AND user_email=email;
+    UPDATE token SET accessed = NOW() WHERE id=token_id;
+    RETURN token_id;
 END;
 $$ LANGUAGE plpgsql;
