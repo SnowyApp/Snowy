@@ -98,7 +98,7 @@ var Export = React.createClass({
         // Add the canvas to the body of the document and add the svg document to the canvas
         document.body.appendChild(canvas);
         canvg(canvas, svg);
-        Canvas2Image.convertToPNG(canvas);
+       // Canvas2Image.convertToPNG(canvas);
 
         // Draw a white background behind the content
         var context = canvas.getContext("2d");
