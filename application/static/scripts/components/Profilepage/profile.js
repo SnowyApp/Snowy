@@ -1,3 +1,58 @@
+//Dictionary for supported languages. m prefix indicates that its a error/success message
+var dict = {
+    swe: {
+        language: "Språk",
+        username: "Användarnamn",
+        email: "Email",
+        date: "Datum",
+        terms: "Termer",
+        diagrams: "Diagram",
+        account: "Konto",
+        name: "Namn",
+        password: "Lösenord",
+        added: "Tillagd",
+        favterms: "Favorittermer",
+        update: "Uppdatera",
+        newPassword: "Nytt lösenord",
+        currentPassword: "Nuvarande lösenord",
+        repeat: "Upprepa",
+        m_wrongPassword:"Felaktigt lösenord.",
+        m_emailTaken: "Den angivna email-adressen är upptagen.",
+        m_updateSuccessful: "Din information har blivit uppdaterad.",
+        m_updatePasswordSuccessful: "Ditt lösenord har uppdaterats.",
+        passwordStrength: ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
+    },
+    eng: {
+        language: "Language",
+        username: "Username",
+        email: "Email",
+        date: "Date",
+        terms: "Terms",
+        diagrams: "Diagrams",
+        account: "Account",
+        name: "Name",
+        password: "Password",
+        added: "Added",
+        favterms: "Favourite terms",
+        update: "Update",
+        newPassword: "New password",
+        currentPassword: "Current password",
+        repeat: "Repeat",
+        m_wrongPassword:"Wrong password.",
+        m_emailTaken: "The provided email is already in use.",
+        m_updateSuccessful: "Your information has been updated.",
+        m_updatePasswordSuccessful: "Your password has been updated.",
+        passwordStrength: ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
+    }
+}
+
+
+var fakeUser = {
+    id: 1337,
+    username: "Arnold",
+    email: "arnold@schwarzenegger.com",
+    lang: "eng"
+}
 
 //Dummy data
 var dummyTerms = 
@@ -93,11 +148,7 @@ var dummyDiagrams =
     }
 ];
 
-var fakeUser = {
-    id: 1337,
-    username: "Arnold",
-    email: "arnold@schwarzenegger.com"
-}
+
 /*
 ,
         {
@@ -147,7 +198,7 @@ var ProfilePage = React.createClass({
     getInitialState: function(){
         return (
             {
-                currentTab: 'Konto'
+                currentTab: 'account'
             }
         );
     },
@@ -214,13 +265,13 @@ var ProfilePage = React.createClass({
         //Only render the current tab
         var content;
         switch(this.state.currentTab){
-            case 'Termer':
+            case 'terms':
                 content = <TermPage terms={dummyTerms} openTerm={this.props.openTerm} removeid={this.removeById} nameSort={this.sortByName} idSort={this.sortByid} dateSort={this.sortByDate}/>;
                 break;
-            case 'Diagram':
+            case 'diagrams':
                 content = <DiagramPage openDiagram={this.props.openDiagram} removeid={this.removeById} nameSort={this.sortByName} dateSort={this.sortByDate}/>;
                 break;
-            case 'Konto':
+            case 'account':
                 content = <AccountPage />;
                 break;
         }
@@ -249,7 +300,7 @@ var TermPage = React.createClass({
     componentDidMount: function(){
         this.setState({
             terms: this.props.dateSort(this.state.terms, false),
-            sortBy: 'Tillagd',
+            sortBy: 'added',
             ascending: false
         });
     },
@@ -262,10 +313,10 @@ var TermPage = React.createClass({
             var asc = !this.state.ascending;
         }
         switch(header){
-            case "Namn":
+            case "name":
                 this.setState({
                     terms: this.props.nameSort(this.state.terms, asc),
-                    sortBy: 'Namn'
+                    sortBy: 'name'
                 });
                 break;
             case "id":
@@ -274,10 +325,10 @@ var TermPage = React.createClass({
                     sortBy: 'id'
                 });
                 break;
-            case "Tillagd":
+            case "added":
                 this.setState({
                     terms: this.props.dateSort(this.state.terms, asc),
-                    sortBy: 'Tillagd'
+                    sortBy: 'added'
                 });
                 break;
         }
@@ -317,7 +368,7 @@ var TermPage = React.createClass({
         var idSortArrow = null;
         var dateSortArrow = null;
         switch(this.state.sortBy){
-            case "Namn":
+            case "name":
                 if(this.state.ascending == true){
                     nameSortArrow = <span className="glyphicon glyphicon-triangle-bottom sortArrow" aria-hidden="true"></span>;
                 }
@@ -333,7 +384,7 @@ var TermPage = React.createClass({
                     idSortArrow = <span className="glyphicon glyphicon-triangle-top sortArrow" aria-hidden="true"></span>;
                 }
                 break;
-            case "Tillagd":
+            case "added":
                 if(this.state.ascending == true){
                     dateSortArrow = <span className="glyphicon glyphicon-triangle-bottom sortArrow" aria-hidden="true"></span>;
                 }
@@ -345,14 +396,14 @@ var TermPage = React.createClass({
 
         return(
             <div>
-                <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> Favorittermer</h1>
+                <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> {dict[fakeUser.lang]["favterms"]}</h1>
                 <hr className="profileHr"/>
                 <table className="favorites">
                     <thead>
                         <tr>
-                            <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "Namn")}>Namn {nameSortArrow}</th>
+                            <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>{dict[fakeUser.lang]["name"]} {nameSortArrow}</th>
                             <th id="Term_id" className="favorites" onClick={this.sortBy.bind(this, "id")}>ID {idSortArrow}</th>
-                            <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "Tillagd")}>Tillagd {dateSortArrow}</th>
+                            <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>{dict[fakeUser.lang]["added"]} {dateSortArrow}</th>
                             <th id="Term_remove" className="favorites"></th>
                         </tr>
                     </thead>
@@ -391,7 +442,7 @@ var DiagramPage = React.createClass({
     componentDidMount: function(){
         this.setState({
             diagrams: this.props.dateSort(this.state.diagrams, false),
-            sortBy: 'Tillagd',
+            sortBy: 'added',
             ascending: false
         });
     },
@@ -404,16 +455,16 @@ var DiagramPage = React.createClass({
             var asc = !this.state.ascending;
         }
         switch(header){
-            case "Namn":
+            case "name":
                 this.setState({
                     terms: this.props.nameSort(this.state.diagrams, asc),
-                    sortBy: 'Namn'
+                    sortBy: 'name'
                 });
                 break;
-            case "Tillagd":
+            case "added":
                 this.setState({
                     terms: this.props.dateSort(this.state.diagrams, asc),
-                    sortBy: 'Tillagd'
+                    sortBy: 'added'
                 });
                 break;
         }
@@ -453,7 +504,7 @@ var DiagramPage = React.createClass({
         var nameSortArrow = null;
         var dateSortArrow = null;
         switch(this.state.sortBy){
-            case "Namn":
+            case "name":
                 if(this.state.ascending == true){
                     nameSortArrow = <span className="glyphicon glyphicon-triangle-bottom sortArrow" aria-hidden="true"></span>;
                 }
@@ -461,7 +512,7 @@ var DiagramPage = React.createClass({
                     nameSortArrow = <span className="glyphicon glyphicon-triangle-top sortArrow" aria-hidden="true"></span>;
                 }
                 break;
-            case "Tillagd":
+            case "added":
                 if(this.state.ascending == true){
                     dateSortArrow = <span className="glyphicon glyphicon-triangle-bottom sortArrow" aria-hidden="true"></span>;
                 }
@@ -473,14 +524,14 @@ var DiagramPage = React.createClass({
 
         return(
             <div>
-                <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> Diagram</h1>
+                <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> {dict[fakeUser.lang]["diagrams"]}</h1>
                 <hr className="profileHr"/>
                 <table className="favorites">
                     <thead>
                         <tr>
-                            <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "Namn")}>Namn {nameSortArrow}</th>
+                            <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>{dict[fakeUser.lang]["name"]} {nameSortArrow}</th>
                             <th id="Diagram_acc" className="favorites"></th>
-                            <th id="Diagram_date" className="favorites" onClick={this.sortBy.bind(this, "Tillagd")}>Tillagd {dateSortArrow}</th>
+                            <th id="Diagram_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>{dict[fakeUser.lang]["added"]} {dateSortArrow}</th>
                             <th id="Diagram_remove" className="favorites"></th>
                         </tr>
                     </thead>
@@ -550,7 +601,7 @@ var DiagramElement = React.createClass({
                                             <td>{this.props.id}</td>
                                         </tr>
                                         <tr>                                    
-                                            <td>Datum:</td>
+                                            <td>{dict[fakeUser.lang]["date"]}:</td>
                                             <td>{this.props.date}</td>
                                         </tr>
                                         <tr>                                    
@@ -625,14 +676,14 @@ var AccountPage = React.createClass({
 
         return(
             <div>
-                <h1><span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> Konto</h1>
+                <h1><span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> {dict[fakeUser.lang]["account"]}</h1>
                 <hr className="profileHr"/>
 
                 {/* NAME ROW */}
                 <div className="accSettingsRow col-sm-12">
                     <div className="col-sm-11">
                         <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
-                            Namn
+                            {dict[fakeUser.lang]["name"]}
                         </a>
                     </div>
                     <div className="col-sm-1">
@@ -653,7 +704,7 @@ var AccountPage = React.createClass({
                 <div className="accSettingsRow col-sm-12">
                     <div className="col-sm-11">
                         <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse" aria-expanded="false">
-                            Lösenord
+                            {dict[fakeUser.lang]["password"]}
                         </a>
                     </div>
                     <div className="col-sm-1">
@@ -675,21 +726,125 @@ var AccountPage = React.createClass({
     }
 });
 
+/*
+<InputField fieldName="username" fieldDescription="Användarnamn" defaultValue={fakeUser.username} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{3,15}$" />
+<InputField fieldName="email" fieldDescription="Email" defaultValue={fakeUser.email} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$" />
+*/
+
+
 //Form for changing username and email
 var ChangeNameAndEmailForm = React.createClass({
+    getInitialState: function(){
+        return({
+            username: "",
+            usernameHasChanged: false,
+            email: "",
+            emailHasChanged: false,
+            validUsername: true,
+            validEmail: true,
+            errorMessage: "",
+            successMessage: ""
+        });
+    },
+
+    //Handles submitting the form
     handleSubmit: function(e){
         e.preventDefault();
+
+        //test error
+        if(this.state.username == "Greger"){
+            this.setState({
+                errorMessage: "Greger är ett fult namn.",
+                successMessage: ""
+            });
+        }
+        //Success
+        else {
+            this.setState({
+                errorMessage: "",
+                successMessage: dict[fakeUser.lang]["m_updateSuccessful"],
+                usernameHasChanged: false,
+                emailHasChanged: false
+            });
+        }
+    },
+
+    //Checks if the username is valid
+    validateUsername: function(event){
+        var input = event.target.value;
+        var regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{3,15}$/;
+
+        this.setState({
+            username: input,
+            validUsername: regEx.test(input),
+            usernameHasChanged: true
+        });
+    },
+
+    //Checks if the email is valid
+    validateEmail: function(event){
+        var input = event.target.value;
+        var regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$/;
+
+        this.setState({
+            email: input,
+            validEmail: regEx.test(input),
+            emailHasChanged: true
+        });
     },
 
     render: function(){
+        //Username validation style
+        var usernameDivState = "form-group";
+        var usernameGlyphState = null;        
+        if(this.state.usernameHasChanged){
+            usernameDivState = usernameDivState + " has-feedback " + (this.state.validUsername ? "has-success" : "has-error");
+            usernameGlyphState = "glyphicon form-control-feedback " + (this.state.validUsername ? "glyphicon-ok" : "glyphicon-remove");
+        }
+
+        //Email validation style
+        var emailDivState = "form-group";
+        var emailGlyphState = null;        
+        if(this.state.emailHasChanged){
+            emailDivState = emailDivState + " has-feedback " + (this.state.validEmail ? "has-success" : "has-error");
+            emailGlyphState = "glyphicon form-control-feedback " + (this.state.validEmail ? "glyphicon-ok" : "glyphicon-remove");
+        }
+
+        //Disable submit button if bad information is provided
+        var disableSubmit = (this.state.validUsername && this.state.validEmail && (this.state.usernameHasChanged || this.state.emailHasChanged) ? "" : "disabled");
+
+        //Error/success message
+        var message = "";
+        if(this.state.successMessage.length > 0){
+            message = <span className="col-sm-6 successMessage">{this.state.successMessage}</span>;
+        } else if(this.state.errorMessage.length > 0){
+            message = <span className="col-sm-6 errorMessage">{this.state.errorMessage}</span>;
+        }
+
         return(
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                <InputField fieldName="username" fieldDescription="Användarnamn" defaultValue={fakeUser.username} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{3,15}$" />
-                <InputField fieldName="email" fieldDescription="Email" defaultValue={fakeUser.email} regEx="^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$" />
+                { /* Username */ }
+                <div className={usernameDivState}>
+                    <label htmlFor="username" className="col-sm-3 control-label ">{dict[fakeUser.lang]["username"]}</label>
+                    <div className="col-sm-7">
+                        <input type="text" className="form-control" defaultValue={fakeUser.username} onChange={this.validateUsername}/>
+                        <span className={usernameGlyphState}></span>
+                    </div>
+                </div>                
+                { /* Email */ }
+                <div className={emailDivState}>
+                    <label htmlFor="email" className="col-sm-3 control-label ">{dict[fakeUser.lang]["email"]}</label>
+                    <div className="col-sm-7">
+                        <input type="text" className="form-control" defaultValue={fakeUser.email} onChange={this.validateEmail}/>
+                        <span className={emailGlyphState}></span>
+                    </div>
+                </div>  
+
                 <div className="form-group">
                     <div className="col-sm-offset-3 col-sm-2">
-                        <button type="submit" className="btn btn-success">Uppdatera</button>
+                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>{dict[fakeUser.lang]["update"]}</button>
                     </div>
+                    {message}
                 </div>
             </form>
         );
@@ -719,7 +874,7 @@ var ChangePasswordForm = React.createClass({
 
         if(this.state.currPassword != "12345"){
             this.setState({
-                errorMessage: "Fel lösenord!",
+                errorMessage: dict[fakeUser.lang]["m_wrongPassword"],
                 successMessage: ""
             });
         }
@@ -727,7 +882,7 @@ var ChangePasswordForm = React.createClass({
         else {
             this.setState({
                 errorMessage: "",
-                successMessage: "Ditt lösenord har uppdaterats.",
+                successMessage: dict[fakeUser.lang]["m_updatePasswordSuccessful"],
                 hasChanged: false,
                 newPassword: "",
                 repeatPassword: "",
@@ -833,28 +988,8 @@ var ChangePasswordForm = React.createClass({
         }
 
         var pwStrengthBarClass = "progress-bar pwStrengthBar";
-        var pwStrengthText = [
-            {
-                className: "pwStrengthText pwStrength0Color",
-                text: "Väldigt svagt"
-            },
-            {
-                className: "pwStrengthText pwStrength1Color",
-                text: "Svagt"
-            },
-            {
-                className: "pwStrengthText pwStrength2Color",
-                text: "Medel"
-            },
-            {
-                className: "pwStrengthText pwStrength3Color",
-                text: "Starkt"
-            },
-            {
-                className: "pwStrengthText pwStrength4Color",
-                text: "Väldigt starkt"
-            }
-        ];
+        var pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"]
+        var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[this.state.passwordStrength];
         
         var barStyle = [
             {backgroundColor: "gray"},
@@ -900,7 +1035,7 @@ var ChangePasswordForm = React.createClass({
         return(
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <div className={passwordDivState}>
-                    <label htmlFor="newPassword" className="col-sm-3 control-label">Nytt lösenord</label>
+                    <label htmlFor="newPassword" className="col-sm-3 control-label">{dict[fakeUser.lang]["newPassword"]}</label>
                     <div className="col-sm-7">
                         <input type="password" id="newPassword" className="form-control" onChange={this.checkPasswordStrength} />
                         <span className={passwordGlyphState}></span>
@@ -917,11 +1052,11 @@ var ChangePasswordForm = React.createClass({
                         <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
                         <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
                     </div>
-                    <div className={pwStrengthText[this.state.passwordStrength].className}>{(this.state.newPassword.length > 0 ? pwStrengthText[this.state.passwordStrength].text : "")}</div>
+                    <div className={pwStrengthBarTextClass}>{(this.state.newPassword.length > 0 ? dict[fakeUser.lang]["passwordStrength"][this.state.passwordStrength] : "")}</div>
                 </div>
 
                 <div className={repeatDivState}>
-                    <label htmlFor="repeatPassword" className="col-sm-3 control-label">Upprepa</label>
+                    <label htmlFor="repeatPassword" className="col-sm-3 control-label">{dict[fakeUser.lang]["repeat"]}</label>
                     <div className="col-sm-7">
                         <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
                         <span className={repeatGlyphState}></span>
@@ -929,14 +1064,14 @@ var ChangePasswordForm = React.createClass({
                 </div>
             
                 <div className="form-group">
-                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">Nuvarande lösenord</label>
+                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">{dict[fakeUser.lang]["currentPassword"]}</label>
                     <div className="col-sm-7">
                         <input type="password" id="currPassword" className="form-control" onChange={this.updateCurrPasswordState}/>
                     </div>
                 </div>
                 <div className="form-group">
-                    <div clasösenordsName="col-sm-offset-3 col-sm-2">
-                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>Uppdatera</button>
+                    <div className="col-sm-offset-3 col-sm-2">
+                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>{dict[fakeUser.lang]["update"]}</button>
                     </div>
                     {message}
                 </div>
@@ -947,48 +1082,7 @@ var ChangePasswordForm = React.createClass({
 });
 
 
-var InputField = React.createClass({
-    getInitialState: function(){
-        return({
-            hasChanged: false,
-            isValid: true 
-        });
-    },
 
-    validateField: function(event){
-        var input = event.target.value;
-        var re = new RegExp(this.props.regEx);
-        if(re.test(input)){
-            this.setState({
-                isValid: true,
-                hasChanged: true
-            });
-        } else{
-            this.setState({
-                isValid: false,
-                hasChanged: true
-            });
-        }
-    },
-    
-    render: function(){
-        var divState = "form-group";
-        var glyphState = null;        
-        if(this.state.hasChanged){
-            divState = divState + " has-feedback " + (this.state.isValid ? "has-success" : "has-error");
-            glyphState = "glyphicon form-control-feedback " + (this.state.isValid ? "glyphicon-ok" : "glyphicon-remove");
-        }
-        return(
-            <div className={divState}>
-                <label htmlFor={this.props.fieldName} className="col-sm-3 control-label ">{this.props.fieldDescription}</label>
-                <div className="col-sm-7">
-                    <input type="text" id={this.props.fieldName} name={this.props.fieldName} className="form-control" defaultValue={this.props.defaultValue} onChange={this.validateField}/>
-                    <span className={glyphState}></span>
-                </div>
-            </div>
-        );
-    }
-});
 
 
 //Tab navigation for profile page
@@ -997,12 +1091,12 @@ var NavBar = React.createClass({
         return(
             <div>
                 <ul className="nav nav-tabs">
-                    <NavBarItem name="Termer" active={this.props.currentTab === 'Termer'} onSelect={this.props.changeActiveTab}/>
-                    <NavBarItem name="Diagram" active={this.props.currentTab === 'Diagram'} onSelect={this.props.changeActiveTab}/>
-                    <NavBarItem name="Konto" active={this.props.currentTab === 'Konto'} onSelect={this.props.changeActiveTab}/>
+                    <NavBarItem name="terms" active={this.props.currentTab === 'terms'} onSelect={this.props.changeActiveTab}/>
+                    <NavBarItem name="diagrams" active={this.props.currentTab === 'diagrams'} onSelect={this.props.changeActiveTab}/>
+                    <NavBarItem name="account" active={this.props.currentTab === 'account'} onSelect={this.props.changeActiveTab}/>
                 </ul>
                 <div className="btn-group langDropdown">
-                    <button type="button" className="btn btn-default">Språk</button>
+                    <button type="button" className="btn btn-default">{dict[fakeUser.lang]["language"]}</button>
                     <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span className="caret"></span>
                     <span className="sr-only">Toggle Dropdown</span>
@@ -1023,7 +1117,7 @@ var NavBarItem = React.createClass({
         var navBarItemClass = (this.props.active ? 'active' : null) + " tabItem"; //Highlight active tab
         return(
             <li role="presentation" className={navBarItemClass}>
-                <a href="#" onClick={this.props.onSelect.bind(null, this.props.name)}>{this.props.name}</a>
+                <a href="#" onClick={this.props.onSelect.bind(null, this.props.name)}>{dict[fakeUser.lang][this.props.name]}</a>
             </li>
         );
     }
