@@ -227,8 +227,10 @@ d3Chart._drawPoints = function(data) {
         })
         .on('contextmenu', d3.contextMenu(menuData))
         .call(drag)
-        .on("click", function(d){ 
-            onClick(d.concept_id);
+        .on("click", function(d){
+            // no point of searching for root again
+            if (d.id != root.id)
+                onClick(d.concept_id);;
         });
     /**
      * Now we add a rectangle element and use conditional expressions to
