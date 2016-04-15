@@ -35,13 +35,11 @@ var Navigation = React.createClass({
                         id: i
                     });
                 }
-                //Ignore if no children were found
-                if(queryResult.length !== 0){
-                    this.setState({
-                        termChildren: queryResult,
-                        currentID: id
-                    });
-                }
+
+                this.setState({
+                    termChildren: queryResult,
+                    currentID: id
+                });
             }.bind(this)
         });
         //Get parent name
