@@ -100,8 +100,12 @@ d3Chart.create = function(element, props, state) {
      * That way it will automatically space out the nodes and layers
      * depending of how many nodes and layers we have, neat.
      */
-    tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
-
+    tree = d3.layout.tree()
+        .separation(function (a, b) {
+            return a.parent == b.parent ? a.parent.name.length/1.5 : a.parent.name.length;
+        })
+        .nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
+        .sort(function(a,b){return d3.ascending(a.name,b.name)});
     this._drawPoints(root);
 };
 
@@ -142,6 +146,7 @@ d3Chart._scales = function(element, domain) {
 
     return {x: x, y: y, z: z};
 };
+
 /**
  * This functions adds the nodes and the lines between the nodes and styles
  * them in the way we want.
