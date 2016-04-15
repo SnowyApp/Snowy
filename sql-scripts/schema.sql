@@ -17,6 +17,18 @@ CREATE TABLE token(
     accessed TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- A table that stores diagram for users
+DROP TABLE IF EXISTS diagram CASCADE;
+CREATE TABLE diagram(
+    id BIGSERIAL PRIMARY KEY,
+    data TEXT NOT NULL,
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    date_modified TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_email TEXT NOT NULL REFERENCES usr (email)
+);
+
+
 -- A table that stores the concept data
 DROP TABLE IF EXISTS concept CASCADE;
 CREATE TABLE concept(
