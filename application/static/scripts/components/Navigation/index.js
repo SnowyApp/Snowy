@@ -3,7 +3,7 @@ module.exports = React.createClass({
     render: function(){
         return (
             <nav>
-                <Navigation APIUrl='http://79.136.62.204:3000' rootNodeID='138875005'/>
+                <Navigation APIUrl={this.props.url} rootNodeID={this.props.sctid}/>
             </nav>
         );
     }
@@ -18,17 +18,18 @@ var Navigation = React.createClass({
 		$.ajax({
             type: "GET",
             "method": "GET",
-            url: this.props.APIUrl + '/snomed/en-edition/v20150731/concepts/' + id + '/children?form=inferred=true',
+            url: this.props.APIUrl + '/get_children/' + id,
             dataType: "json",
             error: function(){
-                console.log('Failed to access API')
+                console.log('Failed to access Navigation children.')
             },
             success: function(result){
                 for (var i in result){
                     queryResult.push({
-                        name: result[i].defaultTerm,
-                        id: result[i].conceptId
-                    })
+                        name: result[i].term,
+                        concept_id: result[i].id,
+                        id: i
+                    });
                 }
                 //Ignore if no children were found
                 if(queryResult.length !== 0){
@@ -43,15 +44,14 @@ var Navigation = React.createClass({
         $.ajax({
             type: "GET",
             "method": "GET",
-            url: this.props.APIUrl + '/snomed/en-edition/v20150731/concepts/' + id,
+            url: this.props.APIUrl + '/concept/' + id,
             dataType: "json",
             error: function(){
-                console.log('Failed to access API')
+                console.log('Failed to access Navigation parent.')
             },
             success: function(result){
-                console.log(result.defaultTerm);
                 this.setState({
-                    currentParent: result.defaultTerm
+                    currentParent: result.term
                 });
             }.bind(this)
         });
@@ -65,15 +65,12 @@ var Navigation = React.createClass({
     //Handles clicks on the children (callback function)
     handleClick: function(e){
         this.state.history.push(this.state.currentID);
-        console.log(this.state.history);
-        this.setParent(e.id);
-        
+        this.setParent(e.id); 
     },
 
     //Move up one level in the tree (from history)
     upOneLevel: function(){
         var id = this.state.history.pop();
-        console.log(id);
         this.setParent(id);
     },
 
@@ -99,7 +96,7 @@ var Navigation = React.createClass({
         //Create NavigationItem's for all the children of the current parent node
         var ItemArray = this.state.termChildren.map(function(child){
             return(
-                <NavigationItem key={child.id} id={child.id} name={child.name} handleClickCallback={this.handleClick} />
+                <NavigationItem key={child.id} id={child.concept_id} name={child.name} handleClickCallback={this.handleClick} />
             );
         }, this);
         return (

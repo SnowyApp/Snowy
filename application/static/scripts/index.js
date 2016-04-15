@@ -37,7 +37,10 @@ var Container = React.createClass({
     render: function() {
         return (
             <div className="wrapper">
-                <Navigation/>
+                <Navigation
+                    sctid={this.state.selectedTerm}
+                    url={this.state.serverUrl}
+                />
                 <section>
                     <Bar update={this.updateSelectedTerm}/>
                     <Diagram 
