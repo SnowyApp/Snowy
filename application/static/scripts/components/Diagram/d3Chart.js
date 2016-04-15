@@ -114,7 +114,6 @@ d3Chart.create = function(element, props, state) {
  */
 d3Chart.update = function(element, state) {
     root = state.data[0];
-    console.log(root);
     this._drawPoints(root);
 };
 
