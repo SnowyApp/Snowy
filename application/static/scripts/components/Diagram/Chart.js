@@ -16,7 +16,8 @@ module.exports = React.createClass({
         var element = ReactDOM.findDOMNode(this);
         d3Chart.create(element, {
             width: this.props.width,
-            height: this.props.height
+            height: this.props.height,
+            onClick: this.props.onClick
         }, this.getChartState());
     },
     componentDidUpdate: function() {

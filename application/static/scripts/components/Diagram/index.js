@@ -75,6 +75,8 @@ module.exports = React.createClass({
         if (sctid != null) {
             this.getRoot(sctid);
             this.getChildren(sctid);
+            if (this.refs.Chart !== undefined)
+                this.reset();
         }
     },
 
@@ -92,7 +94,8 @@ module.exports = React.createClass({
                 <Chart
                     ref="Chart"
                     data={this.state.data}
-                    domain={this.state.domain} />
+                    domain={this.state.domain} 
+                    onClick={this.update} />
             </div>
         );
     },

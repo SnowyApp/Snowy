@@ -36,7 +36,7 @@ var menuData = [
  * will become kind of like an object.
  */
 var i = 0;
-var tree,root;
+var tree,root,onClick;;
 
 const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
@@ -56,6 +56,7 @@ const DURATION = 750;
 
 d3Chart.create = function(element, props, state) {
     root = state.data[0];
+    onClick = props.onClick;
 
     /**
      * Sets the variable zoom to the function zoomed. scaleExtent sets
@@ -225,7 +226,10 @@ d3Chart._drawPoints = function(data) {
             return "translate(" + d.x + ", " + d.y + ")";
         })
         .on('contextmenu', d3.contextMenu(menuData))
-        .call(drag);
+        .call(drag)
+        .on("click", function(d){ 
+            onClick(d.concept_id);
+        });
     /**
      * Now we add a rectangle element and use conditional expressions to
      * style them. The ry and rx elements are used to give the eclipse shape
