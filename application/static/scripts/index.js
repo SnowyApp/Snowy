@@ -64,15 +64,14 @@ var Bar = React.createClass({
         });
     },
 
-    hideRegistration: function(){
-        this.setState({
-            showRegistration: false
-        });
-    },
-
     showLogin: function(){
         this.setState({
             showLogin: true
+        });
+    },
+    hideRegistration: function(){
+        this.setState({
+            showRegistration: false
         });
     },
 
@@ -91,17 +90,10 @@ var Bar = React.createClass({
                     <Button bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
                     <Button bsStyle = "primary" onClick={this.showLogin}>Login</Button>
                     {/* Registration popup */}
-                    <PageClick onClick={this.hideRegistration}>
-                        <div>
-                            <RegisterForm show={this.state.showRegistration} />
-                        </div>
-                    </PageClick>
+                    <RegisterForm show={this.state.showRegistration} hideRegistration = {this.hideRegistration}/>
+
                     {/* Login popup */}
-                    <PageClick onClick={this.hideLogin}>
-                        <div>
-                            <LoginForm show={this.state.showLogin} />
-                        </div>
-                    </PageClick>
+                    <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin}/>
                 </ButtonToolbar>
             </div>
 

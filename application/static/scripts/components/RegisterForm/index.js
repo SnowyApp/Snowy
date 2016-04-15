@@ -1,12 +1,8 @@
-module.exports = React.createClass({
-    render: function(){
-        return (
-            <RegisterForm show={this.props.show} />
-        );
-    }
-});
-
 var RegisterForm = React.createClass({
+    propTypes:{
+        hideRegistration: React.PropTypes.func,
+        show: React.PropTypes.bool
+    },
     getInitialState: function(){
         return({
             email: "",
@@ -15,7 +11,8 @@ var RegisterForm = React.createClass({
             repeatPassword: "",
             matchingPasswords: false,
             passwordStrength: 0,
-            errorMessage: ""
+            errorMessage: "",
+            showModal: false
         });
     },
 
@@ -127,7 +124,18 @@ var RegisterForm = React.createClass({
             matchingPasswords: (this.state.password == this.state.repeatPassword)
         });
     },
+    close() {
+        this.setState({ showModal: false });
+        this.props.hideRegistration()
+    },
 
+    open() {
+        this.setState({ showModal: true });
+    },
+
+    componentWillReceiveProps(nextProps){
+        this.setState({showModal: nextProps.show});
+    },
     
     render: function(){
         var containerClass = "registerForm panel panel-primary" + (this.props.show ? "" : " hide");
@@ -212,9 +220,11 @@ var RegisterForm = React.createClass({
         }
 
         return(
-            <div className={containerClass}>
-                <div className="panel-heading">Registrering</div>
-                <div className="panel-body">
+            <Modal show={this.state.showModal} onHide={this.close}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Registrering</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <form className="form-horizontal" onSubmit={this.handleSubmit}>
                         {/* Email */}                
                         <div className={emailDivState}>
@@ -261,15 +271,14 @@ var RegisterForm = React.createClass({
                             </div>
                             {message}
                         </div>
-                        
                     </form>
-                </div>
-            </div>
+                </Modal.Body>
+            </Modal>
         );
     }
 });
 
-
+module.exports = RegisterForm;
 
 
 

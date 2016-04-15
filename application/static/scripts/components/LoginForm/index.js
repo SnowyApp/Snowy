@@ -1,21 +1,29 @@
-module.exports = React.createClass({
-    render: function(){
-        return (
-            <LoginForm show={this.props.show} />
-        );
-    }
-});
-
 var LoginForm = React.createClass({
+    propTypes:{
+        hideLogin: React.PropTypes.func,
+        show: React.PropTypes.bool
+    },
     getInitialState: function(){
         return({
             email: "",
             validEmail: false,
             password: "",
-            errorMessage: ""
+            errorMessage: "",
+            showModal: false
         });
     },
+    close() {
+        this.setState({ showModal: false });
+        this.props.hideLogin()
+    },
 
+    open() {
+        this.setState({ showModal: true });
+    },
+
+    componentWillReceiveProps(nextProps){
+        this.setState({showModal: nextProps.show});
+    },
     //Handles submit of the form
     handleSubmit: function(e){
         e.preventDefault();
@@ -57,7 +65,6 @@ var LoginForm = React.createClass({
 
     
     render: function(){
-        var containerClass = "loginForm panel panel-primary" + (this.props.show ? "" : " hide")
         //Valid email
         var emailDivState = "form-group";
         var emailGlyphState = null;
@@ -77,11 +84,13 @@ var LoginForm = React.createClass({
         }
 
         return(
-            <div className={containerClass}>
-                <div className="panel-heading">Logga in</div>
-                <div className="panel-body">
+            <Modal show={this.state.showModal} onHide={this.close}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Logga in</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                        {/* Email */}                
+                        {/* Email */}
                         <div className={emailDivState}>
                             <label htmlFor="newPassword" className="col-sm-3 control-label">Email</label>
                             <div className="col-sm-8">
@@ -96,7 +105,7 @@ var LoginForm = React.createClass({
                                 <input type="password" id="password" onChange={this.updatePassword} className="form-control"/>
                             </div>
                         </div>
-                    
+
                         {/* Submit */}
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-2">
@@ -104,13 +113,15 @@ var LoginForm = React.createClass({
                             </div>
                             {message}
                         </div>
-                        
+
                     </form>
-                </div>
-            </div>
+
+                </Modal.Body>
+            </Modal>
         );
     }
 });
+module.exports = LoginForm;
 
 
 
