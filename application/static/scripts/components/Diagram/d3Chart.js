@@ -150,8 +150,6 @@ d3Chart._drawPoints = function(data) {
 
     var g = d3.select('body').selectAll(".nodes");
 
-    //root = data[0];
-
     // build the arrow.
     var arrow = g.append("svg:defs").selectAll("marker")
             .data(["start"])
