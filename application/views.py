@@ -213,7 +213,7 @@ def store_diagram():
         return jsonify(id=cid)
     elif request.method == "PUT":
         data = request.get_json()
-        if not 'data' in data or isinstance(data['data'], str) or \
+        if not 'data' in data or not isinstance(data['data'], str) or \
             not 'id' in data or not isinstance(data['id'], int):
             return jsonify(message="'data' not provided"), 400
 
