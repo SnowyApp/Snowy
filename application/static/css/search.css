@@ -1,0 +1,15 @@
+.search-results {
+    display: none;
+}
+
+.search input {
+    width: 250px;
+    line-height: 20px;
+    height: 40px;
+
+    padding: 5px;
+    margin: 5px 10px;
+
+    overflow: hidden;
+
+}
