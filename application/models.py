@@ -33,8 +33,9 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.effective_time, 
                                 WHERE A.source_id=%s AND A.active=1 AND B.type_id=900000000000003001;"""
 GET_CONCEPT_PROCEDURE = "get_concept"
 
-INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) WHERE user_email=%s RETURNING id"
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, date_modified=NOW() WHERE user_email=%s AND id=%s"
+SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 
 def connect_db():
     """
@@ -135,13 +136,13 @@ class User():
             new_id = None
             if did:
                 cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, self.email, did))
-                new_id = cur.fetchone()
             else:
-                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, self.email, self.email))
+                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, self.email))
+                new_id = cur.fetchone()[0]
             get_db().commit()
             cur.close()
             return new_id
-        except Execption as e:
+        except Exception as e:
             print(e)
             return None
 
@@ -152,10 +153,11 @@ class User():
         cur = get_db().cursor()
         try:
             result = []
-            cur.execute(SELECT_USER_QUERY, (self.email,))
+            cur.execute(SELECT_DIAGRAM_QUERY, (self.email,))
             for data in cur:
-                result += [{"id": data[0], "data": data[1], 'created': data[2], 'modified': data[3]}]
+                result += [{"id": data[0], "data": data[1], 'created': str(data[2]), 'modified': str(data[3])}]
             cur.close()
+            print(result)
             return result
         except Exception as e:
             print(e)
