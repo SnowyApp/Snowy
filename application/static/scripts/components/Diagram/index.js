@@ -73,7 +73,7 @@ module.exports = React.createClass({
     update: function(sctid) {
         this.getRoot(sctid);
         this.getChildren(sctid);
-        if (this.refs.Chart !== undefined) {
+        if (this._chart !== undefined) {
             this.reset();
         }
     },
@@ -102,7 +102,7 @@ module.exports = React.createClass({
             <div className="diagram">
                 <button onClick={this.reset}>Reset</button>
                 <Chart
-                    ref="Chart"
+                    ref={ (ref) => this._chart = ref }
                     data={this.state.data}
                     domain={this.state.domain} 
                     onClick={this.onClick} />
@@ -118,6 +118,6 @@ module.exports = React.createClass({
     },
 
     reset: function() {
-        this.refs.Chart.resetDiagram();
+        this._chart.resetDiagram();
     }
 });
