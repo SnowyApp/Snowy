@@ -33,6 +33,8 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.effective_time, 
                                 WHERE A.source_id=%s AND A.active=1 AND B.type_id=900000000000003001;"""
 GET_CONCEPT_PROCEDURE = "get_concept"
 
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) WHERE user_email=%s"
+
 def connect_db():
     """
     Connects to the database.
@@ -122,6 +124,18 @@ class User():
         except Exception as e:
             print(str(e))
             return False
+
+    def store_diagram(self, data):
+        """
+        Stores a diagram for the user.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(INSERT_DIAGRAM_STATEMENT, (data, self.email, self.email))
+            get_db().commit()
+            cur.close()
+        except Execption as e:
+            print(e)
  
     @staticmethod
     def create_user(email, password):
