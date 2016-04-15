@@ -33,7 +33,8 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.effective_time, 
                                 WHERE A.source_id=%s AND A.active=1 AND B.type_id=900000000000003001;"""
 GET_CONCEPT_PROCEDURE = "get_concept"
 
-INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) WHERE user_email=%s"
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) WHERE user_email=%s RETURNING id"
+UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, date_modified=NOW() WHERE user_email=%s AND id=%s"
 
 def connect_db():
     """
@@ -125,17 +126,25 @@ class User():
             print(str(e))
             return False
 
-    def store_diagram(self, data):
+    def store_diagram(self, data, did = None):
         """
         Stores a diagram for the user.
         """
         cur = get_db().cursor()
         try:
-            cur.execute(INSERT_DIAGRAM_STATEMENT, (data, self.email, self.email))
+            new_id = None
+            if did:
+                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, self.email, did))
+                new_id = cur.fetchone()
+            else:
+                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, self.email, self.email))
             get_db().commit()
             cur.close()
+            return new_id
         except Execption as e:
             print(e)
+            return None
+
  
     @staticmethod
     def create_user(email, password):
