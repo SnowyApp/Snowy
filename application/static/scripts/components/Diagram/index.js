@@ -6,8 +6,9 @@ module.exports = React.createClass({
     * given.
     */
     getInitialState: function() {
+        this.update(this.props.sctid);
         return {
-            data: this.update(this.props.sctid),
+            data: [],
             domain: this.props.domain || { x: [0, 100], y: [0, 100] }
         };
     },
@@ -23,7 +24,7 @@ module.exports = React.createClass({
             },
             success: function(result) {
                 var children = [];
-                if (this.state.data !== undefined) {
+                if (this.state.data.length != 0) {
                     children = this.state.data.slice()[0].children;
                 }
 
