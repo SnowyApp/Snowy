@@ -22,5 +22,9 @@ def store_diagram():
     data = {"data": "This is a test diagram"}
     return json.loads(requests.post(url + "/diagram", json=data, headers=auth).text)
 
+def update_diagram():
+    data = {"data": "This is an updated diagram", "id": store_diagram()['id']}
+    return json.loads(requests.put(url + "/diagram", json=data, headers=auth).text)
+
 def get_diagram():
     return json.loads(requests.get(url + "/diagram", headers=auth).text)
