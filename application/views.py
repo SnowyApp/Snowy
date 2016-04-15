@@ -198,6 +198,31 @@ def search(search_term):
     return jsonify(es.search(index="desc", body=query))
 
 
+@login_required
+@app.route('/diagram', methods=['POST', 'GET', 'PUT'])
+def store_diagram():
+    """
+    Stores a diagram for the user.
+    """
+    if request.method == "POST":
+        data = request.get_json()
+        if not 'data' in data or isinstance(data['data'], str):
+            return jsonify(message="'data' not provided"), 400
+
+        cid = g.user.store_diagram(data['data'])
+        return jsonify(id=cid)
+    elif request.method == "PUT":
+        data = request.get_json()
+        if not 'data' in data or isinstance(data['data'], str) or \
+            not 'id' in data or not isinstance(data['id'], int):
+            return jsonify(message="'data' not provided"), 400
+
+        g.user.store_diagram(data['data'], data['id'])
+        return jsonify(message="ok")
+    else:
+        return jsonify(g.user.get_diagrams())
+
+
 @app.errorhandler(400)
 def error400(err):
     """
