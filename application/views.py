@@ -38,7 +38,7 @@ def login_required(func):
         token = request.headers.get('Authorization', None)
         if not token:
             abort(400)
-        g.user= verify_auth_token(token)
+        g.user = verify_auth_token(token)
         if not g.user:
             abort(401)
 
@@ -198,15 +198,15 @@ def search(search_term):
     return jsonify(es.search(index="desc", body=query))
 
 
-@login_required
 @app.route('/diagram', methods=['POST', 'GET', 'PUT'])
+@login_required
 def store_diagram():
     """
     Stores a diagram for the user.
     """
     if request.method == "POST":
         data = request.get_json()
-        if not 'data' in data or isinstance(data['data'], str):
+        if not 'data' in data or not isinstance(data['data'], str):
             return jsonify(message="'data' not provided"), 400
 
         cid = g.user.store_diagram(data['data'])
@@ -220,7 +220,7 @@ def store_diagram():
         g.user.store_diagram(data['data'], data['id'])
         return jsonify(message="ok")
     else:
-        return jsonify(g.user.get_diagrams())
+        return jsonify(diagrams=g.user.get_diagrams())
 
 
 @app.errorhandler(400)
