@@ -145,6 +145,22 @@ class User():
             print(e)
             return None
 
+    def get_diagrams(self):
+        """
+        Retrieve diagrams for the user.
+        """
+        cur = get_db().cursor()
+        try:
+            result = []
+            cur.execute(SELECT_USER_QUERY, (self.email,))
+            for data in cur:
+                result += [{"id": data[0], "data": data[1], 'created': data[2], 'modified': data[3]}]
+            cur.close()
+            return result
+        except Exception as e:
+            print(e)
+            return None
+
  
     @staticmethod
     def create_user(email, password):
