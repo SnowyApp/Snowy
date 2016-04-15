@@ -1,8 +1,11 @@
+import PageClick from 'react-page-click';
 
 var Diagram = require("./components/Diagram/index");
 var Search = require("./components/Search/index");
 var Navigation = require("./components/Navigation/index");
 var Chart = require('./components/Diagram/Chart');
+var RegisterForm = require('./components/RegisterForm/index');
+var LoginForm = require('./components/LoginForm/index');
 
 //Use this if you have the api locally
 var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
@@ -49,25 +52,62 @@ var Container = React.createClass({
 
 var Bar = React.createClass({
     getInitialState: function(){
-      return{
-
-      };
+        return{
+            showRegistration: false,
+            showLogin: false
+        };
     },
+
+    showRegistration: function(){
+        this.setState({
+            showRegistration: true
+        });
+    },
+
+    hideRegistration: function(){
+        this.setState({
+            showRegistration: false
+        });
+    },
+
+    showLogin: function(){
+        this.setState({
+            showLogin: true
+        });
+    },
+
+    hideLogin: function(){
+        this.setState({
+            showLogin: false
+        });
+    },
+
     render: function() {
         return (
             <div className="bar">
                 <Search url ={mockApi} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
-                    <Button bsStyle = "primary" onClick={this.registerUser}>Register</Button>
-                    <Button bsStyle = "primary" onClick={this.loginUser}>Login</Button>
+                    <Button bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
+                    <Button bsStyle = "primary" onClick={this.showLogin}>Login</Button>
+                    {/* Registration popup */}
+                    <PageClick onClick={this.hideRegistration}>
+                        <div>
+                            <RegisterForm show={this.state.showRegistration} />
+                        </div>
+                    </PageClick>
+                    {/* Login popup */}
+                    <PageClick onClick={this.hideLogin}>
+                        <div>
+                            <LoginForm show={this.state.showLogin} />
+                        </div>
+                    </PageClick>
                 </ButtonToolbar>
             </div>
 
         );
     }
 });
-
 var Export = React.createClass({
     exportSVG: function(){
         var html = d3.select("svg")
@@ -78,13 +118,9 @@ var Export = React.createClass({
             })
             .node().parentNode.innerHTML;
 
-        var blob = new Blob([html], {type: "image/svg+xml"}),
-            url = window.URL.createObjectURL(blob);
-        // Append the image data to a link
-        var link = document.createElement("a");
-        link.download = "test.svg";
-        link.href = url;
-        link.click();
+        var blob = new Blob([html], {type: "image/svg+xml"});
+        saveAs(blob, new Date().toJSON().slice(0,10) + ".svg");
+
     },
     exportPNG: function(){
         // Create a canvas with the height and width of the parent of the svg document
@@ -98,7 +134,6 @@ var Export = React.createClass({
         // Add the canvas to the body of the document and add the svg document to the canvas
         document.body.appendChild(canvas);
         canvg(canvas, svg);
-        Canvas2Image.convertToPNG(canvas);
 
         // Draw a white background behind the content
         var context = canvas.getContext("2d");

@@ -1,3 +1,11 @@
+module.exports = React.createClass({
+    render: function(){
+        return (
+            <LoginForm show={this.props.show} />
+        );
+    }
+});
+
 var LoginForm = React.createClass({
     getInitialState: function(){
         return({
@@ -49,6 +57,7 @@ var LoginForm = React.createClass({
 
     
     render: function(){
+        var containerClass = "registerForm panel panel-primary" + (this.props.show ? "" : " hide")
         //Valid email
         var emailDivState = "form-group";
         var emailGlyphState = null;
@@ -68,44 +77,41 @@ var LoginForm = React.createClass({
         }
 
         return(
-            <div className="loginForm">
-                <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                    {/* Email */}                
-                    <div className={emailDivState}>
-                        <label htmlFor="newPassword" className="col-sm-3 control-label">Email</label>
-                        <div className="col-sm-8">
-                            <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
-                            <span className={emailGlyphState}></span>
+            <div className={containerClass}>
+                <div className="panel-heading">Logga in</div>
+                <div className="panel-body">
+                    <form className="form-horizontal" onSubmit={this.handleSubmit}>
+                        {/* Email */}                
+                        <div className={emailDivState}>
+                            <label htmlFor="newPassword" className="col-sm-3 control-label">Email</label>
+                            <div className="col-sm-8">
+                                <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
+                                <span className={emailGlyphState}></span>
+                            </div>
                         </div>
-                    </div>
-                    {/* Password */}
-                    <div className="form-group">
-                        <label htmlFor="newPassword" className="col-sm-3 control-label">Lösenord</label>
-                        <div className="col-sm-8">
-                            <input type="password" id="password" onChange={this.updatePassword} className="form-control"/>
+                        {/* Password */}
+                        <div className="form-group">
+                            <label htmlFor="newPassword" className="col-sm-3 control-label">Lösenord</label>
+                            <div className="col-sm-8">
+                                <input type="password" id="password" onChange={this.updatePassword} className="form-control"/>
+                            </div>
                         </div>
-                    </div>
-                
-                    {/* Submit */}
-                    <div className="form-group">
-                        <div className="col-sm-offset-3 col-sm-2">
-                            <button type="submit" className="btn btn-success" disabled={disableSubmit}>Logga in</button>
-                        </div>
-                        {message}
-                    </div>
                     
-                </form>
+                        {/* Submit */}
+                        <div className="form-group">
+                            <div className="col-sm-offset-3 col-sm-2">
+                                <button type="submit" className="btn btn-success" disabled={disableSubmit}>Logga in</button>
+                            </div>
+                            {message}
+                        </div>
+                        
+                    </form>
+                </div>
             </div>
         );
     }
 });
 
-
-
-ReactDOM.render(
-    <LoginForm />,
-    document.getElementById('content')
-);
 
 
 

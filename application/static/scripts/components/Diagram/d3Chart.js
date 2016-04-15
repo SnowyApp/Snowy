@@ -76,6 +76,11 @@ d3Chart.create = function(element, props, state) {
      */
     svg = d3.select(element).append("svg")
         .attr("class", "d3")
+        .attr({
+            'xmlns': 'http://www.w3.org/2000/svg',
+            'xlink': 'http://www.w3.org/1999/xlink',
+            version: '1.1'
+        })
         .call(zoom);
 
     /**
@@ -158,17 +163,20 @@ d3Chart._drawPoints = function(data) {
     var arrow = g.append("svg:defs").selectAll("marker")
             .data(["start"])
         .enter().append("svg:marker")    // This section adds in the arrows
-            .attr("id", String)
+            .attr("id", "ArrowMarker")
             .attr("viewBox", "-5 -5 10 10")
             .attr("refX", -5)
             .attr("refY", 0)
             .attr("markerWidth", 6)
             .attr("markerHeight", 6)
+            .attr("markerUnits", "strokeWidth")
             .attr("orient", "auto")
-        .append("svg:path")
-            .attr("d", "M -5,0 L 4,-3 L 4,3 Z")
+            .attr("stroke-width", "2")
             .attr('stroke', 'black')
-            .attr('fill', 'white');
+            .attr('fill', 'white')
+        .append("svg:path")
+            .attr("d", "M -5 0 L 4 -3 L 4 3 z");
+
 
 
     /**
@@ -281,9 +289,9 @@ d3Chart._drawPoints = function(data) {
         .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y2", function(d) { return d.target.y + 0; })
-        .style("style", "stroke:rgb(0,0,0);stroke-width:2")
-        .style("marker-start", "url(#start)"); // add the arrow to the link end
-
+        .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
+        //.style("marker-start", "url(#start)"); // add the arrow to the link end
+        .attr("marker-start", "url(#ArrowMarker)");
     var nodeExit = node.exit().transition()
         .duration(DURATION)
         .attr("transform", function(d) {
