@@ -55,7 +55,6 @@ const DURATION = 750;
  */
 
 d3Chart.create = function(element, props, state) {
-    console.log("Create");
     root = state.data[0];
 
     /**
@@ -119,9 +118,7 @@ d3Chart.reset = function(element, state) {
  * Called when we want to redraw the tree
  */
 d3Chart.update = function(element, state) {
-    console.log("update");
     root = state.data[0];
-    console.log(root);
     this._drawPoints(root);
 };
 
@@ -161,9 +158,7 @@ d3Chart._scales = function(element, domain) {
 d3Chart._drawPoints = function(data) {
 
     var g = d3.select('body').selectAll(".nodes");
-
-    //root = data[0];
-
+    
     // build the arrow.
     var arrow = g.append("svg:defs").selectAll("marker")
             .data(["start"])
@@ -188,8 +183,6 @@ d3Chart._drawPoints = function(data) {
 
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
-    console.log("Nodes");
-    console.log(nodes);
     /**
      * Defines behavior for dragging elements.
      */

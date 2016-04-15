@@ -13,7 +13,6 @@ module.exports = React.createClass({
         }
     },
     componentDidMount: function() {
-        console.log("c-mount");
         var element = ReactDOM.findDOMNode(this);
         d3Chart.create(element, {
             width: this.props.width,
@@ -21,7 +20,6 @@ module.exports = React.createClass({
         }, this.getChartState());
     },
     componentDidUpdate: function() {
-        console.log("c-update");
         var element = ReactDOM.findDOMNode(this);
         d3Chart.update(element, this.getChartState());
     },

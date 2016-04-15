@@ -71,7 +71,6 @@ module.exports = React.createClass({
     },
 
     update: function(sctid) {
-        console.log("UPDATE:" + sctid);
         if (sctid != null) {
             this.getRoot(sctid);
             this.getChildren(sctid);
@@ -79,9 +78,7 @@ module.exports = React.createClass({
     },
 
     componentWillReceiveProps: function(nextProps) {
-        console.log("PROPS UPDATED");
         this.update(nextProps.sctid);
-        console.log("PROPS DONE UPDATING");
     },
 
     /**
@@ -104,102 +101,3 @@ module.exports = React.createClass({
         this.refs.Chart.resetDiagram();
     }
 });
-
-// sample, default data
-// TODO: Remove as fast as correct formatted data is available.
-var treeData1 = [
-    {
-        "name": "Rot",
-        "parent": "null",
-        "expression": "concept",
-        "children": [
-            {
-                "name": "Sjukdom",
-                "parent": "Rot",
-                "expression": "defined-concept",
-                "children": [
-                    {
-                        "name": "Inflammationssjukdom",
-                        "parent": "Sjukdom",
-                        "expression": "attribute",
-                        "children": [
-                            {
-                                "name": "Lunginflammation",
-                                "parent": "Inflammantionssjukdom",
-                                "expression": "attribute"
-                            },
-                            {
-                                "name": "Inflammation i knäled",
-                                "parent": "Inflammantionssjukdom",
-                                "expression": "attribute"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Kroppsstruktur",
-                "parent": "Rot",
-                "expression": "defined-concept",
-                "children": [
-                    {
-                        "name": "Andningssystemet",
-                        "parent": "Kroppstruktur",
-                        "expression": "attribute",
-                        "children": [
-                            {
-                                "name": "Lunga",
-                                "parent": "Andningssystemet",
-                                "expression": "attribute"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Led",
-                "parent": "Kroppsstruktur",
-                "expression": "defined-concept",
-                "children": [
-                    {
-                        "name": "Knäled",
-                        "parent": "Led",
-                        "expression": "attribute"
-                    }
-                ]
-            }
-        ]
-    }
-];
-
-var treeData2 = [
-    {
-        "name": "Top Level",
-        "parent": "null",
-        "expression": "concept",
-        "children": [
-            {
-                "name": "Level 2: A",
-                "parent": "Top Level",
-                "expression": "defined-concept",
-                "children": [
-                    {
-                        "name": "Son of A",
-                        "parent": "Level 2: A",
-                        "expression": "attribute"
-                    },
-                    {
-                        "name": "Daughter of A",
-                        "parent": "Level 2: A",
-                        "expression": "concept"
-                    }
-                ]
-            },
-            {
-                "name": "Level 2: B",
-                "parent": "Top Level",
-                "expression": "attribute"
-            }
-        ]
-    }
-];
