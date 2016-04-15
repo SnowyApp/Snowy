@@ -1,11 +1,8 @@
-import PageClick from 'react-page-click';
 
 var Diagram = require("./components/Diagram/index");
 var Search = require("./components/Search/index");
 var Navigation = require("./components/Navigation/index");
 var Chart = require('./components/Diagram/Chart');
-var RegisterForm = require('./components/RegisterForm/index');
-var LoginForm = require('./components/LoginForm/index');
 
 //Use this if you have the api locally
 var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
@@ -52,56 +49,18 @@ var Container = React.createClass({
 
 var Bar = React.createClass({
     getInitialState: function(){
-        return{
-            showRegistration: false,
-            showLogin: false
-        };
-    },
+      return{
 
-    showRegistration: function(){
-        this.setState({
-            showRegistration: true
-        });
+      };
     },
-    
-    hideRegistration: function(){
-        this.setState({
-            showRegistration: false
-        });
-    },
-	
-    showLogin: function(){
-        this.setState({
-            showLogin: true
-        });
-    },
-    
-    hideLogin: function(){
-        this.setState({
-            showLogin: false
-        });
-    },
-	
     render: function() {
         return (
             <div className="bar">
                 <Search url ={mockApi} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
-                    <Button bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
-                    <Button bsStyle = "primary" onClick={this.showLogin}>Login</Button>
-                    {/* Registration popup */}
-                    <PageClick onClick={this.hideRegistration}>
-                        <div>    
-                            <RegisterForm show={this.state.showRegistration} />
-                        </div>
-                    </PageClick>
-                    {/* Login popup */}
-                    <PageClick onClick={this.hideLogin}>
-                        <div>    
-                            <LoginForm show={this.state.showLogin} />
-                        </div>
-                    </PageClick>
+                    <Button bsStyle = "primary" onClick={this.registerUser}>Register</Button>
+                    <Button bsStyle = "primary" onClick={this.loginUser}>Login</Button>
                 </ButtonToolbar>
             </div>
 
@@ -125,33 +84,30 @@ var Export = React.createClass({
     },
     exportPNG: function(){
         // Create a canvas with the height and width of the parent of the svg document
-        var svg = d3.select("svg").node().parentNode.innerHTML;
+        var chartArea = document.getElementsByTagName('svg')[0].parentNode;
+        var svg = chartArea.innerHTML;
         var canvas = document.createElement('canvas');
-        var filename = 'bilden';
-        canvas.width = chartArea.offsetWidth;
-        canvas.height = chartArea.offsetHeight;
+        canvas.setAttribute('width', chartArea.offsetWidth);
+        canvas.setAttribute('height', chartArea.offsetHeight);
+        canvas.setAttribute('display', 'none');
 
         // Add the canvas to the body of the document and add the svg document to the canvas
-        //document.body.appendChild(canvas);
+        document.body.appendChild(canvas);
+        canvg(canvas, svg);
 
-        //canvg(canvas, svg);
+        // Draw a white background behind the content
+        var context = canvas.getContext("2d");
+        context.globalCompositeOperation = "destination-over";
+        context.fillStyle = '#fff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
 
-        var img = new Image;
-        img.onload = function(){
-            canvas.getContext('2d').drawImage(this, 0, 0, canvas.width, canvas.height);
-            var data = canvas.toDataURL("image/png");
-            download(data, filename + '.png');
-        }
-
-        image.src = 'data:image/svg+xml;base64,' + window.btoa(svg);
-    },
-    download: function(data, filename){
-        var a = document.createElement('a');
-        a.download = filename;
-        a.href = data
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        // Append the image data to a link, download the image and then remove canvas
+        var dataString = canvas.toDataURL();
+        var link = document.createElement("a");
+        link.download = "image.png";
+        link.href = dataString;
+        link.click();
+        canvas.parentNode.removeChild(canvas);
     },
     render: function(){
         return (
