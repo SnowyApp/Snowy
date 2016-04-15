@@ -87,19 +87,32 @@ var Export = React.createClass({
         link.click();
     },
     exportPNG: function(){
-        //var canvasId = "canvas";
-        var canvas = document.createElement("canvas");
-        //Load the canvas element with our svg
-        canvg(canvas, document.getElementsByClassName("chart")[0].innerHTML.trim());
-        //Convert the svg to png
+        // Create a canvas with the height and width of the parent of the svg document
+        var chartArea = document.getElementsByTagName('svg')[0].parentNode;
+        var svg = chartArea.innerHTML;
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('width', chartArea.offsetWidth);
+        canvas.setAttribute('height', chartArea.offsetHeight);
+        canvas.setAttribute('display', 'none');
+
+        // Add the canvas to the body of the document and add the svg document to the canvas
+        document.body.appendChild(canvas);
+        canvg(canvas, svg);
         Canvas2Image.convertToPNG(canvas);
-        // Append the image data to a link
+
+        // Draw a white background behind the content
+        var context = canvas.getContext("2d");
+        context.globalCompositeOperation = "destination-over";
+        context.fillStyle = '#fff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Append the image data to a link, download the image and then remove canvas
         var dataString = canvas.toDataURL();
         var link = document.createElement("a");
         link.download = "image.png";
         link.href = dataString;
         link.click();
-
+        canvas.parentNode.removeChild(canvas);
     },
     render: function(){
         return (

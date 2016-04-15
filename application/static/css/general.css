@@ -66,9 +66,8 @@ section {
 }
 
 #buttons {
-  width: 30%;
+    width: 30%;
     float:left;
-    overflow: auto;
     margin: 8px 0px 0px 0px;
 }
 #searchbar{
