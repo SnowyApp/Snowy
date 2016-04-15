@@ -6,7 +6,6 @@ module.exports = React.createClass({
     * given.
     */
     getInitialState: function() {
-        this.update(this.props.sctid);
         return {
             data: [],
             domain: this.props.domain || { x: [0, 100], y: [0, 100] }
@@ -80,6 +79,16 @@ module.exports = React.createClass({
         }
     },
 
+    /**
+     * Set original state from props before rendering.
+     */
+    componentWillMount: function() {
+        this.update(this.props.sctid);
+    },
+
+    /**
+     * Update state when receiving new props
+     */
     componentWillReceiveProps: function(nextProps) {
         this.update(nextProps.sctid);
     },
