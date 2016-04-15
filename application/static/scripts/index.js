@@ -40,6 +40,7 @@ var Container = React.createClass({
                 <Navigation
                     sctid={this.state.selectedTerm}
                     url={this.state.serverUrl}
+                    update={this.updateSelectedTerm}
                 />
                 <section>
                     <Bar update={this.updateSelectedTerm}/>

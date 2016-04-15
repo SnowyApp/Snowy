@@ -3,7 +3,11 @@ module.exports = React.createClass({
     render: function(){
         return (
             <nav>
-                <Navigation APIUrl={this.props.url} rootNodeID={this.props.sctid}/>
+                <Navigation 
+                    APIUrl={this.props.url} 
+                    rootNodeID={this.props.sctid}
+                    update={this.props.update}            
+                />
             </nav>
         );
     }
@@ -55,6 +59,9 @@ var Navigation = React.createClass({
                 });
             }.bind(this)
         });
+
+        // tell other components on root change
+        this.props.update(id);
     },
 	
 	
