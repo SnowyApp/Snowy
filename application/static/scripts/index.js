@@ -1,8 +1,11 @@
+import PageClick from 'react-page-click';
 
 var Diagram = require("./components/Diagram/index");
 var Search = require("./components/Search/index");
 var Navigation = require("./components/Navigation/index");
 var Chart = require('./components/Diagram/Chart');
+var RegisterForm = require('./components/RegisterForm/index');
+var LoginForm = require('./components/LoginForm/index');
 
 //Use this if you have the api locally
 var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
@@ -49,18 +52,56 @@ var Container = React.createClass({
 
 var Bar = React.createClass({
     getInitialState: function(){
-      return{
-
-      };
+        return{
+            showRegistration: false,
+            showLogin: false
+        };
     },
+
+    showRegistration: function(){
+        this.setState({
+            showRegistration: true
+        });
+    },
+    
+    hideRegistration: function(){
+        this.setState({
+            showRegistration: false
+        });
+    },
+	
+    showLogin: function(){
+        this.setState({
+            showLogin: true
+        });
+    },
+    
+    hideLogin: function(){
+        this.setState({
+            showLogin: false
+        });
+    },
+	
     render: function() {
         return (
             <div className="bar">
                 <Search url ={mockApi} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
-                    <Button bsStyle = "primary" onClick={this.registerUser}>Register</Button>
-                    <Button bsStyle = "primary" onClick={this.loginUser}>Login</Button>
+                    <Button bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
+                    <Button bsStyle = "primary" onClick={this.showLogin}>Login</Button>
+                    {/* Registration popup */}
+                    <PageClick onClick={this.hideRegistration}>
+                        <div>    
+                            <RegisterForm show={this.state.showRegistration} />
+                        </div>
+                    </PageClick>
+                    {/* Login popup */}
+                    <PageClick onClick={this.hideLogin}>
+                        <div>    
+                            <LoginForm show={this.state.showLogin} />
+                        </div>
+                    </PageClick>
                 </ButtonToolbar>
             </div>
 

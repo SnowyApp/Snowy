@@ -1,7 +1,13 @@
 .registerForm {
-    margin: 15px;
-    width: 600px;
-    border: 1px dashed black;
+    /*padding-top: 15px;*/
+    width: 550px;
+    /*border-radius: 5px;
+    border: 1px solid black;*/
+    position: absolute;
+    /*background-color: white;*/
+    right: 10px;
+    z-index: 1000;
+    line-height: 1.42857143;
 }
 
 .loginForm {
@@ -60,3 +66,6 @@
     color: #248d24;
 }
 
+.hide {
+    display: none;
+}

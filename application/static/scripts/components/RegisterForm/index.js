@@ -1,3 +1,11 @@
+module.exports = React.createClass({
+    render: function(){
+        return (
+            <RegisterForm show={this.props.show} />
+        );
+    }
+});
+
 var RegisterForm = React.createClass({
     getInitialState: function(){
         return({
@@ -122,6 +130,7 @@ var RegisterForm = React.createClass({
 
     
     render: function(){
+        var containerClass = "registerForm panel panel-primary" + (this.props.show ? "" : " hide");
         //Valid email
         var emailDivState = "form-group";
         var emailGlyphState = null;
@@ -203,67 +212,62 @@ var RegisterForm = React.createClass({
         }
 
         return(
-            <div className="registerForm">
-                <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                    {/* Email */}                
-                    <div className={emailDivState}>
-                        <label htmlFor="password" className="col-sm-3 control-label">Email</label>
-                        <div className="col-sm-8">
-                            <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
-                            <span className={emailGlyphState}></span>
+            <div className={containerClass}>
+                <div className="panel-heading">Registrering</div>
+                <div className="panel-body">
+                    <form className="form-horizontal" onSubmit={this.handleSubmit}>
+                        {/* Email */}                
+                        <div className={emailDivState}>
+                            <label htmlFor="password" className="col-sm-3 control-label">Email</label>
+                            <div className="col-sm-8">
+                                <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
+                                <span className={emailGlyphState}></span>
+                            </div>
                         </div>
-                    </div>
-                    {/* Password */}
-                    <div className={passwordDivState}>
-                        <label htmlFor="password" className="col-sm-3 control-label">Lösenord</label>
-                        <div className="col-sm-8">
-                            <input type="password" id="password" className="form-control" onChange={this.checkPasswordStrength} />
-                            <span className={passwordGlyphState}></span>
+                        {/* Password */}
+                        <div className={passwordDivState}>
+                            <label htmlFor="password" className="col-sm-3 control-label">Lösenord</label>
+                            <div className="col-sm-8">
+                                <input type="password" id="password" className="form-control" onChange={this.checkPasswordStrength} />
+                                <span className={passwordGlyphState}></span>
+                            </div>
                         </div>
-                    </div>
-                    {/* Password strength bar */}
-                    <div className="col-sm-8 col-sm-offset-3" >
-                        <div className="progress validationBar">
-                            <div className={pwStrengthBarClass} style={barStyle[0]} role="progressbar"></div>
-                            <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
-                            <div className={pwStrengthBarClass} style={barStyle[1]} role="progressbar"></div>
-                            <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
-                            <div className={pwStrengthBarClass} style={barStyle[2]} role="progressbar"></div>
-                            <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
-                            <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
+                        {/* Password strength bar */}
+                        <div className="col-sm-8 col-sm-offset-3" >
+                            <div className="progress validationBar">
+                                <div className={pwStrengthBarClass} style={barStyle[0]} role="progressbar"></div>
+                                <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                                <div className={pwStrengthBarClass} style={barStyle[1]} role="progressbar"></div>
+                                <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                                <div className={pwStrengthBarClass} style={barStyle[2]} role="progressbar"></div>
+                                <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                                <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
+                            </div>
+                            <div className={pwStrengthText[this.state.passwordStrength].className}>{(this.state.password.length > 0 ? pwStrengthText[this.state.passwordStrength].text : "")}</div>
                         </div>
-                        <div className={pwStrengthText[this.state.passwordStrength].className}>{(this.state.password.length > 0 ? pwStrengthText[this.state.passwordStrength].text : "")}</div>
-                    </div>
-                    {/* Repeat password */}
-                    <div className={repeatDivState}>
-                        <label htmlFor="repeatPassword" className="col-sm-3 control-label">Upprepa</label>
-                        <div className="col-sm-8">
-                            <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
-                            <span className={repeatGlyphState}></span>
+                        {/* Repeat password */}
+                        <div className={repeatDivState}>
+                            <label htmlFor="repeatPassword" className="col-sm-3 control-label">Upprepa</label>
+                            <div className="col-sm-8">
+                                <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
+                                <span className={repeatGlyphState}></span>
+                            </div>
                         </div>
-                    </div>
-                
-                    {/* Submit */}
-                    <div className="form-group">
-                        <div className="col-sm-offset-3 col-sm-2">
-                            <button type="submit" className="btn btn-success" disabled={disableSubmit}>Registrera</button>
-                        </div>
-                        {message}
-                    </div>
                     
-                </form>
+                        {/* Submit */}
+                        <div className="form-group">
+                            <div className="col-sm-offset-3 col-sm-2">
+                                <button type="submit" className="btn btn-success" disabled={disableSubmit}>Registrera</button>
+                            </div>
+                            {message}
+                        </div>
+                        
+                    </form>
+                </div>
             </div>
         );
     }
 });
-
-
-
-ReactDOM.render(
-    <RegisterForm />,
-    document.getElementById('content')
-);
-
 
 
 
