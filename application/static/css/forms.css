@@ -1,4 +1,4 @@
-.registerForm {
+.registerForm, .loginForm {
     /*padding-top: 15px;*/
     width: 550px;
     /*border-radius: 5px;
@@ -6,16 +6,17 @@
     position: absolute;
     /*background-color: white;*/
     right: 10px;
+    top: 50px;
     z-index: 1000;
     line-height: 1.42857143;
 }
-
+/*
 .loginForm {
     margin: 15px;
     width: 600px;
     border: 1px dashed black;
 }
-
+*/
 /* Password strength bar */
 
 .validationBar {

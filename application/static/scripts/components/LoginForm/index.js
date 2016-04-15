@@ -57,7 +57,7 @@ var LoginForm = React.createClass({
 
     
     render: function(){
-        var containerClass = "registerForm panel panel-primary" + (this.props.show ? "" : " hide")
+        var containerClass = "loginForm panel panel-primary" + (this.props.show ? "" : " hide")
         //Valid email
         var emailDivState = "form-group";
         var emailGlyphState = null;
