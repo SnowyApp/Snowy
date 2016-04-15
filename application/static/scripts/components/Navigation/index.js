@@ -59,11 +59,11 @@ var Navigation = React.createClass({
                 });
             }.bind(this)
         });
-
-        // tell other components on root change
-        this.props.update(id);
     },
 	
+    componentWillReceiveProps: function(nextProps) {
+        this.setParent(nextProps.rootNodeID);
+    },
 	
     componentDidMount: function(){
         this.setParent(this.props.rootNodeID);
@@ -72,13 +72,15 @@ var Navigation = React.createClass({
     //Handles clicks on the children (callback function)
     handleClick: function(e){
         this.state.history.push(this.state.currentID);
-        this.setParent(e.id); 
+        this.setParent(e.id);
+        this.props.update(e.id); 
     },
 
     //Move up one level in the tree (from history)
     upOneLevel: function(){
         var id = this.state.history.pop();
         this.setParent(id);
+        this.props.update(id);
     },
 
     //Initial state of the component

@@ -47,6 +47,7 @@ var Container = React.createClass({
                     <Diagram 
                         sctid={this.state.selectedTerm}
                         url={this.state.serverUrl}
+                        update={this.updateSelectedTerm}
                     />
                 </section>
             </div>

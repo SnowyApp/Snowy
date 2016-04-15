@@ -71,11 +71,10 @@ module.exports = React.createClass({
     },
 
     update: function(sctid) {
-        if (sctid != null) {
-            this.getRoot(sctid);
-            this.getChildren(sctid);
-            if (this.refs.Chart !== undefined)
-                this.reset();
+        this.getRoot(sctid);
+        this.getChildren(sctid);
+        if (this.refs.Chart !== undefined) {
+            this.reset();
         }
     },
 
@@ -90,7 +89,9 @@ module.exports = React.createClass({
      * Update state when receiving new props
      */
     componentWillReceiveProps: function(nextProps) {
-        this.update(nextProps.sctid);
+        if (this.state.data[0].id != nextProps.sctid) {
+            this.update(nextProps.sctid);
+        }
     },
 
     /**
@@ -104,11 +105,17 @@ module.exports = React.createClass({
                     ref="Chart"
                     data={this.state.data}
                     domain={this.state.domain} 
-                    onClick={this.update} />
+                    onClick={this.onClick} />
             </div>
         );
     },
 
+    onClick: function(sctid) {
+        if (sctid != this.state.data[0].id) {
+            this.update(sctid);
+            this.props.update(sctid);
+        }
+    },
 
     reset: function() {
         this.refs.Chart.resetDiagram();
