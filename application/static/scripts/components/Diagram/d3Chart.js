@@ -15,7 +15,7 @@ var menuData = [
     {
         title: 'Remove Node',
         action: function(elm, d, i) {
-            if (d.parent) {
+            if (d.parent && d.parent.children !== undefined) {
 
                 // find child and remove it
                 for (var ii = 0; ii < d.parent.children.length; ii++) {
@@ -36,7 +36,7 @@ var menuData = [
  * will become kind of like an object.
  */
 var i = 0;
-var tree,root;
+var tree,root,svg;
 
 const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
@@ -55,7 +55,6 @@ const DURATION = 750;
  */
 
 d3Chart.create = function(element, props, state) {
-
     root = state.data[0];
 
     /**
@@ -63,7 +62,6 @@ d3Chart.create = function(element, props, state) {
      * minimum and maximum values for zooming.
      */
     var zoom = d3.behavior.zoom()
-        //.scaleExtent([1, 10])
         .on("zoom", zoomed);
 
 
@@ -76,7 +74,7 @@ d3Chart.create = function(element, props, state) {
      *     .
      * </svg>
      */
-    var svg = d3.select(element).append("svg")
+    svg = d3.select(element).append("svg")
         .attr("class", "d3")
         .attr({
             'xmlns': 'http://www.w3.org/2000/svg',
@@ -107,20 +105,25 @@ d3Chart.create = function(element, props, state) {
      * That way it will automatically space out the nodes and layers
      * depending of how many nodes and layers we have, neat.
      */
-    tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
-
-    this.update(element, root);
+    tree = d3.layout.tree()
+        .separation(function (a, b) {
+            return a.parent == b.parent ? a.parent.name.length/1.5 : a.parent.name.length;
+        })
+        .nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
+        .sort(function(a,b){return d3.ascending(a.name,b.name)});
+    this._drawPoints(root);
 };
 
 /**
  * Called when we want to redraw the tree
  */
-d3Chart.update = function(element, root) {
+d3Chart.update = function(element, state) {
+    root = state.data[0];
     this._drawPoints(root);
 };
 
-d3Chart.destroy = function(element) {
-    // Clean-up
+d3Chart.destroy = function() {
+    svg.remove();
 };
 /**
  * This will set some scaling according to the sizes of the element
@@ -147,16 +150,18 @@ d3Chart._scales = function(element, domain) {
 
     return {x: x, y: y, z: z};
 };
+
 /**
  * This functions adds the nodes and the lines between the nodes and styles
  * them in the way we want.
  */
 
 d3Chart._drawPoints = function(data) {
+    if(!root){
+        return null;
+    }
 
     var g = d3.select('body').selectAll(".nodes");
-
-    //root = data[0];
 
     // build the arrow.
     var arrow = g.append("svg:defs").selectAll("marker")
@@ -185,8 +190,6 @@ d3Chart._drawPoints = function(data) {
 
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
-
-
     /**
      * Defines behavior for dragging elements.
      */
@@ -208,7 +211,8 @@ d3Chart._drawPoints = function(data) {
      * part can be skipped. But it also gives every node a unique id, which
      * is nice.
      */
-    var node = g.selectAll("g.node")
+    var node = g.selectAll("g.node").remove();
+    node = g.selectAll("g.node")
         .data(nodes, function(d) { return d.id || (d.id = ++i) });
 
     /**
@@ -240,8 +244,8 @@ d3Chart._drawPoints = function(data) {
      */
     nodeEnter.append('rect')
         .attr('class', 'node')
-        .attr('x', WIDTH_MARGIN)
-        .attr('width', NODE_WIDTH)
+        .attr('x', function (d) {return WIDTH_MARGIN - d.name.length*1.5 })
+        .attr('width', function(d){return NODE_WIDTH + d.name.length*3})
         .attr('height', NODE_HEIGHT)
         .style('fill', '#FFF')
         .style('stroke','black');
@@ -269,7 +273,8 @@ d3Chart._drawPoints = function(data) {
      * Creates link which will be an array of objects with class line.link
      * and contain all the links generated and the unique id it has been given
      */
-    var link = g.selectAll("line.link")
+    var link = g.selectAll("line.link").remove();
+    link = g.selectAll("line.link")
         .data(links, function(d) { return d.target.id; });
 
     /**
