@@ -63,7 +63,6 @@ d3Chart.create = function(element, props, state) {
      * minimum and maximum values for zooming.
      */
     var zoom = d3.behavior.zoom()
-        //.scaleExtent([1, 10])
         .on("zoom", zoomed);
 
 
