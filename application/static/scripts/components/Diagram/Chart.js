@@ -33,6 +33,11 @@ module.exports = React.createClass({
         };
     },
 
+    resetDiagram: function() {
+        var element = ReactDOM.findDOMNode(this);
+        d3Chart.reset(element, this.getChartState());
+    },
+
     componentWillUnmount: function() {
         var element = ReactDOM.findDOMNode(this);
         d3Chart.destroy(element);

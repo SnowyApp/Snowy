@@ -108,6 +108,14 @@ d3Chart.create = function(element, props, state) {
 };
 
 /**
+ * Reset the chart to state.
+ */
+d3Chart.reset = function(element, state) {
+    tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
+    this.update(element, state);
+};
+
+/**
  * Called when we want to redraw the tree
  */
 d3Chart.update = function(element, state) {

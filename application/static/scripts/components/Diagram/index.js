@@ -90,22 +90,18 @@ module.exports = React.createClass({
     render: function() {
         return (
             <div className="diagram">
-                <button>Remove Tree</button>
-                <button onClick={this.data1}>Data1</button>
-                <button onClick={this.data2}>Data2</button>
+                <button onClick={this.reset}>Reset</button>
                 <Chart
+                    ref="Chart"
                     data={this.state.data}
                     domain={this.state.domain} />
             </div>
         );
     },
 
-    data1: function() {
-        this.setState({data: treeData1});
-    },
 
-    data2: function() {
-        this.setState({data: treeData2});
+    reset: function() {
+        this.refs.Chart.resetDiagram();
     }
 });
 
