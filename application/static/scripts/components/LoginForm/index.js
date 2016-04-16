@@ -1,5 +1,3 @@
-//var Auth = require('../services/AuthService');
-
 var LoginForm = React.createClass({
     propTypes:{
         hideLogin: React.PropTypes.func,
@@ -16,7 +14,7 @@ var LoginForm = React.createClass({
     },
     close: function() {
         this.setState({ showModal: false });
-        this.props.hideLogin()
+        this.props.hideLogin();
     },
 
     open: function() {
@@ -29,6 +27,7 @@ var LoginForm = React.createClass({
     onSuccess: function(e){
         this.resetForm();
         this.close();
+        this.props.updateLoggedIn(true);
     },
     onError: function(t, e) {
         this.setState({

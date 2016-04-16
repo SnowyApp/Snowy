@@ -6,6 +6,7 @@ var Navigation = require("./components/Navigation/index");
 var Chart = require('./components/Diagram/Chart');
 var RegisterForm = require('./components/RegisterForm/index');
 var LoginForm = require('./components/LoginForm/index');
+var LogOut = require('./components/LogOut/index');
 
 //Use this if you have the api locally
 var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
@@ -23,7 +24,8 @@ var Container = React.createClass({
             serverUrl: 'http://79.136.62.204:3000/',
             APIedition: '',
             APIrelease: '',
-            selectedTerm: null
+            selectedTerm: null,
+            isLoggedIn: false
         };
     },
     handleUrlChange: function(e){
@@ -37,12 +39,22 @@ var Container = React.createClass({
             selectedTerm: newSelectedTerm
         });
     },
+    hasLoggedIn: function(){
+        this.setState({
+            isLoggedIn:true
+        });
+    },
+    updateLoggedIn: function(e){
+      this.setState({
+          isLoggedIn: e
+      });
+    },
     render: function() {
         return (
             <div className="wrapper">
                 <Navigation/>
                 <section>
-                    <Bar update={this.updateSelectedTerm}/>
+                    <Bar update={this.updateSelectedTerm} isLoggedIn={this.state.isLoggedIn} updateLoggedIn={this.updateLoggedIn}/>
                     <Diagram />
                 </section>
             </div>
@@ -50,11 +62,13 @@ var Container = React.createClass({
     }
 });
 
+
 var Bar = React.createClass({
     getInitialState: function(){
         return{
             showRegistration: false,
-            showLogin: false
+            showLogin: false,
+            showLogout: false
         };
     },
 
@@ -79,27 +93,50 @@ var Bar = React.createClass({
         this.setState({
             showLogin: false
         });
-    },
 
+    },
+    showLogout: function(){
+        this.setState({
+            showLogout: true
+        });
+    },
+    hideLogout: function(){
+        this.setState({
+            showLogout: false
+        });
+    },
     render: function() {
+        const navButtons = this.props.isLoggedIn ? (
+            <div>
+                <Button className="profile" bsStyle = "primary" >Profile</Button>
+                <Button className="Logout" bsStyle = "primary" onClick={this.showLogout}>Logout</Button>
+                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} updateLoggedIn={this.props.updateLoggedIn}/>
+            </div>
+        ) : (
+            <div>
+                <Button className="Register" bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
+                <Button className="Login" bsStyle = "primary" onClick={this.showLogin}>Login</Button>
+                {/* Registration popup */}
+                <RegisterForm show={this.state.showRegistration} hideRegistration = {this.hideRegistration}/>
+
+                {/* Login popup */}
+                <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin} updateLoggedIn={this.props.updateLoggedIn}/>
+            </div>
+        );
+
         return (
             <div className="bar">
                 <Search url ={mockApi} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
-                    <Button bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
-                    <Button bsStyle = "primary" onClick={this.showLogin}>Login</Button>
-                    {/* Registration popup */}
-                    <RegisterForm show={this.state.showRegistration} hideRegistration = {this.hideRegistration}/>
-
-                    {/* Login popup */}
-                    <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin}/>
+                    {navButtons}
                 </ButtonToolbar>
             </div>
 
         );
     }
 });
+
 var Export = React.createClass({
     exportSVG: function(){
         var html = d3.select("svg")
