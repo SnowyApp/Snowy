@@ -3,8 +3,7 @@
 var LoginForm = React.createClass({
     propTypes:{
         hideLogin: React.PropTypes.func,
-        show: React.PropTypes.bool,
-        hasLoggedIn: React.PropTypes.func
+        show: React.PropTypes.bool
     },
     getInitialState: function(){
         return({
@@ -30,7 +29,6 @@ var LoginForm = React.createClass({
     onSuccess: function(e){
         this.resetForm();
         this.close();
-        this.props.hasLoggedIn();
     },
     onError: function(t, e) {
         this.setState({
