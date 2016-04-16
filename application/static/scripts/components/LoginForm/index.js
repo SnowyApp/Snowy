@@ -14,47 +14,52 @@ var LoginForm = React.createClass({
             showModal: false
         });
     },
-    close() {
+    close: function() {
         this.setState({ showModal: false });
         this.props.hideLogin()
     },
 
-    open() {
+    open: function() {
         this.setState({ showModal: true });
     },
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps: function(nextProps){
         this.setState({showModal: nextProps.show});
     },
+    onSuccess: function(e){
+        this.resetForm();
+        this.close();
+    },
+    onError: function(t, e) {
+        this.setState({
+            errorMessage: "Login unsuccessful"
+        });
+    },
+    resetForm: function(){
+        this.setState({
+            email: "",
+            validEmail: false,
+            password: "",
+            errorMessage: "",
+        });
+    },
+
     //Handles submit of the form
     handleSubmit: function(e){
         e.preventDefault();
         $.ajax({
             type:"POST",
-            contentType: "application/json; charset=utf-8",
-            url: "http://127.0.0.1:5000/login",
-            data:JSON.stringify({"email": "test@gmail.com", "password": "kappa123"}),
-            success: function(data){
-                console.log(data.message);
-            },
+            url: "/login",
+            data: JSON.stringify({"email": this.state.email, "password": this.state.password}),
+            success: function (data) {
+                this.onSuccess(data);
+            }.bind(this),
+            error: function (textStatus, errorThrown) {
+                this.onError(textStatus, errorThrown);
+            }.bind(this),
+            contentType: "application/json",
             dataType: "json"
         });
-        //TODO: Calls to database goes here
-        //Email and password can be found in the states
-
-        //Test example
-        if(this.state.password != "123"){
-            this.setState({
-                errorMessage: "Emailadressen och lösenordet matchar inte."
-            });
-        }
-        //Success
-        else {
-            this.setState({
-                errorMessage: "",
-                password: ""
-            });
-        }
     },
 
     //Check if a valid email has been input
