@@ -85,7 +85,7 @@ var LoginForm = React.createClass({
 
         return(
             <Modal show={this.state.showModal} onHide={this.close}>
-                <Modal.Header closeButton>
+                <Modal.Header className="bg-primary" closeButton>
                     <Modal.Title>Logga in</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
