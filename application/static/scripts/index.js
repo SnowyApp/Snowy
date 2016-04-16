@@ -23,12 +23,18 @@ var Container = React.createClass({
             serverUrl: 'http://79.136.62.204:3000/',
             APIedition: '',
             APIrelease: '',
-            selectedTerm: null
+            selectedTerm: null,
+            isLoggedIn: false
         };
     },
     handleUrlChange: function(e){
         this.setState({
             url: e.target.value
+        });
+    },
+    hasLoggedIn: function(){
+        this.setState({
+            isLoggedIn: true
         });
     },
     //Gets called when the user selects an element in the search result
@@ -42,7 +48,7 @@ var Container = React.createClass({
             <div className="wrapper">
                 <Navigation/>
                 <section>
-                    <Bar update={this.updateSelectedTerm}/>
+                    <Bar update={this.updateSelectedTerm} isLoggedIn={this.state.isLoggedIn} hasLoggedIn={this.state.hasLoggedIn}/>
                     <Diagram />
                 </section>
             </div>
@@ -51,6 +57,10 @@ var Container = React.createClass({
 });
 
 var Bar = React.createClass({
+    propTypes:{
+        isLoggedIn: React.PropTypes.bool.isRequired,
+        hasLoggedIn: React.PropTypes.func
+    },
     getInitialState: function(){
         return{
             showRegistration: false,
@@ -80,12 +90,23 @@ var Bar = React.createClass({
             showLogin: false
         });
     },
-
     render: function() {
+        if (this.props.isLoggedIn) {
+            return (
+                <div className="bar">
+                    <Search url={mockApi} update={this.props.update}/>
+                    <ButtonToolbar id="buttons">
+                        <Export />
+                        <a>Välkommen!</a>
+                    </ButtonToolbar>
+                </div>
+
+            );
+        } else {
         return (
             <div className="bar">
-                <Search url ={mockApi} update={this.props.update}/>
-                <ButtonToolbar id = "buttons">
+                <Search url={mockApi} update={this.props.update}/>
+                <ButtonToolbar id="buttons">
                     <Export />
                     <Button bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
                     <Button bsStyle = "primary" onClick={this.showLogin}>Login</Button>
@@ -93,13 +114,15 @@ var Bar = React.createClass({
                     <RegisterForm show={this.state.showRegistration} hideRegistration = {this.hideRegistration}/>
 
                     {/* Login popup */}
-                    <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin}/>
+                    <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin} hasLoggedIn={this.props.hasLoggedIn}/>
                 </ButtonToolbar>
             </div>
 
         );
     }
+    }
 });
+
 var Export = React.createClass({
     exportSVG: function(){
         var html = d3.select("svg")
