@@ -81,7 +81,7 @@ d3Chart.create = function(element, props, state) {
             'xlink': 'http://www.w3.org/1999/xlink',
             version: '1.1'
         })
-        .call(zoom);
+        .call(zoom).on("dblclick.zoom", null);
 
     /**
      * To add more than one Shape or text element to the SVG-element you have
