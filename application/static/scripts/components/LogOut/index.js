@@ -24,6 +24,9 @@ var LogOut = React.createClass({
         this.props.updateLoggedIn(false);
         this.close();
     },
+    componentWillReceiveProps: function(nextProps){
+        this.setState({showModal: nextProps.show});
+    },
     render: function(){
         return(
             <Modal show={this.state.showModal} onHide={this.close}>
@@ -32,7 +35,7 @@ var LogOut = React.createClass({
                 </Modal.Header>
                 <Modal.Body>
                     <Button bsStyle="primary" onClick={this.logOut}> Ja</Button>
-                    <Button bsStyle="primary" onClick={close.bind(this)}> Nej</Button>
+                    <Button bsStyle="primary" onClick={this.close}> Nej</Button>
                 </Modal.Body>
             </Modal>
         );
