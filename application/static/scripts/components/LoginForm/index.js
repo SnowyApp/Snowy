@@ -1,3 +1,5 @@
+import Auth from './services/AuthService'
+
 var LoginForm = React.createClass({
     propTypes:{
         hideLogin: React.PropTypes.func,
@@ -27,6 +29,13 @@ var LoginForm = React.createClass({
     //Handles submit of the form
     handleSubmit: function(e){
         e.preventDefault();
+
+        Auth.login(this.state.email, this.state.password)
+            .catch(function(err) {
+                this.setState({
+                    "Emailadressen och lösenordet matchar inte"
+                });
+            });
         //TODO: Calls to database goes here
         //Email and password can be found in the states
 
