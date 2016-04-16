@@ -1,4 +1,4 @@
-import Auth from './services/AuthService'
+//var Auth = require('../services/AuthService');
 
 var LoginForm = React.createClass({
     propTypes:{
@@ -29,13 +29,16 @@ var LoginForm = React.createClass({
     //Handles submit of the form
     handleSubmit: function(e){
         e.preventDefault();
-
-        Auth.login(this.state.email, this.state.password)
-            .catch(function(err) {
-                this.setState({
-                    "Emailadressen och lösenordet matchar inte"
-                });
-            });
+        $.ajax({
+            type:"POST",
+            contentType: "application/json; charset=utf-8",
+            url: "http://127.0.0.1:5000/login",
+            data:JSON.stringify({"email": "test@gmail.com", "password": "kappa123"}),
+            success: function(data){
+                console.log(data.message);
+            },
+            dataType: "json"
+        });
         //TODO: Calls to database goes here
         //Email and password can be found in the states
 
