@@ -129,7 +129,7 @@ def update_info():
         return jsonify(message="Incomplete information")
     
     g.user.update_info(data['first_name'], data['last_name'], data['language'])
-    return jsonify(message="ok")
+    return jsonify(status="ok")
 
 
 @app.route('/favorite_term', methods=['POST', 'GET'])

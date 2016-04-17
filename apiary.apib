@@ -92,8 +92,32 @@ Simple API for allowing accessing snowy data.
                 "status": "ok"
             }
 
+## Update user information [/update_info]
+
+### Update info [PUT]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: token
+
+    + Body
+
+            {
+                "first_name": "Simon",
+                "last_name": "Lindblad",
+                "language": "en"
+            }
 
 
++ Response 200 (application/json)
+    
+    + Body 
+        
+            {
+                "status": "ok"
+            }
 
 ## Questions Collection [/questions]
 
