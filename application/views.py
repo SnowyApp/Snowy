@@ -102,7 +102,7 @@ def verify():
     """
     Verifies that a user is logged in.
     """
-    return "ok"
+    return jsonify(status="ok")
 
 
 @app.route('/logout', methods=['POST'])
