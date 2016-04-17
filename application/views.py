@@ -113,7 +113,7 @@ def logout():
     """
     token = request.headers.get('Authorization', None)
     Token(token, "").delete_from_db()
-    return jsonify(message="Logged out")
+    return jsonify(status="ok")
 
 
 @app.route('/update_info', methods=['POST'])
