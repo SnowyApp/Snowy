@@ -202,6 +202,15 @@ class User():
         cur.close()
         return User(user_data[0], user_data[1], user_data[2], user_data[3], user_data[4])
 
+    def to_json(self):
+        """
+        Returns a JSON representation of the user.
+        """
+        return {"email": self.email,
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "language": self.language}
+
 
 class Token():
     """
