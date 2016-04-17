@@ -16,7 +16,12 @@ def login(username, password):
     user = {'email': username, 'password': password}
     return json.loads(requests.post(url + "/login", json=user).text)
     
-    
+def get_favorite_terms():
+    return json.loads(requests.get(url + "/favorite_term", headers=auth).text)
+
+def add_favorite_term(cid, term, et, a):
+    data = {"id": cid, "effective_time": et, "term": term, "active": a}
+    return json.loads(requests.post(url + "/favorite_term", json=data, headers=auth).text)
 
 def search(term):
     return json.loads(requests.get(url + "/search/cancer").text)['hits']['hits']
