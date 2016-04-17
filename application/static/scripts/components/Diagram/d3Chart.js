@@ -168,9 +168,9 @@ d3Chart._drawPoints = function(data) {
             .data(["start"])
         .enter().append("svg:marker")    // This section adds in the arrows
             .attr("id", "ArrowMarker")
-            .attr("viewBox", "-5 -5 10 10")
-            .attr("refX", -5)
-            .attr("refY", 0)
+            .attr("viewBox", "0 0 22 20")
+            .attr("refX", 0)
+            .attr("refY", 10)
             .attr("markerWidth", 6)
             .attr("markerHeight", 6)
             .attr("markerUnits", "strokeWidth")
@@ -179,8 +179,7 @@ d3Chart._drawPoints = function(data) {
             .attr('stroke', 'black')
             .attr('fill', 'white')
         .append("svg:path")
-            .attr("d", "M -5 0 L 4 -3 L 4 3 z");
-
+            .attr("d", "M 0 10 L 20 0 L 20 20 z");
 
 
     /**
