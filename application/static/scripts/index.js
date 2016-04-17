@@ -168,7 +168,7 @@ var Export = React.createClass({
         var context = canvas.getContext("2d");
         context.globalCompositeOperation = "destination-over";
         context.fillStyle = '#fff';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillRect(0, 0, chartArea.offsetWidth, chartArea.offsetHeight);
 
         // Append the image data to a link, download the image and then remove canvas
         var dataString = canvas.toDataURL();
