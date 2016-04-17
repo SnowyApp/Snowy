@@ -204,6 +204,7 @@ $$ LANGUAGE plpgsql;
 DROP TYPE IF EXISTS concept_result CASCADE;
 CREATE TYPE concept_result AS (id BIGINT, term TEXT);
 
+-- Function that retrieves the concept with the given id
 DROP FUNCTION IF EXISTS get_concept(BIGINT);
 CREATE OR REPLACE FUNCTION get_concept(cid BIGINT)
 RETURNS concept_result AS $$
