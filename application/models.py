@@ -271,10 +271,8 @@ class Concept():
     Represents a concept in the Snomed CT database
     """
     
-    def __init__(self, cid, effective_time, active, term):
+    def __init__(self, cid, term):
         self.id = cid
-        self.effective_time = effective_time
-        self.active = active
         self.term = term
 
     @staticmethod
@@ -287,7 +285,7 @@ class Concept():
             cur.execute(query, (cid,))
             result = []
             for data in cur.fetchall():
-                result += [Concept(data[0], data[1], data[2], data[3])]
+                result += [Concept(data[0], data[1])]
             return result
         except Exception as e:
             print(e)
@@ -321,7 +319,7 @@ class Concept():
             if data is None:
                 return None
 
-            return Concept(data[0], data[1], data[2], data[3])
+            return Concept(data[0], data[1])
         except Exception as e:
             print(e)
             return None
@@ -331,8 +329,6 @@ class Concept():
         Returns a JSON representation of the concept.
         """
         return {"id": self.id,
-                "effective_time": self.effective_time,
-                "active": self.active,
                 "term": self.term}
 
     def __str__(self):
