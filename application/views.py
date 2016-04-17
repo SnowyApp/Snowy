@@ -116,7 +116,7 @@ def logout():
     return jsonify(status="ok")
 
 
-@app.route('/update_info', methods=['POST'])
+@app.route('/update_info', methods=['PUT'])
 @login_required
 def update_info():
     """
