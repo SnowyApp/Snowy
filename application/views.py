@@ -149,7 +149,7 @@ def favorite_term():
             return jsonify(message="The concepts data is not providid accurately"), 400
         
         g.user.add_favorite_term(data['id'], data['term'])
-        return jsonify(message="ok")
+        return jsonify(status="ok")
     else:
         return json.dumps(g.user.get_favorite_terms())
 
