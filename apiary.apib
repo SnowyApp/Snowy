@@ -119,7 +119,48 @@ Simple API for allowing accessing snowy data.
                 "status": "ok"
             }
 
+
+## Favorite Terms [/favorite_term]
+
+### Get all favorite terms [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: token
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    'term': 'Secondary caries', 
+                    'id': 708575005, 
+                    'favorite_date': '2016-04-17 17:53:44.908075+02:00'
+                }
+            ]
+
+### Add a new favorite term [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: token
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "status": "ok"
+            }
+
+
 ## Questions Collection [/questions]
+
 
 ### List All Questions [GET]
 
@@ -147,6 +188,8 @@ Simple API for allowing accessing snowy data.
             }
         ]
 
+
+Not yet fully implemented
 ### Create a New Question [POST]
 
 You may create your own question using this action. It takes a JSON
