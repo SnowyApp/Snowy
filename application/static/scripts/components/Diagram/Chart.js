@@ -12,7 +12,6 @@ module.exports = React.createClass({
             height: 300
         }
     },
-
     componentDidMount: function() {
         var element = ReactDOM.findDOMNode(this);
         d3Chart.create(element, {
@@ -20,7 +19,6 @@ module.exports = React.createClass({
             height: this.props.height
         }, this.getChartState());
     },
-
     componentDidUpdate: function() {
         var element = ReactDOM.findDOMNode(this);
         d3Chart.update(element, this.getChartState());
@@ -34,13 +32,12 @@ module.exports = React.createClass({
     },
 
     componentWillUnmount: function() {
-        var element = ReactDOM.findDOMNode(this);
-        d3Chart.destroy(element);
+        d3Chart.destroy();
     },
 
     render: function() {
         return (
-            <div className="Chart"></div>
+            <div className="chart"></div>
         );
     }
 });

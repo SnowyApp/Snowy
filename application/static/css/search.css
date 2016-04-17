@@ -1,5 +1,10 @@
 .search-results {
-    display: none;
+    display: block;
+    background-color: white;
+    z-index: 99;
+    position: relative;
+    width: 250px;
+    margin-left: 150px;
 }
 
 .search input {
