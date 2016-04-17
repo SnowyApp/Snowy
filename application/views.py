@@ -221,9 +221,9 @@ def store_diagram():
             return jsonify(message="'data' not provided"), 400
 
         g.user.store_diagram(data['data'], data['id'])
-        return jsonify(message="ok")
+        return jsonify(status="ok")
     else:
-        return jsonify(diagrams=g.user.get_diagrams())
+        return json.dumps(g.user.get_diagrams())
 
 
 @app.errorhandler(400)
