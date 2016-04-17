@@ -64,8 +64,11 @@ def create_user():
         return jsonify(message="User already exists"), 400
 
     # Create the new user and return OK
-    User.create_user(data['email'], data['password'])
-    return jsonify({'message': "ok"})
+    user = User.create_user(data['email'], data['password'])
+    if user is None:
+        abort(500)
+    else:
+        return jsonify({'status': "ok", "data": user.to_json()}), 201
 
 
 @app.route('/login', methods=['POST'])
