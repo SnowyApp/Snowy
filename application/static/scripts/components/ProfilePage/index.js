@@ -305,7 +305,6 @@ var ProfilePage = React.createClass({
 
 
 var TermPage = React.createClass({
-
     getInitialState: function(){
         return (
             {
@@ -415,19 +414,21 @@ var TermPage = React.createClass({
             <div>
                 <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> {dict[fakeUser.lang]["favterms"]}</h1>
                 <hr className="profileHr"/>
-                <table className="favorites">
-                    <thead>
-                        <tr>
-                            <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>{dict[fakeUser.lang]["name"]} {nameSortArrow}</th>
-                            <th id="Term_id" className="favorites" onClick={this.sortBy.bind(this, "id")}>ID {idSortArrow}</th>
-                            <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>{dict[fakeUser.lang]["added"]} {dateSortArrow}</th>
-                            <th id="Term_remove" className="favorites"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {TermArray}
-                    </tbody>
-                </table>
+                <div className="termPageWrapper">
+                    <table className="favorites">
+                        <thead>
+                            <tr>
+                                <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>{dict[fakeUser.lang]["name"]} {nameSortArrow}</th>
+                                <th id="Term_id" className="favorites" onClick={this.sortBy.bind(this, "id")}>ID {idSortArrow}</th>
+                                <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>{dict[fakeUser.lang]["added"]} {dateSortArrow}</th>
+                                <th id="Term_remove" className="favorites"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {TermArray}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }
@@ -560,23 +561,24 @@ var DiagramPage = React.createClass({
             <div>
                 <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> {dict[fakeUser.lang]["diagrams"]}</h1>
                 <hr className="profileHr"/>
+                <div className="diagramPageWrapper">
+                    <div className="input-group" style={{marginBottom: "8px"}}>
+                        <span className="input-group-addon" id="basic-addon1">Filter</span>
+                        <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={dict[fakeUser.lang]["name"]}/>
+                    </div>
 
-                <div className="input-group" style={{marginBottom: "8px"}}>
-                    <span className="input-group-addon" id="basic-addon1">Filter</span>
-                    <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={dict[fakeUser.lang]["name"]}/>
+                    <table className="favorites">
+                        <thead>
+                            <tr>
+                                <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>{dict[fakeUser.lang]["name"]} {nameSortArrow}</th>
+                                <th id="Diagram_acc" className="favorites"></th>
+                                <th id="Diagram_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>{dict[fakeUser.lang]["added"]} {dateSortArrow}</th>
+                                <th id="Diagram_remove" className="favorites"></th>
+                            </tr>
+                        </thead>
+                        {diagramArray}
+                    </table>
                 </div>
-
-                <table className="favorites">
-                    <thead>
-                        <tr>
-                            <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>{dict[fakeUser.lang]["name"]} {nameSortArrow}</th>
-                            <th id="Diagram_acc" className="favorites"></th>
-                            <th id="Diagram_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>{dict[fakeUser.lang]["added"]} {dateSortArrow}</th>
-                            <th id="Diagram_remove" className="favorites"></th>
-                        </tr>
-                    </thead>
-                    {diagramArray}
-                </table>
             </div>
         );
     }
@@ -718,48 +720,49 @@ var AccountPage = React.createClass({
             <div>
                 <h1><span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> {dict[fakeUser.lang]["account"]}</h1>
                 <hr className="profileHr"/>
-
-                {/* NAME ROW */}
-                <div className="accSettingsRow col-sm-12">
-                    <div className="col-sm-11">
-                        <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
-                            {dict[fakeUser.lang]["name"]}
-                        </a>
-                    </div>
-                    <div className="col-sm-1">
-                        <a data-toggle="collapse" onClick={this.openAcc.bind(null, "name")} href="#nameCollapse" aria-expanded="false">
-                            <span className={expandNameClass} aria-hidden="true"></span>
-                        </a>
-                    </div>
-
-                    {/* HIDDEN NAME DIV */}
-                    <div className="collapse col-sm-12 hiddenSettings" id="nameCollapse">
-                        <div className="customWell">
-                            <ChangeNameAndEmailForm />
+                <div className="accountPageWrapper">
+                    {/* NAME ROW */}
+                    <div className="accSettingsRow col-sm-12">
+                        <div className="col-sm-11">
+                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
+                                {dict[fakeUser.lang]["name"]}
+                            </a>
                         </div>
-                    </div>
-                </div>
+                        <div className="col-sm-1">
+                            <a data-toggle="collapse" onClick={this.openAcc.bind(null, "name")} href="#nameCollapse" aria-expanded="false">
+                                <span className={expandNameClass} aria-hidden="true"></span>
+                            </a>
+                        </div>
 
-                {/* PASSWORD ROW */}
-                <div className="accSettingsRow col-sm-12">
-                    <div className="col-sm-11">
-                        <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse" aria-expanded="false">
-                            {dict[fakeUser.lang]["password"]}
-                        </a>
-                    </div>
-                    <div className="col-sm-1">
-                        <a data-toggle="collapse" onClick={this.openAcc.bind(null, "password")} href="#passwordCollapse" aria-expanded="false">
-                            <span className={expandPasswordClass} aria-hidden="true"></span>
-                        </a>
-                    </div>
-
-                    {/* HIDDEN PASSWORD DIV */}
-                    <div className="collapse col-sm-12 hiddenSettings" id="passwordCollapse">
-                        <div className="customWell">
-                            <ChangePasswordForm />
+                        {/* HIDDEN NAME DIV */}
+                        <div className="collapse col-sm-12 hiddenSettings" id="nameCollapse">
+                            <div className="customWell">
+                                <ChangeNameAndEmailForm />
+                            </div>
                         </div>
                     </div>
 
+                    {/* PASSWORD ROW */}
+                    <div className="accSettingsRow col-sm-12">
+                        <div className="col-sm-11">
+                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse" aria-expanded="false">
+                                {dict[fakeUser.lang]["password"]}
+                            </a>
+                        </div>
+                        <div className="col-sm-1">
+                            <a data-toggle="collapse" onClick={this.openAcc.bind(null, "password")} href="#passwordCollapse" aria-expanded="false">
+                                <span className={expandPasswordClass} aria-hidden="true"></span>
+                            </a>
+                        </div>
+
+                        {/* HIDDEN PASSWORD DIV */}
+                        <div className="collapse col-sm-12 hiddenSettings" id="passwordCollapse">
+                            <div className="customWell">
+                                <ChangePasswordForm />
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         );
@@ -1122,10 +1125,19 @@ var ChangePasswordForm = React.createClass({
 });
 
 
-/*<ul className="dropdown-menu">
-    <li><a href="#"><img className="langFlag" src="flags/flag_eng.png"/> English</a></li>
-    <li><a href="#"><img className="langFlag" src="flags/flag_swe.png"/> Svenska</a></li>
-</ul>*/
+/*
+<div className="btn-group langDropdown">
+    <button type="button" className="btn btn-default">{dict[fakeUser.lang]["language"]}</button>
+    <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span className="caret"></span>
+    <span className="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul className="dropdown-menu">
+        <li><a href="#"><img className="langFlag" src="flags/flag_eng.png"/> English</a></li>
+        <li><a href="#"><img className="langFlag" src="flags/flag_swe.png"/> Svenska</a></li>
+    </ul>
+</div>
+*/
 
 
 //Tab navigation for profile page
@@ -1138,13 +1150,6 @@ var NavBar = React.createClass({
                     <NavBarItem name="diagrams" active={this.props.currentTab === 'diagrams'} onSelect={this.props.changeActiveTab}/>
                     <NavBarItem name="account" active={this.props.currentTab === 'account'} onSelect={this.props.changeActiveTab}/>
                 </ul>
-                <div className="btn-group langDropdown">
-                    <button type="button" className="btn btn-default">{dict[fakeUser.lang]["language"]}</button>
-                    <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span className="caret"></span>
-                    <span className="sr-only">Toggle Dropdown</span>
-                    </button>
-                </div>
             </div>
         );
     }
