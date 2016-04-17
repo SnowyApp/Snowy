@@ -1,10 +1,6 @@
 .registerForm, .loginForm {
-    /*padding-top: 15px;*/
     width: 550px;
-    /*border-radius: 5px;
-    border: 1px solid black;*/
     position: absolute;
-    /*background-color: white;*/
     right: 10px;
     top: 50px;
     z-index: 1000;

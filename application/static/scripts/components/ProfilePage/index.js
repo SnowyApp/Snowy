@@ -1,3 +1,20 @@
+module.exports = React.createClass({
+    render: function(){
+        return (
+            <ProfilePage openTerm={openTerm} openDiagram={openDiagram}/> //Replace openTerm with function that opens up selected term
+        );
+    }
+});
+
+function openTerm(id){
+    console.log(id);
+}
+
+function openDiagram(id){
+    console.log(id);
+}
+
+
 //Dictionary for supported languages. m prefix indicates that its a error/success message
 var dict = {
     swe: {
@@ -198,7 +215,7 @@ var ProfilePage = React.createClass({
     getInitialState: function(){
         return (
             {
-                currentTab: 'account'
+                currentTab: 'diagrams'
             }
         );
     },
@@ -435,7 +452,8 @@ var DiagramPage = React.createClass({
 
     getInitialState: function(){
         return({
-            diagrams: dummyDiagrams
+            diagrams: dummyDiagrams,
+            filteredDiagrams: dummyDiagrams
         });
     },
 
@@ -484,10 +502,26 @@ var DiagramPage = React.createClass({
         });
         //TODO: Remove element from database
     },
+
+    filterDiagrams: function(event){
+        var input = event.target.value;
+        var regEx = new RegExp(input.toLowerCase());
+        var filteredDiagrams = [];
+        for(var i = 0; i < this.state.diagrams.length; i++){
+            if(regEx.test(this.state.diagrams[i].name.toLowerCase())){
+                filteredDiagrams.push(this.state.diagrams[i]);
+            }
+        }
+
+        this.setState({
+            filteredDiagrams: filteredDiagrams
+        });
+        
+    },
     
     render: function(){
         //Generate the diagram elements
-        var diagramArray = this.state.diagrams.map(function(diagram){
+        var diagramArray = this.state.filteredDiagrams.map(function(diagram){
             //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
             var day = ("0" + diagram.dateAdded.getDate()).slice(-2);
             var month = ("0" + diagram.dateAdded.getMonth()).slice(-2);
@@ -526,6 +560,12 @@ var DiagramPage = React.createClass({
             <div>
                 <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> {dict[fakeUser.lang]["diagrams"]}</h1>
                 <hr className="profileHr"/>
+
+                <div className="input-group" style={{marginBottom: "8px"}}>
+                    <span className="input-group-addon" id="basic-addon1">Filter</span>
+                    <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={dict[fakeUser.lang]["name"]}/>
+                </div>
+
                 <table className="favorites">
                     <thead>
                         <tr>
@@ -1082,7 +1122,10 @@ var ChangePasswordForm = React.createClass({
 });
 
 
-
+/*<ul className="dropdown-menu">
+    <li><a href="#"><img className="langFlag" src="flags/flag_eng.png"/> English</a></li>
+    <li><a href="#"><img className="langFlag" src="flags/flag_swe.png"/> Svenska</a></li>
+</ul>*/
 
 
 //Tab navigation for profile page
@@ -1101,10 +1144,6 @@ var NavBar = React.createClass({
                     <span className="caret"></span>
                     <span className="sr-only">Toggle Dropdown</span>
                     </button>
-                    <ul className="dropdown-menu">
-                        <li><a href="#"><img className="langFlag" src="flags/flag_eng.png"/> English</a></li>
-                        <li><a href="#"><img className="langFlag" src="flags/flag_swe.png"/> Svenska</a></li>
-                    </ul>
                 </div>
             </div>
         );
@@ -1123,18 +1162,12 @@ var NavBarItem = React.createClass({
     }
 });
 
-function openTerm(id){
-    console.log(id);
-}
 
-function openDiagram(id){
-    console.log(id);
-}
 
-ReactDOM.render(
+/*ReactDOM.render(
     <ProfilePage openTerm={openTerm} openDiagram={openDiagram}/>, //Replace openTerm with function that opens up selected term
     document.getElementById('content')
-);
+);*/
 
 
 

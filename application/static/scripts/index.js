@@ -6,6 +6,7 @@ var Navigation = require("./components/Navigation/index");
 var Chart = require('./components/Diagram/Chart');
 var RegisterForm = require('./components/RegisterForm/index');
 var LoginForm = require('./components/LoginForm/index');
+var ProfilePage = require("./components/ProfilePage/index");
 
 //Use this if you have the api locally
 var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
@@ -43,7 +44,7 @@ var Container = React.createClass({
                 <Navigation/>
                 <section>
                     <Bar update={this.updateSelectedTerm}/>
-                    <Diagram />
+                    <ProfilePage />
                 </section>
             </div>
         );
