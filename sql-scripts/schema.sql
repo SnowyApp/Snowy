@@ -202,7 +202,7 @@ $$ LANGUAGE plpgsql;
 
 -- Create a new type that stores concept data
 DROP TYPE IF EXISTS concept_result CASCADE;
-CREATE TYPE concept_result AS (id BIGINT, effective_time BIGINT, active INTEGER, term TEXT);
+CREATE TYPE concept_result AS (id BIGINT, term TEXT);
 
 DROP FUNCTION IF EXISTS get_concept(BIGINT);
 CREATE OR REPLACE FUNCTION get_concept(cid BIGINT)
@@ -210,7 +210,7 @@ RETURNS concept_result AS $$
 DECLARE
     result concept_result;
 BEGIN
-    SELECT concept_id, effective_time, active, term INTO result
+    SELECT concept_id, term INTO result
         FROM description
         WHERE concept_id=cid AND active = 1 
         ORDER BY effective_time DESC
