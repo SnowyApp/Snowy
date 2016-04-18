@@ -14,6 +14,8 @@ var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?q
 //Use this if Carl Brage's server is up
 var brageUrl = 'http://155.4.145.248:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
 
+var matteUrl = 'http://85.229.222.71:5000';
+
 //Use this if none of the above work, can only search on asthma
 var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/api/snomed/en-edition/v20160131/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
 
@@ -21,7 +23,7 @@ var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            serverUrl: 'http://localhost:5000',
+            serverUrl: matteUrl,
             APIedition: '',
             APIrelease: '',
             isLoggedIn: false,
