@@ -3,14 +3,6 @@ var FavoriteDiagrams = require('./FavoriteDiagrams/FavoriteDiagrams');
 var AccountPage = require('./AccountPage/AccountPage');
 var NavBar = require('./NavBar/NavBar');
 
-module.exports = React.createClass({
-    render: function(){
-        return (
-            <ProfilePage openTerm={openTerm} openDiagram={openDiagram}/> //Replace openTerm with function that opens up selected term
-        );
-    }
-});
-
 function openTerm(id){
     console.log(id);
 }
@@ -172,12 +164,12 @@ var dummyDiagrams =
 ];
 
 
-var ProfilePage = React.createClass({
+module.exports = React.createClass({
     //Initial state of the component
     getInitialState: function(){
         return (
             {
-                currentTab: 'diagrams'
+                currentTab: 'account'
             }
         );
     },

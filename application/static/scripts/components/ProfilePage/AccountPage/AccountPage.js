@@ -61,47 +61,47 @@ module.exports = React.createClass({
                 <h1><span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> {this.props.dict[fakeUser.lang]["account"]}</h1>
                 <hr className="profileHr"/>
                 <div className="accountPageWrapper">
-                    {/* NAME ROW */}
-                    <div className="accSettingsRow col-sm-12">
-                        <div className="col-sm-11">
-                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse" aria-expanded="false">
-                                {this.props.dict[fakeUser.lang]["name"]}
-                            </a>
-                        </div>
-                        <div className="col-sm-1">
-                            <a data-toggle="collapse" onClick={this.openAcc.bind(null, "name")} href="#nameCollapse" aria-expanded="false">
-                                <span className={expandNameClass} aria-hidden="true"></span>
-                            </a>
-                        </div>
 
-                        {/* HIDDEN NAME DIV */}
-                        <div className="collapse col-sm-12 hiddenSettings" id="nameCollapse">
-                            <div className="customWell">
-                                <ChangeNameAndEmailForm dict={this.props.dict} />
+                    {/* NAME */}
+                    <div className="col-sm-12">
+                        <div className="panel-group">
+                            <div className="panel panel-primary">
+                                <div className="panel-heading">
+                                    <h4 className="panel-title">
+                                    <a onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse">
+                                        {this.props.dict[fakeUser.lang]["name"]}
+                                        <span className={expandNameClass} aria-hidden="true"></span>
+                                    </a>
+                                    </h4>
+                                </div>
+                                <div id="nameCollapse" className="panel-collapse collapse">
+                                    <div className="panel-body">
+                                        <ChangeNameAndEmailForm dict={this.props.dict} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* PASSWORD ROW */}
-                    <div className="accSettingsRow col-sm-12">
-                        <div className="col-sm-11">
-                            <a className="settingCollapseHeader" onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse" aria-expanded="false">
-                                {this.props.dict[fakeUser.lang]["password"]}
-                            </a>
-                        </div>
-                        <div className="col-sm-1">
-                            <a data-toggle="collapse" onClick={this.openAcc.bind(null, "password")} href="#passwordCollapse" aria-expanded="false">
-                                <span className={expandPasswordClass} aria-hidden="true"></span>
-                            </a>
-                        </div>
-
-                        {/* HIDDEN PASSWORD DIV */}
-                        <div className="collapse col-sm-12 hiddenSettings" id="passwordCollapse">
-                            <div className="customWell">
-                                <ChangePasswordForm dict={this.props.dict}/>
+                    {/* PASSWORD */}
+                    <div className="col-sm-12">
+                        <div className="panel-group">
+                            <div className="panel panel-primary">
+                                <div className="panel-heading">
+                                    <h4 className="panel-title">
+                                    <a onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse">
+                                        {this.props.dict[fakeUser.lang]["password"]}
+                                        <span className={expandPasswordClass} aria-hidden="true"></span>
+                                    </a>
+                                    </h4>
+                                </div>
+                                <div id="passwordCollapse" className="panel-collapse collapse">
+                                    <div className="panel-body">
+                                        <ChangePasswordForm dict={this.props.dict}/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
