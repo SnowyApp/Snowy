@@ -182,6 +182,15 @@ def get_relations(cid):
     return json.dumps([concept.to_json() for concept in Concept.get_relations(cid)])
 
 
+@app.route('/get_parents/<int:cid>', methods=['GET'])
+def get_parents(cid):
+    """
+    Returns the parents for the specified id.
+    """
+    return json.dumps([concept.to_json() for concept in Concept.get_parents(cid)])
+
+
+
 @app.route('/search/<search_term>', methods=['GET'])
 def search(search_term):
     """
