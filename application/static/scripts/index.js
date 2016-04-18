@@ -60,7 +60,7 @@ var Container = React.createClass({
                 />
                 <section>
                     <Bar update={this.updateSelectedTerm}/>
-                    <ProfilePage />
+                    <ProfilePage openTerm={function(id){console.log(id)}} openDiagram={function(id){console.log(id)}}/>
                 </section>
             </div>
         );

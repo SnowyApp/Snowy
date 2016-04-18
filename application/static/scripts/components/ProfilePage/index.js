@@ -3,13 +3,7 @@ var FavoriteDiagrams = require('./FavoriteDiagrams/FavoriteDiagrams');
 var AccountPage = require('./AccountPage/AccountPage');
 var NavBar = require('./NavBar/NavBar');
 
-function openTerm(id){
-    console.log(id);
-}
 
-function openDiagram(id){
-    console.log(id);
-}
 
 
 //Dictionary for supported languages. m prefix indicates that its a error/success message

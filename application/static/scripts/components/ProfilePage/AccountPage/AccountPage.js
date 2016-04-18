@@ -64,7 +64,7 @@ module.exports = React.createClass({
 
                     {/* NAME */}
                     <div className="col-sm-12">
-                        <div className="panel-group">
+                        <div className="panel-group accountSettingsPanel">
                             <div className="panel panel-primary">
                                 <div className="panel-heading">
                                     <h4 className="panel-title">
@@ -85,7 +85,7 @@ module.exports = React.createClass({
 
                     {/* PASSWORD */}
                     <div className="col-sm-12">
-                        <div className="panel-group">
+                        <div className="panel-group accountSettingsPanel">
                             <div className="panel panel-primary">
                                 <div className="panel-heading">
                                     <h4 className="panel-title">
