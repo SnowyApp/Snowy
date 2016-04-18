@@ -172,9 +172,9 @@ Simple API for allowing accessing snowy data.
                 "term": "Secondary caries"
             }
 
-## Children [get_children/{id}]
+## Children [/get_children/{id}]
 
-### Retrivieng children [GET]
+### Retriving children [GET]
 
 + Response 200 (application/json)
     
@@ -195,9 +195,9 @@ Simple API for allowing accessing snowy data.
                 }
             ]
 
-## Parents [get_parents/{id}]
+## Parents [/get_parents/{id}]
 
-### Retrivieng parents [GET]
+### Retriving parents [GET]
 
 + Response 200 (application/json)
     
@@ -206,15 +206,50 @@ Simple API for allowing accessing snowy data.
             [
                 {
                     'term': 'Wound observation', 
-                    'id': 225552003
+                    'id': 225552003,
+                    'type_id': 11668003,
+                    'type_name': 'IS A'
                 }, 
                 {
                     'term': 'Absence of signs and symptoms of radiation injury (situation)', 
-                    'id': 397606006
+                    'id': 397606006,
+                    'type_id': 11668003,
+                    'type_name': 'IS A'
                 }, 
                 {
                     'term': 'Single liveborn born in hospital by cesarean section (situation)', 
-                    'id': 442423001
+                    'id': 442423001,
+                    'type_id': 11668003,
+                    'type_name': 'IS A'
+                }
+            ]
+
+## Relationships [/get_relations/{id}]
+
+### Retriving relationships [GET]
+
++ Response 200 (application/json)
+    
+    + Body
+        
+            [
+                {
+                    'term': 'Wound observation', 
+                    'id': 225552003,
+                    'type_id': 11668003,
+                    'type_name': 'IS A'
+                }, 
+                {
+                    'term': 'Absence of signs and symptoms of radiation injury (situation)', 
+                    'id': 397606006,
+                    'type_id': 116676008,
+                    'type_name': 'ASSOCIATED MORPHOLOGY'
+                }, 
+                {
+                    'term': 'Single liveborn born in hospital by cesarean section (situation)', 
+                    'id': 442423001,
+                    'type_id': 41216001,
+                    'type_name': 'FINDING SITE'
                 }
             ]
 
