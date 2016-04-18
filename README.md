@@ -1,5 +1,23 @@
 # SNOWY - SNOMED CT Browser
 
+## Database
+To run this application you will need  to setup an API running with access to a postgresql server with SNOMED CT's data.
+
+Install postgresql.
+
+In `/application/models.py` change the variables `DB_NAME` and `DB_USER` to match the name of the postgresql database name and user owning that database.
+
+In `/sql-scripts/import.data.sql` change all paths to `SNOMED_CT_RF2Release_INT_20150731` to its location in your filesystem.
+
+Finally run ,
+
+```
+psql -f schema.sql <database-name>
+psql -f import-data.sql <database-name>
+```
+
+from inside `/sql-scripts/`. Where `<database-name>` is the name of your postgresql database.
+
 ## Installation
 
 Install necessary node programs by, inside the `/application/static` directory,  running:

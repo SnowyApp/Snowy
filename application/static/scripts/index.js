@@ -21,11 +21,11 @@ var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            serverUrl: 'http://79.136.62.204:3000/',
+            serverUrl: 'http://localhost:5000',
             APIedition: '',
             APIrelease: '',
-            selectedTerm: null,
-            isLoggedIn: false
+            isLoggedIn: false,
+            selectedTerm: "138875005"
         };
     },
     handleUrlChange: function(e){
@@ -52,10 +52,22 @@ var Container = React.createClass({
     render: function() {
         return (
             <div className="wrapper">
-                <Navigation/>
+                <Navigation
+                    sctid={this.state.selectedTerm}
+                    url={this.state.serverUrl}
+                    update={this.updateSelectedTerm}
+                />
                 <section>
-                    <Bar update={this.updateSelectedTerm} isLoggedIn={this.state.isLoggedIn} updateLoggedIn={this.updateLoggedIn}/>
-                    <Diagram />
+                    <Bar 
+                        update={this.updateSelectedTerm} 
+                        isLoggedIn={this.state.isLoggedIn} 
+                        updateLoggedIn={this.updateLoggedIn}
+                    />
+                    <Diagram 
+                        sctid={this.state.selectedTerm}
+                        url={this.state.serverUrl}
+                        update={this.updateSelectedTerm}
+                    />
                 </section>
             </div>
         );
