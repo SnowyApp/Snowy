@@ -101,7 +101,8 @@ var Search = React.createClass({
     doSearch:function(queryText){
         var queryResult=[];
         var baseUrl = this.props.url;
-        var url = baseUrl.replace("query=","query="+queryText);
+        var url = baseUrl + "/search/" + queryText;
+
         $.ajax({
             type: "GET",
             "method": "GET",
@@ -111,10 +112,10 @@ var Search = React.createClass({
                 console.log('Failed to access API')
             },
             success: function(result){
-                for (var i in result["matches"]){
+                for (var i in result.hits.hits){
                     queryResult.push({
-                        name: result["matches"][i]["term"],
-                        id: result["matches"][i]["conceptId"]
+                        name: result.hits.hits[i]._source.term,
+                        id: result.hits.hits[i]._source.concept_id
                     });
                 }
                 this.setState({

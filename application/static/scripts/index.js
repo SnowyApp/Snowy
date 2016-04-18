@@ -58,7 +58,8 @@ var Container = React.createClass({
                     update={this.updateSelectedTerm}
                 />
                 <section>
-                    <Bar 
+                    <Bar
+                        serverUrl={this.state.serverUrl} 
                         update={this.updateSelectedTerm} 
                         isLoggedIn={this.state.isLoggedIn} 
                         updateLoggedIn={this.updateLoggedIn}
@@ -121,24 +122,30 @@ var Bar = React.createClass({
         const navButtons = this.props.isLoggedIn ? (
             <div>
                 <Button className="profile" bsStyle = "primary" >Profile</Button>
-                <Button className="Logout" bsStyle = "primary" onClick={this.showLogout}>Logout</Button>
-                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} updateLoggedIn={this.props.updateLoggedIn}/>
+                <Button className="Logout" bsStyle = "primary" 
+                    onClick={this.showLogout}>Logout</Button>
+                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} 
+                    updateLoggedIn={this.props.updateLoggedIn}/>
             </div>
         ) : (
             <div>
-                <Button className="Register" bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
-                <Button className="Login" bsStyle = "primary" onClick={this.showLogin}>Login</Button>
+                <Button className="Register" bsStyle = "primary" 
+                    onClick={this.showRegistration}>Register</Button>
+                <Button className="Login" bsStyle = "primary" 
+                    onClick={this.showLogin}>Login</Button>
                 {/* Registration popup */}
-                <RegisterForm show={this.state.showRegistration} hideRegistration = {this.hideRegistration}/>
+                <RegisterForm show={this.state.showRegistration} 
+                    hideRegistration={this.hideRegistration}/>
 
                 {/* Login popup */}
-                <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin} updateLoggedIn={this.props.updateLoggedIn}/>
+                <LoginForm show={this.state.showLogin} hideLogin={this.hideLogin} 
+                    updateLoggedIn={this.props.updateLoggedIn}/>
             </div>
         );
 
         return (
             <div className="bar">
-                <Search url ={mockApi} update={this.props.update}/>
+                <Search url={this.props.serverUrl} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
                     {navButtons}
