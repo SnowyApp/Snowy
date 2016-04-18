@@ -25,7 +25,7 @@ SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%
 SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term 
                                 FROM relationship B JOIN description A 
                                 ON B.source_id=a.concept_id 
-                                WHERE B.destination_id=%s and b.active=1;"""
+                                WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
 
 SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.term 
                                 FROM relationship A JOIN description B ON A.destination_id=B.concept_id 
