@@ -10,3 +10,7 @@
     margin-top: -40px;
     float: right;
 }
+
+.navigation-header {
+    border-radius: 0px !important;
+}
