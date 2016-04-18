@@ -8,6 +8,7 @@ var RegisterForm = require('./components/RegisterForm/index');
 var LoginForm = require('./components/LoginForm/index');
 var ProfilePage = require("./components/ProfilePage/index");
 
+
 //Use this if you have the api locally
 var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
 
@@ -21,10 +22,11 @@ var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            serverUrl: 'http://79.136.62.204:3000/',
+            serverUrl: 'http://localhost:5000',
             APIedition: '',
             APIrelease: '',
-            selectedTerm: null
+            isLoggedIn: false,
+            selectedTerm: "138875005"
         };
     },
     handleUrlChange: function(e){
@@ -38,10 +40,24 @@ var Container = React.createClass({
             selectedTerm: newSelectedTerm
         });
     },
+    hasLoggedIn: function(){
+        this.setState({
+            isLoggedIn:true
+        });
+    },
+    updateLoggedIn: function(e){
+      this.setState({
+          isLoggedIn: e
+      });
+    },
     render: function() {
         return (
             <div className="wrapper">
-                <Navigation/>
+                <Navigation
+                    sctid={this.state.selectedTerm}
+                    url={this.state.serverUrl}
+                    update={this.updateSelectedTerm}
+                />
                 <section>
                     <Bar update={this.updateSelectedTerm}/>
                     <ProfilePage />
@@ -51,11 +67,13 @@ var Container = React.createClass({
     }
 });
 
+
 var Bar = React.createClass({
     getInitialState: function(){
         return{
             showRegistration: false,
-            showLogin: false
+            showLogin: false,
+            showLogout: false
         };
     },
 
@@ -80,27 +98,50 @@ var Bar = React.createClass({
         this.setState({
             showLogin: false
         });
-    },
 
+    },
+    showLogout: function(){
+        this.setState({
+            showLogout: true
+        });
+    },
+    hideLogout: function(){
+        this.setState({
+            showLogout: false
+        });
+    },
     render: function() {
+        const navButtons = this.props.isLoggedIn ? (
+            <div>
+                <Button className="profile" bsStyle = "primary" >Profile</Button>
+                <Button className="Logout" bsStyle = "primary" onClick={this.showLogout}>Logout</Button>
+                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} updateLoggedIn={this.props.updateLoggedIn}/>
+            </div>
+        ) : (
+            <div>
+                <Button className="Register" bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
+                <Button className="Login" bsStyle = "primary" onClick={this.showLogin}>Login</Button>
+                {/* Registration popup */}
+                <RegisterForm show={this.state.showRegistration} hideRegistration = {this.hideRegistration}/>
+
+                {/* Login popup */}
+                <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin} updateLoggedIn={this.props.updateLoggedIn}/>
+            </div>
+        );
+
         return (
             <div className="bar">
                 <Search url ={mockApi} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
-                    <Button bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
-                    <Button bsStyle = "primary" onClick={this.showLogin}>Login</Button>
-                    {/* Registration popup */}
-                    <RegisterForm show={this.state.showRegistration} hideRegistration = {this.hideRegistration}/>
-
-                    {/* Login popup */}
-                    <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin}/>
+                    {navButtons}
                 </ButtonToolbar>
             </div>
 
         );
     }
 });
+
 var Export = React.createClass({
     exportSVG: function(){
         var html = d3.select("svg")
@@ -132,7 +173,7 @@ var Export = React.createClass({
         var context = canvas.getContext("2d");
         context.globalCompositeOperation = "destination-over";
         context.fillStyle = '#fff';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillRect(0, 0, chartArea.offsetWidth, chartArea.offsetHeight);
 
         // Append the image data to a link, download the image and then remove canvas
         var dataString = canvas.toDataURL();

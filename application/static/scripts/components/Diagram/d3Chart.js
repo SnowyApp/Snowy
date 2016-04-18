@@ -27,6 +27,19 @@ var menuData = [
             }
             d3Chart._drawPoints(d);
         }
+    },
+    {
+        title: 'Hide/show children',
+        action: function(elm, d){
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            d3Chart._drawPoints(d);
+        }
     }
 ];
 
@@ -36,7 +49,7 @@ var menuData = [
  * will become kind of like an object.
  */
 var i = 0;
-var tree,root,svg;
+var tree,root,svg,onClick;
 
 const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
@@ -56,6 +69,7 @@ const DURATION = 750;
 
 d3Chart.create = function(element, props, state) {
     root = state.data[0];
+    onClick = props.onClick;
 
     /**
      * Sets the variable zoom to the function zoomed. scaleExtent sets
@@ -115,6 +129,14 @@ d3Chart.create = function(element, props, state) {
 };
 
 /**
+ * Reset the chart to state.
+ */
+d3Chart.reset = function(element, state) {
+    tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
+    this.update(element, state);
+};
+
+/**
  * Called when we want to redraw the tree
  */
 d3Chart.update = function(element, state) {
@@ -162,15 +184,15 @@ d3Chart._drawPoints = function(data) {
     }
 
     var g = d3.select('body').selectAll(".nodes");
-
+    
     // build the arrow.
     var arrow = g.append("svg:defs").selectAll("marker")
             .data(["start"])
         .enter().append("svg:marker")    // This section adds in the arrows
             .attr("id", "ArrowMarker")
-            .attr("viewBox", "-5 -5 10 10")
-            .attr("refX", -5)
-            .attr("refY", 0)
+            .attr("viewBox", "0 0 22 20")
+            .attr("refX", 0)
+            .attr("refY", 10)
             .attr("markerWidth", 6)
             .attr("markerHeight", 6)
             .attr("markerUnits", "strokeWidth")
@@ -179,8 +201,7 @@ d3Chart._drawPoints = function(data) {
             .attr('stroke', 'black')
             .attr('fill', 'white')
         .append("svg:path")
-            .attr("d", "M -5 0 L 4 -3 L 4 3 z");
-
+            .attr("d", "M 0 10 L 20 0 L 20 20 z");
 
 
     /**
@@ -232,7 +253,15 @@ d3Chart._drawPoints = function(data) {
             return "translate(" + d.x + ", " + d.y + ")";
         })
         .on('contextmenu', d3.contextMenu(menuData))
-        .call(drag);
+        .call(drag)
+        .on("click", function(d){
+            // suppress click if already used
+            if  (d3.event.defaultPrevented) return;
+
+            // no point of searching for root again
+            if (d.id != root.id)
+                onClick(d.concept_id);
+        });
     /**
      * Now we add a rectangle element and use conditional expressions to
      * style them. The ry and rx elements are used to give the eclipse shape

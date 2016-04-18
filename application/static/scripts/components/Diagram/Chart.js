@@ -16,7 +16,8 @@ module.exports = React.createClass({
         var element = ReactDOM.findDOMNode(this);
         d3Chart.create(element, {
             width: this.props.width,
-            height: this.props.height
+            height: this.props.height,
+            onClick: this.props.onClick
         }, this.getChartState());
     },
     componentDidUpdate: function() {
@@ -29,6 +30,11 @@ module.exports = React.createClass({
             data: this.props.data,
             domain: this.props.domain
         };
+    },
+
+    resetDiagram: function() {
+        var element = ReactDOM.findDOMNode(this);
+        d3Chart.reset(element, this.getChartState());
     },
 
     componentWillUnmount: function() {

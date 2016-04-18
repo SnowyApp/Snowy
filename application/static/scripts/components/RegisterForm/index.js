@@ -15,29 +15,42 @@ var RegisterForm = React.createClass({
             showModal: false
         });
     },
-
+    onSuccess: function(e){
+        this.resetForm();
+        this.close();
+    },
+    onError: function(t, e){
+        this.setState({
+            errorMessage: "Registration unsuccessful"
+        });
+    },
+    resetForm: function(){
+        this.setState({
+            email: "",
+            validEmail: false,
+            password: "",
+            repeatPassword: "",
+            matchingPasswords: false,
+            passwordStrength: 0,
+            errorMessage: "",
+        });
+    },
     //Handles submit of the form
     handleSubmit: function(e){
         e.preventDefault();
-        //TODO: Calls to database goes here
-        //Email and password can be found in the states (email, password)
-
-        //Test example
-        if(this.state.email == "lol@lol.lol"){
-            this.setState({
-                errorMessage: "Mailadressen är upptagen"
-            });
-        }
-        //Success    
-        else {
-            this.setState({
-                errorMessage: "",
-                password: "",
-                repeatPassword: "",
-                matchingPasswords: false,
-                passwordStrength: 0,
-            });
-        }
+        $.ajax({
+            type:"POST",
+            url: "/register",
+            data: JSON.stringify({"email": this.state.email, "password": this.state.password}),
+            success: function (data) {
+                this.onSuccess(data);
+            }.bind(this),
+            error: function (textStatus, errorThrown) {
+                this.onError(textStatus, errorThrown);
+            }.bind(this),
+            contentType: "application/json",
+            dataType: "json"
+        });
     },
 
     //Check if a valid email has been input

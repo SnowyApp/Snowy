@@ -1,6 +1,7 @@
 import application 
 import json
 import unittest
+import psycopg2
 
 class TestApplication(unittest.TestCase):
     """
@@ -13,8 +14,6 @@ class TestApplication(unittest.TestCase):
         Does not use a seperate database.
         """
         application.app.config['TESTING'] = True
-        application.db.drop_all()
-        application.db.create_all()
         self.app = application.app.test_client()
 
     def create_user(self):
