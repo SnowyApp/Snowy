@@ -13,6 +13,8 @@ module.exports = React.createClass({
     },
 
     update: function(data) {
+        if (data === undefined) return;
+
         this.setState({
             data: data
         });
