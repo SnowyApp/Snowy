@@ -17,7 +17,7 @@ var brageUrl = 'http://155.4.145.248:3000/snomed/en-edition/v20150731/descriptio
 //Use this if none of the above work, can only search on asthma
 var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/api/snomed/en-edition/v20160131/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
 
-
+//'http://85.229.227.71:5000''http://localhost:5000'
 var Container = React.createClass({
     getInitialState: function(){
         return{
