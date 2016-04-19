@@ -90,6 +90,15 @@ var Container = React.createClass({
 
     },
 
+    componentWillReceiveProps: function(nextProps) {
+        if (nextProps.data !== undefined) {
+            this.setState({
+                data: nextProps.data,
+                selectedTerm: nextProps.data[0].id
+            });
+        }
+    },
+
     componentWillMount: function() {
         this.getConcept(this.state.selectedTerm);
     },
