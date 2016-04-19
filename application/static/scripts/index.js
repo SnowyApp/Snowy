@@ -21,8 +21,8 @@ var Container = React.createClass({
             isLoggedIn: (cookie.load('userId') != null),
             userId: cookie.load('userId'),
             selectedTerm: this.props.concept_id,
-            data: [],
-            content: "diagram"
+            content: "diagram",
+            data: this.props.data
         };
     },
 
