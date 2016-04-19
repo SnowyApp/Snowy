@@ -29,6 +29,12 @@ def search(term):
 def get_children(id):
     return json.loads(requests.get(url + "/get_children/" + str(id)).text)
 
+def get_relations(id):
+    return json.loads(requests.get(url + "/get_relations/" + str(id)).text)
+
+def get_parents(id):
+    return json.loads(requests.get(url + "/get_parents/" + str(id)).text)
+
 def get_concept(id):
     return json.loads(requests.get(url + "/concept/" + str(id)).text)
 

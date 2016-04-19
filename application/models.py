@@ -22,15 +22,25 @@ SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 ADD_FAVORITE_TERM_PROCEDURE = "add_favorite_term"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
-SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term 
+SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id 
                                 FROM relationship B JOIN description A 
                                 ON B.source_id=a.concept_id 
-                                WHERE B.destination_id=%s and b.active=1;"""
-
+                                WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
+SELECT_PARENTS_QUERY = """SELECT B.source_id, A.term, B.type_id
+                                FROM relationship B JOIN description A 
+                                ON B.destination_id=a.concept_id 
+                                WHERE B.source_id=%s and b.active=1 and b.type_id=116680003;"""
+SELECT_RELATIONS_QUERY = """SELECT B.destination_id, MIN(A.term), MIN(B.type_id) 
+                                FROM relationship B JOIN description A 
+                                ON B.destination_id=a.concept_id 
+                                WHERE B.source_id=%s and b.active=1 
+                                GROUP BY B.destination_id 
+                                HAVING COUNT(B.type_id) > 0;"""
 SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.term 
                                 FROM relationship A JOIN description B ON A.destination_id=B.concept_id 
                                 JOIN language_refset C ON B.id=C.referenced_component_id 
                                 WHERE A.source_id=%s AND A.active=1 AND B.type_id=900000000000003001;"""
+
 GET_CONCEPT_PROCEDURE = "get_concept"
 
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) RETURNING id"
@@ -271,9 +281,11 @@ class Concept():
     Represents a concept in the Snomed CT database
     """
     
-    def __init__(self, cid, term):
+    def __init__(self, cid, term, type_id):
         self.id = cid
         self.term = term
+        self.type_id = type_id
+        self.type_name = Concept.get_attribute(self.type_id)
 
     @staticmethod
     def fetch_relations(cid, query):
@@ -285,7 +297,7 @@ class Concept():
             cur.execute(query, (cid,))
             result = []
             for data in cur.fetchall():
-                result += [Concept(data[0], data[1])]
+                result += [Concept(data[0], data[1], data[2])]
             return result
         except Exception as e:
             print(e)
@@ -297,6 +309,13 @@ class Concept():
         Returns the children of the concept. 
         """
         return Concept.fetch_relations(cid, SELECT_CHILDREN_QUERY)
+
+    @staticmethod
+    def get_parents(cid):
+        """
+        Returns the parents of the concept.
+        """
+        return Concept.fetch_relations(cid, SELECT_PARENTS_QUERY)
 
     @staticmethod
     def get_relations(cid):
@@ -324,12 +343,26 @@ class Concept():
             print(e)
             return None
 
+    @staticmethod
+    def get_attribute(type_id):
+        if type_id == 363698007:
+            return "FINDING SITE"
+        elif type_id == 116676008:
+            return "ASSOCIATED MORPHOLOGY"
+        elif type_id == 116680003:
+            return "IS A"
+        else:
+            return "UNDEFINED (PROBABLE ERROR SERVER SIDE)"
+
+
     def to_json(self):
         """
         Returns a JSON representation of the concept.
         """
         return {"id": self.id,
-                "term": self.term}
+                "term": self.term,
+                "type_id": self.type_id,
+                "type_name": self.type_name}
 
     def __str__(self):
         """
