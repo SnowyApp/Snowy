@@ -26,9 +26,9 @@ var Navigation = React.createClass({
             return;
 
         // add a unique ID for all children to be used in the
-        // term table
+        // term table. add 1 as root has ID 0
         for (var i in data[0].children) {
-            data[0].children[i].id = i;;
+            data[0].children[i].id = parseInt(i)+1;
         }
 
         // update the state with the given data

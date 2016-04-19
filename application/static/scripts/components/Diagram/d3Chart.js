@@ -234,7 +234,7 @@ d3Chart._drawPoints = function(data) {
      */
     var node = g.selectAll("g.node").remove();
     node = g.selectAll("g.node")
-        .data(nodes, function(d) { return d.id || (d.id = ++i) });
+        .data(nodes, function(d) { return d.id });
 
     /**
      * "Enters" the nodes by creating a new g-element inside the bigger

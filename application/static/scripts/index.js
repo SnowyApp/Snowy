@@ -70,16 +70,16 @@ var Container = React.createClass({
                         "name": res1[0].term,
                         "concept_id": res1[0].id,
                         "parent": "null",
-                        "children": children
+                        "children": children,
+                        "id": 0
                     }
                 ];
                 
-                console.log(root);
-
                 // update state so that component children can update
                 this.setState({
                     data: root
                 });
+                
             }.bind(this)
         );
 
@@ -100,7 +100,7 @@ var Container = React.createClass({
      * its information.
      */
     updateSelectedTerm: function(conceptId){
-        this.getConcept(conceptId);;
+        this.getConcept(conceptId);
     },
     hasLoggedIn: function(){
         this.setState({
