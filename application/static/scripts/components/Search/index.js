@@ -15,7 +15,7 @@ var SearchBox = React.createClass({
     getInitialState:function(){
         return{
             timeout:null,
-            searchHistory: cookie.load('searchHistory')
+            searchHistory: cookie.load('searchHistory') ? cookie.load('searchHistory') : []
         }
     },
     doSearch: function() {
