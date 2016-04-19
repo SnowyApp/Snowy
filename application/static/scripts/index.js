@@ -20,6 +20,40 @@ var Container = React.createClass({
             selectedTerm: "138875005"
         };
     },
+
+    getConcept: function(id) {
+
+        $.when(
+                $.ajax({
+                    type: "GET",
+                    method: "GET",
+                    url: this.state.serverUrl + "/concept/" + id,
+                    dataType: "json",
+                    error: function() {
+                        console.log("Could not get concept root.");
+                    }.bind(this)
+                }),
+
+                $.ajax({
+                    type: "GET",
+                    method: "GET",
+                    url: this.state.serverUrl + "/get_children/" + id,
+                    dataType: "json",
+                    error: function() {
+                        console.log("Could not get concept children.");
+                    }.bind(this)
+                })
+
+            ).then(function(res1, res2) {
+                // get root from res1 and update with children from res2
+                var root = res1[0];
+                root.children = res2[0];
+                console.log(root);
+            }
+        );
+
+    },
+    
     handleUrlChange: function(e){
         this.setState({
             url: e.target.value
@@ -27,6 +61,7 @@ var Container = React.createClass({
     },
     //Gets called when the user selects an element in the search result
     updateSelectedTerm: function(newSelectedTerm){
+        this.getConcept(newSelectedTerm);
         this.setState({
             selectedTerm: newSelectedTerm
         });
