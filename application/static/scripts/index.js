@@ -21,6 +21,10 @@ var Container = React.createClass({
         };
     },
 
+    /**
+     * Fetch information used to display diagram and navigation and update
+     * state when all information is received.
+     */
     getConcept: function(id) {
 
         $.when(
@@ -45,6 +49,8 @@ var Container = React.createClass({
                 })
 
             ).then(function(res1, res2) {
+
+                // get all information about children
                 var children = [];
                 for (var i in res2[0]) {
                     children.push(
@@ -57,6 +63,8 @@ var Container = React.createClass({
                     );
                 }
                 
+                // get all information about the root and add the array
+                // of the children
                 var root = [
                     {
                         "name": res1[0].term,
@@ -65,7 +73,11 @@ var Container = React.createClass({
                         "children": children
                     }
                 ];
-                console.log(root);
+
+                // update state so that component children can update
+                this.setState({
+                    data: root
+                });
             }
         );
 
