@@ -42,25 +42,32 @@ var SearchBox = React.createClass({
     },
     addHistory: function(){
         var newHistory = this.state.searchHistory;
-        newHistory.push("Asthma");
+        newHistory.push({
+            name: "Asthma",
+            id: 195967001
+        });
+        if (newHistory.length>5){
+            newHistory.shift();
+        }
         this.setState({
             searchHistory:newHistory
         })
         cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
-        console.log(cookie.load('searchHistory'));
     },
     removeHistory: function(){
         var newHistory = this.state.searchHistory;
-        newHistory.pop();
+        newHistory.shift();
         this.setState({
             searchHistory:newHistory
         })
         cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
-        console.log(cookie.load('searchHistory'));
+    },
+    onClick: function(){
+        this.props.updateData();
     },
     render:function(){
         return(
-            <div>
+            <div onClick={this.onClick}>
                 <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyUp={this.handleKeyPress} />
                 <Button onClick={this.doSearch} >Search</Button>
                 <Button onClick={this.addHistory}> Add history</Button>
@@ -91,7 +98,7 @@ var TermTable = React.createClass({
         var style={
             display: "none"
         };
-        if(this.props.data.length >0){
+        if(this.props.data.length > 0){
             style={
               display: "block"
             };
@@ -154,10 +161,21 @@ var Search = React.createClass({
             searchData: []
         });
     },
+    updateData: function(){
+        var searchData = this.state.searchData;
+        if(searchData != undefined && searchData.length == 0 && cookie.load('searchHistory') != undefined
+        && document.activeElement.id == 'searchInput'){
+            searchData = cookie.load('searchHistory');
+        }
+        this.setState({
+            searchData: searchData
+        });
+    },
     render:function(){
+
         return (
             <div className="search">
-                <SearchBox query={this.state.query} doSearch={this.doSearch}/>
+                <SearchBox query={this.state.query} doSearch={this.doSearch} updateData={this.updateData}/>
                 <TermTable data={this.state.searchData} update={this.props.update} clearData={this.clearData} />
             </div>
         );
