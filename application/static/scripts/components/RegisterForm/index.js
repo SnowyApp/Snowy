@@ -40,7 +40,7 @@ var RegisterForm = React.createClass({
         e.preventDefault();
         $.ajax({
             type:"POST",
-            url: "/register",
+            url: this.props.url + "/register",
             data: JSON.stringify({"email": this.state.email, "password": this.state.password}),
             success: function (data) {
                 this.onSuccess(data);

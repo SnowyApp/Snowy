@@ -34,7 +34,7 @@ var LogOut = React.createClass({
                     <Modal.Title>Vill du logga ut?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Button bsStyle="primary" onClick={this.logOut}> Ja</Button>
+                    <Button onClick={this.logOut}> Ja</Button>
                     <Button bsStyle="primary" onClick={this.close}> Nej</Button>
                 </Modal.Body>
             </Modal>

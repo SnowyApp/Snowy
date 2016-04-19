@@ -125,6 +125,7 @@ var Container = React.createClass({
                         update={this.updateSelectedTerm} 
                         isLoggedIn={this.state.isLoggedIn} 
                         updateLoggedIn={this.updateLoggedIn}
+                        url={this.state.serverUrl}
                     />
                     <Diagram 
                         data={this.state.data}
@@ -187,7 +188,7 @@ var Bar = React.createClass({
                 <Button className="Logout" bsStyle = "primary" 
                     onClick={this.showLogout}>Logout</Button>
                 <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} 
-                    updateLoggedIn={this.props.updateLoggedIn}/>
+                    updateLoggedIn={this.props.updateLoggedIn}url={this.props.url}/>
             </div>
         ) : (
             <div>
@@ -197,11 +198,11 @@ var Bar = React.createClass({
                     onClick={this.showLogin}>Login</Button>
                 {/* Registration popup */}
                 <RegisterForm show={this.state.showRegistration} 
-                    hideRegistration={this.hideRegistration}/>
+                    hideRegistration={this.hideRegistration} url={this.props.url}/>
 
                 {/* Login popup */}
                 <LoginForm show={this.state.showLogin} hideLogin={this.hideLogin} 
-                    updateLoggedIn={this.props.updateLoggedIn}/>
+                    updateLoggedIn={this.props.updateLoggedIn} url={this.props.url}/>
             </div>
         );
 
