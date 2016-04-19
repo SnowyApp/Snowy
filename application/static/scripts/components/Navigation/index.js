@@ -56,6 +56,9 @@ var Navigation = React.createClass({
     //Move up one level in the tree (from history)
     upOneLevel: function(){
         var id = this.state.history.pop();
+        
+        // do not do anything if on the root node
+        if (id === undefined) return;
         this.props.update(id);
     },
 
