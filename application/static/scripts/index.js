@@ -82,7 +82,7 @@ var Container = React.createClass({
                 // update state so that component children can update
                 this.setState({
                     data: root,
-                    selectedTerm: root[0].term
+                    selectedTerm: root[0].id
                 });
                 
             }.bind(this)
