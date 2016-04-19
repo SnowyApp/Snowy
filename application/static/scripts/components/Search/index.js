@@ -15,7 +15,7 @@ var SearchBox = React.createClass({
     getInitialState:function(){
         return{
             timeout:null,
-            searchHistory: []
+            searchHistory: cookie.load('searchHistory')
         }
     },
     doSearch: function() {
@@ -57,7 +57,6 @@ var SearchBox = React.createClass({
         })
         cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
         console.log(cookie.load('searchHistory'));
-
     },
     render:function(){
         return(
