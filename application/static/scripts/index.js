@@ -13,8 +13,6 @@ var matteUrl = 'http://85.229.222.71:5000';
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            APIedition: '',
-            APIrelease: '',
             serverUrl: this.props.url,
             isLoggedIn: false,
             selectedTerm: this.props.concept_id,
