@@ -1,4 +1,5 @@
 import PageClick from 'react-page-click';
+import cookie from 'react-cookie';
 
 module.exports = React.createClass({
 
@@ -14,6 +15,7 @@ var SearchBox = React.createClass({
     getInitialState:function(){
         return{
             timeout:null,
+            searchHistory: []
         }
     },
     doSearch: function() {
@@ -38,11 +40,32 @@ var SearchBox = React.createClass({
             }.bind(this), 300);
         }
     },
+    addHistory: function(){
+        var newHistory = this.state.searchHistory;
+        newHistory.push("Asthma");
+        this.setState({
+            searchHistory:newHistory
+        })
+        cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
+        console.log(cookie.load('searchHistory'));
+    },
+    removeHistory: function(){
+        var newHistory = this.state.searchHistory;
+        newHistory.pop();
+        this.setState({
+            searchHistory:newHistory
+        })
+        cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
+        console.log(cookie.load('searchHistory'));
+
+    },
     render:function(){
         return(
             <div>
                 <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyUp={this.handleKeyPress} />
                 <Button onClick={this.doSearch} >Search</Button>
+                <Button onClick={this.addHistory}> Add history</Button>
+                <Button onClick={this.removeHistory}> Remove</Button>
             </div>
         )
     }
@@ -95,7 +118,7 @@ var Search = React.createClass({
     getInitialState:function(){
         return{
             query:'',
-            searchData: []
+            searchData: [],
         }
     },
     doSearch:function(queryText){
