@@ -13,11 +13,11 @@ var matteUrl = 'http://85.229.222.71:5000';
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            serverUrl: matteUrl,
             APIedition: '',
             APIrelease: '',
+            serverUrl: this.props.url,
             isLoggedIn: false,
-            selectedTerm: "138875005",
+            selectedTerm: this.props.concept_id,
             data: []
         };
     },
@@ -273,6 +273,6 @@ var Export = React.createClass({
 
 
 ReactDOM.render(
-    <Container />,
+    <Container concept_id="138875005" url=matteUrl />,
     document.getElementById('content')
 );
