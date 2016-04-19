@@ -45,9 +45,26 @@ var Container = React.createClass({
                 })
 
             ).then(function(res1, res2) {
-                // get root from res1 and update with children from res2
-                var root = res1[0];
-                root.children = res2[0];
+                var children = [];
+                for (var i in res2[0]) {
+                    children.push(
+                        {
+                            "name": res2[0][i].term,
+                            "concept_id": res2[0][i].id,
+                            "parent": res1[0].id,
+                            "children": []
+                        }
+                    );
+                }
+                
+                var root = [
+                    {
+                        "name": res1[0].term,
+                        "concept_id": res1[0].id,
+                        "parent": "null",
+                        "children": children
+                    }
+                ];
                 console.log(root);
             }
         );
