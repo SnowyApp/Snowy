@@ -7,7 +7,7 @@ from flask import g
 import psycopg2
 
 DB_NAME = "snomedct"
-DB_USER = "Sehnsucht"
+DB_USER = "simon"
 
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
 SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, language FROM usr WHERE email=%s;"
