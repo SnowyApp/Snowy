@@ -7,10 +7,17 @@
 }
 
 .arrowLink {
-    margin-top: -40px;
-    float: right;
+    /*margin-top: -40px;
+    float: right;*/
+    text-align: center;
 }
 
 .navigation-header {
     border-radius: 0px !important;
+    margin-bottom: 3px;
+    padding: 10px 15px !important;
+}
+
+.nav-pills > li > a {
+    padding: 5px 15px;
 }
