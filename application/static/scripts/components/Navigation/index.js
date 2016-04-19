@@ -112,7 +112,6 @@ var NavigationItem = React.createClass({
         return(
             <li role="presentation">
                 <a className="navLink" onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>{this.props.name}</a>
-                <a className="arrowLink" href='#2'><span className="glyphicon glyphicon-arrow-right navArrow" aria-hidden="true"></span></a>
             </li>
         );
     }
