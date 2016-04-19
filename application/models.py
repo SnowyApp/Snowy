@@ -338,7 +338,7 @@ class Concept():
             if data is None:
                 return None
 
-            return Concept(data[0], data[1])
+            return Concept(data[0], data[1], 0)
         except Exception as e:
             print(e)
             return None
