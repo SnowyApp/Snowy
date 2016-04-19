@@ -8,12 +8,7 @@
 }
 
 nav {
-    float: left;
     height: 100vh;
-
-    width: 25%;
-    max-width: 300px;
-
     border-style: solid;
     border-width: 0 1px 0 0;
     border-color: #bbb;
@@ -85,3 +80,6 @@ section {
     display: inline-block;
     width: auto;
 }
+
+
+

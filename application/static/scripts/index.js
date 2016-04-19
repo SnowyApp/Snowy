@@ -1,4 +1,6 @@
 import PageClick from 'react-page-click';
+import ResizableBox from 'react-resizable-component';
+import SplitPane from 'react-split-pane';
 
 var Diagram = require("./components/Diagram/index");
 var Search = require("./components/Search/index");
@@ -22,13 +24,14 @@ var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            serverUrl: 'http://hem.ulmstedt.net:5000',
+            serverUrl: '//hem.ulmstedt.net:5000',
             APIedition: '',
             APIrelease: '',
             isLoggedIn: false,
             selectedTerm: "138875005"
         };
     },
+
     handleUrlChange: function(e){
         this.setState({
             url: e.target.value
@@ -53,15 +56,17 @@ var Container = React.createClass({
     render: function() {
         return (
             <div className="wrapper">
-                <Navigation
-                    sctid={this.state.selectedTerm}
-                    url={this.state.serverUrl}
-                    update={this.updateSelectedTerm}
-                />
-                <section>
-                    <Bar update={this.updateSelectedTerm}/>
-                    <ProfilePage openTerm={function(id){console.log(id)}} openDiagram={function(id){console.log(id)}}/>
-                </section>
+                    <SplitPane split="vertical" defaultSize={360} minSize={10} maxSize={700}>
+                        <Navigation
+                            sctid={this.state.selectedTerm}
+                            url={this.state.serverUrl}
+                            update={this.updateSelectedTerm}
+                        />
+                        <section>
+                            <Bar update={this.updateSelectedTerm}/>
+                            <ProfilePage openTerm={function(id){console.log(id)}} openDiagram={function(id){console.log(id)}}/>
+                        </section>
+                    </SplitPane>
             </div>
         );
     }
