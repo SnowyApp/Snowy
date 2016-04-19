@@ -4,9 +4,9 @@ module.exports = React.createClass({
         return (
             <nav>
                 <Navigation 
-                    APIUrl={this.props.url} 
-                    rootNodeID={this.props.sctid}
+                    APIUrl={this.props.url}
                     update={this.props.update}            
+                    data={this.props.data}
                 />
             </nav>
         );
@@ -15,69 +15,47 @@ module.exports = React.createClass({
 
 //Navigation panel component
 var Navigation = React.createClass({
-    //Set current data set, get children of id
-    setParent: function(id){
-        var queryResult=[];
-        //Get children
-		$.ajax({
-            type: "GET",
-            "method": "GET",
-            url: this.props.APIUrl + '/get_children/' + id,
-            dataType: "json",
-            error: function(){
-                console.log('Failed to access Navigation children.')
-            },
-            success: function(result){
-                for (var i in result){
-                    queryResult.push({
-                        name: result[i].term,
-                        concept_id: result[i].id,
-                        id: i
-                    });
-                }
+    
+    /**
+     * Update the state from given data.
+     **/
+    updateState: function(data) {
 
-                this.setState({
-                    termChildren: queryResult,
-                    currentID: id
-                });
-            }.bind(this)
-        });
-        //Get parent name
-        $.ajax({
-            type: "GET",
-            "method": "GET",
-            url: this.props.APIUrl + '/concept/' + id,
-            dataType: "json",
-            error: function(){
-                console.log('Failed to access Navigation parent.')
-            },
-            success: function(result){
-                this.setState({
-                    currentParent: result.term
-                });
-            }.bind(this)
+        // do not try to use uninitialised data
+        if (data[0] === undefined)
+            return;
+
+        // add a unique ID for all children to be used in the
+        // term table
+        for (var i in data[0].children) {
+            data[0].children[i].id = i;;
+        }
+
+        // update the state with the given data
+        this.setState({
+            currentParent: data[0].name,
+            termChildren: data[0].children,
+            currentID: data[0].concept_id
         });
     },
-	
+    
     componentWillReceiveProps: function(nextProps) {
-        this.setParent(nextProps.rootNodeID);
+        this.updateState(nextProps.data);
     },
 	
     componentDidMount: function(){
-        this.setParent(this.props.rootNodeID);
+        this.updateState(this.props.data);
     },
 
     //Handles clicks on the children (callback function)
     handleClick: function(e){
         this.state.history.push(this.state.currentID);
-        this.setParent(e.id);
         this.props.update(e.id); 
     },
 
     //Move up one level in the tree (from history)
     upOneLevel: function(){
         var id = this.state.history.pop();
-        this.setParent(id);
         this.props.update(id);
     },
 
@@ -85,7 +63,7 @@ var Navigation = React.createClass({
     getInitialState: function(){
         return (
             {
-                currentParent: 'SNOMED CT Concept',
+                currentParent: [],
                 termChildren: [],
                 history: []
             }

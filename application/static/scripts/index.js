@@ -17,7 +17,8 @@ var Container = React.createClass({
             APIedition: '',
             APIrelease: '',
             isLoggedIn: false,
-            selectedTerm: "138875005"
+            selectedTerm: "138875005",
+            data: []
         };
     },
 
@@ -26,7 +27,6 @@ var Container = React.createClass({
      * state when all information is received.
      */
     getConcept: function(id) {
-
         $.when(
                 $.ajax({
                     type: "GET",
@@ -73,14 +73,20 @@ var Container = React.createClass({
                         "children": children
                     }
                 ];
+                
+                console.log(root);
 
                 // update state so that component children can update
                 this.setState({
                     data: root
                 });
-            }
+            }.bind(this)
         );
 
+    },
+
+    componentWillMount: function() {
+        this.getConcept(this.state.selectedTerm);
     },
     
     handleUrlChange: function(e){
@@ -88,12 +94,13 @@ var Container = React.createClass({
             url: e.target.value
         });
     },
-    //Gets called when the user selects an element in the search result
-    updateSelectedTerm: function(newSelectedTerm){
-        this.getConcept(newSelectedTerm);
-        this.setState({
-            selectedTerm: newSelectedTerm
-        });
+
+    /**
+     * Fetch information about given concept and update state.data with 
+     * its information.
+     */
+    updateSelectedTerm: function(conceptId){
+        this.getConcept(conceptId);;
     },
     hasLoggedIn: function(){
         this.setState({
@@ -109,7 +116,7 @@ var Container = React.createClass({
         return (
             <div className="wrapper">
                 <Navigation
-                    sctid={this.state.selectedTerm}
+                    data={this.state.data}
                     url={this.state.serverUrl}
                     update={this.updateSelectedTerm}
                 />
@@ -121,7 +128,7 @@ var Container = React.createClass({
                         updateLoggedIn={this.updateLoggedIn}
                     />
                     <Diagram 
-                        sctid={this.state.selectedTerm}
+                        data={this.state.data}
                         url={this.state.serverUrl}
                         update={this.updateSelectedTerm}
                     />

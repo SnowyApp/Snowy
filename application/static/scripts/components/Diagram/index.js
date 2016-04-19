@@ -12,67 +12,11 @@ module.exports = React.createClass({
         };
     },
 
-    getRoot: function(sctid) {
-        $.ajax({
-            type: "GET",
-            "method": "GET",
-            url: this.props.url + "/concept/" + sctid,
-            dataType: "json",
-            error: function() {
-                console.log("Failed to retrieve Diagram root.");
-            },
-            success: function(result) {
-                var children = [];
-                if (this.state.data.length != 0) {
-                    children = this.state.data.slice()[0].children;
-                }
-
-                this.setState({
-                    data: [
-                        {
-                            "name": result.term,
-                            "concept_id": result.id,
-                            "parent": "null",
-                            "children": children
-                        }
-                    ]
-                });
-            }.bind(this)
+    update: function(data) {
+        this.setState({
+            data: data
         });
-    },
 
-    getChildren: function(sctid) {
-        $.ajax({
-            type: "GET",
-            "method": "GET",
-            url: this.props.url + "/get_children/" + sctid,
-            dataType: "json",
-            error: function() {
-                console.log("Failed to retrieve Diagram children.");
-            },
-            success: function(result) {
-                var children = [];
-                for (var i in result) {
-                    children.push({
-                        name: result[i].term,
-                        concept_id: result[i].id,
-                        parent: sctid
-                    });
-                }
-                
-                var dataCopy = this.state.data.slice();
-                dataCopy[0].children = children;
-                this.setState({
-                    data: dataCopy
-                });
-
-            }.bind(this)
-        });
-    },
-
-    update: function(sctid) {
-        this.getRoot(sctid);
-        this.getChildren(sctid);
         if (this._chart !== undefined) {
             this.reset();
         }
@@ -82,16 +26,14 @@ module.exports = React.createClass({
      * Set original state from props before rendering.
      */
     componentWillMount: function() {
-        this.update(this.props.sctid);
+        this.update(this.props.data);
     },
 
     /**
      * Update state when receiving new props
      */
     componentWillReceiveProps: function(nextProps) {
-        if (this.state.data[0].id != nextProps.sctid) {
-            this.update(nextProps.sctid);
-        }
+        this.update(nextProps.data);
     },
 
     /**
@@ -112,7 +54,6 @@ module.exports = React.createClass({
 
     onClick: function(sctid) {
         if (sctid != this.state.data[0].id) {
-            this.update(sctid);
             this.props.update(sctid);
         }
     },
