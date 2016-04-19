@@ -272,6 +272,6 @@ var Export = React.createClass({
 
 
 ReactDOM.render(
-    <Container concept_id="138875005" url=matteUrl />,
+    <Container concept_id="138875005" url={matteUrl} />,
     document.getElementById('content')
 );
