@@ -281,11 +281,14 @@ class Concept():
     Represents a concept in the Snomed CT database
     """
     
-    def __init__(self, cid, term, type_id):
+    def __init__(self, cid, term, type_id = None):
         self.id = cid
         self.term = term
         self.type_id = type_id
-        self.type_name = Concept.get_attribute(self.type_id)
+        if type_id is not None:
+            self.type_name = Concept.get_attribute(self.type_id)
+        else:
+            self.type_name = ""
 
     @staticmethod
     def fetch_relations(cid, query):
@@ -338,7 +341,7 @@ class Concept():
             if data is None:
                 return None
 
-            return Concept(data[0], data[1], 0)
+            return Concept(data[0], data[1])
         except Exception as e:
             print(e)
             return None
@@ -359,10 +362,14 @@ class Concept():
         """
         Returns a JSON representation of the concept.
         """
-        return {"id": self.id,
-                "term": self.term,
-                "type_id": self.type_id,
-                "type_name": self.type_name}
+        if self.type_id is None:
+            return {"id": self.id,
+                    "term": self.term}
+        else:
+            return {"id": self.id,
+                    "term": self.term,
+                    "type_id": self.type_id,
+                    "type_name": self.type_name}
 
     def __str__(self):
         """
