@@ -22,7 +22,7 @@ var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            serverUrl: 'http://localhost:5000',
+            serverUrl: 'http://hem.ulmstedt.net:5000',
             APIedition: '',
             APIrelease: '',
             isLoggedIn: false,
