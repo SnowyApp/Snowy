@@ -21,8 +21,8 @@ var Container = React.createClass({
             isLoggedIn: (cookie.load('userId') != null),
             userId: cookie.load('userId'),
             selectedTerm: this.props.concept_id,
-            data: [],
-            content: "diagram"
+            content: "diagram",
+            data: this.props.data
         };
     },
 
@@ -82,12 +82,31 @@ var Container = React.createClass({
                 // update state so that component children can update
                 this.setState({
                     data: root,
-                    selectedTerm: root[0].term
+                    selectedTerm: root[0].id
                 });
                 
             }.bind(this)
         );
 
+    },
+
+    /**
+     * Update state on change of props.
+     */
+    componentWillReceiveProps: function(nextProps) {
+
+        // set concept_id in focus if given
+        if (nextProps.concept_id !== undefined) {
+            getConcept(nextProps.concept_id);
+        }
+
+        // set given data in focus if given, overruling concept_id
+        if (nextProps.data !== undefined) {
+            this.setState({
+                data: nextProps.data,
+                selectedTerm: nextProps.data[0].id
+            });
+        }
     },
 
     componentWillMount: function() {
