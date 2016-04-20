@@ -310,13 +310,10 @@ d3Chart._drawPoints = function(data) {
                     d3.selectAll(".selected").classed("selected", false)
                         .selectAll("rect.node").style("fill", "white");
                 }
-            }
 
-            /*
-            // no point of searching for root again
-            if (d.id != root.id)
-                onClick(d.concept_id);
-            */
+                // notify container of click on node
+                onClick(d.id);
+            }
         });
     /**
      * Now we add a rectangle element and use conditional expressions to

@@ -132,6 +132,13 @@ var Container = React.createClass({
 
 
     /**
+     * Add or remove children of concept from state.
+     */
+    updateConceptChildren: function(id) {
+        console.log(this.findNode(this.state.data[0], id));    
+    },
+
+    /**
      * Find a node with given d3 id.
      */
     findNode: function(tree, id) {
@@ -202,6 +209,7 @@ var Container = React.createClass({
                             data={this.state.data}
                             url={this.state.serverUrl}
                             update={this.updateSelectedTerm}
+                            updateConceptChildren={this.updateConceptChildren}
                           />
                 break;
             case "profile":

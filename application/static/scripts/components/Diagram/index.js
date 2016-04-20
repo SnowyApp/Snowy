@@ -51,15 +51,16 @@ module.exports = React.createClass({
                     ref={ (ref) => this._chart = ref }
                     data={this.state.data}
                     domain={this.state.domain} 
-                    onClick={this.onClick} />
+                    onClick={this.onNodeClick} />
             </div>
         );
     },
 
-    onClick: function(sctid) {
-        if (sctid != this.state.data[0].id) {
-            this.props.update(sctid);
-        }
+    /**
+     * Show/hide children of node on click.
+     */
+    onNodeClick: function(id) {
+        this.props.updateConceptChildren(id); 
     },
 
     resetZoom: function(){
