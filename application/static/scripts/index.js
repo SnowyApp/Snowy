@@ -20,7 +20,8 @@ var Container = React.createClass({
             serverUrl: this.props.url,
             isLoggedIn: false,
             selectedTerm: this.props.concept_id,
-            data: []
+            data: [],
+            content: "diagram"
         };
     },
 
@@ -98,6 +99,13 @@ var Container = React.createClass({
         });
     },
 
+    //Set what content to display in the content area
+    setContent: function(content){
+        this.setState({
+            content: content
+        });
+    },
+
     /**
      * Fetch information about given concept and update state.data with 
      * its information.
@@ -116,6 +124,22 @@ var Container = React.createClass({
       });
     },
     render: function() {
+        var content = null;
+        switch(this.state.content){
+            case "diagram":
+                content = <Diagram 
+                            data={this.state.data}
+                            url={this.state.serverUrl}
+                            update={this.updateSelectedTerm}
+                          />
+                break;
+            case "profile":
+                content = <ProfilePage
+                            openTerm={function(id){console.log(id)}}
+                            openDiagram={function(id){console.log(id)}}
+                          />
+                break;
+        }
         return (
             <div className="wrapper">
                 <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
@@ -131,12 +155,9 @@ var Container = React.createClass({
                             isLoggedIn={this.state.isLoggedIn} 
                             updateLoggedIn={this.updateLoggedIn}
                             url={this.state.serverUrl}
+                            setContent={this.setContent}
                         />
-                        <Diagram 
-                            data={this.state.data}
-                            url={this.state.serverUrl}
-                            update={this.updateSelectedTerm}
-                        />
+                        {content}
                     </section>
                 </SplitPane>
             </div>
@@ -191,7 +212,7 @@ var Bar = React.createClass({
     render: function() {
         const navButtons = this.props.isLoggedIn ? (
             <div>
-                <Button className="profile" bsStyle = "primary" >Profile</Button>
+                <Button className="profile" onClick={this.props.setContent.bind(null, "profile")} bsStyle = "primary" >Profile</Button>
                 <Button className="Logout" bsStyle = "primary" 
                     onClick={this.showLogout}>Logout</Button>
                 <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} 
