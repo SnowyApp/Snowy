@@ -32,28 +32,8 @@ var Container = React.createClass({
      * state when all information is received.
      */
     getConcept: function(id) {
-        $.when(
-                $.ajax({
-                    type: "GET",
-                    method: "GET",
-                    url: this.state.serverUrl + "/concept/" + id,
-                    dataType: "json",
-                    error: function() {
-                        console.log("Could not get concept root.");
-                    }.bind(this)
-                }),
-
-                $.ajax({
-                    type: "GET",
-                    method: "GET",
-                    url: this.state.serverUrl + "/get_children/" + id,
-                    dataType: "json",
-                    error: function() {
-                        console.log("Could not get concept children.");
-                    }.bind(this)
-                })
-
-            ).then(function(res1, res2) {
+        $.when(getRoot(id), getChildren(id))
+            .then(function(res1, res2) {
 
                 // get all information about children
                 var children = [];
@@ -63,7 +43,7 @@ var Container = React.createClass({
                             "name": res2[0][i].term,
                             "concept_id": res2[0][i].id,
                             "parent": res1[0].id,
-                            "children": []
+                            "children": null
                         }
                     );
                 }
@@ -79,7 +59,7 @@ var Container = React.createClass({
                         "id": 0
                     }
                 ];
-
+                
                 // update state so that component children can update
                 this.setState({
                     data: root,
@@ -88,7 +68,30 @@ var Container = React.createClass({
                 
             }.bind(this)
         );
+    },
 
+    getChildren: function(id) {
+        return $.ajax({
+            type: "GET",
+            method: "GET",
+            url: this.state.serverUrl + "/concept/" + id,
+            dataType: "json",
+            error: function() {
+                console.log("Could not get concept root.");
+            }.bind(this)
+        });
+    },
+
+    getRoot: function(id) {
+        return $.ajax({
+            type: "GET",
+            method: "GET",
+            url: this.state.serverUrl + "/get_children/" + id,
+            dataType: "json",
+            error: function() {
+                console.log("Could not get concept children.");
+            }.bind(this)
+        });
     },
 
     /**
