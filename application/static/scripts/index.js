@@ -112,6 +112,7 @@ var Container = React.createClass({
      */
     updateSelectedTerm: function(conceptId){
         this.getConcept(conceptId);
+        this.setContent("diagram");
     },
     hasLoggedIn: function(){
         this.setState({
