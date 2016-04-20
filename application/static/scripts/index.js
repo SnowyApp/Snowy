@@ -79,11 +79,13 @@ var Container = React.createClass({
                     }
                 ];
                 
-                // update state so that component children can update
-                this.setState({
-                    data: root,
-                    selectedTerm: root[0].id
-                });
+                if(children.length != 0){
+                    // update state so that component children can update
+                    this.setState({
+                        data: root,
+                        selectedTerm: root[0].id
+                    });
+                } else {console.log("Root node found");}
                 
             }.bind(this)
         );

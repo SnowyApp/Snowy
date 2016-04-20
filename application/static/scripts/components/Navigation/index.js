@@ -48,13 +48,14 @@ var Navigation = React.createClass({
 
     //Handles clicks on the children (callback function)
     handleClick: function(e){
-        this.state.history.push(this.state.currentID);
+        var historyObject = {id: this.state.currentID, name: this.state.currentParent};
+        this.state.history.push(historyObject);
         this.props.update(e.id); 
     },
 
     //Move up one level in the tree (from history)
     upOneLevel: function(){
-        var id = this.state.history.pop();
+        var id = this.state.history.pop().id;
         
         // do not do anything if on the root node
         if (id === undefined) return;
@@ -74,11 +75,14 @@ var Navigation = React.createClass({
 
     render: function() {
         var backArrow;
+        var parentMarginLeft;
         //Hide back arrow if there is no history
         if(this.state.history.length === 0){
             backArrow = {display: 'none'};
+            parentMarginLeft = {marginLeft: "0px"};
         }else{
             backArrow = {};
+            parentMarginLeft = {};
         }
         //Create NavigationItem's for all the children of the current parent node
         var ItemArray = this.state.termChildren.map(function(child){
@@ -86,12 +90,17 @@ var Navigation = React.createClass({
                 <NavigationItem key={child.id} id={child.concept_id} name={child.name} handleClickCallback={this.handleClick} />
             );
         }, this);
+
+        //Only display grandparent if there is one
+        var grandparent = (this.state.history.length > 0 ? this.state.history[this.state.history.length-1].name + " >" : "");
+
         return (
             <ul className="nav nav-pills nav-stacked">
-                <li role="presentation" className="active">
+                <li role="presentation" className="active">                    
                     <a className="navigation-header" onClick={this.upOneLevel} href="#">
-                        <span style={backArrow} className="glyphicon glyphicon-triangle-top" aria-hidden="true"> </span> 
-                        {this.state.currentParent}
+                        <span style={backArrow} className="glyphicon glyphicon-triangle-top backArrow" aria-hidden="true"> </span>
+                        <div className="grandparentHeader">{grandparent}</div>                         
+                        <div style={parentMarginLeft} className="parentHeader">{this.state.currentParent}</div>
                     </a>
                 </li> 
                 {ItemArray}
