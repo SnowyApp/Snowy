@@ -33,16 +33,15 @@ var Container = React.createClass({
      */
     getConcept: function(id) {
         $.when(this.getRoot(id), this.getChildren(id))
-            .then(function(res1, res2) {
-
+            .then(function(rootResult, childrenResult) {
                 // get all information about children
                 var children = [];
-                for (var i in res2[0]) {
+                for (var i in childrenResult[0]) {
                     children.push(
                         {
-                            "name": res2[0][i].term,
-                            "concept_id": res2[0][i].id,
-                            "parent": res1[0].id,
+                            "name": childrenResult[0][i].term,
+                            "concept_id": childrenResult[0][i].id,
+                            "parent": rootResult[0].id,
                             "children": null
                         }
                     );
@@ -52,8 +51,8 @@ var Container = React.createClass({
                 // of the children
                 var root = [
                     {
-                        "name": res1[0].term,
-                        "concept_id": res1[0].id,
+                        "name": rootResult[0].term,
+                        "concept_id": rootResult[0].id,
                         "parent": "null",
                         "children": children,
                         "id": 0
@@ -70,7 +69,10 @@ var Container = React.createClass({
         );
     },
 
-    getChildren: function(id) {
+    /**
+     * Return function to fetch root from api.
+     */
+    getRoot: function(id) {
         return $.ajax({
             type: "GET",
             method: "GET",
@@ -82,7 +84,10 @@ var Container = React.createClass({
         });
     },
 
-    getRoot: function(id) {
+    /**
+     * Return function to fetch children of id from api.
+     */
+    getChildren: function(id) {
         return $.ajax({
             type: "GET",
             method: "GET",
