@@ -1,6 +1,7 @@
 import PageClick from 'react-page-click';
 import ResizableBox from 'react-resizable-component';
 import SplitPane from 'react-split-pane';
+import cookie from 'react-cookie';
 
 var Diagram = require('./components/Diagram/index');
 var Search = require('./components/Search/index');
@@ -18,7 +19,7 @@ var Container = React.createClass({
     getInitialState: function(){
         return{
             serverUrl: this.props.url,
-            isLoggedIn: false,
+            isLoggedIn: (cookie.load('userId') != null),
             selectedTerm: this.props.concept_id,
             data: [],
             content: "diagram"
