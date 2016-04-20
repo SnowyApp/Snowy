@@ -3,7 +3,7 @@ import psycopg2
 from elasticsearch import Elasticsearch
 es = Elasticsearch()
 
-db = psycopg2.connect("dbname=snomedct user=simon")
+db = psycopg2.connect("dbname=snomedct user=Sehnsucht")
 cur = db.cursor()
 cur.execute("SELECT concept_id,term FROM description;")
 i = 0
