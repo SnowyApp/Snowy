@@ -160,6 +160,7 @@ var Container = React.createClass({
                             onLogout={this.onLogout}
                             url={this.state.serverUrl}
                             setContent={this.setContent}
+                            contentName={this.state.content}
                         />
                         {content}
                     </section>
