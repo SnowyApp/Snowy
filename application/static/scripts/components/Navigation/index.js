@@ -21,7 +21,7 @@ var Navigation = React.createClass({
     updateState: function(data) {
 
         // do not try to use uninitialised data
-        if (data[0] === undefined)
+        if (data === undefined)
             return;
 
         // add a unique ID for all children to be used in the

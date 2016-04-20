@@ -27,7 +27,7 @@ var LoginForm = React.createClass({
     onSuccess: function(e){
         this.resetForm();
         this.close();
-        this.props.updateLoggedIn(true);
+        this.props.onLogin(e.token);
     },
     onError: function(t, e) {
         this.setState({
