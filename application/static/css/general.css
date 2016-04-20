@@ -21,7 +21,7 @@ nav {
 
 section {
     /* Positions section to left of nav */
-    overflow: auto;
+    overflow: hidden;
     height: 100vh;
 
     position: relative;
