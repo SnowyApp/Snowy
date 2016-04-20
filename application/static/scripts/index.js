@@ -276,6 +276,26 @@ var Container = React.createClass({
         this.setState({isLoggedIn: false, content: "diagram", userId: ''});
         cookie.remove('userId', {path: '/'});
     },
+
+    saveDiagram: function() {
+        console.log("SAVING DIAGRAM");
+        console.log(this.state.data[0]);
+        $.ajax({
+            type: "POST",
+            method: "POST",
+            url: this.state.serverUrl + "/diagram/",
+            dataType: "json",
+            data: this.state.data[0],
+            error: function() {
+                console.log("Could not store diagram.");
+            }.bind(this),
+            success: function(result) {
+                console.log("Could store diagram:");
+            }.bind(this)
+        });
+        console.log("DIAGRAM SNET");
+    },
+
     render: function() {
         var content = null;
         switch(this.state.content){
@@ -298,8 +318,25 @@ var Container = React.createClass({
         }
         return (
             <div className="wrapper">
+<<<<<<< 29664f67c25142229da3e6b488376cb9f190967c
                 <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
                     <Navigation
+=======
+                <Navigation
+                    data={this.state.data}
+                    url={this.state.serverUrl}
+                    update={this.updateSelectedTerm}
+                />
+                <section>
+                    <Bar
+                        serverUrl={this.state.serverUrl} 
+                        update={this.updateSelectedTerm} 
+                        isLoggedIn={this.state.isLoggedIn} 
+                        updateLoggedIn={this.updateLoggedIn}
+                        saveDiagram={this.saveDiagram}
+                    />
+                    <Diagram 
+>>>>>>> Add button to store diagram
                         data={this.state.data}
                         url={this.state.serverUrl}
                         update={this.updateSelectedTerm}
@@ -391,6 +428,12 @@ var Bar = React.createClass({
             </div>
         ) : (
             <div>
+                <Button 
+                    className="save-diagram" 
+                    bsStyle="primary"
+                    onClick={this.props.saveDiagram}
+                >Save Diagram</Button>
+
                 <Button className="Register" bsStyle = "primary" 
                     onClick={this.showRegistration}>Register</Button>
                 <Button className="Login" bsStyle = "primary" 
