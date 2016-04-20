@@ -15,7 +15,6 @@ var SearchBox = React.createClass({
     getInitialState:function(){
         return{
             timeout:null,
-            searchHistory: cookie.load('searchHistory') ? cookie.load('searchHistory') : []
         }
     },
     doSearch: function() {
@@ -40,28 +39,6 @@ var SearchBox = React.createClass({
             }.bind(this), 300);
         }
     },
-    addHistory: function(){
-        var newHistory = this.state.searchHistory;
-        newHistory.push({
-            name: "Asthma",
-            id: 195967001
-        });
-        if (newHistory.length>5){
-            newHistory.shift();
-        }
-        this.setState({
-            searchHistory:newHistory
-        })
-        cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
-    },
-    removeHistory: function(){
-        var newHistory = this.state.searchHistory;
-        newHistory.shift();
-        this.setState({
-            searchHistory:newHistory
-        })
-        cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
-    },
     onClick: function(){
         this.props.updateData();
     },
@@ -70,8 +47,6 @@ var SearchBox = React.createClass({
             <div onClick={this.onClick}>
                 <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyUp={this.handleKeyPress} />
                 <Button onClick={this.doSearch} >Search</Button>
-                <Button onClick={this.addHistory}> Add history</Button>
-                <Button onClick={this.removeHistory}> Remove</Button>
             </div>
         )
     }
@@ -90,6 +65,7 @@ var TermTable = React.createClass({
             onRowClick: function(row){
                 //Sends back the selected term to the container class
                 this.props.update(row.id);
+                this.props.addHistory(row.name,row.id);
                 this.props.clearData();
             }.bind(this)
         };
@@ -125,6 +101,7 @@ var Search = React.createClass({
         return{
             query:'',
             searchData: [],
+            searchHistory: cookie.load('searchHistory') ? cookie.load('searchHistory') : []
         }
     },
     doSearch:function(queryText){
@@ -171,12 +148,32 @@ var Search = React.createClass({
             searchData: searchData
         });
     },
+    addHistory: function(name, id){
+        console.log(name + id);
+        var newHistory = this.state.searchHistory;
+        newHistory.push({
+            name: name,
+            id: id
+        });
+        if (newHistory.length>5){
+            newHistory.shift();
+        }
+        this.setState({
+            searchHistory:newHistory
+        })
+        cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
+    },
     render:function(){
 
         return (
             <div className="search">
-                <SearchBox query={this.state.query} doSearch={this.doSearch} updateData={this.updateData}/>
-                <TermTable data={this.state.searchData} update={this.props.update} clearData={this.clearData} />
+                <SearchBox query={this.state.query}
+                           doSearch={this.doSearch}
+                           updateData={this.updateData}/>
+                <TermTable data={this.state.searchData}
+                           update={this.props.update}
+                           clearData={this.clearData}
+                           addHistory={this.addHistory} />
             </div>
         );
     }
