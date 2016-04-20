@@ -12,7 +12,7 @@ var ProfilePage = require('./components/ProfilePage/index');
 var LogOut = require('./components/LogOut/');
 
 
-var matteUrl = 'http://85.229.222.71:5000';
+var matteUrl = 'http://hem.ulmstedt.net:5000';
 
 var Container = React.createClass({
     getInitialState: function(){
