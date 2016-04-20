@@ -132,6 +132,22 @@ var Container = React.createClass({
 
 
     /**
+     * Find a node with given d3 id.
+     */
+    findNode: function(tree, id) {
+        if (tree.id == undefined) return null;
+        if (tree.id == id) return tree;
+        if (tree.children == undefined) return null;
+         
+        var result = null;
+        for(var i in tree.children) {
+            result = this.findNode(tree.children[i], id);
+            if (result != null) return result;
+        }
+        return null;
+    },
+
+    /**
      * Fetch information about given concept and update state.data with 
      * its information.
      */
