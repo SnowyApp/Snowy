@@ -2,7 +2,7 @@
     display: block;
     background-color: white;
     z-index: 99;
-    position: relative;
+    position: absolute;
     width: 250px;
     margin-left: 125px;
 }
