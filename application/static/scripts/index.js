@@ -1,5 +1,4 @@
 import PageClick from 'react-page-click';
-import ResizableBox from 'react-resizable-component';
 import SplitPane from 'react-split-pane';
 import cookie from 'react-cookie';
 
@@ -20,6 +19,7 @@ var Container = React.createClass({
         return{
             serverUrl: this.props.url,
             isLoggedIn: (cookie.load('userId') != null),
+            userId: cookie.load('userId'),
             selectedTerm: this.props.concept_id,
             data: [],
             content: "diagram"
@@ -115,15 +115,16 @@ var Container = React.createClass({
         this.getConcept(conceptId);
         this.setContent("diagram");
     },
-    hasLoggedIn: function(){
+    onLogin: function(uid){
         this.setState({
+            userId: uid,
             isLoggedIn:true
         });
+        cookie.save('userId', uid,{path: '/'});
     },
-    updateLoggedIn: function(e){
-      this.setState({
-          isLoggedIn: e
-      });
+    onLogout: function(){
+        this.setState({isLoggedIn: false});
+        cookie.remove('userId', {path: '/'});
     },
     render: function() {
         var content = null;
@@ -154,8 +155,9 @@ var Container = React.createClass({
                         <Bar
                             serverUrl={this.state.serverUrl} 
                             update={this.updateSelectedTerm} 
-                            isLoggedIn={this.state.isLoggedIn} 
-                            updateLoggedIn={this.updateLoggedIn}
+                            isLoggedIn={this.state.isLoggedIn}
+                            onLogin={this.onLogin}
+                            onLogout={this.onLogout}
                             url={this.state.serverUrl}
                             setContent={this.setContent}
                         />
@@ -216,8 +218,8 @@ var Bar = React.createClass({
                 <Button className="profile" onClick={this.props.setContent.bind(null, "profile")} bsStyle = "primary" >Profile</Button>
                 <Button className="Logout" bsStyle = "primary" 
                     onClick={this.showLogout}>Logout</Button>
-                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} 
-                    updateLoggedIn={this.props.updateLoggedIn}url={this.props.url}/>
+                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout}
+                        onLogout={this.props.onLogout} url={this.props.url}/>
             </div>
         ) : (
             <div>
@@ -230,8 +232,8 @@ var Bar = React.createClass({
                     hideRegistration={this.hideRegistration} url={this.props.url}/>
 
                 {/* Login popup */}
-                <LoginForm show={this.state.showLogin} hideLogin={this.hideLogin} 
-                    updateLoggedIn={this.props.updateLoggedIn} url={this.props.url}/>
+                <LoginForm show={this.state.showLogin} hideLogin={this.hideLogin}
+                           onLogin={this.props.onLogin} url={this.props.url}/>
             </div>
         );
 
