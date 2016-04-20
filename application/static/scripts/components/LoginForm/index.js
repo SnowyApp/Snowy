@@ -48,7 +48,7 @@ var LoginForm = React.createClass({
         e.preventDefault();
         $.ajax({
             type:"POST",
-            url: "/login",
+            url: this.props.url + "/login",
             data: JSON.stringify({"email": this.state.email, "password": this.state.password}),
             success: function (data) {
                 this.onSuccess(data);

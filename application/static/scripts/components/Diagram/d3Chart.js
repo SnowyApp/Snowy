@@ -40,6 +40,28 @@ var menuData = [
             }
             d3Chart._drawPoints(d);
         }
+    },
+    {
+        title: 'Hide Siblings',
+        action: function(elm, d){
+            if(d.parent != "null") {
+                var tempChild = [];
+                tempChild.push(d);
+                d.parent._children = d.parent.children;
+                d.parent.children = tempChild;
+                d3Chart._drawPoints(d);
+            }
+        }
+    },
+    {
+        title: 'Show siblings',
+        action: function(elm, d){
+            if(d.parent != "null" && d.parent._children){
+                d.parent.children = d.parent._children;
+                d.parent._children = null;
+                d3Chart._drawPoints(d);
+            }
+        }
     }
 ];
 
@@ -234,7 +256,7 @@ d3Chart._drawPoints = function(data) {
      */
     var node = g.selectAll("g.node").remove();
     node = g.selectAll("g.node")
-        .data(nodes, function(d) { return d.id || (d.id = ++i) });
+        .data(nodes, function(d) { return d.id });
 
     /**
      * "Enters" the nodes by creating a new g-element inside the bigger

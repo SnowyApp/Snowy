@@ -11,37 +11,98 @@ var LoginForm = require('./components/LoginForm/index');
 var ProfilePage = require("./components/ProfilePage/index");
 
 
-//Use this if you have the api locally
-var localUrl = 'http://127.0.0.1:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
-
-//Use this if Carl Brage's server is up
-var brageUrl = 'http://155.4.145.248:3000/snomed/en-edition/v20150731/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
-
-//Use this if none of the above work, can only search on asthma
-var mockApi ='http://private-anon-d3abcd99e-snomedctsnapshotapi.apiary-mock.com/api/snomed/en-edition/v20160131/descriptions?query=&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true';
-
+var matteUrl = 'http://85.229.222.71:5000';
 
 var Container = React.createClass({
     getInitialState: function(){
         return{
-            serverUrl: '//hem.ulmstedt.net:5000',
-            APIedition: '',
-            APIrelease: '',
+            serverUrl: this.props.url,
             isLoggedIn: false,
-            selectedTerm: "138875005"
+            selectedTerm: this.props.concept_id,
+            data: []
         };
     },
 
+    /**
+     * Fetch information used to display diagram and navigation and update
+     * state when all information is received.
+     */
+    getConcept: function(id) {
+        $.when(
+                $.ajax({
+                    type: "GET",
+                    method: "GET",
+                    url: this.state.serverUrl + "/concept/" + id,
+                    dataType: "json",
+                    error: function() {
+                        console.log("Could not get concept root.");
+                    }.bind(this)
+                }),
+
+                $.ajax({
+                    type: "GET",
+                    method: "GET",
+                    url: this.state.serverUrl + "/get_children/" + id,
+                    dataType: "json",
+                    error: function() {
+                        console.log("Could not get concept children.");
+                    }.bind(this)
+                })
+
+            ).then(function(res1, res2) {
+
+                // get all information about children
+                var children = [];
+                for (var i in res2[0]) {
+                    children.push(
+                        {
+                            "name": res2[0][i].term,
+                            "concept_id": res2[0][i].id,
+                            "parent": res1[0].id,
+                            "children": []
+                        }
+                    );
+                }
+                
+                // get all information about the root and add the array
+                // of the children
+                var root = [
+                    {
+                        "name": res1[0].term,
+                        "concept_id": res1[0].id,
+                        "parent": "null",
+                        "children": children,
+                        "id": 0
+                    }
+                ];
+                
+                // update state so that component children can update
+                this.setState({
+                    data: root,
+                    selectedTerm: root[0].term
+                });
+                
+            }.bind(this)
+        );
+
+    },
+
+    componentWillMount: function() {
+        this.getConcept(this.state.selectedTerm);
+    },
+    
     handleUrlChange: function(e){
         this.setState({
             url: e.target.value
         });
     },
-    //Gets called when the user selects an element in the search result
-    updateSelectedTerm: function(newSelectedTerm){
-        this.setState({
-            selectedTerm: newSelectedTerm
-        });
+
+    /**
+     * Fetch information about given concept and update state.data with 
+     * its information.
+     */
+    updateSelectedTerm: function(conceptId){
+        this.getConcept(conceptId);
     },
     hasLoggedIn: function(){
         this.setState({
@@ -56,22 +117,33 @@ var Container = React.createClass({
     render: function() {
         return (
             <div className="wrapper">
-                    <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
-                        <Navigation
-                            sctid={this.state.selectedTerm}
+                <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
+                    <Navigation
+                        data={this.state.data}
+                        url={this.state.serverUrl}
+                        update={this.updateSelectedTerm}
+                    />
+                    <section>
+                        <Bar
+                            serverUrl={this.state.serverUrl} 
+                            update={this.updateSelectedTerm} 
+                            isLoggedIn={this.state.isLoggedIn} 
+                            updateLoggedIn={this.updateLoggedIn}
+                            url={this.state.serverUrl}
+                        />
+                        <Diagram 
+                            data={this.state.data}
                             url={this.state.serverUrl}
                             update={this.updateSelectedTerm}
                         />
-                        <section>
-                            <Bar update={this.updateSelectedTerm}/>
-                            <ProfilePage openTerm={function(id){console.log(id)}} openDiagram={function(id){console.log(id)}}/>
-                        </section>
-                    </SplitPane>
+                    </section>
+                </SplitPane>
             </div>
         );
     }
 });
 
+//<ProfilePage openTerm={function(id){console.log(id)}} openDiagram={function(id){console.log(id)}}/>
 
 var Bar = React.createClass({
     getInitialState: function(){
@@ -119,24 +191,30 @@ var Bar = React.createClass({
         const navButtons = this.props.isLoggedIn ? (
             <div>
                 <Button className="profile" bsStyle = "primary" >Profile</Button>
-                <Button className="Logout" bsStyle = "primary" onClick={this.showLogout}>Logout</Button>
-                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} updateLoggedIn={this.props.updateLoggedIn}/>
+                <Button className="Logout" bsStyle = "primary" 
+                    onClick={this.showLogout}>Logout</Button>
+                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout} 
+                    updateLoggedIn={this.props.updateLoggedIn}url={this.props.url}/>
             </div>
         ) : (
             <div>
-                <Button className="Register" bsStyle = "primary" onClick={this.showRegistration}>Register</Button>
-                <Button className="Login" bsStyle = "primary" onClick={this.showLogin}>Login</Button>
+                <Button className="Register" bsStyle = "primary" 
+                    onClick={this.showRegistration}>Register</Button>
+                <Button className="Login" bsStyle = "primary" 
+                    onClick={this.showLogin}>Login</Button>
                 {/* Registration popup */}
-                <RegisterForm show={this.state.showRegistration} hideRegistration = {this.hideRegistration}/>
+                <RegisterForm show={this.state.showRegistration} 
+                    hideRegistration={this.hideRegistration} url={this.props.url}/>
 
                 {/* Login popup */}
-                <LoginForm show={this.state.showLogin} hideLogin = {this.hideLogin} updateLoggedIn={this.props.updateLoggedIn}/>
+                <LoginForm show={this.state.showLogin} hideLogin={this.hideLogin} 
+                    updateLoggedIn={this.props.updateLoggedIn} url={this.props.url}/>
             </div>
         );
 
         return (
             <div className="bar">
-                <Search url ={mockApi} update={this.props.update}/>
+                <Search url={this.props.serverUrl} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
                     {navButtons}
@@ -201,6 +279,6 @@ var Export = React.createClass({
 
 
 ReactDOM.render(
-    <Container />,
+    <Container concept_id="138875005" url={matteUrl} />,
     document.getElementById('content')
 );
