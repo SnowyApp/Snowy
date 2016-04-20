@@ -32,7 +32,7 @@ var Container = React.createClass({
      * state when all information is received.
      */
     getConcept: function(id) {
-        $.when(getRoot(id), getChildren(id))
+        $.when(this.getRoot(id), this.getChildren(id))
             .then(function(res1, res2) {
 
                 // get all information about children
@@ -135,7 +135,40 @@ var Container = React.createClass({
      * Add or remove children of concept from state.
      */
     updateConceptChildren: function(id) {
-        console.log(this.findNode(this.state.data[0], id));    
+
+        // find node in data
+        var node = this.findNode(this.state.data[0], id);
+
+        if (node == null) {
+            // something went wrong
+            return;
+        }
+
+        if (node.children === undefined) {
+            // add children to the node
+            $.when(this.getChildren).then(
+                function(res) {
+
+                    // get all information about children
+                    var children = [];
+                    for (var i in res[0]) {
+                        children.push(
+                            {
+                                "name": res[0][i].term,
+                                "concept_id": res[0][i].id,
+                                "parent": node.id,
+                                "children": null
+                            }
+                        );
+                    }
+                    // update node's children
+                    node.children = children;
+                }        
+            );
+        } else {
+            // remove the nodes children
+            node.children = null;
+        }
     },
 
     /**
