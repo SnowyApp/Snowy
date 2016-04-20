@@ -2,13 +2,14 @@ import PageClick from 'react-page-click';
 import ResizableBox from 'react-resizable-component';
 import SplitPane from 'react-split-pane';
 
-var Diagram = require("./components/Diagram/index");
-var Search = require("./components/Search/index");
-var Navigation = require("./components/Navigation/index");
+var Diagram = require('./components/Diagram/index');
+var Search = require('./components/Search/index');
+var Navigation = require('./components/Navigation/index');
 var Chart = require('./components/Diagram/Chart');
 var RegisterForm = require('./components/RegisterForm/index');
 var LoginForm = require('./components/LoginForm/index');
-var ProfilePage = require("./components/ProfilePage/index");
+var ProfilePage = require('./components/ProfilePage/index');
+var LogOut = require('./components/LogOut/');
 
 
 var matteUrl = 'http://85.229.222.71:5000';
