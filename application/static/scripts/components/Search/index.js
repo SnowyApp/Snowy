@@ -67,8 +67,7 @@ var TermTable = React.createClass({
                 this.props.update(row.id);
                 this.props.addHistory(row.name,row.id);
                 this.props.clearData();
-            }.bind(this),
-            sortOrder: 'asc'
+            }.bind(this)
         };
         //Only display the result table if there is a result
         var style={
@@ -80,7 +79,7 @@ var TermTable = React.createClass({
             };
         }
         var tableData = this.props.data;
-        tableData.reverse();
+        //tableData.reverse();
         return(
             <PageClick onClick={this.handleBlur}>
                 <div className="search-results" style={style}>
@@ -151,15 +150,13 @@ var Search = React.createClass({
     },
     addHistory: function(name, id){
         var newHistory = this.state.searchHistory;
-        newHistory.push({
+        newHistory.unshift({
             name: name,
             id: id
         });
         if (newHistory.length>5){
-            newHistory.shift();
+            newHistory.pop();
         }
-        //DEBUG
-        console.log(newHistory);
         this.setState({
             searchHistory:newHistory
         })
