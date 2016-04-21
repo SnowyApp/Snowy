@@ -118,7 +118,11 @@ d3Chart.create = function(element, props, state) {
             'xlink': 'http://www.w3.org/1999/xlink',
             version: '1.1'
         })
-        .call(zoom).on("dblclick.zoom", null);
+        .call(zoom).on("dblclick.zoom", null)
+        .on( "mousedown", function() {
+                d3.selectAll( 'g.selected').classed( "selected", false)
+                                            .selectAll("rect.node").style( "fill", "white");;
+        });
 
     /**
      * To add more than one Shape or text element to the SVG-element you have
@@ -287,15 +291,21 @@ d3Chart._drawPoints = function(data) {
             d3.select(this).selectAll("rect.node").style( "fill", "#ebebeb");
         })
         .on("mouseout", function() {
-            d3.select(this).selectAll("rect.node").style("fill", "white");
+            if(!d3.select(this).classed("selected")) {
+                d3.select(this).selectAll("rect.node").style("fill", "white");
+            }
         })
-        .on("click", function(d){
+        .on("mousedown", function(d){
+            d3.select(this).classed("selected", true)
+                .selectAll("rect.node").style( "fill", "#ebebeb");
+            /*
             // suppress click if already used
             if  (d3.event.defaultPrevented) return;
 
             // no point of searching for root again
             if (d.id != root.id)
                 onClick(d.concept_id);
+                */
         });
     /**
      * Now we add a rectangle element and use conditional expressions to
@@ -409,8 +419,12 @@ d3Chart._drawPoints = function(data) {
      * Function for dragging an element.
      */
     function dragmove(d, i) {
-        d.x += d3.event.dx;
-        d.y += d3.event.dy;
+        var selection = d3.selectAll(".selected");
+        selection.attr("transform", function( d, i) {
+            d.x += d3.event.dx;
+            d.y += d3.event.dy;
+            return "translate(" + [ d.x,d.y ] + ")"
+        });
         tick();
     }
     /**
