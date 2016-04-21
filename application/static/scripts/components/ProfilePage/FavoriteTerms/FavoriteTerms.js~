@@ -1,5 +1,6 @@
 var TermElement = require('./TermElement');
 
+//Temporary fake user
 var fakeUser = {
     id: 1337,
     username: "Arnold",

@@ -1,19 +1,3 @@
-module.exports = React.createClass({
-    render: function(){
-        return (
-            <nav>
-                <Navigation 
-                    APIUrl={this.props.url}
-                    update={this.props.update}            
-                    data={this.props.data}
-                    upOneLevel={this.props.upOneLevel}
-                    getHistory={this.props.getHistory}
-                />
-            </nav>
-        );
-    }
-});
-
 //Navigation panel component
 var Navigation = React.createClass({
     
@@ -88,16 +72,18 @@ var Navigation = React.createClass({
         var grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
 
         return (
-            <ul className="nav nav-pills nav-stacked">
-                <li role="presentation" className="active">                    
-                    <a className="navigation-header" onClick={this.props.upOneLevel} href="#">
-                        <span style={backArrow} className="glyphicon glyphicon-triangle-top backArrow" aria-hidden="true"> </span>
-                        <div className="grandparentHeader">{grandparent}</div>                         
-                        <div style={parentMarginLeft} className="parentHeader">{this.state.currentParent}</div>
-                    </a>
-                </li> 
-                {ItemArray}
-            </ul>
+            <nav>
+                <ul className="nav nav-pills nav-stacked">
+                    <li role="presentation" className="active">                    
+                        <a className="navigation-header" onClick={this.props.upOneLevel} href="#">
+                            <span style={backArrow} className="glyphicon glyphicon-triangle-top backArrow" aria-hidden="true"> </span>
+                            <div className="grandparentHeader">{grandparent}</div>                         
+                            <div style={parentMarginLeft} className="parentHeader">{this.state.currentParent}</div>
+                        </a>
+                    </li> 
+                    {ItemArray}
+                </ul>
+            </nav>
         );
     }
 });
@@ -117,3 +103,5 @@ var NavigationItem = React.createClass({
         );
     }
 });
+
+module.exports = Navigation;
