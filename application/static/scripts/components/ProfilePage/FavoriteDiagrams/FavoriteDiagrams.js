@@ -14,12 +14,13 @@ var fakeUser = {
 module.exports = React.createClass({
     getInitialState: function(){
         return({
-            diagrams: this.props.diagrams,
-            filteredDiagrams: this.props.diagrams
+            diagrams: [],
+            filteredDiagrams: []
         });
     },
 
     componentDidMount: function(){
+        this.getFavoriteDiagrams();
         this.setState({
             diagrams: this.props.dateSort(this.state.diagrams, false),
             sortBy: 'added',
@@ -87,21 +88,62 @@ module.exports = React.createClass({
         });
         
     },
+
+    /**
+    * Gets the users favorite diagrams and saves them to the terms state
+    */
+    getFavoriteDiagrams: function(){
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "GET",
+                method: "GET",
+                url: this.props.url + "/diagram",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                success: function (data) {
+                    console.log(data);
+                    this.setState({
+                        diagrams: data[0],
+                        filteredDiagrams: data[0]
+                    });
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
     
     render: function(){
         //Generate the diagram elements
-        var diagramArray = this.state.filteredDiagrams.map(function(diagram){
-            //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
-            var day = ("0" + diagram.dateAdded.getDate()).slice(-2);
-            var month = ("0" + diagram.dateAdded.getMonth()).slice(-2);
-            var year = diagram.dateAdded.getUTCFullYear();
-            
-            var dateString = year + "-" + month + "-" + day;
+        var diagramArray = null;
+        if(this.state.diagrams.length > 0){
+            diagramArray = this.state.filteredDiagrams.map(function(diagram){
+                //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
+                var day = ("0" + diagram.dateAdded.getDate()).slice(-2);
+                var month = ("0" + diagram.dateAdded.getMonth()).slice(-2);
+                var year = diagram.dateAdded.getUTCFullYear();
+                
+                var dateString = year + "-" + month + "-" + day;
 
-            return(
-                <DiagramElement key={diagram.id} name={diagram.name} dict={this.props.dict} id={diagram.id} date={dateString} parameters={diagram.parameters} openDiagram={this.props.openDiagram} removeDiagram={this.removeDiagram}/>
-            );
-        }, this);
+                return(
+                    <DiagramElement 
+                        key={diagram.id}
+                        name={diagram.name}
+                        dict={this.props.dict}
+                        id={diagram.id}
+                        date={dateString}
+                        parameters={diagram.parameters}
+                        openDiagram={this.props.openDiagram}
+                        removeDiagram={this.removeDiagram}
+                    />
+                );
+            }, this);
+        }
 
         //Render the correct sorting arrows
         var nameSortArrow = null;
@@ -134,7 +176,9 @@ module.exports = React.createClass({
                 <hr className="profileHr"/>
                 <div className="diagramPageWrapper">
                     <div className="input-group" style={{marginBottom: "8px"}}>
-                        <span className="input-group-addon" id="basic-addon1">Filter</span>
+                        <span className="input-group-addon" id="basic-addon1">
+                            Filter
+                        </span>
                         <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={this.props.dict[fakeUser.lang]["name"]}/>
                     </div>
 
