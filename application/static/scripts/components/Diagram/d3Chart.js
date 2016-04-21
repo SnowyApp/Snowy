@@ -176,6 +176,14 @@ d3Chart.update = function(element, state) {
 d3Chart.destroy = function() {
     svg.remove();
 };
+
+/**
+ * Return an ID for a d3 node.
+ */
+d3Chart.getId = function() {
+    return ++i;
+},
+
 /**
  * This will set some scaling according to the sizes of the element
  */

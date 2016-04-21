@@ -57,6 +57,13 @@ module.exports = React.createClass({
     },
 
     /**
+     * Return an ID for d3 node
+     */
+    getId: function() {
+        return this._chart.getId();
+    },
+
+    /**
      * Show/hide children of node on click.
      */
     onNodeClick: function(id) {

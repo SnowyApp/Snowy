@@ -42,7 +42,8 @@ var Container = React.createClass({
                             "name": childrenResult[0][i].term,
                             "concept_id": childrenResult[0][i].id,
                             "parent": rootResult[0].id,
-                            "children": null
+                            "children": null,
+                            "id": this._diagram.getId()
                         }
                     );
                 }
@@ -158,13 +159,13 @@ var Container = React.createClass({
                     // get all information about children
                     var children = [];
                     for (var i in res) {
-                        console.log(child);
                         children.push(
                             {
                                 "name": res[i].term,
                                 "concept_id": res[i].id,
                                 "parent": node.concept_id,
-                                "children": null
+                                "children": null,
+                                "id": this._diagram.getId()
                             }
                         );
                     }
@@ -249,6 +250,7 @@ var Container = React.createClass({
         switch(this.state.content){
             case "diagram":
                 content = <Diagram 
+                            ref={ (ref) => this._diagram = ref }
                             data={this.state.data}
                             url={this.state.serverUrl}
                             update={this.updateSelectedTerm}
