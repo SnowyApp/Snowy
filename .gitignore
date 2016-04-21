@@ -5,3 +5,4 @@ application/static/bundle.js
 *.swp
 *.pyc
 *.DS_Store
+*~
