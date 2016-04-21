@@ -28,7 +28,7 @@ var menuData = [
                     }
                 }
             }
-            d3Chart._drawPoints(d);
+            d3Chart._drawTree(d);
         }
     },
     {
@@ -41,7 +41,7 @@ var menuData = [
                 d.children = d._children;
                 d._children = null;
             }
-            d3Chart._drawPoints(d);
+            d3Chart._drawTree(d);
         }
     },
     {
@@ -52,7 +52,7 @@ var menuData = [
                 tempChild.push(d);
                 d.parent._children = d.parent.children;
                 d.parent.children = tempChild;
-                d3Chart._drawPoints(d);
+                d3Chart._drawTree(d);
             }
         }
     },
@@ -62,7 +62,7 @@ var menuData = [
             if(d.parent != "null" && d.parent._children){
                 d.parent.children = d.parent._children;
                 d.parent._children = null;
-                d3Chart._drawPoints(d);
+                d3Chart._drawTree(d);
             }
         }
     }
@@ -147,9 +147,6 @@ d3Chart.create = function(element, props, state) {
      */
 
     tree = d3.layout.tree()
-        .separation(function (a, b) {
-            return a.parent == b.parent ? a.parent.name.length/1.5 : a.parent.name.length;
-        })
         .sort(function(a,b){return d3.ascending(a.name,b.name)});
 
     if(state.view == 'vertical'){
@@ -158,7 +155,7 @@ d3Chart.create = function(element, props, state) {
         tree.size([500, 960])
     }
 
-    this._drawPoints(root);
+    this._drawTree(root);
 };
 
 d3Chart.createHorizontal = function(element, props, state){
@@ -421,14 +418,28 @@ d3Chart._drawTree = function(data) {
     *   d.source.x + 10 y2 = d.source.y + 5>
     * </g>
     */
-    link.enter().insert('line', 'g')
-        .attr("class", "link")
-        .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-        .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y2", function(d) { return d.target.y + 0; })
-        .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
-        .attr("marker-start", "url(#ArrowMarker)");
+
+    if(treeState == 'vertical') {
+        link.enter().insert('line', 'g')
+            .attr("class", "link")
+            .attr("x1", function (d) {return d.source.x + NODE_WIDTH / 2 + WIDTH_MARGIN;})
+            .attr("y1", function (d) {return d.source.y + NODE_HEIGHT;})
+            .attr("x2", function (d) {return d.target.x + NODE_WIDTH / 2 + WIDTH_MARGIN;})
+            .attr("y2", function (d) {return d.target.y + 0;
+            })
+            .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
+            .attr("marker-start", "url(#ArrowMarker)");
+    } else {
+        link.enter().insert('line', 'g')
+            .attr("class", "link")
+            .attr("y1", function(d) { return d.source.x + 20; })
+            .attr("x1", function(d) { return d.source.y + 100;})
+            .attr("y2", function(d) { return d.target.x + 20; })
+            .attr("x2", function(d) { return d.target.y; })
+            .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
+            .attr("marker-start", "url(#ArrowMarker)");
+    }
+
     var nodeExit = node.exit().transition()
         .duration(DURATION)
         .attr("transform", function(d) {
@@ -455,13 +466,20 @@ d3Chart._drawTree = function(data) {
      * Function for recalculating values of links and nodes
      */
     function tick() {
-        link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
-            .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-            .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
-            .attr("y2", function(d) { return d.target.y; });
+        if(treeState == 'vertical') {
+            link.attr("x1", function (d) {return d.source.x + NODE_WIDTH / 2 + WIDTH_MARGIN;})
+                .attr("y1", function (d) {return d.source.y + NODE_HEIGHT;})
+                .attr("x2", function (d) {return d.target.x + NODE_WIDTH / 2 + WIDTH_MARGIN;})
+                .attr("y2", function (d) {return d.target.y;});
 
+            node.attr("transform", function (d) {return "translate(" + d.x + "," + d.y + ")";});
+        } else {
+            link.attr("y1", function(d) { return d.source.x + 20; })
+                .attr("x1", function(d) { return d.source.y + 100;})
+                .attr("y2", function(d) { return d.target.x + 20; })
+                .attr("x2", function(d) { return d.target.y; });
 
-        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            node.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });}
     }
 
 
