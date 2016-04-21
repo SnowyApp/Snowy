@@ -79,17 +79,12 @@ var Container = React.createClass({
                         "id": 0
                     }
                 ];
-                /* NOTE:
-                    This is a temporary fix. After we implement a information page about
-                    concepts you should be able to set leaves to current node.
-                */
-                if(children.length != 0){
-                    // update state so that component children can update
-                    this.setState({
-                        data: root,
-                        selectedTerm: root[0].id
-                    });
-                } else {console.log("Leaf node found");}
+
+                // update state so that component children can update
+                this.setState({
+                    data: root,
+                    selectedTerm: root[0].id
+                });
                 
             }.bind(this)
         );
