@@ -142,10 +142,6 @@ var Container = React.createClass({
      */
     updateConceptChildren: function(id) {
 
-        // ignore if it is the root
-        if (id == 0)
-            return;
-
         var tree = this.state.data.slice();;
 
         // find node in data
@@ -183,9 +179,6 @@ var Container = React.createClass({
         } else {
             // remove the nodes children
             node.children = null;
-            this.setState({
-                data: tree
-            });
         }
     },
 
