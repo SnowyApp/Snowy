@@ -189,7 +189,10 @@ module.exports = React.createClass({
 
         return(
             <div>
-                <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> {this.props.dict[fakeUser.lang]["favterms"]}</h1>
+                <h1>
+                    <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
+                    {this.props.dict[fakeUser.lang]["favterms"]}
+                </h1>
                 <hr className="profileHr"/>
                 <div className="termPageWrapper">
                     <table className="favorites">
