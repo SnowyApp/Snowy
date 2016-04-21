@@ -519,8 +519,8 @@ d3Chart._drawHorizontal = function(data) {
      */
 
     nodes.forEach(function(d) {
-        d.y = d.depth*200;
-        d.x -= 1000;
+        d.y = d.depth*500; //Increases distance between children and parents
+        d.x /= 3.5; //Reduces vertical distance between nodes
     });
 
     /**
