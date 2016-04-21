@@ -133,11 +133,15 @@ var Container = React.createClass({
      */
     updateSelectedTerm: function(conceptId){
         //Push current parent to history
+        var currHistory = this.state.history;
         var historyObject = {id: this.state.data[0].concept_id, name: this.state.data[0].name};
-        this.state.history.push(historyObject);
-        console.log(this.state.history);
+        //Prevent term from being added multiple times to history due to fast clicking
+        if(currHistory.length == 0 || currHistory[currHistory.length-1].id != historyObject.id){
+            this.state.history.push(historyObject);
+        }
         this.getConcept(conceptId);
         this.setContent("diagram");
+        console.log(this.state.history);
     },
 
    /**
@@ -151,7 +155,6 @@ var Container = React.createClass({
     * Move up one level in the tree (from history)
     */
     upOneLevel: function(){
-        console.log(this.state.history);
         var id = this.state.history.pop().id;
 
         // do not do anything if on the root node
