@@ -295,24 +295,28 @@ d3Chart._drawPoints = function(data) {
                 d3.select(this).selectAll("rect.node").style("fill", "white");
             }
         })
-        .on("mousedown", function(){
-            d3.select(this).classed("selected", true)
-                .selectAll("rect.node").style( "fill", "#ebebeb");
-
-            /*
-            // suppress click if already used
+        .on("click", function(){
+            // If we are dragging, don't call click
             if  (d3.event.defaultPrevented) return;
 
+            // If we are holding down the ctrl key and clicking, invert selected
+            if(d3.event.ctrlKey) {
+                var selection = d3.select(this).classed("selected");
+                d3.select(this).classed("selected", !selection)
+                    .selectAll("rect.node").style("fill", selection ? ("white") : ("ebebeb"));
+            }else{
+                // If we are clicking on a node which is not selected, deselect all nodes
+                if(!d3.select(this).classed("selected")){
+                    d3.selectAll(".selected").classed("selected", false)
+                        .selectAll("rect.node").style("fill", "white");
+                }
+            }
+
+            /*
             // no point of searching for root again
             if (d.id != root.id)
                 onClick(d.concept_id);
             */
-        })
-        .on("mouseup", function(){
-
-            if(d3.event.ctrlKey){
-                d3.select(this).classed("selected", false);
-            }
         });
     /**
      * Now we add a rectangle element and use conditional expressions to
@@ -376,7 +380,6 @@ d3Chart._drawPoints = function(data) {
         .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
         .attr("y2", function(d) { return d.target.y + 0; })
         .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
-        //.style("marker-start", "url(#start)"); // add the arrow to the link end
         .attr("marker-start", "url(#ArrowMarker)");
     var nodeExit = node.exit().transition()
         .duration(DURATION)
@@ -427,11 +430,16 @@ d3Chart._drawPoints = function(data) {
      */
     function dragmove(d, i) {
         var selection = d3.selectAll(".selected");
-        selection.attr("transform", function( d, i) {
+        if (!selection.empty()) {
+        selection.attr("transform", function (d, i) {
             d.x += d3.event.dx;
             d.y += d3.event.dy;
-            return "translate(" + [ d.x,d.y ] + ")"
+            return "translate(" + [d.x, d.y] + ")"
         });
+        }else{
+            d.x += d3.event.dx;
+            d.y += d3.event.dy;
+        }
         tick();
     }
     /**
