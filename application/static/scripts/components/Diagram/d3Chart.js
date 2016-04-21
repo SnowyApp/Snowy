@@ -121,7 +121,11 @@ d3Chart.create = function(element, props, state) {
             'xlink': 'http://www.w3.org/1999/xlink',
             version: '1.1'
         })
-        .call(zoom).on("dblclick.zoom", null);
+        .call(zoom).on("dblclick.zoom", null)
+        .on( "mousedown", function() {
+                d3.selectAll( 'g.selected').classed( "selected", false)
+                                            .selectAll("rect.node").style( "fill", "white");;
+        });
 
     /**
      * To add more than one Shape or text element to the SVG-element you have
@@ -199,7 +203,7 @@ d3Chart._drawTree = function(data) {
     }
 
     var gTree = d3.select('body').selectAll(".nodes");
-    
+
     // build the arrow.
     var arrow = gTree.append("svg:defs").selectAll("marker")
             .data(["start"])
@@ -281,13 +285,25 @@ d3Chart._drawTree = function(data) {
 
     nodeEnter.on('contextmenu', d3.contextMenu(menuData))
         .call(drag)
-        .on("click", function(d){
+        .on("mouseover", function(){
+            d3.select(this).selectAll("rect.node").style( "fill", "#ebebeb");
+        })
+        .on("mouseout", function() {
+            if(!d3.select(this).classed("selected")) {
+                d3.select(this).selectAll("rect.node").style("fill", "white");
+            }
+        })
+        .on("mousedown", function(d){
+            d3.select(this).classed("selected", true)
+                .selectAll("rect.node").style( "fill", "#ebebeb");
+            /*
             // suppress click if already used
             if  (d3.event.defaultPrevented) return;
 
             // no point of searching for root again
             if (d.id != root.id)
                 onClick(d.concept_id);
+                */
         });
 
     /**
@@ -438,15 +454,25 @@ d3Chart._drawTree = function(data) {
      * Function for dragging an element.
      */
     function dragmove(d, i) {
-        if(treeState == 'vertical'){
-            d.x += d3.event.dx;
-            d.y += d3.event.dy;
-            tick();
-        } else {
-            d.x += d3.event.dy;
-            d.y += d3.event.dx;
-            tick();
-        }
+        var selection = d3.selectAll(".selected");
+        selection.attr("transform", function( d, i) {
+            if(treeState = 'vertical') {
+                d.x += d3.event.dx;
+                d.y += d3.event.dy;
+                return "translate(" + [d.x, d.y] + ")"
+            } else {
+                d.x += d3.event.dy;
+                d.y += d3.event.dx;
+                return "translate(" + [d.x, d.y] + ")"
+            }
+        });
+        tick();
+    }
+    /**
+     * Function for the event dragged. Currently replaced by function dragmove.
+     */
+    function dragged(d) {
+        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
     }
 
     /**
