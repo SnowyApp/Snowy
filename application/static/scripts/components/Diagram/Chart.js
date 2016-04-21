@@ -31,6 +31,9 @@ module.exports = React.createClass({
             domain: this.props.domain
         };
     },
+    resetZoom: function(){
+      d3Chart._resetZoom();
+    },
 
     resetDiagram: function() {
         var element = ReactDOM.findDOMNode(this);

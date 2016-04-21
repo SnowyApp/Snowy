@@ -130,7 +130,8 @@ d3Chart.create = function(element, props, state) {
      * </svg>
      */
     var g = svg.append("g")
-        .attr("class", "nodes");
+        .attr("class", "nodes")
+        .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
 
     function zoomed() {
         g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -195,6 +196,10 @@ d3Chart._scales = function(element, domain) {
 
     return {x: x, y: y, z: z};
 };
+
+d3Chart._resetZoom = function(){
+    d3.select('body').selectAll(".nodes").attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
+}
 
 /**
  * This functions adds the nodes and the lines between the nodes and styles
