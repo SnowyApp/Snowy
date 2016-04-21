@@ -35,6 +35,7 @@ module.exports = React.createClass({
      * Update state when receiving new props
      */
     componentWillReceiveProps: function(nextProps) {
+        this.resetZoom();
         this.update(nextProps.data);
     },
 
@@ -44,7 +45,8 @@ module.exports = React.createClass({
     render: function() {
         return (
             <div className="diagram">
-                <button onClick={this.reset}>Reset</button>
+                <Button bsStyle="primary" onClick={this.reset}>Reset</Button>
+                <Button bsStyle="primary" onClick={this.resetZoom}>Reset zoom</Button>
                 <Chart
                     ref={ (ref) => this._chart = ref }
                     data={this.state.data}
@@ -58,6 +60,10 @@ module.exports = React.createClass({
         if (sctid != this.state.data[0].id) {
             this.props.update(sctid);
         }
+    },
+
+    resetZoom: function(){
+        this._chart.resetZoom();
     },
 
     reset: function() {
