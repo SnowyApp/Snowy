@@ -44,7 +44,6 @@ module.exports = React.createClass({
                 },
                 data: JSON.stringify({"id": id, "term": name}),
                 success: function (data) {
-                    console.log(data);
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
@@ -116,14 +115,13 @@ module.exports = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
-                    console.log(data);
                     this.setState({
-                        terms: data[0]
+                        terms: data
                     });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
+                    /*console.log(textStatus); TODO: Re-add logs when database works
+                    console.log(errorThrown);*/
                 },
                 contentType: "application/json",
                 dataType: "json"
@@ -134,7 +132,9 @@ module.exports = React.createClass({
     render: function(){
         //Generate the table rows
         var TermArray = null;
+        var hideTable = null;
         if(this.state.terms.length > 0){
+            hideTable = {}; //Show table
             TermArray = this.state.terms.map(function(term){
                 //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
                 var day = ("0" + term.dateAdded.getDate()).slice(-2);
@@ -154,6 +154,8 @@ module.exports = React.createClass({
                     />
                 );
             }, this);
+        } else {
+            hideTable = {display: "none"}; //Hide table
         }
 
         //Render the correct sorting arrows
@@ -191,11 +193,11 @@ module.exports = React.createClass({
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
-                    {this.props.dict[fakeUser.lang]["favterms"]}
+                    {this.props.dict[fakeUser.lang]["savedTerms"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="termPageWrapper">
-                    <table className="favorites">
+                    <table className="favorites" style={hideTable}>
                         <thead>
                             <tr>
                                 <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
@@ -214,6 +216,7 @@ module.exports = React.createClass({
                             {TermArray}
                         </tbody>
                     </table>
+                    {this.state.terms.length > 0 ? "" : this.props.dict[fakeUser.lang]["noSavedTerms"]}
                 </div>
             </div>
         );

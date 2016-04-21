@@ -103,15 +103,14 @@ module.exports = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
-                    console.log(data);
                     this.setState({
                         diagrams: data,
                         filteredDiagrams: data
                     });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
+                    /*console.log(textStatus); TODO: Re-add comments when database works
+                    console.log(errorThrown);*/
                 },
                 contentType: "application/json",
                 dataType: "json"
@@ -122,7 +121,9 @@ module.exports = React.createClass({
     render: function(){
         //Generate the diagram elements
         var diagramArray = null;
+        var hideTable = null;
         if(this.state.diagrams.length > 0){
+            hideTable = {}; //Show table
             diagramArray = this.state.filteredDiagrams.map(function(diagram){
                 //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
                 var day = ("0" + diagram.dateAdded.getDate()).slice(-2);
@@ -144,6 +145,8 @@ module.exports = React.createClass({
                     />
                 );
             }, this);
+        }else {
+            hideTable = {display: "none"}; //Hide table
         }
 
         //Render the correct sorting arrows
@@ -167,23 +170,22 @@ module.exports = React.createClass({
                 }
                 break;
         }
-
         return(
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
-                    {this.props.dict[fakeUser.lang]["diagrams"]}
+                    {this.props.dict[fakeUser.lang]["savedDiagrams"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="diagramPageWrapper">
-                    <div className="input-group" style={{marginBottom: "8px"}}>
+                    <div className="input-group" style={Object.assign({marginBottom: "8px"}, hideTable)}>
                         <span className="input-group-addon" id="basic-addon1">
                             Filter
                         </span>
                         <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={this.props.dict[fakeUser.lang]["name"]}/>
                     </div>
 
-                    <table className="favorites">
+                    <table className="favorites" style={hideTable}>
                         <thead>
                             <tr>
                                 <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
@@ -200,6 +202,7 @@ module.exports = React.createClass({
                         </thead>
                         {diagramArray}
                     </table>
+                    {this.state.diagrams.length > 0 ? "" : this.props.dict[fakeUser.lang]["noSavedDiagrams"]}
                 </div>
             </div>
         );
