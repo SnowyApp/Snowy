@@ -18,6 +18,8 @@ var dict = {
         savedDiagrams: "Sparade diagram",
         account: "Konto",
         name: "Namn",
+        firstName: "Förnamn",
+        lastName: "Efternamn",
         password: "Lösenord",
         added: "Tillagd",
         savedTerms: "Sparade termer",
@@ -25,6 +27,7 @@ var dict = {
         newPassword: "Nytt lösenord",
         currentPassword: "Nuvarande lösenord",
         repeat: "Upprepa",
+        personalInfo: "Personlig information",
         noSavedTerms: "Du har inga sparade termer.",
         noSavedDiagrams: "Du har inga sparade diagram.",
         m_wrongPassword:"Felaktigt lösenord.",
@@ -43,6 +46,8 @@ var dict = {
         savedDiagrams: "Saved diagrams",
         account: "Account",
         name: "Name",
+        firstName: "First name",
+        lastName: "Last name",
         password: "Password",
         added: "Added",
         savedTerms: "Saved terms",
@@ -50,6 +55,7 @@ var dict = {
         newPassword: "New password",
         currentPassword: "Current password",
         repeat: "Repeat",
+        personalInfo: "Personal information",
         noSavedTerms: "You don't have any saved terms.",
         noSavedDiagrams: "You don't have any saved diagrams.",
         m_wrongPassword:"Wrong password.",
@@ -63,7 +69,8 @@ var dict = {
 //Temporary fake user
 var fakeUser = {
     id: 1337,
-    username: "Arnold",
+    firstName: "Arnold",
+    surname: "Schwarzenegger",
     email: "arnold@schwarzenegger.com",
     language: "eng"
 }

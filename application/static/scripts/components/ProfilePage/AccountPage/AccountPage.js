@@ -4,7 +4,8 @@ var ChangePasswordForm = require('./ChangePasswordForm');
 //Temporary fake user
 var fakeUser = {
     id: 1337,
-    username: "Arnold",
+    firstName: "Arnold",
+    surname: "Schwarzenegger",
     email: "arnold@schwarzenegger.com",
     language: "eng"
 }
@@ -69,21 +70,21 @@ module.exports = React.createClass({
                 <hr className="profileHr"/>
                 <div className="accountPageWrapper">
 
-                    {/* NAME */}
+                    {/* PERSONAL INFORMATION */}
                     <div className="col-sm-12">
                         <div className="panel-group accountSettingsPanel">
                             <div className="panel panel-primary">
                                 <div className="panel-heading">
                                     <h4 className="panel-title">
                                     <a onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse">
-                                        {this.props.dict[fakeUser.language]["name"]}
+                                        {this.props.dict[fakeUser.language]["personalInfo"]}
                                         <span className={expandNameClass} aria-hidden="true"></span>
                                     </a>
                                     </h4>
                                 </div>
                                 <div id="nameCollapse" className="panel-collapse collapse">
                                     <div className="panel-body">
-                                        <ChangeNameAndEmailForm dict={this.props.dict} />
+                                        <ChangePersonalInformation dict={this.props.dict} />
                                     </div>
                                 </div>
                             </div>
