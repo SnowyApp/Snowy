@@ -1,4 +1,4 @@
-var ChangeNameAndEmailForm = require('./ChangeNameAndEmailForm');
+var ChangePersonalInformation = require('./ChangePersonalInformation');
 var ChangePasswordForm = require('./ChangePasswordForm');
 
 //Temporary fake user
@@ -6,7 +6,7 @@ var fakeUser = {
     id: 1337,
     username: "Arnold",
     email: "arnold@schwarzenegger.com",
-    lang: "eng"
+    language: "eng"
 }
 
 /**
@@ -64,7 +64,7 @@ module.exports = React.createClass({
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> 
-                    {this.props.dict[fakeUser.lang]["account"]}
+                    {this.props.dict[fakeUser.language]["account"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="accountPageWrapper">
@@ -76,7 +76,7 @@ module.exports = React.createClass({
                                 <div className="panel-heading">
                                     <h4 className="panel-title">
                                     <a onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse">
-                                        {this.props.dict[fakeUser.lang]["name"]}
+                                        {this.props.dict[fakeUser.language]["name"]}
                                         <span className={expandNameClass} aria-hidden="true"></span>
                                     </a>
                                     </h4>
@@ -97,7 +97,7 @@ module.exports = React.createClass({
                                 <div className="panel-heading">
                                     <h4 className="panel-title">
                                     <a onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse">
-                                        {this.props.dict[fakeUser.lang]["password"]}
+                                        {this.props.dict[fakeUser.language]["password"]}
                                         <span className={expandPasswordClass} aria-hidden="true"></span>
                                     </a>
                                     </h4>

@@ -5,7 +5,7 @@ var fakeUser = {
     id: 1337,
     username: "Arnold",
     email: "arnold@schwarzenegger.com",
-    lang: "eng"
+    language: "eng"
 }
 
 /**
@@ -17,17 +17,17 @@ module.exports = React.createClass({
             <div>
                 <ul className="nav nav-tabs">
                     <NavBarItem
-                        name={this.props.dict[fakeUser.lang]["terms"]}
+                        name={this.props.dict[fakeUser.language]["terms"]}
                         active={this.props.currentTab == 'terms'}
                         onSelect={this.props.changeActiveTab}
                     />
                     <NavBarItem
-                        name={this.props.dict[fakeUser.lang]["diagrams"]}
+                        name={this.props.dict[fakeUser.language]["diagrams"]}
                         active={this.props.currentTab == 'diagrams'}
                         onSelect={this.props.changeActiveTab}
                     />
                     <NavBarItem
-                        name={this.props.dict[fakeUser.lang]["account"]}
+                        name={this.props.dict[fakeUser.language]["account"]}
                         active={this.props.currentTab == 'account'}
                         onSelect={this.props.changeActiveTab}
                     />

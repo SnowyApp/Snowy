@@ -1,9 +1,10 @@
 //Temporary fake user
 var fakeUser = {
     id: 1337,
-    username: "Arnold",
+    firstName: "Arnold",
+    surname: "Schwarzenegger",
     email: "arnold@schwarzenegger.com",
-    lang: "eng"
+    language: "eng"
 }
 
 /**
@@ -33,7 +34,7 @@ module.exports = React.createClass({
 
         if(this.state.currPassword != "12345"){
             this.setState({
-                errorMessage: this.props.dict[fakeUser.lang]["m_wrongPassword"],
+                errorMessage: this.props.dict[fakeUser.language]["m_wrongPassword"],
                 successMessage: ""
             });
         }
@@ -41,7 +42,7 @@ module.exports = React.createClass({
         else {
             this.setState({
                 errorMessage: "",
-                successMessage: this.props.dict[fakeUser.lang]["m_updatePasswordSuccessful"],
+                successMessage: this.props.dict[fakeUser.language]["m_updatePasswordSuccessful"],
                 hasChanged: false,
                 newPassword: "",
                 repeatPassword: "",
@@ -203,7 +204,7 @@ module.exports = React.createClass({
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <div className={passwordDivState}>
                     <label htmlFor="newPassword" className="col-sm-3 control-label">
-                        {this.props.dict[fakeUser.lang]["newPassword"]}
+                        {this.props.dict[fakeUser.language]["newPassword"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="password" id="newPassword" className="form-control" onChange={this.checkPasswordStrength} />
@@ -222,13 +223,13 @@ module.exports = React.createClass({
                         <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
                     </div>
                     <div className={pwStrengthBarTextClass}>
-                        {(this.state.newPassword.length > 0 ? this.props.dict[fakeUser.lang]["passwordStrength"][this.state.passwordStrength] : "")}
+                        {(this.state.newPassword.length > 0 ? this.props.dict[fakeUser.language]["passwordStrength"][this.state.passwordStrength] : "")}
                     </div>
                 </div>
 
                 <div className={repeatDivState}>
                     <label htmlFor="repeatPassword" className="col-sm-3 control-label">
-                        {this.props.dict[fakeUser.lang]["repeat"]}
+                        {this.props.dict[fakeUser.language]["repeat"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
@@ -238,7 +239,7 @@ module.exports = React.createClass({
             
                 <div className="form-group">
                     <label htmlFor="inputPassword3" className="col-sm-3 control-label ">
-                        {this.props.dict[fakeUser.lang]["currentPassword"]}
+                        {this.props.dict[fakeUser.language]["currentPassword"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="password" id="currPassword" className="form-control" onChange={this.updateCurrPasswordState}/>
@@ -247,7 +248,7 @@ module.exports = React.createClass({
                 <div className="form-group">
                     <div className="col-sm-offset-3 col-sm-2">
                         <button type="submit" className="btn btn-success" disabled={disableSubmit}>
-                            {this.props.dict[fakeUser.lang]["update"]}
+                            {this.props.dict[fakeUser.language]["update"]}
                         </button>
                     </div>
                     {message}

@@ -65,7 +65,7 @@ var fakeUser = {
     id: 1337,
     username: "Arnold",
     email: "arnold@schwarzenegger.com",
-    lang: "eng"
+    language: "eng"
 }
 
 //Dummy data

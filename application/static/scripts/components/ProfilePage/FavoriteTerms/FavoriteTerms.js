@@ -6,7 +6,7 @@ var fakeUser = {
     id: 1337,
     username: "Arnold",
     email: "arnold@schwarzenegger.com",
-    lang: "eng"
+    language: "eng"
 }
 
 /**
@@ -193,7 +193,7 @@ module.exports = React.createClass({
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
-                    {this.props.dict[fakeUser.lang]["savedTerms"]}
+                    {this.props.dict[fakeUser.language]["savedTerms"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="termPageWrapper">
@@ -201,13 +201,13 @@ module.exports = React.createClass({
                         <thead>
                             <tr>
                                 <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
-                                    {this.props.dict[fakeUser.lang]["name"]} {nameSortArrow}
+                                    {this.props.dict[fakeUser.language]["name"]} {nameSortArrow}
                                 </th>
                                 <th id="Term_id" className="favorites" onClick={this.sortBy.bind(this, "id")}>
                                     ID {idSortArrow}
                                 </th>
                                 <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>
-                                    {this.props.dict[fakeUser.lang]["added"]} {dateSortArrow}
+                                    {this.props.dict[fakeUser.language]["added"]} {dateSortArrow}
                                 </th>
                                 <th id="Term_remove" className="favorites"></th>
                             </tr>
@@ -216,7 +216,7 @@ module.exports = React.createClass({
                             {TermArray}
                         </tbody>
                     </table>
-                    {this.state.terms.length > 0 ? "" : this.props.dict[fakeUser.lang]["noSavedTerms"]}
+                    {this.state.terms.length > 0 ? "" : this.props.dict[fakeUser.language]["noSavedTerms"]}
                 </div>
             </div>
         );
