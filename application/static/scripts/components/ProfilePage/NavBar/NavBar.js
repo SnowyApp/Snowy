@@ -1,5 +1,13 @@
 var NavBarItem = require('./NavBarItem');
 
+//Temporary fake user
+var fakeUser = {
+    id: 1337,
+    username: "Arnold",
+    email: "arnold@schwarzenegger.com",
+    lang: "eng"
+}
+
 /**
  * Tab navigation for profile page
  */
