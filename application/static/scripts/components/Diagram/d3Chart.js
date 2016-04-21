@@ -73,7 +73,8 @@ var menuData = [
 var i = 0;
 var tree,root,svg,onClick;
 
-const NODE_WIDTH = 100;
+const TEXT_MAX_WIDTH = 250;
+const NODE_WIDTH = 250;
 const NODE_HEIGHT = 50;
 const WIDTH_MARGIN = 500;
 
@@ -206,24 +207,24 @@ d3Chart._drawPoints = function(data) {
     }
 
     var g = d3.select('body').selectAll(".nodes");
-    
+
     // build the arrow.
     var arrow = g.append("svg:defs").selectAll("marker")
-            .data(["start"])
+        .data(["start"])
         .enter().append("svg:marker")    // This section adds in the arrows
-            .attr("id", "ArrowMarker")
-            .attr("viewBox", "0 0 22 20")
-            .attr("refX", 0)
-            .attr("refY", 10)
-            .attr("markerWidth", 6)
-            .attr("markerHeight", 6)
-            .attr("markerUnits", "strokeWidth")
-            .attr("orient", "auto")
-            .attr("stroke-width", "2")
-            .attr('stroke', 'black')
-            .attr('fill', 'white')
+        .attr("id", "ArrowMarker")
+        .attr("viewBox", "0 0 22 20")
+        .attr("refX", 0)
+        .attr("refY", 10)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("markerUnits", "strokeWidth")
+        .attr("orient", "auto")
+        .attr("stroke-width", "2")
+        .attr('stroke', 'black')
+        .attr('fill', 'white')
         .append("svg:path")
-            .attr("d", "M 0 10 L 20 0 L 20 20 z");
+        .attr("d", "M 0 10 L 20 0 L 20 20 z");
 
 
     /**
@@ -237,7 +238,7 @@ d3Chart._drawPoints = function(data) {
      * Defines behavior for dragging elements.
      */
     var drag = d3.behavior.drag()
-       // .origin(function(d) { return d; })
+        // .origin(function(d) { return d; })
         .on("dragstart", dragstarted)
         .on("drag", dragmove)
         .on("dragend", dragended);
@@ -295,9 +296,9 @@ d3Chart._drawPoints = function(data) {
      */
     nodeEnter.append('rect')
         .attr('class', 'node')
-        .attr('x', function (d) {return WIDTH_MARGIN - d.name.length*1.5 })
-        .attr('width', function(d){return NODE_WIDTH + d.name.length*3})
-        .attr('height', NODE_HEIGHT)
+        .attr('x', WIDTH_MARGIN)
+        .attr('width', NODE_WIDTH)
+        .attr('height',NODE_HEIGHT)
         .style('fill', '#FFF')
         .style('stroke','black');
 
@@ -318,7 +319,8 @@ d3Chart._drawPoints = function(data) {
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
-        .style("fill-opacity", 1);
+        .style("fill-opacity", 1)
+        .call(wrap, TEXT_MAX_WIDTH);
 
     /**
      * Creates link which will be an array of objects with class line.link
@@ -329,15 +331,15 @@ d3Chart._drawPoints = function(data) {
         .data(links, function(d) { return d.target.id; });
 
     /**
-    * "Enters" the nodes by creating a new g-element inside the bigger
-    * g-element same as the nodes
-    *
-    * This codes generates this for every link
-    * <g>
-    *   <line class = link x1 = d.source.x + 10 y1 = d.source.y + 10 x2 =
-    *   d.source.x + 10 y2 = d.source.y + 5>
-    * </g>
-    */
+     * "Enters" the nodes by creating a new g-element inside the bigger
+     * g-element same as the nodes
+     *
+     * This codes generates this for every link
+     * <g>
+     *   <line class = link x1 = d.source.x + 10 y1 = d.source.y + 10 x2 =
+     *   d.source.x + 10 y2 = d.source.y + 5>
+     * </g>
+     */
     link.enter().insert('line', 'g')
         .attr("class", "link")
         .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
@@ -411,6 +413,31 @@ d3Chart._drawPoints = function(data) {
      */
     function dragended(d) {
         d3.select(this).classed("dragging", false);
+    }
+
+    function wrap(text, width, data) {
+        text.each(function() {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr("x"),
+                y = text.attr("y"),
+                dy = parseFloat(text.attr("dy")),
+                tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                }
+            }
+        });
     }
 };
 
