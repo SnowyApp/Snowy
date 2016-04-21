@@ -22,7 +22,8 @@ var Container = React.createClass({
             userId: cookie.load('userId'),
             selectedTerm: this.props.concept_id,
             content: "diagram",
-            data: this.props.data
+            data: this.props.data,
+            history: []
         };
     },
 
@@ -78,17 +79,12 @@ var Container = React.createClass({
                         "id": 0
                     }
                 ];
-                /* NOTE:
-                    This is a temporary fix. After we implement a information page about
-                    concepts you should be able to set leaves to current node.
-                */
-                if(children.length != 0){
-                    // update state so that component children can update
-                    this.setState({
-                        data: root,
-                        selectedTerm: root[0].id
-                    });
-                } else {console.log("Root node found");}
+
+                // update state so that component children can update
+                this.setState({
+                    data: root,
+                    selectedTerm: root[0].id
+                });
                 
             }.bind(this)
         );
@@ -136,9 +132,37 @@ var Container = React.createClass({
      * its information.
      */
     updateSelectedTerm: function(conceptId){
+        //Push current parent to history
+        var currHistory = this.state.history;
+        var historyObject = {id: this.state.data[0].concept_id, name: this.state.data[0].name};
+        //Prevent term from being added multiple times to history due to fast clicking
+        if(currHistory.length == 0 || currHistory[currHistory.length-1].id != historyObject.id){
+            this.state.history.push(historyObject);
+        }
         this.getConcept(conceptId);
         this.setContent("diagram");
+        console.log(this.state.history);
     },
+
+   /**
+    * Returns array with the navigation history
+    */
+    getHistory: function(){
+        return this.state.history;
+    },
+
+   /**
+    * Move up one level in the tree (from history)
+    */
+    upOneLevel: function(){
+        var id = this.state.history.pop().id;
+
+        // do not do anything if on the root node
+        if (id === undefined) return;
+        this.getConcept(id);
+        this.setContent("diagram");
+    },
+    
     onLogin: function(uid){
         this.setState({
             userId: uid,
@@ -174,6 +198,8 @@ var Container = React.createClass({
                         data={this.state.data}
                         url={this.state.serverUrl}
                         update={this.updateSelectedTerm}
+                        upOneLevel={this.upOneLevel}
+                        getHistory={this.getHistory}
                     />
                     <section>
                         <Bar
