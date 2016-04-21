@@ -295,9 +295,10 @@ d3Chart._drawPoints = function(data) {
                 d3.select(this).selectAll("rect.node").style("fill", "white");
             }
         })
-        .on("mousedown", function(d){
+        .on("mousedown", function(){
             d3.select(this).classed("selected", true)
                 .selectAll("rect.node").style( "fill", "#ebebeb");
+
             /*
             // suppress click if already used
             if  (d3.event.defaultPrevented) return;
@@ -305,7 +306,13 @@ d3Chart._drawPoints = function(data) {
             // no point of searching for root again
             if (d.id != root.id)
                 onClick(d.concept_id);
-                */
+            */
+        })
+        .on("mouseup", function(){
+
+            if(d3.event.ctrlKey){
+                d3.select(this).classed("selected", false);
+            }
         });
     /**
      * Now we add a rectangle element and use conditional expressions to
