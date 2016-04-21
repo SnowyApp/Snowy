@@ -34,6 +34,7 @@ module.exports = React.createClass({
     getChartState: function() {
         return {
             data: this.props.data,
+            view: this.props.view,
             domain: this.props.domain
         };
     },
