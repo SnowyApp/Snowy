@@ -303,7 +303,7 @@ d3Chart._drawPoints = function(data) {
                 d3.select(this).selectAll("rect.node").style("fill", "white");
             }
         })
-        .on("click", function(){
+        .on("click", function(d){
             // If we are dragging, don't call click
             if  (d3.event.defaultPrevented) return;
 
