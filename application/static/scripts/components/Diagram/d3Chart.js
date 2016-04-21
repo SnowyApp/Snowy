@@ -146,14 +146,17 @@ d3Chart.create = function(element, props, state) {
      * depending of how many nodes and layers we have, neat.
      */
 
-    tree = d3.layout.tree()
-        .sort(function(a,b){return d3.ascending(a.name,b.name)});
+    tree = d3.layout.tree();
 
     if(state.view == 'vertical'){
-        tree.nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
+        tree.separation(function (a, b) {
+            return a.parent == b.parent ? a.parent.name.length/1.5 : a.parent.name.length;
+        })
+        .nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
     } else {
-        tree.size([500, 960])
+        tree.size([500, 960]);
     }
+    tree.sort(function(a,b){return d3.ascending(a.name,b.name)});
 
     this._drawTree(root);
 };
@@ -219,8 +222,6 @@ d3Chart.createHorizontal = function(element, props, state){
  * Reset the chart to state.
  */
 d3Chart.reset = function(element, state) {
-    tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
-    this.update(element, state);
 };
 
 /**
@@ -318,7 +319,7 @@ d3Chart._drawTree = function(data) {
     } else {
         nodes.forEach(function(d) {
             d.y = d.depth*500; //Increases distance between children and parents
-            d.x /= 3.5; //Reduces vertical distance between nodes
+            d.x *= 4; //Reduces vertical distance between nodes
         });
     }
 
@@ -346,12 +347,10 @@ d3Chart._drawTree = function(data) {
         .attr("class", "node");
 
     if(treeState == 'vertical'){
-        treeState.attr("transform", function(d) {
-        return "translate(" + d.x + ", " + d.y + ")";}
-        )} else {
-        treeState.attr("transform", function(d) {
-            return "translate(" + d.y + ", " + d.x + ")";
-        })
+        nodeEnter.attr("transform", function(d) {return "translate(" + d.x + ", " + d.y + ")";})
+    }
+    else {
+        nodeEnter.attr("transform", function(d) {return "translate(" + d.y + ", " + d.x + ")";})
     }
 
     nodeEnter.on('contextmenu', d3.contextMenu(menuData))
@@ -373,13 +372,30 @@ d3Chart._drawTree = function(data) {
      * < rect class = node width = 20 height = 10 ry = 10px rx = 1px
      *   style="fill:#FFFFCC;stroke:black" />
      */
-    nodeEnter.append('rect')
-        .attr('class', 'node')
-        .attr('x', function (d) {return WIDTH_MARGIN - d.name.length*1.5 })
-        .attr('width', function(d){return NODE_WIDTH + d.name.length*3})
-        .attr('height', NODE_HEIGHT)
-        .style('fill', '#FFF')
-        .style('stroke','black');
+
+
+    if (treeState == 'vertical'){
+        nodeEnter.append('rect')
+            .attr('x', WIDTH_MARGIN)
+            .attr('class', 'node')
+            .attr('width', NODE_WIDTH)
+            .attr('height', NODE_HEIGHT)
+            .style('fill', '#FFF')
+            .style('stroke','black');
+    }
+    else {
+        nodeEnter.append('rect')
+            .attr('class', 'node')
+            .attr('width', NODE_WIDTH)
+            .attr('height', NODE_HEIGHT)
+            .style('fill', '#FFF')
+            .style('stroke','black');
+    }
+
+
+    if(treeState == 'vertical'){
+        //nodeEnter.attr('x', WIDTH_MARGIN);
+    }
 
     /**
      * This adds a text element to the same g element as the rectangle. The
@@ -392,10 +408,15 @@ d3Chart._drawTree = function(data) {
      * </text>
      *
      */
-    nodeEnter.append("text")
-        .attr("y", NODE_HEIGHT/2)
-        .attr("x", NODE_WIDTH/2 + WIDTH_MARGIN)
-        .attr("dy", ".35em")
+    var textEnter = nodeEnter.append("text");
+    if(treeState == 'vertical'){
+            textEnter.attr("y", NODE_HEIGHT/2);
+            textEnter.attr("x", NODE_WIDTH/2 + WIDTH_MARGIN);
+    } else {
+            textEnter.attr("x", 50);
+            textEnter.attr("y", 25);
+    }
+     textEnter.attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
         .style("fill-opacity", 1);
@@ -496,9 +517,15 @@ d3Chart._drawTree = function(data) {
      * Function for dragging an element.
      */
     function dragmove(d, i) {
-        d.x += d3.event.dx;
-        d.y += d3.event.dy;
-        tick();
+        if(treeState == 'vertical'){
+            d.x += d3.event.dx;
+            d.y += d3.event.dy;
+            tick();
+        } else {
+            d.x += d3.event.dy;
+            d.y += d3.event.dx;
+            tick();
+        }
     }
 
     /**
@@ -689,9 +716,15 @@ d3Chart._drawHorizontal = function(data) {
      * Function for dragging an element.
      */
     function dragmove(d, i) {
-        d.x += d3.event.dy;
-        d.y += d3.event.dx;
-        tick();
+        if(treeState == 'vertical'){
+            d.x += d3.event.dy;
+            d.y += d3.event.dx;
+            tick();
+        } else {
+            d.x += d3.event.dx;
+            d.y += d3.event.dy;
+            tick();
+        }
     }
 
     /**
