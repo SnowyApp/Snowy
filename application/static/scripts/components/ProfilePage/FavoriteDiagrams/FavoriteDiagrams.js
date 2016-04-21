@@ -86,7 +86,6 @@ module.exports = React.createClass({
         this.setState({
             filteredDiagrams: filteredDiagrams
         });
-        
     },
 
     /**
