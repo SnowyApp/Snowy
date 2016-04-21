@@ -1,3 +1,5 @@
+import cookie from 'react-cookie';
+
 var DiagramElement = require('./DiagramElement');
 
 //Temporary fake user
@@ -103,8 +105,8 @@ module.exports = React.createClass({
                 success: function (data) {
                     console.log(data);
                     this.setState({
-                        diagrams: data[0],
-                        filteredDiagrams: data[0]
+                        diagrams: data,
+                        filteredDiagrams: data
                     });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
