@@ -1,3 +1,5 @@
+import cookie from 'react-cookie';
+
 var LogOut = React.createClass({
     propTypes:{
         hideLogout: React.PropTypes.func,
@@ -20,8 +22,26 @@ var LogOut = React.createClass({
     open: function() {
         this.setState({ showModal: true });
     },
-    logOut: function(){
-        this.props.onLogout();
+    logOut: function() {
+        if (cookie.load('userId') != null) {
+
+            $.ajax({
+                type: "POST",
+                url: this.props.url + "/logout",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                success: function (data) {
+                    this.props.onLogout();
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    this.props.onLogout();
+                    console.log(textStatus, errorThrown);
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
         this.close();
     },
     componentWillReceiveProps: function(nextProps){
@@ -37,8 +57,8 @@ var LogOut = React.createClass({
                     Are you sure you want to log out?
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={this.logOut}> Ja</Button>
-                    <Button bsStyle="primary" onClick={this.close}> Nej</Button>
+                    <Button onClick={this.logOut}>Yes</Button>
+                    <Button bsStyle="primary" onClick={this.close}>No</Button>
                 </Modal.Footer>
             </Modal>
         );
