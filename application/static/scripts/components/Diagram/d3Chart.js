@@ -9,6 +9,9 @@ var d3Chart = module.exports = {};
 
 var contextMenu = require('./d3-context-menu');
 
+var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
 // context menu
 
 var menuData = [
@@ -25,7 +28,7 @@ var menuData = [
                     }
                 }
             }
-            d3Chart._drawPoints(d);
+            d3Chart._drawTree(d);
         }
     },
     {
@@ -38,7 +41,7 @@ var menuData = [
                 d.children = d._children;
                 d._children = null;
             }
-            d3Chart._drawPoints(d);
+            d3Chart._drawTree(d);
         }
     },
     {
@@ -49,7 +52,7 @@ var menuData = [
                 tempChild.push(d);
                 d.parent._children = d.parent.children;
                 d.parent.children = tempChild;
-                d3Chart._drawPoints(d);
+                d3Chart._drawTree(d);
             }
         }
     },
@@ -59,7 +62,7 @@ var menuData = [
             if(d.parent != "null" && d.parent._children){
                 d.parent.children = d.parent._children;
                 d.parent._children = null;
-                d3Chart._drawPoints(d);
+                d3Chart._drawTree(d);
             }
         }
     }
@@ -71,7 +74,7 @@ var menuData = [
  * will become kind of like an object.
  */
 var i = 0;
-var tree,root,svg,onClick;
+var tree,root,treeState, svg,g,onClick;
 
 const TEXT_MAX_WIDTH = 250;
 const NODE_WIDTH = 250;
@@ -92,6 +95,7 @@ const DURATION = 750;
 
 d3Chart.create = function(element, props, state) {
     root = state.data[0];
+    treeState = state.view;
     onClick = props.onClick;
 
     /**
@@ -100,7 +104,6 @@ d3Chart.create = function(element, props, state) {
      */
     var zoom = d3.behavior.zoom()
         .on("zoom", zoomed);
-
 
     /**
      * We append an SVG element to the page and set it's class to d3.
@@ -129,7 +132,7 @@ d3Chart.create = function(element, props, state) {
      *      </g>
      * </svg>
      */
-    var g = svg.append("g")
+    g = svg.append("g")
         .attr("class", "nodes")
         .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")")
         .style("cursor","pointer");
@@ -144,21 +147,26 @@ d3Chart.create = function(element, props, state) {
      * That way it will automatically space out the nodes and layers
      * depending of how many nodes and layers we have, neat.
      */
-    tree = d3.layout.tree()
-        .separation(function (a, b) {
+
+    tree = d3.layout.tree();
+
+    if(state.view == 'vertical'){
+        tree.separation(function (a, b) {
             return a.parent == b.parent ? a.parent.name.length/1.5 : a.parent.name.length;
         })
         .nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
-        .sort(function(a,b){return d3.ascending(a.name,b.name)});
-    this._drawPoints(root);
+    } else {
+        tree.size([500, 960]);
+    }
+    tree.sort(function(a,b){return d3.ascending(a.name,b.name)});
+
+    this._drawTree(root);
 };
 
 /**
  * Reset the chart to state.
  */
 d3Chart.reset = function(element, state) {
-    tree = d3.layout.tree().nodeSize([NODE_HEIGHT*5, NODE_WIDTH*5]);
-    this.update(element, state);
 };
 
 /**
@@ -166,37 +174,14 @@ d3Chart.reset = function(element, state) {
  */
 d3Chart.update = function(element, state) {
     root = state.data[0];
-    this._drawPoints(root);
+    treeState = state.view;
+    this._drawTree(root);
 };
 
 d3Chart.destroy = function() {
     svg.remove();
 };
-/**
- * This will set some scaling according to the sizes of the element
- */
-d3Chart._scales = function(element, domain) {
-    if (!domain) {
-        return null;
-    }
 
-    var width = element.offsetWidth;
-    var height = element.offsetHeight;
-
-    var x = d3.scale.linear()
-        .range([0, width])
-        .domain(domain.x);
-
-    var y = d3.scale.linear()
-        .range([height, 0])
-        .domain(domain.y);
-
-    var z = d3.scale.linear()
-        .range([5, 20])
-        .domain([1, 10]);
-
-    return {x: x, y: y, z: z};
-};
 
 d3Chart._resetZoom = function(){
     d3.select('body').selectAll(".nodes").attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
@@ -207,16 +192,17 @@ d3Chart._resetZoom = function(){
  * them in the way we want.
  */
 
-d3Chart._drawPoints = function(data) {
+d3Chart._drawTree = function(data) {
+
     if(!root){
         return null;
     }
 
-    var g = d3.select('body').selectAll(".nodes");
-
+    var gTree = d3.select('body').selectAll(".nodes");
+    
     // build the arrow.
-    var arrow = g.append("svg:defs").selectAll("marker")
-        .data(["start"])
+    var arrow = gTree.append("svg:defs").selectAll("marker")
+            .data(["start"])
         .enter().append("svg:marker")    // This section adds in the arrows
         .attr("id", "ArrowMarker")
         .attr("viewBox", "0 0 22 20")
@@ -244,7 +230,6 @@ d3Chart._drawPoints = function(data) {
      * Defines behavior for dragging elements.
      */
     var drag = d3.behavior.drag()
-        // .origin(function(d) { return d; })
         .on("dragstart", dragstarted)
         .on("drag", dragmove)
         .on("dragend", dragended);
@@ -253,16 +238,24 @@ d3Chart._drawPoints = function(data) {
      * This manually sets the distance between the nodes
      */
 
-    nodes.forEach(function(d) {
-        d.y = d.depth*100; });
+
+    if(treeState == 'vertical'){
+        nodes.forEach(function(d) {
+            d.y = d.depth*100; });
+    } else {
+        nodes.forEach(function(d) {
+            d.y = d.depth*500; //Increases distance between children and parents
+            d.x *= 4; //Increase vertical distance between nodes
+        });
+    }
 
     /**
      * Declares a node to the g element or var that we created. I think this
      * part can be skipped. But it also gives every node a unique id, which
      * is nice.
      */
-    var node = g.selectAll("g.node").remove();
-    node = g.selectAll("g.node")
+    var node = gTree.selectAll("g.node").remove();
+    node = gTree.selectAll("g.node")
         .data(nodes, function(d) { return d.id });
 
     /**
@@ -277,11 +270,16 @@ d3Chart._drawPoints = function(data) {
      * </g>
      */
     var nodeEnter = node.enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function(d) {
-            return "translate(" + d.x + ", " + d.y + ")";
-        })
-        .on('contextmenu', d3.contextMenu(menuData))
+        .attr("class", "node");
+
+    if(treeState == 'vertical'){
+        nodeEnter.attr("transform", function(d) {return "translate(" + d.x + ", " + d.y + ")";})
+    }
+    else {
+        nodeEnter.attr("transform", function(d) {return "translate(" + d.y + ", " + d.x + ")";})
+    }
+
+    nodeEnter.on('contextmenu', d3.contextMenu(menuData))
         .call(drag)
         .on("click", function(d){
             // suppress click if already used
@@ -291,6 +289,7 @@ d3Chart._drawPoints = function(data) {
             if (d.id != root.id)
                 onClick(d.concept_id);
         });
+
     /**
      * Now we add a rectangle element and use conditional expressions to
      * style them. The ry and rx elements are used to give the eclipse shape
@@ -300,13 +299,25 @@ d3Chart._drawPoints = function(data) {
      * < rect class = node width = 20 height = 10 ry = 10px rx = 1px
      *   style="fill:#FFFFCC;stroke:black" />
      */
-    nodeEnter.append('rect')
-        .attr('class', 'node')
-        .attr('x', WIDTH_MARGIN)
-        .attr('width', NODE_WIDTH)
-        .attr('height',NODE_HEIGHT)
-        .style('fill', '#FFF')
-        .style('stroke','black');
+
+
+    if (treeState == 'vertical'){
+        nodeEnter.append('rect')
+            .attr('x', WIDTH_MARGIN)
+            .attr('class', 'node')
+            .attr('width', NODE_WIDTH)
+            .attr('height', NODE_HEIGHT)
+            .style('fill', '#FFF')
+            .style('stroke','black');
+    }
+    else {
+        nodeEnter.append('rect')
+            .attr('class', 'node')
+            .attr('width', NODE_WIDTH)
+            .attr('height', NODE_HEIGHT)
+            .style('fill', '#FFF')
+            .style('stroke','black');
+    }
 
     /**
      * This adds a text element to the same g element as the rectangle. The
@@ -319,10 +330,15 @@ d3Chart._drawPoints = function(data) {
      * </text>
      *
      */
-    nodeEnter.append("text")
-        .attr("y", NODE_HEIGHT/2)
-        .attr("x", NODE_WIDTH/2 + WIDTH_MARGIN)
-        .attr("dy", ".35em")
+    var textEnter = nodeEnter.append("text");
+    if(treeState == 'vertical'){
+            textEnter.attr("y", NODE_HEIGHT/2);
+            textEnter.attr("x", NODE_WIDTH/2 + WIDTH_MARGIN);
+    } else {
+            textEnter.attr("x", 50);
+            textEnter.attr("y", 25);
+    }
+     textEnter.attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
         .style("fill-opacity", 1)
@@ -332,29 +348,42 @@ d3Chart._drawPoints = function(data) {
      * Creates link which will be an array of objects with class line.link
      * and contain all the links generated and the unique id it has been given
      */
-    var link = g.selectAll("line.link").remove();
-    link = g.selectAll("line.link")
+    var link = gTree.selectAll("line.link").remove();
+    link = gTree.selectAll("line.link")
         .data(links, function(d) { return d.target.id; });
 
     /**
-     * "Enters" the nodes by creating a new g-element inside the bigger
-     * g-element same as the nodes
-     *
-     * This codes generates this for every link
-     * <g>
-     *   <line class = link x1 = d.source.x + 10 y1 = d.source.y + 10 x2 =
-     *   d.source.x + 10 y2 = d.source.y + 5>
-     * </g>
-     */
-    link.enter().insert('line', 'g')
-        .attr("class", "link")
-        .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-        .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y2", function(d) { return d.target.y + 0; })
-        .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
-        //.style("marker-start", "url(#start)"); // add the arrow to the link end
-        .attr("marker-start", "url(#ArrowMarker)");
+    * "Enters" the nodes by creating a new g-element inside the bigger
+    * g-element same as the nodes
+    *
+    * This codes generates this for every link
+    * <g>
+    *   <line class = link x1 = d.source.x + 10 y1 = d.source.y + 10 x2 =
+    *   d.source.x + 10 y2 = d.source.y + 5>
+    * </g>
+    */
+
+    if(treeState == 'vertical') {
+        link.enter().insert('line', 'g')
+            .attr("class", "link")
+            .attr("x1", function (d) {return d.source.x + NODE_WIDTH / 2 + WIDTH_MARGIN;})
+            .attr("y1", function (d) {return d.source.y + NODE_HEIGHT;})
+            .attr("x2", function (d) {return d.target.x + NODE_WIDTH / 2 + WIDTH_MARGIN;})
+            .attr("y2", function (d) {return d.target.y + 0;
+            })
+            .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
+            .attr("marker-start", "url(#ArrowMarker)");
+    } else {
+        link.enter().insert('line', 'g')
+            .attr("class", "link")
+            .attr("y1", function(d) { return d.source.x + 20; })
+            .attr("x1", function(d) { return d.source.y + 100;})
+            .attr("y2", function(d) { return d.target.x + 20; })
+            .attr("x2", function(d) { return d.target.y; })
+            .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
+            .attr("marker-start", "url(#ArrowMarker)");
+    }
+
     var nodeExit = node.exit().transition()
         .duration(DURATION)
         .attr("transform", function(d) {
@@ -381,18 +410,24 @@ d3Chart._drawPoints = function(data) {
      * Function for recalculating values of links and nodes
      */
     function tick() {
-        link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
-            .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-            .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
-            .attr("y2", function(d) { return d.target.y; });
+        if(treeState == 'vertical') {
+            link.attr("x1", function (d) {return d.source.x + NODE_WIDTH / 2 + WIDTH_MARGIN;})
+                .attr("y1", function (d) {return d.source.y + NODE_HEIGHT;})
+                .attr("x2", function (d) {return d.target.x + NODE_WIDTH / 2 + WIDTH_MARGIN;})
+                .attr("y2", function (d) {return d.target.y;});
 
+            node.attr("transform", function (d) {return "translate(" + d.x + "," + d.y + ")";});
+        } else {
+            link.attr("y1", function(d) { return d.source.x + 20; })
+                .attr("x1", function(d) { return d.source.y + 100;})
+                .attr("y2", function(d) { return d.target.x + 20; })
+                .attr("x2", function(d) { return d.target.y; });
 
-        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            node.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });}
     }
 
     /**
      * Function for the event dragstarted
-     * @param d
      */
     function dragstarted(d) {
         d3.event.sourceEvent.stopPropagation();
@@ -403,17 +438,17 @@ d3Chart._drawPoints = function(data) {
      * Function for dragging an element.
      */
     function dragmove(d, i) {
-        d.x += d3.event.dx;
-        d.y += d3.event.dy;
-        tick();
+        if(treeState == 'vertical'){
+            d.x += d3.event.dx;
+            d.y += d3.event.dy;
+            tick();
+        } else {
+            d.x += d3.event.dy;
+            d.y += d3.event.dx;
+            tick();
+        }
     }
-    /**
-     * Function for the event dragged. Currently replaced by function dragmove.
-     * @param d
-     */
-    function dragged(d) {
-        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-    }
+
     /**
      * Function for the event dragended
      */

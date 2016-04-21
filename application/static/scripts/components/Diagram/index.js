@@ -8,13 +8,12 @@ module.exports = React.createClass({
     getInitialState: function() {
         return {
             data: [],
+            view: 'vertical', //TODO change depending on user preference
             domain: this.props.domain || { x: [0, 100], y: [0, 100] }
         };
     },
 
     update: function(data) {
-        if (data === undefined) return;
-
         this.setState({
             data: data
         });
@@ -47,10 +46,12 @@ module.exports = React.createClass({
             <div className="diagram">
                 <Button bsStyle="primary" onClick={this.reset}>Reset</Button>
                 <Button bsStyle="primary" onClick={this.resetZoom}>Reset zoom</Button>
+                <button bsStyle="primary" onClick={this.switchView}>Horizontal/Vertical view</button>
                 <Chart
                     ref={ (ref) => this._chart = ref }
                     data={this.state.data}
-                    domain={this.state.domain} 
+                    view={this.state.view}
+                    domain={this.state.domain}
                     onClick={this.onClick} />
             </div>
         );
@@ -68,5 +69,18 @@ module.exports = React.createClass({
 
     reset: function() {
         this._chart.resetDiagram();
+    },
+
+    switchView: function() {
+        var tempView = this.state.view;
+        if(tempView == 'vertical'){
+            this.setState({
+                view: 'horizontal'
+            })
+        } else {
+            this.setState({
+                view: 'vertical'
+            })
+        }
     }
 });
