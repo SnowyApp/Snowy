@@ -74,7 +74,7 @@ var menuData = [
  * will become kind of like an object.
  */
 var i = 0;
-var tree,root,svg,g,onClick;
+var tree,root,treeState, svg,g,onClick;
 
 const NODE_WIDTH = 100;
 const NODE_HEIGHT = 50;
@@ -92,8 +92,9 @@ const DURATION = 750;
  * </svg>
  */
 
-d3Chart.createVertical = function(element, props, state) {
+d3Chart.create = function(element, props, state) {
     root = state.data[0];
+    treeState = state.view;
     onClick = props.onClick;
 
     /**
@@ -144,12 +145,19 @@ d3Chart.createVertical = function(element, props, state) {
      * That way it will automatically space out the nodes and layers
      * depending of how many nodes and layers we have, neat.
      */
+
     tree = d3.layout.tree()
         .separation(function (a, b) {
             return a.parent == b.parent ? a.parent.name.length/1.5 : a.parent.name.length;
         })
-        .nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
         .sort(function(a,b){return d3.ascending(a.name,b.name)});
+
+    if(state.view == 'vertical'){
+        tree.nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
+    } else {
+        tree.size([500, 960])
+    }
+
     this._drawPoints(root);
 };
 
@@ -206,7 +214,6 @@ d3Chart.createHorizontal = function(element, props, state){
      * depending of how many nodes and layers we have, neat.
      */
     tree = d3.layout.tree()
-        .size([500, 960])
         .sort(function(a,b){return d3.ascending(a.name,b.name)});
     this._drawHorizontal(root);
 };
@@ -224,7 +231,8 @@ d3Chart.reset = function(element, state) {
  */
 d3Chart.update = function(element, state) {
     root = state.data[0];
-    this._drawHorizontal(root);
+    treeState = state.view;
+    this._drawTree(root);
 };
 
 d3Chart.destroy = function() {
@@ -261,7 +269,7 @@ d3Chart._scales = function(element, domain) {
  * them in the way we want.
  */
 
-d3Chart._drawVertical = function(data) {
+d3Chart._drawTree = function(data) {
     if(!root){
         return null;
     }
@@ -306,8 +314,16 @@ d3Chart._drawVertical = function(data) {
      * This manually sets the distance between the nodes
      */
 
-    nodes.forEach(function(d) {
-        d.y = d.depth*100; });
+
+    if(treeState == 'vertical'){
+        nodes.forEach(function(d) {
+            d.y = d.depth*100; });
+    } else {
+        nodes.forEach(function(d) {
+            d.y = d.depth*500; //Increases distance between children and parents
+            d.x /= 3.5; //Reduces vertical distance between nodes
+        });
+    }
 
     /**
      * Declares a node to the g element or var that we created. I think this
@@ -330,11 +346,18 @@ d3Chart._drawVertical = function(data) {
      * </g>
      */
     var nodeEnter = node.enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function(d) {
-            return "translate(" + d.x + ", " + d.y + ")";
+        .attr("class", "node");
+
+    if(treeState == 'vertical'){
+        treeState.attr("transform", function(d) {
+        return "translate(" + d.x + ", " + d.y + ")";}
+        )} else {
+        treeState.attr("transform", function(d) {
+            return "translate(" + d.y + ", " + d.x + ")";
         })
-        .on('contextmenu', d3.contextMenu(menuData))
+    }
+
+    nodeEnter.on('contextmenu', d3.contextMenu(menuData))
         .call(drag)
         .on("click", function(d){
             // suppress click if already used
