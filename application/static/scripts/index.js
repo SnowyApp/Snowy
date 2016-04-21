@@ -186,8 +186,9 @@ var Container = React.createClass({
                 break;
             case "profile":
                 content = <ProfilePage
-                            openTerm={function(id){console.log(id)}}
+                            openTerm={this.updateSelectedTerm}
                             openDiagram={function(id){console.log(id)}}
+                            url={this.state.serverUrl}
                           />
                 break;
         }

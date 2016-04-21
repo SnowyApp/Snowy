@@ -231,13 +231,13 @@ module.exports = React.createClass({
         var content;
         switch(this.state.currentTab){
             case 'terms':
-                content = <FavoriteTerms dict={dict} terms={dummyTerms} openTerm={this.props.openTerm} removeid={this.removeById} nameSort={this.sortByName} idSort={this.sortByid} dateSort={this.sortByDate}/>;
+                content = <FavoriteTerms url={this.props.url} dict={dict} terms={dummyTerms} openTerm={this.props.openTerm} removeid={this.removeById} nameSort={this.sortByName} idSort={this.sortByid} dateSort={this.sortByDate}/>;
                 break;
             case 'diagrams':
-                content = <FavoriteDiagrams dict={dict} diagrams={dummyDiagrams} openDiagram={this.props.openDiagram} removeid={this.removeById} nameSort={this.sortByName} dateSort={this.sortByDate}/>;
+                content = <FavoriteDiagrams url={this.props.url} dict={dict} diagrams={dummyDiagrams} openDiagram={this.props.openDiagram} removeid={this.removeById} nameSort={this.sortByName} dateSort={this.sortByDate}/>;
                 break;
             case 'account':
-                content = <AccountPage dict={dict}/>;
+                content = <AccountPage url={this.props.url} dict={dict}/>;
                 break;
         }
         return(

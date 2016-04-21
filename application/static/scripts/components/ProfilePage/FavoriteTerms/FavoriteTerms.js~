@@ -1,3 +1,4 @@
+import cookie from 'react-cookie';
 var TermElement = require('./TermElement');
 
 //Temporary fake user
@@ -13,12 +14,14 @@ module.exports = React.createClass({
     getInitialState: function(){
         return (
             {
-                terms: this.props.terms
+                terms: []
             }
         );
     },
 
     componentDidMount: function(){
+        //this.addFavoriteTerm(1337, "test test test");
+        this.getFavoriteTerms();
         this.setState({
             terms: this.props.dateSort(this.state.terms, false),
             sortBy: 'added',
@@ -26,7 +29,31 @@ module.exports = React.createClass({
         });
     },
 
-    //Sort terms by header
+    addFavoriteTerm: function(id, name){
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "POST",
+                url: this.props.url + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({"id": id, "term": name}),
+                success: function (data) {
+                    console.log(data);
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
+   /*
+    * Sort terms by header
+    */
     sortBy: function(header){
         var asc = true;
         //If already sorting by header, invert order
@@ -60,7 +87,9 @@ module.exports = React.createClass({
 
     },
 
-    //Remove element from the term table
+   /*
+    * Remove element from the term table
+    */
     removeTerm: function(id){
         //Remove element locally (for responsiveness)
         this.setState({
@@ -69,20 +98,47 @@ module.exports = React.createClass({
         //TODO: Remove element from database
     },
 
+   /**
+    * Gets the users favorite terms and saves them to the terms state
+    */
+    getFavoriteTerms: function(){
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "GET",
+                url: this.props.url + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                success: function (data) {
+                    console.log(data);
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
     render: function(){
         //Generate the table rows
-        var TermArray = this.state.terms.map(function(term){
-            //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
-            var day = ("0" + term.dateAdded.getDate()).slice(-2);
-            var month = ("0" + term.dateAdded.getMonth()).slice(-2);
-            var year = term.dateAdded.getUTCFullYear();
-            
-            var dateString = year + "-" + month + "-" + day;
+        var TermArray = null;
+        if(this.state.terms.length > 0){
+            TermArray = this.state.terms.map(function(term){
+                //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
+                var day = ("0" + term.dateAdded.getDate()).slice(-2);
+                var month = ("0" + term.dateAdded.getMonth()).slice(-2);
+                var year = term.dateAdded.getUTCFullYear();
+                
+                var dateString = year + "-" + month + "-" + day;
 
-            return(
-                <TermElement key={term.id} id={term.id} name={term.name} openTerm={this.props.openTerm} removeTerm={this.removeTerm} date={dateString} />
-            );
-        }, this);
+                return(
+                    <TermElement key={term.id} id={term.id} name={term.name} openTerm={this.props.openTerm} removeTerm={this.removeTerm} date={dateString} />
+                );
+            }, this);
+        }
 
         //Render the correct sorting arrows
         var nameSortArrow = null;
