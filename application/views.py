@@ -150,7 +150,12 @@ def favorite_term():
         g.user.add_favorite_term(data['id'], data['term'])
         return jsonify(status="ok")
     else:
-        return json.dumps(g.user.get_favorite_terms())
+        #return json.dumps(g.user.get_favorite_terms())
+        return json.dumps([
+                            [{"id": 1337, "term": "test test test"}],
+                            [{"id": 1338, "term": "222222222222"}]
+                          ])
+        #result += [{"id": data[0], "favorite_date": str(data[4]), "term": data[5]}]
 
 
 @app.route('/concept/<int:cid>', methods=['POST', 'GET'])
