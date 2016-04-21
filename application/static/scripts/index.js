@@ -179,6 +179,9 @@ var Container = React.createClass({
         } else {
             // remove the nodes children
             node.children = null;
+            this.setState({
+                data: tree
+            });
         }
     },
 
