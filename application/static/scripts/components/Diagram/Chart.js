@@ -15,7 +15,7 @@ module.exports = React.createClass({
     },
     componentDidMount: function() {
         var element = ReactDOM.findDOMNode(this);
-        d3Chart.createHorizontal(element, {
+        d3Chart.create(element, {
             width: this.props.width,
             height: this.props.height,
             onClick: this.props.onClick
