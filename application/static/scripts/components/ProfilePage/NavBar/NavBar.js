@@ -9,20 +9,17 @@ module.exports = React.createClass({
             <div>
                 <ul className="nav nav-tabs">
                     <NavBarItem
-                        dict={this.props.dict}
-                        name="terms"
+                        name={this.props.dict[fakeUser.lang]["terms"]}
                         active={this.props.currentTab == 'terms'}
                         onSelect={this.props.changeActiveTab}
                     />
                     <NavBarItem
-                        dict={this.props.dict}
-                        name="diagrams"
+                        name={this.props.dict[fakeUser.lang]["diagrams"]}
                         active={this.props.currentTab == 'diagrams'}
                         onSelect={this.props.changeActiveTab}
                     />
                     <NavBarItem
-                        dict={this.props.dict}
-                        name="account"
+                        name={this.props.dict[fakeUser.lang]["account"]}
                         active={this.props.currentTab == 'account'}
                         onSelect={this.props.changeActiveTab}
                     />

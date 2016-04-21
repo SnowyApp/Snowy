@@ -15,7 +15,7 @@ module.exports = React.createClass({
         return(
             <li role="presentation" className={navBarItemClass}>
                 <a href="#" onClick={this.props.onSelect.bind(null, this.props.name)}>
-                    {this.props.dict[fakeUser.lang][this.props.name]}
+                    {this.props.name}
                 </a>
             </li>
         );
