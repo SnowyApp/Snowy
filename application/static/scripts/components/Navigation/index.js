@@ -6,6 +6,8 @@ module.exports = React.createClass({
                     APIUrl={this.props.url}
                     update={this.props.update}            
                     data={this.props.data}
+                    upOneLevel={this.props.upOneLevel}
+                    getHistory={this.props.getHistory}
                 />
             </nav>
         );
@@ -48,18 +50,7 @@ var Navigation = React.createClass({
 
     //Handles clicks on the children (callback function)
     handleClick: function(e){
-        var historyObject = {id: this.state.currentID, name: this.state.currentParent};
-        this.state.history.push(historyObject);
         this.props.update(e.id); 
-    },
-
-    //Move up one level in the tree (from history)
-    upOneLevel: function(){
-        var id = this.state.history.pop().id;
-        
-        // do not do anything if on the root node
-        if (id === undefined) return;
-        this.props.update(id);
     },
 
     //Initial state of the component
@@ -74,10 +65,11 @@ var Navigation = React.createClass({
     },
 
     render: function() {
+        var history = this.props.getHistory();
         var backArrow;
         var parentMarginLeft;
         //Hide back arrow if there is no history
-        if(this.state.history.length === 0){
+        if(history.length == 0){
             backArrow = {display: 'none'};
             parentMarginLeft = {marginLeft: "0px"};
         }else{
@@ -92,12 +84,13 @@ var Navigation = React.createClass({
         }, this);
 
         //Only display grandparent if there is one
-        var grandparent = (this.state.history.length > 0 ? this.state.history[this.state.history.length-1].name + " >" : "");
+        
+        var grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
 
         return (
             <ul className="nav nav-pills nav-stacked">
                 <li role="presentation" className="active">                    
-                    <a className="navigation-header" onClick={this.upOneLevel} href="#">
+                    <a className="navigation-header" onClick={this.props.upOneLevel} href="#">
                         <span style={backArrow} className="glyphicon glyphicon-triangle-top backArrow" aria-hidden="true"> </span>
                         <div className="grandparentHeader">{grandparent}</div>                         
                         <div style={parentMarginLeft} className="parentHeader">{this.state.currentParent}</div>
