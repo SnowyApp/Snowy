@@ -437,6 +437,10 @@ d3Chart._drawPoints = function(data) {
                     tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
                 }
             }
+            // If the text is 2 rows or more, increase the width of the rect
+            if(lineNumber > 0){
+                d3.select(this.parentNode).selectAll("rect.node").attr("height", NODE_HEIGHT + lineNumber*15);
+            }
         });
     }
 };
