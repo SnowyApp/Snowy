@@ -8,7 +8,7 @@ module.exports = React.createClass({
     getInitialState: function() {
         return {
             data: [],
-            view: "vertical", //TODO change depending on user preference
+            view: 'vertical', //TODO change depending on user preference
             domain: this.props.domain || { x: [0, 100], y: [0, 100] }
         };
     },
@@ -48,7 +48,8 @@ module.exports = React.createClass({
                 <Chart
                     ref={ (ref) => this._chart = ref }
                     data={this.state.data}
-                    domain={this.state.domain} 
+                    view={this.state.view}
+                    domain={this.state.domain}
                     onClick={this.onClick} />
             </div>
         );
@@ -65,8 +66,15 @@ module.exports = React.createClass({
     },
 
     switchView: function() {
-        this.setState({
-            view: "vertical" ? "horizontal" : "vertical"
-        })
+        var tempView = this.state.view;
+        if(tempView == 'vertical'){
+            this.setState({
+                view: 'horizontal'
+            })
+        } else {
+            this.setState({
+                view: 'vertical'
+            })
+        }
     }
 });

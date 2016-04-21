@@ -3,6 +3,7 @@ var d3Chart = require('./d3Chart');
 module.exports = React.createClass({
     propTypes: {
         data: React.PropTypes.array,
+        view: React.PropTypes.string,
         domain: React.PropTypes.object
     },
 
@@ -26,8 +27,10 @@ module.exports = React.createClass({
     },
 
     getChartState: function() {
+
         return {
             data: this.props.data,
+            view: this.props.view,
             domain: this.props.domain
         };
     },
