@@ -23,7 +23,12 @@ module.exports = React.createClass({
     },
     componentDidUpdate: function() {
         var element = ReactDOM.findDOMNode(this);
-        d3Chart.update(element, this.getChartState());
+        d3Chart.destroy();
+        d3Chart.create(element, {
+            width: this.props.width,
+            height: this.props.height,
+            onClick: this.props.onClick
+            }, this.getChartState());
     },
 
     getChartState: function() {
