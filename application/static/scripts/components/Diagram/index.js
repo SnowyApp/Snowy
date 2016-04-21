@@ -35,6 +35,7 @@ module.exports = React.createClass({
      * Update state when receiving new props
      */
     componentWillReceiveProps: function(nextProps) {
+        this.resetZoom();
         this.update(nextProps.data);
     },
 
