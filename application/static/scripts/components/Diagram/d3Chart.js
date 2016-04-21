@@ -283,6 +283,12 @@ d3Chart._drawPoints = function(data) {
         })
         .on('contextmenu', d3.contextMenu(menuData))
         .call(drag)
+        .on("mouseover", function(){
+            d3.select(this).selectAll("rect.node").style( "fill", "#ebebeb");
+        })
+        .on("mouseout", function() {
+            d3.select(this).selectAll("rect.node").style("fill", "white");
+        })
         .on("click", function(d){
             // suppress click if already used
             if  (d3.event.defaultPrevented) return;
