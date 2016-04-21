@@ -48,7 +48,7 @@ module.exports = React.createClass({
             <div className="diagram">
                 <Button bsStyle="primary" onClick={this.reset}>Reset</Button>
                 <Button bsStyle="primary" onClick={this.resetZoom}>Reset zoom</Button>
-                <button bsStyle="primary" onClick={this.switchView}>Horizontal/Vertical view</button>
+                <Button bsStyle="primary" onClick={this.switchView}>Horizontal/Vertical view</Button>
                 <Chart
                     ref={ (ref) => this._chart = ref }
                     data={this.state.data}
