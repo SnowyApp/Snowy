@@ -127,6 +127,7 @@ var Container = React.createClass({
         });
     },
 
+
     /**
      * Fetch information about given concept and update state.data with 
      * its information.
@@ -171,7 +172,7 @@ var Container = React.createClass({
         cookie.save('userId', uid,{path: '/'});
     },
     onLogout: function(){
-        this.setState({isLoggedIn: false});
+        this.setState({isLoggedIn: false, content: "diagram", userId: ''});
         cookie.remove('userId', {path: '/'});
     },
     render: function() {
@@ -264,9 +265,20 @@ var Bar = React.createClass({
         });
     },
     render: function() {
+        var switchName = '';
+        switch(this.props.contentName){
+            case "diagram":
+                switchName = "Profile";
+                break;
+            case "profile":
+                switchName = "Diagram";
+                break;
+        }
         const navButtons = this.props.isLoggedIn ? (
             <div>
-                <Button className="profile" onClick={this.props.setContent.bind(null, "profile")} bsStyle = "primary" >Profile</Button>
+                <Button className="profile"
+                        onClick={this.props.setContent.bind(null, switchName.toLowerCase())}
+                        bsStyle = "primary" >{switchName}</Button>
                 <Button className="Logout" bsStyle = "primary" 
                     onClick={this.showLogout}>Logout</Button>
                 <LogOut show={this.state.showLogout} hideLogout={this.hideLogout}
