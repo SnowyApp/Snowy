@@ -22,7 +22,8 @@ var Container = React.createClass({
             userId: cookie.load('userId'),
             selectedTerm: this.props.concept_id,
             content: "diagram",
-            data: this.props.data
+            data: this.props.data,
+            history: []
         };
     },
 
@@ -88,7 +89,7 @@ var Container = React.createClass({
                         data: root,
                         selectedTerm: root[0].id
                     });
-                } else {console.log("Root node found");}
+                } else {console.log("Leaf node found");}
                 
             }.bind(this)
         );
@@ -136,9 +137,34 @@ var Container = React.createClass({
      * its information.
      */
     updateSelectedTerm: function(conceptId){
+        //Push current parent to history
+        var historyObject = {id: this.state.data[0].concept_id, name: this.state.data[0].name};
+        this.state.history.push(historyObject);
+        console.log(this.state.history);
         this.getConcept(conceptId);
         this.setContent("diagram");
     },
+
+   /**
+    * Returns array with the navigation history
+    */
+    getHistory: function(){
+        return this.state.history;
+    },
+
+   /**
+    * Move up one level in the tree (from history)
+    */
+    upOneLevel: function(){
+        console.log(this.state.history);
+        var id = this.state.history.pop().id;
+
+        // do not do anything if on the root node
+        if (id === undefined) return;
+        this.getConcept(id);
+        this.setContent("diagram");
+    },
+    
     onLogin: function(uid){
         this.setState({
             userId: uid,
@@ -174,6 +200,8 @@ var Container = React.createClass({
                         data={this.state.data}
                         url={this.state.serverUrl}
                         update={this.updateSelectedTerm}
+                        upOneLevel={this.upOneLevel}
+                        getHistory={this.getHistory}
                     />
                     <section>
                         <Bar
