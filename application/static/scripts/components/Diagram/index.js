@@ -59,10 +59,18 @@ module.exports = React.createClass({
         );
     },
 
-    onClick: function(sctid) {
-        if (sctid != this.state.data[0].id) {
-            this.props.update(sctid);
-        }
+    /**
+     * Return an ID for d3 node
+     */
+    getId: function() {
+        return this._chart.getId();
+    },
+
+    /**
+     * Show/hide children of node on click.
+     */
+    onNodeClick: function(id) {
+        this.props.updateConceptChildren(id);
     },
 
     resetZoom: function(){

@@ -186,6 +186,21 @@ d3Chart.destroy = function() {
     svg.remove();
 };
 
+/**
+ * Return an ID for a d3 node.
+ */
+d3Chart.getId = function() {
+    return ++i;
+},
+
+/**
+ * This will set some scaling according to the sizes of the element
+ */
+d3Chart._scales = function(element, domain) {
+    if (!domain) {
+        return null;
+    }
+
 
 d3Chart._resetZoom = function(){
     d3.select('body').selectAll(".nodes").attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
@@ -293,17 +308,25 @@ d3Chart._drawTree = function(data) {
                 d3.select(this).selectAll("rect.node").style("fill", "white");
             }
         })
-        .on("mousedown", function(d){
-            d3.select(this).classed("selected", true)
-                .selectAll("rect.node").style( "fill", "#ebebeb");
-            /*
-            // suppress click if already used
+        .on("click", function(d){
+            // If we are dragging, don't call click
             if  (d3.event.defaultPrevented) return;
 
-            // no point of searching for root again
-            if (d.id != root.id)
-                onClick(d.concept_id);
-                */
+            // If we are holding down the ctrl key and clicking, invert selected
+            if(d3.event.ctrlKey) {
+                var selection = d3.select(this).classed("selected");
+                d3.select(this).classed("selected", !selection)
+                    .selectAll("rect.node").style("fill", selection ? ("white") : ("ebebeb"));
+            }else{
+                // If we are clicking on a node which is not selected, deselect all nodes
+                if(!d3.select(this).classed("selected")){
+                    d3.selectAll(".selected").classed("selected", false)
+                        .selectAll("rect.node").style("fill", "white");
+                }
+
+                // notify container of click on node
+                onClick(d.id);
+            }
         });
 
     /**
@@ -455,7 +478,7 @@ d3Chart._drawTree = function(data) {
      */
     function dragmove(d, i) {
         var selection = d3.selectAll(".selected");
-        selection.attr("transform", function( d, i) {
+        if (!selection.empty()){selection.attr("transform", function( d, i) {
             if(treeState = 'vertical') {
                 d.x += d3.event.dx;
                 d.y += d3.event.dy;
@@ -466,6 +489,18 @@ d3Chart._drawTree = function(data) {
                 return "translate(" + [d.x, d.y] + ")"
             }
         });
+        }
+        else {
+            if(treeState = 'vertical') {
+                d.x += d3.event.dx;
+                d.y += d3.event.dy;
+            } else {
+                d.x += d3.event.dy;
+                d.y += d3.event.dx;
+            }
+        }
+    }
+
         tick();
     }
     /**

@@ -43,6 +43,13 @@ module.exports = React.createClass({
       d3Chart._resetZoom();
     },
 
+    /**
+     * Return an ID for d3 chart.
+     */
+    getId: function() {
+        return d3Chart.getId();
+    },
+
     resetDiagram: function() {
         var element = ReactDOM.findDOMNode(this);
         d3Chart.reset(element, this.getChartState());
