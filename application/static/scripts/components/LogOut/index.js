@@ -24,7 +24,6 @@ var LogOut = React.createClass({
     },
     logOut: function() {
         if (cookie.load('userId') != null) {
-
             $.ajax({
                 type: "POST",
                 url: this.props.url + "/logout",
