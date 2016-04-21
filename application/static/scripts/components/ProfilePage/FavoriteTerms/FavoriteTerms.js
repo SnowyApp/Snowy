@@ -117,7 +117,9 @@ module.exports = React.createClass({
                 },
                 success: function (data) {
                     console.log(data);
-                    //TODO: Save data to terms state
+                    this.setState({
+                        terms: data[0]
+                    });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
@@ -142,7 +144,14 @@ module.exports = React.createClass({
                 var dateString = year + "-" + month + "-" + day;
 
                 return(
-                    <TermElement key={term.id} id={term.id} name={term.name} openTerm={this.props.openTerm} removeTerm={this.removeTerm} date={dateString} />
+                    <TermElement
+                        key={term.id}
+                        id={term.id}
+                        name={term.name}
+                        openTerm={this.props.openTerm}
+                        removeTerm={this.removeTerm}
+                        date={dateString}
+                    />
                 );
             }, this);
         }
