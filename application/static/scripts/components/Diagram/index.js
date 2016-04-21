@@ -8,6 +8,7 @@ module.exports = React.createClass({
     getInitialState: function() {
         return {
             data: [],
+            view: "vertical", //TODO change depending on user preference
             domain: this.props.domain || { x: [0, 100], y: [0, 100] }
         };
     },
@@ -43,6 +44,7 @@ module.exports = React.createClass({
         return (
             <div className="diagram">
                 <button onClick={this.reset}>Reset</button>
+                <button onClick={this.switchView}>Horizontal/Vertical view</button>
                 <Chart
                     ref={ (ref) => this._chart = ref }
                     data={this.state.data}
@@ -60,5 +62,11 @@ module.exports = React.createClass({
 
     reset: function() {
         this._chart.resetDiagram();
+    },
+
+    switchView: function() {
+        this.setState({
+            view: "vertical" ? "horizontal" : "vertical"
+        })
     }
 });
