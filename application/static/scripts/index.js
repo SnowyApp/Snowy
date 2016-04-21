@@ -141,8 +141,10 @@ var Container = React.createClass({
      */
     updateConceptChildren: function(id) {
 
+        var tree = this.state.data.slice();;
+
         // find node in data
-        var node = this.findNode(this.state.data[0], id);
+        var node = this.findNode(tree[0], id);
 
         if (node == null) {
             // something went wrong
@@ -151,24 +153,27 @@ var Container = React.createClass({
 
         if (node.children === undefined) {
             // add children to the node
-            $.when(this.getChildren).then(
+            $.when(this.getChildren(node.concept_id)).then(
                 function(res) {
-
                     // get all information about children
                     var children = [];
-                    for (var i in res[0]) {
+                    for (var i in res) {
+                        console.log(child);
                         children.push(
                             {
-                                "name": res[0][i].term,
-                                "concept_id": res[0][i].id,
-                                "parent": node.id,
+                                "name": res[i].term,
+                                "concept_id": res[i].id,
+                                "parent": node.concept_id,
                                 "children": null
                             }
                         );
                     }
                     // update node's children
                     node.children = children;
-                }        
+                    this.setState({
+                        data: tree
+                    });
+                }.bind(this)
             );
         } else {
             // remove the nodes children
