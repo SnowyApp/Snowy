@@ -157,9 +157,10 @@ var dummyDiagrams =
     }
 ];
 
-
+/**
+ * Profile page component
+ */
 module.exports = React.createClass({
-    //Initial state of the component
     getInitialState: function(){
         return (
             {
@@ -168,14 +169,18 @@ module.exports = React.createClass({
         );
     },
 
-    //Set current tab
+   /**
+    * Sets current tab
+    */
     changeTab: function(tab){    
         this.setState({
             currentTab: tab
         });
     },
 
-    //Sort table data by name
+   /**
+    * Sorts table data by name
+    */
     sortByName: function(data, asc){
         data.sort(function(a,b){
             if(asc){
@@ -188,7 +193,9 @@ module.exports = React.createClass({
         return data;
     },
 
-    //Sort table data by id
+   /**
+    * Sorts table data by id
+    */
     sortByid: function(data, asc){
         data.sort(function(a,b){
             if(asc){
@@ -201,7 +208,9 @@ module.exports = React.createClass({
         return data;
     },
 
-    //Sort table data by date added
+   /**
+    * Sorts table data by date added
+    */
     sortByDate: function(data, asc){
         data.sort(function(a,b){
             if(asc){
@@ -214,7 +223,9 @@ module.exports = React.createClass({
         return data;
     },
     
-    //Remove an object from array with .id == id
+   /**
+    * Removes an object from array with .id == id
+    */
     removeById: function(array, id){
         //Find the object and remove it from the array
         for(var i = 0; i < array.length; i++){              
@@ -231,18 +242,41 @@ module.exports = React.createClass({
         var content;
         switch(this.state.currentTab){
             case 'terms':
-                content = <FavoriteTerms url={this.props.url} dict={dict} terms={dummyTerms} openTerm={this.props.openTerm} removeid={this.removeById} nameSort={this.sortByName} idSort={this.sortByid} dateSort={this.sortByDate}/>;
+                content = <FavoriteTerms
+                                url={this.props.url}
+                                dict={dict} terms={dummyTerms}
+                                openTerm={this.props.openTerm}
+                                removeid={this.removeById}
+                                nameSort={this.sortByName}
+                                idSort={this.sortByid}
+                                dateSort={this.sortByDate}
+                          />;
                 break;
             case 'diagrams':
-                content = <FavoriteDiagrams url={this.props.url} dict={dict} diagrams={dummyDiagrams} openDiagram={this.props.openDiagram} removeid={this.removeById} nameSort={this.sortByName} dateSort={this.sortByDate}/>;
+                content = <FavoriteDiagrams
+                                url={this.props.url}
+                                dict={dict}
+                                diagrams={dummyDiagrams}
+                                openDiagram={this.props.openDiagram}
+                                removeid={this.removeById}
+                                nameSort={this.sortByName}
+                                dateSort={this.sortByDate}
+                          />;
                 break;
             case 'account':
-                content = <AccountPage url={this.props.url} dict={dict}/>;
+                content = <AccountPage
+                                url={this.props.url}
+                                dict={dict}
+                          />;
                 break;
         }
         return(
             <div>
-                <NavBar dict={dict} currentTab={this.state.currentTab} changeActiveTab={this.changeTab}/>
+                <NavBar
+                    dict={dict}
+                    currentTab={this.state.currentTab}
+                    changeActiveTab={this.changeTab}
+                />
                 <div className="profileContent">
                     {content}
                 </div>

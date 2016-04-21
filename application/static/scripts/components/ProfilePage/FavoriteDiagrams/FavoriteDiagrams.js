@@ -8,7 +8,9 @@ var fakeUser = {
     lang: "eng"
 }
 
-//Component that displays favorite diagrams in a table
+/**
+ * Component that displays favorite diagrams in a table
+ */
 module.exports = React.createClass({
     getInitialState: function(){
         return({
@@ -25,7 +27,9 @@ module.exports = React.createClass({
         });
     },
 
-    //Sort diagrams by header
+   /**
+    * Sort diagrams by header
+    */
     sortBy: function(header){
         var asc = true;
         //If already sorting by header, invert order
@@ -53,7 +57,9 @@ module.exports = React.createClass({
 
     },
     
-    //Remove element from the diagram table
+   /**
+    * Remove element from the diagram table
+    */
     removeDiagram: function(id){
         //Remove element locally (for responsiveness)
         var tempDiagrams = this.props.removeid(this.state.diagrams, id);
@@ -63,6 +69,9 @@ module.exports = React.createClass({
         //TODO: Remove element from database
     },
 
+   /**
+    * Filters the favorite list by user input
+    */
     filterDiagrams: function(event){
         var input = event.target.value;
         var regEx = new RegExp(input.toLowerCase());
@@ -118,7 +127,10 @@ module.exports = React.createClass({
 
         return(
             <div>
-                <h1><span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span> {this.props.dict[fakeUser.lang]["diagrams"]}</h1>
+                <h1>
+                    <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
+                    {this.props.dict[fakeUser.lang]["diagrams"]}
+                </h1>
                 <hr className="profileHr"/>
                 <div className="diagramPageWrapper">
                     <div className="input-group" style={{marginBottom: "8px"}}>
@@ -129,9 +141,15 @@ module.exports = React.createClass({
                     <table className="favorites">
                         <thead>
                             <tr>
-                                <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>{this.props.dict[fakeUser.lang]["name"]} {nameSortArrow}</th>
+                                <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
+                                    {this.props.dict[fakeUser.lang]["name"]}
+                                    {nameSortArrow}
+                                </th>
                                 <th id="Diagram_acc" className="favorites"></th>
-                                <th id="Diagram_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>{this.props.dict[fakeUser.lang]["added"]} {dateSortArrow}</th>
+                                <th id="Diagram_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>
+                                    {this.props.dict[fakeUser.lang]["added"]}
+                                    {dateSortArrow}
+                                </th>
                                 <th id="Diagram_remove" className="favorites"></th>
                             </tr>
                         </thead>

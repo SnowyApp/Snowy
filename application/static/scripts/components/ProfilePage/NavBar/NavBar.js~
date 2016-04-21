@@ -1,6 +1,8 @@
 var NavBarItem = require('./NavBarItem');
 
-//Tab navigation for profile page
+/**
+ * Tab navigation for profile page
+ */
 module.exports = React.createClass({
     render: function(){
         return(

@@ -1,3 +1,6 @@
+/**
+ * Login form component
+ */
 var LoginForm = React.createClass({
     propTypes:{
         hideLogin: React.PropTypes.func,
@@ -43,7 +46,9 @@ var LoginForm = React.createClass({
         });
     },
 
-    //Handles submit of the form
+   /**
+    * Handles submit of the form
+    */
     handleSubmit: function(e){
         e.preventDefault();
         $.ajax({
@@ -61,7 +66,9 @@ var LoginForm = React.createClass({
         });
     },
 
-    //Check if a valid email has been input
+   /**
+    * Checks if a valid email has been input
+    */
     validateEmail: function(event){
         var input = event.target.value;
         var regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$/;
@@ -71,7 +78,9 @@ var LoginForm = React.createClass({
         });
     },
 
-    //Updates the password state to match the input field
+   /**
+    * Updates the password state to match the input field
+    */
     updatePassword: function(event){
         var input = event.target.value;
         this.setState({
@@ -102,13 +111,17 @@ var LoginForm = React.createClass({
         return(
             <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header className="bg-primary" closeButton>
-                    <Modal.Title>Logga in</Modal.Title>
+                    <Modal.Title>
+                        Logga in
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form className="form-horizontal" onSubmit={this.handleSubmit}>
                         {/* Email */}
                         <div className={emailDivState}>
-                            <label htmlFor="newPassword" className="col-sm-3 control-label">Email</label>
+                            <label htmlFor="newPassword" className="col-sm-3 control-label">
+                                Email
+                            </label>
                             <div className="col-sm-8">
                                 <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
                                 <span className={emailGlyphState}></span>
@@ -116,7 +129,9 @@ var LoginForm = React.createClass({
                         </div>
                         {/* Password */}
                         <div className="form-group">
-                            <label htmlFor="newPassword" className="col-sm-3 control-label">Lösenord</label>
+                            <label htmlFor="newPassword" className="col-sm-3 control-label">
+                                Lösenord
+                            </label>
                             <div className="col-sm-8">
                                 <input type="password" id="password" onChange={this.updatePassword} className="form-control"/>
                             </div>
@@ -125,13 +140,13 @@ var LoginForm = React.createClass({
                         {/* Submit */}
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-2">
-                                <button type="submit" className="btn btn-success" disabled={disableSubmit}>Logga in</button>
+                                <button type="submit" className="btn btn-success" disabled={disableSubmit}>
+                                    Logga in
+                                </button>
                             </div>
                             {message}
                         </div>
-
                     </form>
-
                 </Modal.Body>
             </Modal>
         );

@@ -1,9 +1,22 @@
-//Navigation panel component
+var NavigationItem = require('./NavigationItem');
+
+/**
+ * Navigation panel component
+ */
 var Navigation = React.createClass({
+    getInitialState: function(){
+        return (
+            {
+                currentParent: [],
+                termChildren: [],
+                history: []
+            }
+        );
+    },
     
     /**
      * Update the state from given data.
-     **/
+     */
     updateState: function(data) {
 
         // do not try to use uninitialised data
@@ -32,20 +45,11 @@ var Navigation = React.createClass({
         this.updateState(this.props.data);
     },
 
-    //Handles clicks on the children (callback function)
+   /**
+    * Handles clicks on the children (callback function)
+    */
     handleClick: function(e){
         this.props.update(e.id); 
-    },
-
-    //Initial state of the component
-    getInitialState: function(){
-        return (
-            {
-                currentParent: [],
-                termChildren: [],
-                history: []
-            }
-        );
     },
 
     render: function() {
@@ -68,7 +72,6 @@ var Navigation = React.createClass({
         }, this);
 
         //Only display grandparent if there is one
-        
         var grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
 
         return (
@@ -77,29 +80,17 @@ var Navigation = React.createClass({
                     <li role="presentation" className="active">                    
                         <a className="navigation-header" onClick={this.props.upOneLevel} href="#">
                             <span style={backArrow} className="glyphicon glyphicon-triangle-top backArrow" aria-hidden="true"> </span>
-                            <div className="grandparentHeader">{grandparent}</div>                         
-                            <div style={parentMarginLeft} className="parentHeader">{this.state.currentParent}</div>
+                            <div className="grandparentHeader">
+                                {grandparent}
+                            </div>
+                            <div style={parentMarginLeft} className="parentHeader">
+                                {this.state.currentParent}
+                            </div>
                         </a>
                     </li> 
                     {ItemArray}
                 </ul>
             </nav>
-        );
-    }
-});
-
-//Clickable items in the navigation bar
-var NavigationItem = React.createClass({
-    //Handles clicks on the items and calls back to the parent to change the current data
-    handleClick: function(e){
-        this.props.handleClickCallback(e);
-    },
-
-    render: function(){
-        return(
-            <li role="presentation">
-                <a className="navLink" onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>{this.props.name}</a>
-            </li>
         );
     }
 });

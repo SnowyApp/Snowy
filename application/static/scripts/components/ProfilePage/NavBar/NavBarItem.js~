@@ -1,4 +1,14 @@
-//Tab in the navbar
+//Temporary fake user
+var fakeUser = {
+    id: 1337,
+    username: "Arnold",
+    email: "arnold@schwarzenegger.com",
+    lang: "eng"
+}
+
+/**
+ * Tab in the navbar
+ */
 module.exports = React.createClass({
     render: function(){
         var navBarItemClass = (this.props.active ? 'active' : null) + " tabItem"; //Highlight active tab

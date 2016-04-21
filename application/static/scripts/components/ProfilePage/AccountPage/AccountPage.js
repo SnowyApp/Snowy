@@ -9,7 +9,9 @@ var fakeUser = {
     lang: "eng"
 }
 
-//A page where the user can change profile ifo
+/**
+ * A page where the user can change profile ifo
+ */
 module.exports = React.createClass({
     getInitialState: function(){
         return ({
@@ -20,7 +22,9 @@ module.exports = React.createClass({
         });
     },
 
-    //Toggles between +/- expand glyph
+   /**
+    * Toggles between +/- expand glyph
+    */
     openAcc: function(acc){
         var disableTime = 400;
         //Check what field was expanded
@@ -58,7 +62,10 @@ module.exports = React.createClass({
 
         return(
             <div>
-                <h1><span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> {this.props.dict[fakeUser.lang]["account"]}</h1>
+                <h1>
+                    <span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> 
+                    {this.props.dict[fakeUser.lang]["account"]}
+                </h1>
                 <hr className="profileHr"/>
                 <div className="accountPageWrapper">
 

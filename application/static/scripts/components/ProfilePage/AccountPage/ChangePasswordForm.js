@@ -6,7 +6,9 @@ var fakeUser = {
     lang: "eng"
 }
 
-//Form that allows the user to change password
+/**
+ * Form that allows the user to change password
+ */
 module.exports = React.createClass({
     getInitialState: function(){
         return({
@@ -21,7 +23,9 @@ module.exports = React.createClass({
         });
     },
 
-    //Handles the submit of the form
+   /**
+    * Handles the submit of the form
+    */
     handleSubmit: function(e){
         e.preventDefault();
         //TODO: Calls to database goes here
@@ -50,7 +54,9 @@ module.exports = React.createClass({
         }
     },
 
-    //Checks the strength of the password (0-4)
+   /**
+    * Checks the strength of the password (0-4)
+    */
     checkPasswordStrength: function(event){
         var input = event.target.value; //Value from input field
         var passwordStrength = 0;
@@ -109,7 +115,9 @@ module.exports = React.createClass({
         }
     },
 
-    //Updates the repeatedPassword state to match the input field
+   /**
+    * Updates the repeatedPassword state to match the input field
+    */
     updateRepeatedPassword: function(event){
         var input = event.target.value;
         //Update state and provide a callback function for when the state is updated to check if the passwords are matching
@@ -118,14 +126,18 @@ module.exports = React.createClass({
         }, this.checkMatchingPasswords);
     },
 
-    //Check if the two password fields match
+   /**
+    * Check if the two password fields match
+    */
     checkMatchingPasswords: function(){
         this.setState({
             matchingPasswords: (this.state.newPassword == this.state.repeatPassword)
         });
     },
 
-    //Updates the currPassword state to match input
+   /**
+    * Updates the currPassword state to match input
+    */
     updateCurrPasswordState: function(event){
         var input = event.target.value;
         this.setState({
@@ -190,7 +202,9 @@ module.exports = React.createClass({
         return(
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <div className={passwordDivState}>
-                    <label htmlFor="newPassword" className="col-sm-3 control-label">{this.props.dict[fakeUser.lang]["newPassword"]}</label>
+                    <label htmlFor="newPassword" className="col-sm-3 control-label">
+                        {this.props.dict[fakeUser.lang]["newPassword"]}
+                    </label>
                     <div className="col-sm-7">
                         <input type="password" id="newPassword" className="form-control" onChange={this.checkPasswordStrength} />
                         <span className={passwordGlyphState}></span>
@@ -207,11 +221,15 @@ module.exports = React.createClass({
                         <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
                         <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
                     </div>
-                    <div className={pwStrengthBarTextClass}>{(this.state.newPassword.length > 0 ? this.props.dict[fakeUser.lang]["passwordStrength"][this.state.passwordStrength] : "")}</div>
+                    <div className={pwStrengthBarTextClass}>
+                        {(this.state.newPassword.length > 0 ? this.props.dict[fakeUser.lang]["passwordStrength"][this.state.passwordStrength] : "")}
+                    </div>
                 </div>
 
                 <div className={repeatDivState}>
-                    <label htmlFor="repeatPassword" className="col-sm-3 control-label">{this.props.dict[fakeUser.lang]["repeat"]}</label>
+                    <label htmlFor="repeatPassword" className="col-sm-3 control-label">
+                        {this.props.dict[fakeUser.lang]["repeat"]}
+                    </label>
                     <div className="col-sm-7">
                         <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
                         <span className={repeatGlyphState}></span>
@@ -219,14 +237,18 @@ module.exports = React.createClass({
                 </div>
             
                 <div className="form-group">
-                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">{this.props.dict[fakeUser.lang]["currentPassword"]}</label>
+                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">
+                        {this.props.dict[fakeUser.lang]["currentPassword"]}
+                    </label>
                     <div className="col-sm-7">
                         <input type="password" id="currPassword" className="form-control" onChange={this.updateCurrPasswordState}/>
                     </div>
                 </div>
                 <div className="form-group">
                     <div className="col-sm-offset-3 col-sm-2">
-                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>{this.props.dict[fakeUser.lang]["update"]}</button>
+                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>
+                            {this.props.dict[fakeUser.lang]["update"]}
+                        </button>
                     </div>
                     {message}
                 </div>

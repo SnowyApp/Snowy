@@ -9,7 +9,9 @@ var fakeUser = {
     lang: "eng"
 }
 
-//Component that displays favorite terms in a table
+/**
+ * Component that displays favorite terms in a table
+ */
 module.exports = React.createClass({
     getInitialState: function(){
         return (
@@ -29,6 +31,9 @@ module.exports = React.createClass({
         });
     },
 
+   /**
+    * Adds a favorite term to the database
+    */
     addFavoriteTerm: function(id, name){
         if (cookie.load('userId') != null) {
             $.ajax({
@@ -51,7 +56,7 @@ module.exports = React.createClass({
         }
     },
 
-   /*
+   /**
     * Sort terms by header
     */
     sortBy: function(header){
@@ -87,7 +92,7 @@ module.exports = React.createClass({
 
     },
 
-   /*
+   /**
     * Remove element from the term table
     */
     removeTerm: function(id){
@@ -105,12 +110,14 @@ module.exports = React.createClass({
         if (cookie.load('userId') != null) {
             $.ajax({
                 type: "GET",
+                method: "GET",
                 url: this.props.url + "/favorite_term",
                 headers: {
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
                     console.log(data);
+                    //TODO: Save data to terms state
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);

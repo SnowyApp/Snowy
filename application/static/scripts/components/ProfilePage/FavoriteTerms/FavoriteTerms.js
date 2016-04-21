@@ -9,7 +9,9 @@ var fakeUser = {
     lang: "eng"
 }
 
-//Component that displays favorite terms in a table
+/**
+ * Component that displays favorite terms in a table
+ */
 module.exports = React.createClass({
     getInitialState: function(){
         return (
@@ -29,6 +31,9 @@ module.exports = React.createClass({
         });
     },
 
+   /**
+    * Adds a favorite term to the database
+    */
     addFavoriteTerm: function(id, name){
         if (cookie.load('userId') != null) {
             $.ajax({
@@ -51,7 +56,7 @@ module.exports = React.createClass({
         }
     },
 
-   /*
+   /**
     * Sort terms by header
     */
     sortBy: function(header){
@@ -87,7 +92,7 @@ module.exports = React.createClass({
 
     },
 
-   /*
+   /**
     * Remove element from the term table
     */
     removeTerm: function(id){
@@ -112,6 +117,7 @@ module.exports = React.createClass({
                 },
                 success: function (data) {
                     console.log(data);
+                    //TODO: Save data to terms state
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
@@ -180,9 +186,15 @@ module.exports = React.createClass({
                     <table className="favorites">
                         <thead>
                             <tr>
-                                <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>{this.props.dict[fakeUser.lang]["name"]} {nameSortArrow}</th>
-                                <th id="Term_id" className="favorites" onClick={this.sortBy.bind(this, "id")}>ID {idSortArrow}</th>
-                                <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>{this.props.dict[fakeUser.lang]["added"]} {dateSortArrow}</th>
+                                <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
+                                    {this.props.dict[fakeUser.lang]["name"]} {nameSortArrow}
+                                </th>
+                                <th id="Term_id" className="favorites" onClick={this.sortBy.bind(this, "id")}>
+                                    ID {idSortArrow}
+                                </th>
+                                <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>
+                                    {this.props.dict[fakeUser.lang]["added"]} {dateSortArrow}
+                                </th>
                                 <th id="Term_remove" className="favorites"></th>
                             </tr>
                         </thead>

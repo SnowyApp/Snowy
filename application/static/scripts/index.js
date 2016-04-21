@@ -54,7 +54,7 @@ var Container = React.createClass({
                 })
 
             ).then(function(res1, res2) {
-
+console.log(res2);
                 // get all information about children
                 var children = [];
                 for (var i in res2[0]) {
@@ -120,7 +120,9 @@ var Container = React.createClass({
         });
     },
 
-    //Set what content to display in the content area
+   /**
+    * Set what content to display in the content area
+    */
     setContent: function(content){
         this.setState({
             content: content

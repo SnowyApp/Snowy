@@ -1,3 +1,6 @@
+/**
+ * Registration form component
+ */
 var RegisterForm = React.createClass({
     propTypes:{
         hideRegistration: React.PropTypes.func,
@@ -24,6 +27,10 @@ var RegisterForm = React.createClass({
             errorMessage: "Registration unsuccessful"
         });
     },
+
+   /**
+    * Resets the form
+    */
     resetForm: function(){
         this.setState({
             email: "",
@@ -35,7 +42,10 @@ var RegisterForm = React.createClass({
             errorMessage: "",
         });
     },
-    //Handles submit of the form
+
+   /**
+    * Handles submit of the form
+    */
     handleSubmit: function(e){
         e.preventDefault();
         $.ajax({
@@ -53,7 +63,9 @@ var RegisterForm = React.createClass({
         });
     },
 
-    //Check if a valid email has been input
+   /**
+    * Checks if a valid email has been input
+    */
     validateEmail: function(event){
         var input = event.target.value;
         var regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$/;
@@ -63,7 +75,9 @@ var RegisterForm = React.createClass({
         });
     },
 
-    //Checks how strong the password is (lvl 0-4)
+   /**
+    * Checks how strong the password is (lvl 0-4)
+    */
     checkPasswordStrength: function(event){
         var input = event.target.value; //Value from input field
         var passwordStrength = 0;
@@ -122,7 +136,9 @@ var RegisterForm = React.createClass({
         }
     },
 
-    //Updates the repeatedPassword state to match the input field
+   /**
+    * Updates the repeatedPassword state to match the input field
+    */
     updateRepeatedPassword: function(event){
         var input = event.target.value;
         //Update state and provide a callback function for when the state is updated to check if the passwords are matching
@@ -131,7 +147,9 @@ var RegisterForm = React.createClass({
         }, this.checkMatchingPasswords);
     },
 
-    //Check if the two password fields match
+   /**
+    * Check if the two password fields match
+    */
     checkMatchingPasswords: function(){
         this.setState({
             matchingPasswords: (this.state.password == this.state.repeatPassword)
@@ -235,13 +253,17 @@ var RegisterForm = React.createClass({
         return(
             <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header className="bg-primary" closeButton>
-                    <Modal.Title>Registrering</Modal.Title>
+                    <Modal.Title>
+                        Registrering
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form className="form-horizontal" onSubmit={this.handleSubmit}>
                         {/* Email */}                
                         <div className={emailDivState}>
-                            <label htmlFor="password" className="col-sm-3 control-label">Email</label>
+                            <label htmlFor="password" className="col-sm-3 control-label">
+                                Email
+                            </label>
                             <div className="col-sm-8">
                                 <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
                                 <span className={emailGlyphState}></span>
@@ -249,7 +271,9 @@ var RegisterForm = React.createClass({
                         </div>
                         {/* Password */}
                         <div className={passwordDivState}>
-                            <label htmlFor="password" className="col-sm-3 control-label">Lösenord</label>
+                            <label htmlFor="password" className="col-sm-3 control-label">
+                                Lösenord
+                            </label>
                             <div className="col-sm-8">
                                 <input type="password" id="password" className="form-control" onChange={this.checkPasswordStrength} />
                                 <span className={passwordGlyphState}></span>
@@ -266,11 +290,15 @@ var RegisterForm = React.createClass({
                                 <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
                                 <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
                             </div>
-                            <div className={pwStrengthText[this.state.passwordStrength].className}>{(this.state.password.length > 0 ? pwStrengthText[this.state.passwordStrength].text : "")}</div>
+                            <div className={pwStrengthText[this.state.passwordStrength].className}>
+                                {(this.state.password.length > 0 ? pwStrengthText[this.state.passwordStrength].text : "")}
+                            </div>
                         </div>
                         {/* Repeat password */}
                         <div className={repeatDivState}>
-                            <label htmlFor="repeatPassword" className="col-sm-3 control-label">Upprepa</label>
+                            <label htmlFor="repeatPassword" className="col-sm-3 control-label">
+                                Upprepa
+                            </label>
                             <div className="col-sm-8">
                                 <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
                                 <span className={repeatGlyphState}></span>
@@ -280,7 +308,9 @@ var RegisterForm = React.createClass({
                         {/* Submit */}
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-2">
-                                <button type="submit" className="btn btn-success" disabled={disableSubmit}>Registrera</button>
+                                <button type="submit" className="btn btn-success" disabled={disableSubmit}>
+                                    Registrera
+                                </button>
                             </div>
                             {message}
                         </div>

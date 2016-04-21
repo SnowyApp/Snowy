@@ -6,7 +6,9 @@ var fakeUser = {
     lang: "eng"
 }
 
-//Diagram element in favorite diagrams table
+/**
+ * Diagram element in favorite diagrams table
+ */
 module.exports = React.createClass({
     getInitialState: function(){
         return ({
@@ -15,7 +17,9 @@ module.exports = React.createClass({
         });
     },
 
-    //Toggles accordion body
+   /**
+    * Toggles accordion body
+    */
     openAcc: function(){
         var disableTime = 400;
         if(this.state.buttonEnabled){

@@ -6,7 +6,9 @@ var fakeUser = {
     lang: "eng"
 }
 
-//Diagram element in favorite diagrams table
+/**
+ * Diagram element in favorite diagrams table
+ */
 module.exports = React.createClass({
     getInitialState: function(){
         return ({
@@ -15,7 +17,9 @@ module.exports = React.createClass({
         });
     },
 
-    //Toggles accordion body
+   /**
+    * Toggles accordion body
+    */
     openAcc: function(){
         var disableTime = 400;
         if(this.state.buttonEnabled){
@@ -47,12 +51,23 @@ module.exports = React.createClass({
                         </div>
                     </td>
                     <td id="infoGlyph" className="favorites glyph">
-                        <a role="button" className="collapsed favorites" onClick={this.openAcc} data-toggle="collapse" href={"#" + this.props.id} aria-expanded="false">
+                        <a
+                            role="button"
+                            className="collapsed favorites"
+                            onClick={this.openAcc}
+                            data-toggle="collapse"
+                            href={"#" + this.props.id}
+                            aria-expanded="false"
+                        >
                             <span className="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                         </a>
                     </td>
-                    <td className="favorites">{this.props.date}</td>
-                    <td id="removeGlyph" className="favorites glyph" onClick={this.props.removeDiagram.bind(null, this.props.id)}><span className="glyphicon glyphicon-remove" aria-hidden="true"> </span></td>
+                    <td className="favorites">
+                        {this.props.date}
+                    </td>
+                    <td id="removeGlyph" className="favorites glyph" onClick={this.props.removeDiagram.bind(null, this.props.id)}>
+                        <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </td>
                 </tr>
                 <tr>
                     <td colSpan="4">

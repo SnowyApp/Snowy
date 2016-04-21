@@ -6,7 +6,9 @@ var fakeUser = {
     lang: "eng"
 }
 
-//Form that allows the user to change username and email
+/**
+ * Form that allows the user to change username and email
+ */
 module.exports = React.createClass({
     getInitialState: function(){
         return({
@@ -21,7 +23,9 @@ module.exports = React.createClass({
         });
     },
 
-    //Handles submitting the form
+   /**
+    * Handles submitting the form
+    */
     handleSubmit: function(e){
         e.preventDefault();
 
@@ -43,7 +47,9 @@ module.exports = React.createClass({
         }
     },
 
-    //Checks if the username is valid
+   /**
+    * Checks if the username is valid
+    */
     validateUsername: function(event){
         var input = event.target.value;
         var regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{3,15}$/;
@@ -55,7 +61,9 @@ module.exports = React.createClass({
         });
     },
 
-    //Checks if the email is valid
+   /**
+    * Checks if the email is valid
+    */
     validateEmail: function(event){
         var input = event.target.value;
         var regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$/;
@@ -90,16 +98,22 @@ module.exports = React.createClass({
         //Error/success message
         var message = "";
         if(this.state.successMessage.length > 0){
-            message = <span className="col-sm-6 successMessage">{this.state.successMessage}</span>;
+            message = <span className="col-sm-6 successMessage">
+                        {this.state.successMessage}
+                      </span>;
         } else if(this.state.errorMessage.length > 0){
-            message = <span className="col-sm-6 errorMessage">{this.state.errorMessage}</span>;
+            message = <span className="col-sm-6 errorMessage">
+                        {this.state.errorMessage}
+                      </span>;
         }
 
         return(
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 { /* Username */ }
                 <div className={usernameDivState}>
-                    <label htmlFor="username" className="col-sm-3 control-label ">{this.props.dict[fakeUser.lang]["username"]}</label>
+                    <label htmlFor="username" className="col-sm-3 control-label ">
+                        {this.props.dict[fakeUser.lang]["username"]}
+                    </label>
                     <div className="col-sm-7">
                         <input type="text" className="form-control" defaultValue={fakeUser.username} onChange={this.validateUsername}/>
                         <span className={usernameGlyphState}></span>
@@ -107,7 +121,9 @@ module.exports = React.createClass({
                 </div>                
                 { /* Email */ }
                 <div className={emailDivState}>
-                    <label htmlFor="email" className="col-sm-3 control-label ">{this.props.dict[fakeUser.lang]["email"]}</label>
+                    <label htmlFor="email" className="col-sm-3 control-label ">
+                        {this.props.dict[fakeUser.lang]["email"]}
+                    </label>
                     <div className="col-sm-7">
                         <input type="text" className="form-control" defaultValue={fakeUser.email} onChange={this.validateEmail}/>
                         <span className={emailGlyphState}></span>
@@ -116,7 +132,9 @@ module.exports = React.createClass({
 
                 <div className="form-group">
                     <div className="col-sm-offset-3 col-sm-2">
-                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>{this.props.dict[fakeUser.lang]["update"]}</button>
+                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>
+                            {this.props.dict[fakeUser.lang]["update"]}
+                        </button>
                     </div>
                     {message}
                 </div>
