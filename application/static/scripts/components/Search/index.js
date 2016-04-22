@@ -63,8 +63,12 @@ var TermTable = React.createClass({
     },
     render:function(){
         var optionsProp = {
+            /*
+            Send the selected term back to the container component,
+            add the term to the search history and
+            clear the result table
+             */
             onRowClick: function(row){
-                //Sends back the selected term to the container class
                 this.props.update(row.id);
                 this.props.addHistory(row.name,row.id);
                 this.props.clearData();
@@ -112,6 +116,7 @@ var Search = React.createClass({
         var baseUrl = this.props.url;
         var url = baseUrl + "/search/" + queryText;
 
+        //API request
         $.ajax({
             type: "GET",
             "method": "GET",
@@ -136,6 +141,9 @@ var Search = React.createClass({
 
         });
     },
+    /*
+     Clears the current result list and save it for future use
+    */
     clearData: function(){
         lastData=this.state.lastData;
         if(this.state.searchData != undefined && this.state.searchData.length > 0){
@@ -147,6 +155,11 @@ var Search = React.createClass({
             searchData: []
         });
     },
+    /*
+     Called when the user interacts with the search box.
+     If the user didn't clear the search box set the search result to the last result.
+     Otherwise fetch the users search history from a cookie.
+     */
     updateData: function(){
         var searchData = this.state.searchData;
         if(searchData != undefined && searchData.length == 0){
@@ -161,12 +174,16 @@ var Search = React.createClass({
             searchData: searchData
         });
     },
+    /*
+    Every time the user selects a term in the result table save it and add it to the search history cookie.
+     */
     addHistory: function(name, id){
         var newHistory = this.state.searchHistory;
         newHistory.unshift({
             name: name,
             id: id
         });
+        //Save the last 5 searches
         if (newHistory.length>5){
             newHistory.pop();
         }
