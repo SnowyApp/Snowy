@@ -294,11 +294,11 @@ var Container = React.createClass({
             );
         }
 
-        return JSON.stringify(s);
+        return s;
     },
 
     saveDiagram: function() {
-        var data = this.stringifyDiagram(this.state.data);
+        var data = JSON.stringify(this.stringifyDiagram(this.state.data));
         var something = { "data": data };
         $.ajax({
             type: "POST",
@@ -308,7 +308,7 @@ var Container = React.createClass({
             },
             url: this.state.serverUrl + "/diagram",
             contentType: "application/json",
-            data: data,
+            data: JSON.stringify({ "data" :data }),
             error: function(xhr) {
                 console.log("Could not store diagram.");
                 console.log(xhr.responseText);
