@@ -25,6 +25,7 @@ var SearchBox = React.createClass({
     },
     //Automatic search if no keypress detected for 0.3s after typing. Instant search on enter.
     handleKeyPress: function(target) {
+        this.props.updateQuery(ReactDOM.findDOMNode(this.refs.searchInput).value);
         if(this.timeout){
             clearTimeout(this.timeout)
             this.timeout = null
@@ -101,7 +102,9 @@ var Search = React.createClass({
         return{
             query:'',
             searchData: [],
-            searchHistory: cookie.load('searchHistory') ? cookie.load('searchHistory') : []
+            searchHistory: cookie.load('searchHistory') ? cookie.load('searchHistory') : [],
+            lastData: [],
+            lastSearch: ''
         }
     },
     doSearch:function(queryText){
@@ -126,23 +129,39 @@ var Search = React.createClass({
                 }
                 this.setState({
                     query: queryText,
-                    searchData: queryResult
+                    searchData: queryResult,
+                    lastSearch: queryText
                 });
             }.bind(this)
 
         });
     },
     clearData: function(){
+        lastData=this.state.lastData;
+        if(this.state.searchData != undefined && this.state.searchData.length > 0){
+            var lastData = this.state.searchData;
+        }
         this.setState({
             query: this.state.query,
+            lastData: lastData,
             searchData: []
         });
     },
     updateData: function(){
+        console.log("searchData: " +this.state.searchData);
+        console.log("lastSearch: " +this.state.lastSearch);
+        console.log("query: " +this.state.query);
+
         var searchData = this.state.searchData;
-        if(searchData != undefined && searchData.length == 0 && cookie.load('searchHistory') != undefined
-        && document.activeElement.id == 'searchInput'){
-            searchData = cookie.load('searchHistory');
+        if(searchData != undefined && searchData.length == 0){
+            if (this.state.query == this.state.lastSearch && this.state.query.length > 0){
+                console.log('hämtar lastdata')
+                searchData = this.state.lastData;
+            }
+            else if(cookie.load('searchHistory') != undefined && document.activeElement.id == 'searchInput'){
+                console.log('hämtar kaka')
+                searchData = cookie.load('searchHistory')
+            }
         }
         this.setState({
             searchData: searchData
@@ -162,17 +181,23 @@ var Search = React.createClass({
         })
         cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
     },
+    updateQuery: function(query){
+        this.setState({
+            query: query
+        })
+    },
     render:function(){
 
         return (
             <div className="search">
                 <SearchBox query={this.state.query}
                            doSearch={this.doSearch}
-                           updateData={this.updateData}/>
+                           updateData={this.updateData}
+                           updateQuery={this.updateQuery}/>
                 <TermTable data={this.state.searchData}
                            update={this.props.update}
                            clearData={this.clearData}
-                           addHistory={this.addHistory} />
+                           addHistory={this.addHistory}/>
             </div>
         );
     }
