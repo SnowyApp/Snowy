@@ -338,25 +338,8 @@ var Container = React.createClass({
         }
         return (
             <div className="wrapper">
-<<<<<<< 29664f67c25142229da3e6b488376cb9f190967c
                 <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
                     <Navigation
-=======
-                <Navigation
-                    data={this.state.data}
-                    url={this.state.serverUrl}
-                    update={this.updateSelectedTerm}
-                />
-                <section>
-                    <Bar
-                        serverUrl={this.state.serverUrl} 
-                        update={this.updateSelectedTerm} 
-                        isLoggedIn={this.state.isLoggedIn} 
-                        updateLoggedIn={this.updateLoggedIn}
-                        saveDiagram={this.saveDiagram}
-                    />
-                    <Diagram 
->>>>>>> Add button to store diagram
                         data={this.state.data}
                         url={this.state.serverUrl}
                         update={this.updateSelectedTerm}
