@@ -306,8 +306,9 @@ var Container = React.createClass({
             url: this.state.serverUrl + "/diagram",
             contentType: "application/json",
             data: data,
-            error: function() {
+            error: function(xhr) {
                 console.log("Could not store diagram.");
+                console.log(xhr.responseText);
             }.bind(this),
             success: function(result) {
                 console.log("Could store diagram:");
