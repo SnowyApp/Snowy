@@ -46,7 +46,8 @@ var Navigation = React.createClass({
     * Handles clicks on the children (callback function)
     */
     handleClick: function(id){
-        this.props.update(id); 
+        var saveHistory = (this.state.currentID != id);
+        this.props.update(id, saveHistory); 
     },
 
     render: function() {

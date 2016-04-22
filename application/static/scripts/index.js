@@ -60,8 +60,11 @@ var Container = React.createClass({
                     }
                 ];
 
-                //Add to history if not root/leaf
-                if(saveHistory && root[0].concept_id != this.props.concept_id && root[0].children.length != 0){
+                //Add to history if saveHistory == true and not root/leaf and its not already the root
+                if( saveHistory && 
+                    root[0].concept_id != this.props.concept_id &&
+                    root[0].children.length != 0
+                  ){
                     //Push current parent to history
                     var historyObject = {id: this.state.data[0].concept_id, name: this.state.data[0].name};
                     //Prevent term from being added multiple times to history due to fast clicking
@@ -222,8 +225,8 @@ var Container = React.createClass({
      * Fetch information about given concept and update state.data with 
      * its information.
      */
-    updateSelectedTerm: function(conceptId){
-        this.getConcept(conceptId);
+    updateSelectedTerm: function(conceptId, saveHistory = true){
+        this.getConcept(conceptId, saveHistory);
         this.setContent("diagram");
     },
 
@@ -243,8 +246,7 @@ var Container = React.createClass({
 
         // do not do anything if on the root node
         if (id === undefined) return;
-        this.getConcept(id, false);
-        this.setContent("diagram");
+        this.updateSelectedTerm(id, false);
     },
     
     onLogin: function(uid){
