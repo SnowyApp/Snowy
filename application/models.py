@@ -46,6 +46,7 @@ GET_CONCEPT_PROCEDURE = "get_concept"
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, date_modified=NOW() WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
+DELETE_DIAGRAM_QUERY = "DELETE FROM diagram WHERE id=%s and user_email=%s"
 
 def connect_db():
     """
@@ -172,6 +173,18 @@ class User():
         except Exception as e:
             print(e)
             return None
+
+    def delete_diagram(self, cid):
+        """
+        Delete a diagram for the user.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(DELETE_USER_STATEMENT, (cid, self.email))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
 
  
     @staticmethod

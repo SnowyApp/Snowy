@@ -226,10 +226,18 @@ def store_diagram():
         data = request.get_json()
         if not 'data' in data or not isinstance(data['data'], str) or \
             not 'id' in data or not isinstance(data['id'], int):
-            return jsonify(message="'data' not provided"), 400
+            return jsonify(message="'data' or 'id' not provided"), 400
 
         g.user.store_diagram(data['data'], data['id'])
         return jsonify(status="ok")
+    elif request.method == "DELETE":
+        data = request.json()
+        if not 'id' in data or not isinstance(data['id'], int):
+            return jsonify(message = "'id' is not provided"), 400
+
+        g.user.delete_diagram(data['id'])
+        return jsonify(status="ok")
+        
     else:
         return json.dumps(g.user.get_diagrams())
 
