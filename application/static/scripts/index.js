@@ -357,6 +357,7 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             setContent={this.setContent}
                             contentName={this.state.content}
+                            saveDiagram={this.saveDiagram}
                         />
                         {content}
                     </section>
@@ -431,12 +432,6 @@ var Bar = React.createClass({
             </div>
         ) : (
             <div>
-                <Button 
-                    className="save-diagram" 
-                    bsStyle="primary"
-                    onClick={this.props.saveDiagram}
-                >Save Diagram</Button>
-
                 <Button className="Register" bsStyle = "primary" 
                     onClick={this.showRegistration}>Register</Button>
                 <Button className="Login" bsStyle = "primary" 
@@ -456,6 +451,11 @@ var Bar = React.createClass({
                 <Search url={this.props.serverUrl} update={this.props.update}/>
                 <ButtonToolbar id = "buttons">
                     <Export />
+                    <Button 
+                        className="save-diagram" 
+                        bsStyle="primary"
+                        onClick={this.props.saveDiagram}
+                    >Save Diagram</Button>
                     {navButtons}
                 </ButtonToolbar>
             </div>
@@ -518,6 +518,6 @@ var Export = React.createClass({
 
 
 ReactDOM.render(
-    <Container concept_id="138875005" url={matteUrl} />,
+    <Container concept_id="138875005" url="http://localhost:5000" />,
     document.getElementById('content')
 );
