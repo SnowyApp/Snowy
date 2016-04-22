@@ -76,7 +76,7 @@ var TermTable = React.createClass({
         };
         if(this.props.data.length > 0){
             style={
-              display: "block"
+                display: "block"
             };
         }
         var tableData = this.props.data;
@@ -148,18 +148,12 @@ var Search = React.createClass({
         });
     },
     updateData: function(){
-        console.log("searchData: " +this.state.searchData);
-        console.log("lastSearch: " +this.state.lastSearch);
-        console.log("query: " +this.state.query);
-
         var searchData = this.state.searchData;
         if(searchData != undefined && searchData.length == 0){
             if (this.state.query == this.state.lastSearch && this.state.query.length > 0){
-                console.log('hämtar lastdata')
                 searchData = this.state.lastData;
             }
             else if(cookie.load('searchHistory') != undefined && document.activeElement.id == 'searchInput'){
-                console.log('hämtar kaka')
                 searchData = cookie.load('searchHistory')
             }
         }
