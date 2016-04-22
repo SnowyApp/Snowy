@@ -70,13 +70,15 @@ var Navigation = React.createClass({
             backArrow = {};
             parentMarginLeft = {};
         }
-        //Create NavigationItem's for all the children of the current parent node
-        var ItemArray = this.state.termChildren.map(function(child){
-            return(
-                <NavigationItem key={child.id} id={child.concept_id} name={child.name} handleClickCallback={this.handleClick} />
-            );
-        }, this);
-
+        if(this.state.termChildren != null) {
+            //Create NavigationItem's for all the children of the current parent node
+            var ItemArray = this.state.termChildren.map(function (child) {
+                return (
+                    <NavigationItem key={child.id} id={child.concept_id} name={child.name}
+                                    handleClickCallback={this.handleClick}/>
+                );
+            }, this);
+       }
         //Only display grandparent if there is one
         
         var grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");

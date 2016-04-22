@@ -219,7 +219,6 @@ var Container = React.createClass({
         }
         this.getConcept(conceptId);
         this.setContent("diagram");
-        console.log(this.state.history);
     },
 
    /**
