@@ -121,8 +121,10 @@ d3Chart.create = function(element, props, state) {
         })
         .call(zoom).on("dblclick.zoom", null)
         .on( "mousedown", function() {
-                d3.selectAll( 'g.selected').classed( "selected", false)
-                                            .selectAll("rect.node").style( "fill", "white");;
+            if(!d3.event.ctrlKey) {
+                d3.selectAll('g.selected').classed("selected", false)
+                    .selectAll("rect.node").style("fill", "white");
+            }
         });
 
     /**
