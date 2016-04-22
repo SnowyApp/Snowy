@@ -19,6 +19,9 @@ def login(username, password):
 def get_favorite_terms():
     return json.loads(requests.get(url + "/favorite_term", headers=auth).text)
 
+def delete_favorite_term(id):
+    return json.loads(requests.delete(url + "/favorite_term", json={'id': id}, headers=auth).text)
+
 def add_favorite_term(cid, term):
     data = {"id": cid, "term": term}
     return json.loads(requests.post(url + "/favorite_term", json=data, headers=auth).text)

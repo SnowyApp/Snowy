@@ -19,6 +19,7 @@ DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 VALID_TOKEN_PROCEDURE = "is_valid_token"
 
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
+DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s and concept_id=%s"
 INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term) VALUES (%s, %s, %s);"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
@@ -103,6 +104,18 @@ class User():
         cur = get_db().cursor()
         try:
             cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (cid, self.email, term))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
+
+    def delete_favorite_term(self, cid):
+        """
+        Deletes a favorite term from the database.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(DELETE_FAVORITE_TERM_STATEMENT, (self.email, cid))
             get_db().commit()
             cur.close()
         except Exception as e:
