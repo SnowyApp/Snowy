@@ -277,6 +277,26 @@ var Container = React.createClass({
         cookie.remove('userId', {path: '/'});
     },
 
+    stringifyDiagram: function(diagram) {
+        var s = [];
+        for (var node in diagram) {
+            s.push(
+                {
+                    "concept_id": diagram[node].concept_id,
+                    "id": diagram[node].id,
+                    "depth": diagram[node].depth,
+                    "name": diagram[node].name,
+                    "x": diagram[node].x,
+                    "y": diagram[node].y,
+                    "parent": diagram[node].parent.concept_id,
+                    "children": this.stringifyDiagram(diagram[node].children)
+                }
+            );
+        }
+
+        return JSON.stringify(s);
+    },
+
     saveDiagram: function() {
         console.log("SAVING DIAGRAM");
         console.log(this.state.data[0]);
