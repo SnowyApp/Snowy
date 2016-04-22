@@ -304,7 +304,7 @@ var Container = React.createClass({
             type: "POST",
             method: "POST",
             headers: {
-                "Authorization:" : cookie.load("userId")
+                "Authorization" : cookie.load("userId")
             },
             url: this.state.serverUrl + "/diagram",
             contentType: "application/json",
