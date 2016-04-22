@@ -32,38 +32,18 @@ var Container = React.createClass({
      * state when all information is received.
      */
     getConcept: function(id) {
-        $.when(
-                $.ajax({
-                    type: "GET",
-                    method: "GET",
-                    url: this.state.serverUrl + "/concept/" + id,
-                    dataType: "json",
-                    error: function() {
-                        console.log("Could not get concept root.");
-                    }.bind(this)
-                }),
-
-                $.ajax({
-                    type: "GET",
-                    method: "GET",
-                    url: this.state.serverUrl + "/get_children/" + id,
-                    dataType: "json",
-                    error: function() {
-                        console.log("Could not get concept children.");
-                    }.bind(this)
-                })
-
-            ).then(function(res1, res2) {
-
+        $.when(this.getRoot(id), this.getChildren(id))
+            .then(function(rootResult, childrenResult) {
                 // get all information about children
                 var children = [];
-                for (var i in res2[0]) {
+                for (var i in childrenResult[0]) {
                     children.push(
                         {
-                            "name": res2[0][i].term,
-                            "concept_id": res2[0][i].id,
-                            "parent": res1[0].id,
-                            "children": []
+                            "name": childrenResult[0][i].term,
+                            "concept_id": childrenResult[0][i].id,
+                            "parent": rootResult[0].id,
+                            "children": null,
+                            "id": this._diagram.getId()
                         }
                     );
                 }
@@ -72,14 +52,14 @@ var Container = React.createClass({
                 // of the children
                 var root = [
                     {
-                        "name": res1[0].term,
-                        "concept_id": res1[0].id,
+                        "name": rootResult[0].term,
+                        "concept_id": rootResult[0].id,
                         "parent": "null",
                         "children": children,
                         "id": 0
                     }
                 ];
-
+                
                 // update state so that component children can update
                 this.setState({
                     data: root,
@@ -88,7 +68,36 @@ var Container = React.createClass({
                 
             }.bind(this)
         );
+    },
 
+    /**
+     * Return function to fetch root from api.
+     */
+    getRoot: function(id) {
+        return $.ajax({
+            type: "GET",
+            method: "GET",
+            url: this.state.serverUrl + "/concept/" + id,
+            dataType: "json",
+            error: function() {
+                console.log("Could not get concept root.");
+            }.bind(this)
+        });
+    },
+
+    /**
+     * Return function to fetch children of id from api.
+     */
+    getChildren: function(id) {
+        return $.ajax({
+            type: "GET",
+            method: "GET",
+            url: this.state.serverUrl + "/get_children/" + id,
+            dataType: "json",
+            error: function() {
+                console.log("Could not get concept children.");
+            }.bind(this)
+        });
     },
 
     /**
@@ -129,6 +138,67 @@ var Container = React.createClass({
         });
     },
 
+
+    /**
+     * Add or remove children of concept from state.
+     */
+    updateConceptChildren: function(id) {
+
+        var tree = this.state.data.slice();;
+
+        // find node in data
+        var node = this.findNode(tree[0], id);
+
+        if (node == null) {
+            // something went wrong
+            return;
+        }
+
+        if (node.children === undefined) {
+            // add children to the node
+            $.when(this.getChildren(node.concept_id)).then(
+                function(res) {
+                    // get all information about children
+                    var children = [];
+                    for (var i in res) {
+                        children.push(
+                            {
+                                "name": res[i].term,
+                                "concept_id": res[i].id,
+                                "parent": node.concept_id,
+                                "children": null,
+                                "id": this._diagram.getId()
+                            }
+                        );
+                    }
+                    // update node's children
+                    node.children = children;
+                    this.setState({
+                        data: tree
+                    });
+                }.bind(this)
+            );
+        } else {
+            // remove the nodes children
+            node.children = null;
+        }
+    },
+
+    /**
+     * Find a node with given d3 id.
+     */
+    findNode: function(tree, id) {
+        if (tree.id == undefined) return null;
+        if (tree.id == id) return tree;
+        if (tree.children == undefined) return null;
+         
+        var result = null;
+        for(var i in tree.children) {
+            result = this.findNode(tree.children[i], id);
+            if (result != null) return result;
+        }
+        return null;
+    },
 
     /**
      * Fetch information about given concept and update state.data with 
@@ -182,9 +252,11 @@ var Container = React.createClass({
         switch(this.state.content){
             case "diagram":
                 content = <Diagram 
+                            ref={ (ref) => this._diagram = ref }
                             data={this.state.data}
                             url={this.state.serverUrl}
                             update={this.updateSelectedTerm}
+                            updateConceptChildren={this.updateConceptChildren}
                           />
                 break;
             case "profile":

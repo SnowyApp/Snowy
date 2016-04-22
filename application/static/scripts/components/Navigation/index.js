@@ -23,12 +23,6 @@ var Navigation = React.createClass({
         if (data === undefined)
             return;
 
-        // add a unique ID for all children to be used in the
-        // term table. add 1 as root has ID 0
-        for (var i in data[0].children) {
-            data[0].children[i].id = parseInt(i)+1;
-        }
-
         // update the state with the given data
         this.setState({
             currentParent: data[0].name,

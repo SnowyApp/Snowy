@@ -8,6 +8,7 @@ module.exports = React.createClass({
     getInitialState: function() {
         return {
             data: [],
+            view:  'vertical',
             domain: this.props.domain || { x: [0, 100], y: [0, 100] }
         };
     },
@@ -47,19 +48,29 @@ module.exports = React.createClass({
             <div className="diagram">
                 <Button bsStyle="primary" onClick={this.reset}>Reset</Button>
                 <Button bsStyle="primary" onClick={this.resetZoom}>Reset zoom</Button>
+                <Button bsStyle="primary" onClick={this.changeView}>Vertical/Horizontal view</Button>
                 <Chart
                     ref={ (ref) => this._chart = ref }
                     data={this.state.data}
-                    domain={this.state.domain} 
-                    onClick={this.onClick} />
+                    view={this.state.view}
+                    domain={this.state.domain}
+                    onClick={this.onNodeClick} />
             </div>
         );
     },
 
-    onClick: function(sctid) {
-        if (sctid != this.state.data[0].id) {
-            this.props.update(sctid);
-        }
+    /**
+     * Return an ID for d3 node
+     */
+    getId: function() {
+        return this._chart.getId();
+    },
+
+    /**
+     * Show/hide children of node on click.
+     */
+    onNodeClick: function(id) {
+        this.props.updateConceptChildren(id);
     },
 
     resetZoom: function(){
@@ -68,5 +79,18 @@ module.exports = React.createClass({
 
     reset: function() {
         this._chart.resetDiagram();
+    },
+
+    changeView: function(){
+      if(this.state.view == 'vertical') {
+          this.setState({
+              view: 'horizontal'
+          })
+      }
+        else {
+          this.setState({
+              view: 'vertical'
+          })
+      }
     }
 });
