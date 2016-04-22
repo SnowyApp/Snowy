@@ -18,9 +18,8 @@ var Navigation = React.createClass({
      * Update the state from given data.
      */
     updateState: function(data) {
-
         // do not try to use uninitialised data
-        if (data === undefined)
+        if (data === undefined || data[0].children.length == 0)
             return;
 
         // update the state with the given data
@@ -35,6 +34,10 @@ var Navigation = React.createClass({
         this.updateState(nextProps.data);
     },
 	
+    shouldComponentUpdate: function(nextProps, nextState) {
+        return nextProps.data != this.props.data;
+    },
+
     componentDidMount: function(){
         this.updateState(this.props.data);
     },

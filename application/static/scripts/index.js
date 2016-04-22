@@ -31,7 +31,7 @@ var Container = React.createClass({
      * Fetch information used to display diagram and navigation and update
      * state when all information is received.
      */
-    getConcept: function(id) {
+    getConcept: function(id, saveHistory = true) {
         $.when(this.getRoot(id), this.getChildren(id))
             .then(function(rootResult, childrenResult) {
                 // get all information about children
@@ -59,12 +59,23 @@ var Container = React.createClass({
                         "id": 0
                     }
                 ];
-                
+
+                //Add to history if not root/leaf
+                if(saveHistory && root[0].concept_id != this.props.concept_id && root[0].children.length != 0){
+                    //Push current parent to history
+                    var historyObject = {id: this.state.data[0].concept_id, name: this.state.data[0].name};
+                    //Prevent term from being added multiple times to history due to fast clicking
+                    var currHistory = this.state.history;
+                    if(currHistory.length == 0 || currHistory[currHistory.length-1].id != historyObject.id){
+                        this.state.history.push(historyObject);
+                    }
+                }
+
                 // update state so that component children can update
                 this.setState({
                     data: root,
                     selectedTerm: root[0].id
-                });
+                });     
                 
             }.bind(this)
         );
@@ -104,7 +115,6 @@ var Container = React.createClass({
      * Update state on change of props.
      */
     componentWillReceiveProps: function(nextProps) {
-
         // set concept_id in focus if given
         if (nextProps.concept_id !== undefined) {
             getConcept(nextProps.concept_id);
@@ -133,6 +143,7 @@ var Container = React.createClass({
     * Set what content to display in the content area
     */
     setContent: function(content){
+        if(this.state.content == content) return;
         this.setState({
             content: content
         });
@@ -205,16 +216,8 @@ var Container = React.createClass({
      * its information.
      */
     updateSelectedTerm: function(conceptId){
-        //Push current parent to history
-        var currHistory = this.state.history;
-        var historyObject = {id: this.state.data[0].concept_id, name: this.state.data[0].name};
-        //Prevent term from being added multiple times to history due to fast clicking
-        if(currHistory.length == 0 || currHistory[currHistory.length-1].id != historyObject.id){
-            this.state.history.push(historyObject);
-        }
         this.getConcept(conceptId);
         this.setContent("diagram");
-        console.log(this.state.history);
     },
 
    /**
@@ -228,11 +231,12 @@ var Container = React.createClass({
     * Move up one level in the tree (from history)
     */
     upOneLevel: function(){
+        if(this.state.history.length == 0) return;
         var id = this.state.history.pop().id;
 
         // do not do anything if on the root node
         if (id === undefined) return;
-        this.getConcept(id);
+        this.getConcept(id, false);
         this.setContent("diagram");
     },
     
