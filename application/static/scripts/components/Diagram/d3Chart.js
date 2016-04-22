@@ -121,8 +121,10 @@ d3Chart.create = function(element, props, state) {
         })
         .call(zoom).on("dblclick.zoom", null)
         .on( "mousedown", function() {
-                d3.selectAll( 'g.selected').classed( "selected", false)
-                                            .selectAll("rect.node").style( "fill", "white");;
+            if(!d3.event.ctrlKey) {
+                d3.selectAll('g.selected').classed("selected", false)
+                    .selectAll("rect.node").style("fill", "white");
+            }
         });
 
     /**
@@ -300,7 +302,7 @@ d3Chart._drawTree = function(data) {
                 d3.select(this).selectAll("rect.node").style("fill", "white");
             }
         })
-        .on("click", function(){
+        .on("click", function(d){
             // If we are dragging, don't call click
             if  (d3.event.defaultPrevented) return;
 
@@ -418,13 +420,6 @@ d3Chart._drawTree = function(data) {
             .attr("marker-start", "url(#ArrowMarker)");
     }
 
-
-
-
-
-
-
-
     var nodeExit = node.exit().transition()
         .duration(DURATION)
         .attr("transform", function(d) {
@@ -493,18 +488,18 @@ d3Chart._drawTree = function(data) {
                     return "translate(" + [d.x, d.y] + ")"
                 });
             }
-            else{
+            else {
+                selection.attr("transform", function (d, i) {
                     d.x += d3.event.dy;
                     d.y += d3.event.dx;
                     return "translate(" + [d.x, d.y] + ")"
-                }
+                });
+            }
         }
         else {
             if(treeView == 'vertical'){
-                selection.attr("transform", function (d, i) {
                     d.x += d3.event.dx;
                     d.y += d3.event.dy;
-                });
             }
             else{
                 d.x += d3.event.dy;
