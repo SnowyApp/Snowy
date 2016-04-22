@@ -45,8 +45,8 @@ var Navigation = React.createClass({
    /**
     * Handles clicks on the children (callback function)
     */
-    handleClick: function(e){
-        this.props.update(e.id); 
+    handleClick: function(id){
+        this.props.update(id); 
     },
 
     render: function() {
@@ -80,7 +80,7 @@ var Navigation = React.createClass({
                             <div className="grandparentHeader linkPointer" onClick={this.props.upOneLevel}>
                                 {grandparent}
                             </div>
-                            <div style={parentMarginLeft} className="parentHeader linkPointer">
+                            <div style={parentMarginLeft} className="parentHeader linkPointer" onClick={this.handleClick.bind(null, this.state.currentID)}>
                                 {this.state.currentParent}
                             </div>
                         </a>
