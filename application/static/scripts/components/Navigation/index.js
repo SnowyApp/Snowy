@@ -94,19 +94,4 @@ var Navigation = React.createClass({
     }
 });
 
-/*
-
-<a className="navigation-header" onClick={this.props.upOneLevel} href="#">
-    <span style={backArrow} className="glyphicon glyphicon-triangle-top backArrow" aria-hidden="true"> </span>
-    <div className="grandparentHeader">
-        {grandparent}
-    </div>
-    <div style={parentMarginLeft} className="parentHeader">
-        {this.state.currentParent}
-    </div>
-</a>
-
-*/
-
-
 module.exports = Navigation;
