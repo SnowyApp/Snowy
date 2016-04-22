@@ -420,13 +420,6 @@ d3Chart._drawTree = function(data) {
             .attr("marker-start", "url(#ArrowMarker)");
     }
 
-
-
-
-
-
-
-
     var nodeExit = node.exit().transition()
         .duration(DURATION)
         .attr("transform", function(d) {
@@ -495,18 +488,18 @@ d3Chart._drawTree = function(data) {
                     return "translate(" + [d.x, d.y] + ")"
                 });
             }
-            else{
+            else {
+                selection.attr("transform", function (d, i) {
                     d.x += d3.event.dy;
                     d.y += d3.event.dx;
                     return "translate(" + [d.x, d.y] + ")"
-                }
+                });
+            }
         }
         else {
             if(treeView == 'vertical'){
-                selection.attr("transform", function (d, i) {
                     d.x += d3.event.dx;
                     d.y += d3.event.dy;
-                });
             }
             else{
                 d.x += d3.event.dy;
