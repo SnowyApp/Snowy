@@ -8,8 +8,8 @@
 
 .backArrow {
     position: absolute;
-    font-size: 1.3em;
-    top: 35%;
+    font-size: 2em;
+    top: 28%;
     left: 8px;
 }
 
@@ -24,11 +24,21 @@
 }
 
 .parentHeader {
-    font-size: 1.1em;
-    margin-left: 17px; 
+    font-size: 1.2em;
+    margin-left: 28px; 
 }
 
 .grandparentHeader {
     font-size: 0.8em;
-    margin-left: 17px;
+    margin-left: 28px;
 }
+
+.linkPointer:hover {
+    cursor: pointer;
+    color: #f0ad4e;
+}
+/*
+baby blue: #c9ddff
+bootstrap yellow: f0ad4e
+
+*/
