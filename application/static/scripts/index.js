@@ -404,7 +404,6 @@ var Export = React.createClass({
         var chartArea = document.getElementsByTagName('svg')[0].parentNode;
         var svg = chartArea.innerHTML;
         var canvas = document.createElement('canvas');
-        console.log(chartArea.offsetWidth);
         canvas.setAttribute('width', chartArea.offsetWidth);
         canvas.setAttribute('height', chartArea.offsetHeight);
         canvas.setAttribute('display', 'none');
