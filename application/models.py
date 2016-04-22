@@ -101,7 +101,7 @@ class User():
         """
         cur = get_db().cursor()
         try:
-            cur.execute(INSERT_FAVORITE_TERM, (cid, self.email, term))
+            cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (cid, self.email, term))
             get_db().commit()
             cur.close()
         except Exception as e:
@@ -116,7 +116,7 @@ class User():
             cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
             result = []
             for data in cur.fetchall():
-                result += [{"id": data[0], "favorite_date": str(data[4]), "term": data[5]}]
+                result += [{"id": data[0], "favorite_date": str(data[2]), "term": data[1]}]
             return result
         except Exception as e:
             print(e)
