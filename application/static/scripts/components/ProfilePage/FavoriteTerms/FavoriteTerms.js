@@ -16,14 +16,13 @@ module.exports = React.createClass({
     getInitialState: function(){
         return (
             {
-                terms: []
+                terms: this.props.terms // should be [] later when not using dummy data
             }
         );
     },
 
     componentDidMount: function(){
-        //this.addFavoriteTerm(1337, "test test test");
-        this.getFavoriteTerms();
+        //this.getFavoriteTerms(); //Uncomment to stop using dummy data
         this.setState({
             terms: this.props.dateSort(this.state.terms, false),
             sortBy: 'added',

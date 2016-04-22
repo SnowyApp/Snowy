@@ -16,13 +16,13 @@ var fakeUser = {
 module.exports = React.createClass({
     getInitialState: function(){
         return({
-            diagrams: [],
-            filteredDiagrams: []
+            diagrams: this.props.diagrams, // should be [] later when not using dummy data
+            filteredDiagrams: this.props.diagrams // should be [] later when not using dummy data
         });
     },
 
     componentDidMount: function(){
-        this.getFavoriteDiagrams();
+        //this.getFavoriteDiagrams(); //Uncomment to stop using dummy data
         this.setState({
             diagrams: this.props.dateSort(this.state.diagrams, false),
             sortBy: 'added',
