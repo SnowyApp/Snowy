@@ -319,6 +319,24 @@ var Container = React.createClass({
         });
     },
 
+    loadDiagram: function() {
+        $.ajax({
+            type: "GET",
+            method: "GET",
+            headers: {
+                "Authorization": cookie.load("userId")
+            },
+            url: this.state.serverUrl + "/diagram",
+            dataType: "json",
+            error: function(error) {
+                console.log(error);
+            }.bind(this),
+            success: function(result) {
+                console.log(result);
+            }.bind(this)
+        });
+    },
+
     render: function() {
         var content = null;
         switch(this.state.content){
