@@ -176,14 +176,10 @@ CREATE TABLE complex_map_refset(
 DROP TABLE IF EXISTS favorite_term CASCADE;
 CREATE TABLE favorite_term(
     concept_id BIGINT NOT NULL,
-    effective_time BIGINT NOT NULL,
-    active INTEGER NOT NULL,
     user_email TEXT NOT NULL,
     date_added TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     term TEXT NOT NULL,
-    CONSTRAINT favorite_term_concept_fk 
-        FOREIGN KEY (concept_id, effective_time, active) REFERENCES
-        concept (id, effective_time, active),
+    CONSTRAINT favorite_term_user_pk PRIMARY KEY (concept_id, user_email),
     CONSTRAINT favorite_term_user_fk 
         FOREIGN KEY (user_email) REFERENCES usr (email)
 );
@@ -195,8 +191,8 @@ DECLARE
 	latest_concept RECORD;
 BEGIN
     SELECT * FROM concept INTO latest_concept WHERE active=1 AND id=cid ORDER BY effective_time DESC LIMIT 1;
-    INSERT INTO favorite_term (concept_id, effective_time, active, user_email, term)
-        VALUES (cid, latest_concept.effective_time, latest_concept.active, email, term);
+    INSERT INTO favorite_term (concept_id, user_email, term)
+        VALUES (cid, email, term);
 END;
 $$ LANGUAGE plpgsql;
 

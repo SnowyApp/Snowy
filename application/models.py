@@ -19,7 +19,7 @@ DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 VALID_TOKEN_PROCEDURE = "is_valid_token"
 
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
-ADD_FAVORITE_TERM_PROCEDURE = "add_favorite_term"
+INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term) VALUES (%s, %s, %s);"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
 SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id 
@@ -101,7 +101,7 @@ class User():
         """
         cur = get_db().cursor()
         try:
-            cur.callproc("add_favorite_term", (cid, self.email, term))
+            cur.execute(INSERT_FAVORITE_TERM, (cid, self.email, term))
             get_db().commit()
             cur.close()
         except Exception as e:
