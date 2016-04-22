@@ -10,7 +10,7 @@ var NavigationItem = React.createClass({
     render: function(){
         return(
             <li role="presentation">
-                <a className="navLink" onClick={this.handleClick.bind(this, {name:this.props.name, id:this.props.id})} href='#'>
+                <a className="navLink" onClick={this.handleClick.bind(this, this.props.id) href='#'>
                     {this.props.name}
                 </a>
             </li>
