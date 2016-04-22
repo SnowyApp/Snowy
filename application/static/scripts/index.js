@@ -298,14 +298,14 @@ var Container = React.createClass({
     },
 
     saveDiagram: function() {
-        console.log("SAVING DIAGRAM");
-        console.log(this.state.data[0]);
+        var data = this.stringifyDiagram(this.state.data);
+        var something = { "data": data };
         $.ajax({
             type: "POST",
             method: "POST",
-            url: this.state.serverUrl + "/diagram/",
-            dataType: "json",
-            data: this.state.data[0],
+            url: this.state.serverUrl + "/diagram",
+            contentType: "application/json",
+            data: data,
             error: function() {
                 console.log("Could not store diagram.");
             }.bind(this),
@@ -313,7 +313,6 @@ var Container = React.createClass({
                 console.log("Could store diagram:");
             }.bind(this)
         });
-        console.log("DIAGRAM SNET");
     },
 
     render: function() {
