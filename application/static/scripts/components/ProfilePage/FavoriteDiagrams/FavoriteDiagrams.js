@@ -65,9 +65,10 @@ module.exports = React.createClass({
     */
     removeDiagram: function(id){
         //Remove element locally (for responsiveness)
-        var tempDiagrams = this.props.removeid(this.state.diagrams, id);
+        var tempDiagrams = this.props.removeid(this.state.filteredDiagrams, id);
         this.setState({
-            diagrams: tempDiagrams
+            diagrams: tempDiagrams,
+            filteredDiagrams: tempDiagrams
         });
         //TODO: Remove element from database
     },
