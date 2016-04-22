@@ -29,7 +29,8 @@ var Container = React.createClass({
 
     /**
      * Fetch information used to display diagram and navigation and update
-     * state when all information is received.
+     * state when all information is received. saveHistory determines if
+     * the last node is saved to history.
      */
     getConcept: function(id, saveHistory = true) {
         $.when(this.getRoot(id), this.getChildren(id))
@@ -238,6 +239,13 @@ var Container = React.createClass({
     },
 
    /**
+    * Clears the navigation history
+    */
+    clearHistory: function(){
+        this.state.history.length = 0;
+    },
+
+   /**
     * Move up one level in the tree (from history)
     */
     upOneLevel: function(){
@@ -247,6 +255,14 @@ var Container = React.createClass({
         // do not do anything if on the root node
         if (id === undefined) return;
         this.updateSelectedTerm(id, false);
+    },
+
+   /**
+    * Resets navigation to SNOMED CT root node
+    */
+    resetRoot: function(){
+        this.updateSelectedTerm(this.props.concept_id, false);
+        this.clearHistory();
     },
     
     onLogin: function(uid){
@@ -288,6 +304,7 @@ var Container = React.createClass({
                         url={this.state.serverUrl}
                         update={this.updateSelectedTerm}
                         upOneLevel={this.upOneLevel}
+                        resetRoot={this.resetRoot}
                         getHistory={this.getHistory}
                     />
                     <section>

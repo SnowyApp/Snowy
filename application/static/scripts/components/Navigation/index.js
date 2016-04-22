@@ -78,6 +78,7 @@ var Navigation = React.createClass({
                     <li role="presentation" className="active">                    
                         <a className="navigation-header">
                             <span style={backArrow} onClick={this.props.upOneLevel} className="glyphicon glyphicon-triangle-top backArrow linkPointer" aria-hidden="true"> </span>
+                            <span onClick={this.props.resetRoot} className="glyphicon glyphicon-home rootLink linkPointer" aria-hidden="true"> </span>
                             <div className="grandparentHeader linkPointer" onClick={this.props.upOneLevel}>
                                 {grandparent}
                             </div>

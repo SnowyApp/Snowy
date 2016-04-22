@@ -13,6 +13,13 @@
     left: 8px;
 }
 
+.rootLink {
+    position: absolute;
+    font-size: 1.9em;
+    top: 28%;
+    right: 10px;
+}
+
 .navigation-header {
     border-radius: 0px !important;
     margin-bottom: 3px;
@@ -25,12 +32,14 @@
 
 .parentHeader {
     font-size: 1.2em;
-    margin-left: 28px; 
+    margin-left: 28px;
+    margin-right: 28px;
 }
 
 .grandparentHeader {
     font-size: 0.8em;
     margin-left: 28px;
+    margin-right: 28px;
 }
 
 .linkPointer:hover {
