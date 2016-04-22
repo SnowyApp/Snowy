@@ -209,7 +209,7 @@ def search(search_term):
     return jsonify(es.search(index="desc", body=query))
 
 
-@app.route('/diagram', methods=['POST', 'GET', 'PUT'])
+@app.route('/diagram', methods=['POST', 'GET', 'PUT', 'DELETE'])
 @login_required
 def store_diagram():
     """
@@ -231,7 +231,7 @@ def store_diagram():
         g.user.store_diagram(data['data'], data['id'])
         return jsonify(status="ok")
     elif request.method == "DELETE":
-        data = request.json()
+        data = request.get_json()
         if not 'id' in data or not isinstance(data['id'], int):
             return jsonify(message = "'id' is not provided"), 400
 
