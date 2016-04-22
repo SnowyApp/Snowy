@@ -404,6 +404,7 @@ var Export = React.createClass({
         var chartArea = document.getElementsByTagName('svg')[0].parentNode;
         var svg = chartArea.innerHTML;
         var canvas = document.createElement('canvas');
+        console.log(chartArea.offsetWidth);
         canvas.setAttribute('width', chartArea.offsetWidth);
         canvas.setAttribute('height', chartArea.offsetHeight);
         canvas.setAttribute('display', 'none');
@@ -416,12 +417,12 @@ var Export = React.createClass({
         var context = canvas.getContext("2d");
         context.globalCompositeOperation = "destination-over";
         context.fillStyle = '#fff';
-        context.fillRect(0, 0, chartArea.offsetWidth, chartArea.offsetHeight);
+        context.fillRect(0, 0, canvas.width, canvas.height);
 
         // Append the image data to a link, download the image and then remove canvas
         var dataString = canvas.toDataURL();
         var link = document.createElement("a");
-        link.download = "image.png";
+        link.download = new Date().toJSON().slice(0,10) + ".png";
         link.href = dataString;
         link.click();
         canvas.parentNode.removeChild(canvas);
