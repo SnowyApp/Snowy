@@ -3,39 +3,27 @@ var d3Chart = require('./d3Chart');
 module.exports = React.createClass({
     propTypes: {
         data: React.PropTypes.array,
-        view: React.PropTypes.string,
-        domain: React.PropTypes.object
+        view: React.PropTypes.string
     },
 
-    getDefaultProps: function() {
-        return {
-            width: 300,
-            height: 300
-        }
-    },
     componentDidMount: function() {
         var element = ReactDOM.findDOMNode(this);
         d3Chart.create(element, {
-            width: this.props.width,
-            height: this.props.height,
             onClick: this.props.onClick
         }, this.getChartState());
     },
     componentDidUpdate: function() {
         var element = ReactDOM.findDOMNode(this);
-        d3Chart.destroy();
-        d3Chart.create(element, {
-            width: this.props.width,
-            height: this.props.height,
-            onClick: this.props.onClick
-        }, this.getChartState());
+            d3Chart.destroy();
+            d3Chart.create(element, {
+                onClick: this.props.onClick
+            }, this.getChartState());
     },
 
     getChartState: function() {
         return {
             data: this.props.data,
-            view: this.props.view,
-            domain: this.props.domain
+            view: this.props.view
         };
     },
     resetZoom: function(){
