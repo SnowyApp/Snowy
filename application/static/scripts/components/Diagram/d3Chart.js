@@ -78,6 +78,8 @@ const NODE_WIDTH = 250;
 const NODE_HEIGHT = 50;
 const WIDTH_MARGIN = 500;
 
+const HORIZONTAL_MARGIN = 300; //Moves the horizontal view down in the y-axis
+
 const DURATION = 750;
 
 /**
@@ -91,6 +93,8 @@ const DURATION = 750;
  */
 
 d3Chart.create = function(element, props, state) {
+    if(!state){return;}
+
     root = state.data[0];
     treeView = state.view;
     onClick = props.onClick;
@@ -136,13 +140,26 @@ d3Chart.create = function(element, props, state) {
      *      </g>
      * </svg>
      */
-    g = svg.append("g")
-        .attr("class", "nodes")
-        .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")")
-        .style("cursor","pointer");
+    if(treeView == 'vertical'){
+        g = svg.append("g")
+            .attr("class", "nodes")
+            .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")")
+            .style("cursor","pointer");
+    } else {
+        g = svg.append("g")
+            .attr("class", "nodes")
+            .attr("transform", "translate(" + 0 + "," + HORIZONTAL_MARGIN + ")scale(" + 1 + ")")
+            .style("cursor","pointer");
+    }
 
     function zoomed() {
-        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        var yOffset = d3.event.translate[1] + HORIZONTAL_MARGIN;
+        if(treeView == 'vertical'){
+            g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        } else {
+            g.attr("transform", "translate(" + d3.event.translate[0] + ',' + yOffset + ")scale(" + d3.event.scale + ")");
+        }
+
     }
 
     /**
@@ -158,7 +175,7 @@ d3Chart.create = function(element, props, state) {
         })
         .nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
     } else {
-        tree.size([500,960]); //TODO change magic number
+        tree.nodeSize([NODE_HEIGHT, NODE_WIDTH/2]);
     }
 
         tree.sort(function(a,b){return d3.ascending(a.name,b.name)});
@@ -177,9 +194,10 @@ d3Chart.reset = function(element, state) {
  * Called when we want to redraw the tree
  */
 d3Chart.update = function(element, state) {
-    root = state.data[0];
-    treeView = state.view;
-    this._drawTree(root);
+    if (state){
+        root = state.data[0];
+        this._drawTree(root);
+    }
 };
 
 d3Chart.destroy = function() {
@@ -194,7 +212,14 @@ d3Chart.getId = function() {
 };
 
 d3Chart._resetZoom = function(){
-    d3.select('body').selectAll(".nodes").attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
+    if(treeView == 'vertical'){
+        d3.select('body').selectAll(".nodes")
+            .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
+    } else {
+        d3.select('body').selectAll(".nodes")
+            .attr("transform", "translate(" + 0 + "," + HORIZONTAL_MARGIN + ")scale(" + 1 + ")");
+    }
+
 };
 
 /**
@@ -253,9 +278,7 @@ d3Chart._drawTree = function(data) {
     } else {
         nodes.forEach(function(d) {
             d.y = d.depth*500;
-            d.x *= 4;
-        }
-        );
+        });
     }
 
 
@@ -458,7 +481,7 @@ d3Chart._drawTree = function(data) {
             link.attr("y1", function(d) { return d.source.x + NODE_HEIGHT/2; })
                 .attr("x1", function(d) { return d.source.y + NODE_WIDTH;})
                 .attr("y2", function(d) { return d.target.x + NODE_HEIGHT/2; })
-                .attr("x2", function(d) { return d.target.y; })
+                .attr("x2", function(d) { return d.target.y; });
 
 
             node.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
@@ -491,7 +514,7 @@ d3Chart._drawTree = function(data) {
             else {
                 selection.attr("transform", function (d, i) {
                     d.x += d3.event.dy;
-                    d.y += d3.event.dx;
+                    d.y += d3.event.dx ;
                     return "translate(" + [d.x, d.y] + ")"
                 });
             }
