@@ -6,18 +6,21 @@ module.exports = React.createClass({
         view: React.PropTypes.string
     },
 
-    componentDidMount: function() {
+    componentDidUpdate: function(prevProps) {
         var element = ReactDOM.findDOMNode(this);
-        d3Chart.create(element, {
-            onClick: this.props.onClick
-        }, this.getChartState());
-    },
-    componentDidUpdate: function() {
-        var element = ReactDOM.findDOMNode(this);
+
+        if (prevProps.data.length == 0){
+            d3Chart.create(element, {
+                onClick: this.props.onClick
+            }, this.getChartState());
+        } else if (prevProps.view != this.props.view) {
             d3Chart.destroy();
             d3Chart.create(element, {
                 onClick: this.props.onClick
             }, this.getChartState());
+        } else {
+            d3Chart.update(element, this.getChartState());
+        }
     },
 
     getChartState: function() {
