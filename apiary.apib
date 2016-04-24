@@ -92,7 +92,7 @@ Simple API for allowing accessing snowy data.
                 "status": "ok"
             }
 
-## Update user information [/update_info]
+## Update user information [/user_info]
 
 ### Update info [PUT]
 
@@ -119,6 +119,24 @@ Simple API for allowing accessing snowy data.
                 "status": "ok"
             }
 
+### Get info [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: token
+
++ Response 200 (application/json)
+    
+    + Body 
+
+            {
+                "first_name": "Simon",
+                "last_name": "Lindblad",
+                "language": "en",
+                "email": "test@test.com"
+            }
 
 ## Favorite Terms [/favorite_term]
 
