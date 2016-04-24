@@ -389,6 +389,7 @@ d3Chart._drawTree = function(data) {
             .attr("x", NODE_WIDTH/2 + WIDTH_MARGIN)
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
+            .attr('font-family', 'Helvetica, Arial, Sans-Serif')
             .text(function(d) { return d.name; })
             .style("fill-opacity", 1)
             .call(wrap, TEXT_MAX_WIDTH);
@@ -398,6 +399,7 @@ d3Chart._drawTree = function(data) {
             .attr("x", NODE_WIDTH/2)
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
+            .attr('font-family', 'Helvetica, Arial, Sans-Serif')
             .text(function(d) { return d.name; })
             .style("fill-opacity", 1)
             .call(wrap, TEXT_MAX_WIDTH);
