@@ -41,9 +41,12 @@ def get_parents(id):
 def get_concept(id):
     return json.loads(requests.get(url + "/concept/" + str(id)).text)
 
-def update_info(first_name, last_name, language, email):
-    data = {"first_name": first_name, "last_name": last_name, "language": language, "email": email}
-    return json.loads(requests.put(url + "/user_info", json=data, headers=auth).text)
+def update_info():
+    global auth
+    data = {"first_name": "Simon", "last_name": "Lindblad", "data_lang": "en", "email": "simonlind", "site_lang": "en"}
+    data = json.loads(requests.put(url + "/user_info", json=data, headers=auth).text)
+    auth = {"Authorization": data["token"]}
+    return data
 
 def update_password(pswd):
     data= {"password": pswd, "invalidate_tokens": True}

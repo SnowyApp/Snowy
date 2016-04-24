@@ -10,8 +10,8 @@ DB_NAME = "snomedct"
 DB_USER = "simon"
 
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
-SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, language FROM usr WHERE email=%s;"
-UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, language=%s, email=%s WHERE email=%s ;"
+SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, data_lang, site_lang FROM usr WHERE email=%s;"
+UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, data_lang=%s, email=%s, site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
 
@@ -81,12 +81,13 @@ class User():
     """
     A user of the browser.
     """
-    def __init__(self, email, password_hash, first_name = "", last_name = "", language = "en"):
+    def __init__(self, email, password_hash, first_name = "", last_name = "", data_lang = "en", site_lang = "en"):
         self.email = email
         self.password_hash = password_hash
         self.first_name = first_name
         self.last_name = last_name
-        self.language = language
+        self.data_lang = data_lang
+        self.site_lang = site_lang
 
     def check_password(self, plain_pass):
         """ Checks if the password matches the stored hash """
@@ -138,19 +139,20 @@ class User():
             print(e)
             return None
 
-    def update_info(self, first_name, last_name, language, email):
+    def update_info(self, first_name, last_name, data_lang, email, site_lang):
         """
         Update the first name, last name and language setting for the user.
         Returns True if the operation succeeded, False otherwise.
         """
         cur = get_db().cursor()
         try:
-            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, language, email, self.email))
+            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, data_lang, email, site_lang,self.email))
             get_db().commit()
             self.email = email
             self.first_name = first_name
             self.last_name = last_name
-            self.language = language
+            self.data_lang = data_lang
+            self.site_lang = data_lang
             cur.close()
             return True
         except Exception as e:
@@ -268,7 +270,8 @@ class User():
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
-        return User(user_data[0], user_data[1], user_data[2], user_data[3], user_data[4])
+        print(user_data)
+        return User(user_data[0], user_data[1], user_data[2], user_data[3], user_data[4], user_data[5])
 
     def to_json(self):
         """
@@ -277,7 +280,8 @@ class User():
         return {"email": self.email,
                 "first_name": self.first_name,
                 "last_name": self.last_name,
-                "language": self.language}
+                "data_lang": self.data_lang,
+                "site_lang": self.site_lang}
 
 
 class Token():

@@ -4,7 +4,8 @@ CREATE TABLE usr(
     email TEXT NOT NULL PRIMARY KEY,
     first_name TEXT,
     last_name TEXT,
-    language VARCHAR(2),
+    data_lang VARCHAR(2),
+    site_lang VARCHAR(2),
     password_hash TEXT NOT NULL
 );
 
