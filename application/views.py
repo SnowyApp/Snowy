@@ -117,20 +117,23 @@ def logout():
     return jsonify(status="ok")
 
 
-@app.route('/update_info', methods=['PUT'])
+@app.route('/user_info', methods=['PUT', 'GET'])
 @login_required
-def update_info():
+def user_info():
     """
     Updates information for the user.
     """
-    data = request.get_json()
-    if not 'first_name' in data or not isinstance(data['first_name'], str) or \
-        not 'last_name' in data or not isinstance(data['last_name'], str) or \
-        not 'language' in data or not isinstance(data['language'], str):
-        return jsonify(message="Incomplete information")
-    
-    g.user.update_info(data['first_name'], data['last_name'], data['language'])
-    return jsonify(status="ok")
+    if request.method == "GET":
+        return jsonify(g.user.to_json())
+    elif request.method == "PUT":
+        data = request.get_json()
+        if not 'first_name' in data or not isinstance(data['first_name'], str) or \
+            not 'last_name' in data or not isinstance(data['last_name'], str) or \
+            not 'language' in data or not isinstance(data['language'], str):
+            return jsonify(message="Incomplete information")
+        
+        g.user.update_info(data['first_name'], data['last_name'], data['language'])
+        return jsonify(status="ok")
 
 
 @app.route('/favorite_term', methods=['POST', 'GET', 'DELETE'])

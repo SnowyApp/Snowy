@@ -43,7 +43,10 @@ def get_concept(id):
 
 def update_info(first_name, last_name, language):
     data = {"first_name": first_name, "last_name": last_name, "language": language}
-    return json.loads(requests.post(url + "/update_info", json=data, headers=auth).text)
+    return json.loads(requests.put(url + "/user_info", json=data, headers=auth).text)
+
+def get_user_info():
+    return json.loads(requests.get(url + "/user_info", headers=auth).text)
 
 def store_diagram():
     data = {"data": "This is a test diagram", "name": "Simons diagram"}
