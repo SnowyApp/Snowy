@@ -45,6 +45,10 @@ def update_info(first_name, last_name, language, email):
     data = {"first_name": first_name, "last_name": last_name, "language": language, "email": email}
     return json.loads(requests.put(url + "/user_info", json=data, headers=auth).text)
 
+def update_password(pswd):
+    data= {"password": pswd, "invalidate_tokens": True}
+    return json.loads(requests.put(url + "/password", json=data, headers=auth).text)
+
 def get_user_info():
     return json.loads(requests.get(url + "/user_info", headers=auth).text)
 

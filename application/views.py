@@ -137,6 +137,24 @@ def user_info():
         return jsonify(status="ok")
 
 
+@app.route('/password', methods=['PUT'])
+@login_required
+def update_password():
+    """
+    Update the users password
+    """
+    data = request.get_json()
+    print(data)
+    if not 'password' in data or not isinstance(data['password'], str) or \
+        not 'invalidate_tokens' in data or not isinstance(data['invalidate_tokens'], bool):
+        return jsonify(message="Password or invalidate_tokens not provided")
+
+    g.user.update_password(data['password'])
+    if data['invalidate_tokens']:
+        g.user.invalidate_tokens(request.headers.get('Authorization', None))
+
+    return jsonify(status="ok")
+
 @app.route('/favorite_term', methods=['POST', 'GET', 'DELETE'])
 @login_required
 def favorite_term():

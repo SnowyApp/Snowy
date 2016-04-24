@@ -12,11 +12,13 @@ DB_USER = "simon"
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
 SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, language FROM usr WHERE email=%s;"
 UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, language=%s, email=%s WHERE email=%s ;"
+UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 VALID_TOKEN_PROCEDURE = "is_valid_token"
+INVALIDATE_TOKENS_STATEMENT = "DELETE FROM token WHERE token!=%s"
 
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s and concept_id=%s"
@@ -154,6 +156,32 @@ class User():
         except Exception as e:
             print(str(e))
             return False
+
+    def update_password(self, new_password):
+        """
+        Updates the users password.
+        """
+        cur = get_db().cursor()
+        p_hash = generate_password_hash(new_password, salt_length=12)
+        try:
+            cur.execute(UPDATE_PASSWORD_STATEMENT, (p_hash,self.email))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
+
+
+    def invalidate_tokens(self,token):
+        """
+        Invalidate all tokens but token.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(INVALIDATE_TOKENS_STATEMENT, (token, ))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
 
     def store_diagram(self, data, name, did = None):
         """
