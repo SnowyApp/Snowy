@@ -46,11 +46,11 @@ def update_info(first_name, last_name, language):
     return json.loads(requests.post(url + "/update_info", json=data, headers=auth).text)
 
 def store_diagram():
-    data = {"data": "This is a test diagram"}
+    data = {"data": "This is a test diagram", "name": "Simons diagram"}
     return json.loads(requests.post(url + "/diagram", json=data, headers=auth).text)
 
 def update_diagram():
-    data = {"data": "This is an updated diagram", "id": store_diagram()['id']}
+    data = {"data": "This is an updated diagram", "name": "Simons updated diagram", "id": store_diagram()['id']}
     return json.loads(requests.put(url + "/diagram", json=data, headers=auth).text)
 
 def delete_diagram(id):

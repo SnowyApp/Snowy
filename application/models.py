@@ -44,8 +44,8 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.term
 
 GET_CONCEPT_PROCEDURE = "get_concept"
 
-INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) RETURNING id"
-UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, date_modified=NOW() WHERE user_email=%s AND id=%s"
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, user_email) VALUES (%s, %s, %s) RETURNING id"
+UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=NOW() WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
 
@@ -151,7 +151,7 @@ class User():
             print(str(e))
             return False
 
-    def store_diagram(self, data, did = None):
+    def store_diagram(self, data, name, did = None):
         """
         Stores a diagram for the user.
         """
@@ -159,9 +159,9 @@ class User():
         try:
             new_id = None
             if did:
-                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, self.email, did))
+                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, name, self.email, did))
             else:
-                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, self.email))
+                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, self.email))
                 new_id = cur.fetchone()[0]
             get_db().commit()
             cur.close()
