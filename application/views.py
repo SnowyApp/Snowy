@@ -129,10 +129,11 @@ def user_info():
         data = request.get_json()
         if not 'first_name' in data or not isinstance(data['first_name'], str) or \
             not 'last_name' in data or not isinstance(data['last_name'], str) or \
-            not 'language' in data or not isinstance(data['language'], str):
+            not 'language' in data or not isinstance(data['language'], str) or \
+            not 'email' in data or not isinstance(data['email'], str):
             return jsonify(message="Incomplete information")
         
-        g.user.update_info(data['first_name'], data['last_name'], data['language'])
+        g.user.update_info(data['first_name'], data['last_name'], data['language'], data['email'])
         return jsonify(status="ok")
 
 

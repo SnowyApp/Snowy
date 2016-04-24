@@ -11,7 +11,7 @@ DB_USER = "simon"
 
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
 SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, language FROM usr WHERE email=%s;"
-UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, language=%s WHERE email=%s ;"
+UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, language=%s, email=%s WHERE email=%s ;"
 
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
@@ -136,15 +136,19 @@ class User():
             print(e)
             return None
 
-    def update_info(self, first_name, last_name, language):
+    def update_info(self, first_name, last_name, language, email):
         """
         Update the first name, last name and language setting for the user.
         Returns True if the operation succeeded, False otherwise.
         """
         cur = get_db().cursor()
         try:
-            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, language, self.email))
+            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, language, email, self.email))
             get_db().commit()
+            self.email = email
+            self.first_name = first_name
+            self.last_name = last_name
+            self.language = language
             cur.close()
             return True
         except Exception as e:

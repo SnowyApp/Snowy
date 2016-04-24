@@ -41,8 +41,8 @@ def get_parents(id):
 def get_concept(id):
     return json.loads(requests.get(url + "/concept/" + str(id)).text)
 
-def update_info(first_name, last_name, language):
-    data = {"first_name": first_name, "last_name": last_name, "language": language}
+def update_info(first_name, last_name, language, email):
+    data = {"first_name": first_name, "last_name": last_name, "language": language, "email": email}
     return json.loads(requests.put(url + "/user_info", json=data, headers=auth).text)
 
 def get_user_info():
