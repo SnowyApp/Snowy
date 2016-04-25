@@ -277,6 +277,9 @@ var Container = React.createClass({
         cookie.remove('userId', {path: '/'});
     },
 
+    /**
+     * Create a json string of given diagram.
+     **/
     stringifyDiagram: function(diagram) {
         var s = [];
         for (var node in diagram) {
@@ -297,13 +300,18 @@ var Container = React.createClass({
         return s;
     },
 
+    /**
+     * Return a Javascript object of the diagram given in JSON.
+     **/
     objectifyDiagram: function(data) {
         data = JSON.parse(data);
-
         data[0].children = this.parseChildren(data[0].children);
         return data;
     },
 
+    /**
+     * Parse given list of children and recursively parse its children.
+     **/
     parseChildren: function(children) {
         children = JSON.parse(children);
 
@@ -314,9 +322,10 @@ var Container = React.createClass({
     },
 
 
+    /**
+     * Send diagram to server.
+     **/
     saveDiagram: function() {
-        var data = JSON.stringify(this.stringifyDiagram(this.state.data));
-        var something = { "data": data };
         $.ajax({
             type: "POST",
             method: "POST",
@@ -325,13 +334,18 @@ var Container = React.createClass({
             },
             url: this.state.serverUrl + "/diagram",
             contentType: "application/json",
-            data: JSON.stringify({ "data" :data }),
+            data: JSON.stringify(
+                    { "data" : JSON.stringify(this.stringifyDiagram(this.state.data)) }),
             error: function(xhr) {
                 console.log("Could not store diagram.");
             }.bind(this)
         });
     },
 
+    /**
+     * Load the diagram of given ID from the server and update state when the 
+     * results are received.
+     **/
     loadDiagram: function(id) {
         $.ajax({
             type: "GET",
