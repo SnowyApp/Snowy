@@ -24,7 +24,8 @@ var Container = React.createClass({
             content: "diagram",
             data: this.props.data,
             history: [],
-            language: "en"
+            language: "en",
+            dbEdition: "en"
         };
     },
 
@@ -285,6 +286,17 @@ var Container = React.createClass({
         this.setState({
             language: language
         });
+        //TODO: If user is logged in, save to database
+    },
+
+   /**
+    * Sets the sites language to language
+    */
+    setEdition: function(edition){
+        this.setState({
+            dbEdition: edition
+        });
+        //TODO: If user is logged in, save to database
     },
 
     render: function() {
@@ -330,6 +342,7 @@ var Container = React.createClass({
                             contentName={this.state.content}
                             language={this.state.language}
                             setLanguage={this.setLanguage}
+                            setEdition={this.setEdition}
                         />
                         {content}
                     </section>
@@ -447,8 +460,8 @@ var Bar = React.createClass({
                         <span className="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a onClick={this.props.setLanguage.bind(null,"en")} href="#">bajs</a></li>
-                            <li><a onClick={this.props.setLanguage.bind(null,"se")} href="#">bajs</a></li>
+                            <li><a onClick={this.props.setEdition.bind(null,"en")} href="#">English Edition 2015-11-30</a></li>
+                            <li><a onClick={this.props.setEdition.bind(null,"se")} href="#">Swedish Edition 2015-11-30</a></li>
                         </ul>
                     </div>
                     {/* Language drop-down */}
