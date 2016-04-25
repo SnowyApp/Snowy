@@ -2,7 +2,8 @@ var FavoriteTerms = require('./FavoriteTerms/FavoriteTerms');
 var FavoriteDiagrams = require('./FavoriteDiagrams/FavoriteDiagrams');
 var AccountPage = require('./AccountPage/AccountPage');
 var NavBar = require('./NavBar/NavBar');
-
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 
 

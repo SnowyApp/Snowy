@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 //Temporary fake user
 var fakeUser = {
     id: 1337,

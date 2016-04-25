@@ -1,4 +1,8 @@
 import cookie from 'react-cookie';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Modal from 'react-bootstrap/lib/Modal';
+import Button from 'react-bootstrap/lib/Button';
 
 var LogOut = React.createClass({
     propTypes:{

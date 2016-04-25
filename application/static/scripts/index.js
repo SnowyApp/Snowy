@@ -1,6 +1,12 @@
 import PageClick from 'react-page-click';
 import SplitPane from 'react-split-pane';
 import cookie from 'react-cookie';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Button from 'react-bootstrap/lib/Button';
+import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
+import SplitButton from 'react-bootstrap/lib/SplitButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
 
 var Diagram = require('./components/Diagram/index');
 var Search = require('./components/Search/index');
@@ -569,6 +575,6 @@ var Export = React.createClass({
 
 
 ReactDOM.render(
-    <Container concept_id="138875005" url={matteUrl}  />,
+   <Container concept_id="138875005" url={matteUrl}  />,
     document.getElementById('content')
 );

@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 /**
  * These comments will work a little bit like a small tutorial for how
  * d3 works and why the code looks like it does. The way you "inject" a D3

@@ -1,4 +1,7 @@
 var Chart = require("./Chart");
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Button from 'react-bootstrap/lib/Button';
 
 module.exports = React.createClass({
     /**

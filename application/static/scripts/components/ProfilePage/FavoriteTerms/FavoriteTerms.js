@@ -1,4 +1,7 @@
 import cookie from 'react-cookie';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 var TermElement = require('./TermElement');
 
 //Temporary fake user

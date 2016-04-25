@@ -1,4 +1,6 @@
 var NavigationItem = require('./NavigationItem');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 /**
  * Navigation panel component
