@@ -445,6 +445,30 @@ var Container = React.createClass({
 
 
 var Bar = React.createClass({
+    //Dictionary for supported languages
+    dict: {
+        se: {
+            "search":       "Sök",
+            "version":      "Version",
+            "saveDiagram":  "Spara diagram",
+            "diagram":      "Diagram",
+            "login":        "Logga in",
+            "logout":       "Logga ut",
+            "register":     "Registrera",
+            "profile":      "Profilsida"
+        },
+        en: {
+            "search":       "Search",
+            "version":      "Version",
+            "saveDiagram":  "Save diagram",
+            "diagram":      "Diagram",
+            "login":        "Log in",
+            "logout":       "Log out",
+            "register":     "Register",
+            "profile":      "Profile"
+        }
+    },
+
     getInitialState: function(){
         return{
             showRegistration: false,
@@ -490,28 +514,28 @@ var Bar = React.createClass({
         var switchName = '';
         switch(this.props.contentName){
             case "diagram":
-                switchName = "Profile";
+                switchName = "profile";
                 break;
             case "profile":
-                switchName = "Diagram";
+                switchName = "diagram";
                 break;
         }
         const navButtons = this.props.isLoggedIn ? (
             <div>
                 <Button className="profile"
                         onClick={this.props.setContent.bind(null, switchName.toLowerCase())}
-                        bsStyle = "primary" >{switchName}</Button>
+                        bsStyle = "primary" >{this.dict[this.props.language][switchName]}</Button>
                 <Button className="Logout" bsStyle = "primary" 
-                    onClick={this.showLogout}>Logout</Button>
+                    onClick={this.showLogout}>{this.dict[this.props.language]["logout"]}</Button>
                 <LogOut show={this.state.showLogout} hideLogout={this.hideLogout}
                         onLogout={this.props.onLogout} url={this.props.url}/>
             </div>
         ) : (
             <div>
                 <Button className="Register" bsStyle = "primary" 
-                    onClick={this.showRegistration}>Register</Button>
+                    onClick={this.showRegistration}>{this.dict[this.props.language]["register"]}</Button>
                 <Button className="Login" bsStyle = "primary" 
-                    onClick={this.showLogin}>Login</Button>
+                    onClick={this.showLogin}>{this.dict[this.props.language]["login"]}</Button>
                 {/* Registration popup */}
                 <RegisterForm show={this.state.showRegistration} 
                     hideRegistration={this.hideRegistration} url={this.props.url}/>
@@ -544,15 +568,23 @@ var Bar = React.createClass({
                     {/* Database edition drop-down */}
                     <div className="btn-group">
                         <button type="button" className="btn btn-success">
-                            Version
+                            {this.dict[this.props.language]["version"]}
                         </button>
                         <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span className="caret"></span>
                         <span className="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a onClick={this.props.setEdition.bind(null,"en")} href="#">English Edition 2015-11-30</a></li>
-                            <li><a onClick={this.props.setEdition.bind(null,"se")} href="#">Swedish Edition 2015-11-30</a></li>
+                            <li>
+                                <a onClick={this.props.setEdition.bind(null,"en")} href="#">
+                                    English Edition 2015-11-30
+                                </a>
+                            </li>
+                            <li>
+                                <a onClick={this.props.setEdition.bind(null,"se")} href="#">
+                                    Swedish Edition 2015-11-30
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     {/* Language drop-down */}
@@ -565,16 +597,26 @@ var Bar = React.createClass({
                         <span className="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a onClick={this.props.setLanguage.bind(null,"en")} href="#"><img className="langFlag" src="static/img/flags/flag_eng.png"/> English</a></li>
-                            <li><a onClick={this.props.setLanguage.bind(null,"se")} href="#"><img className="langFlag" src="static/img/flags/flag_swe.png"/> Svenska</a></li>
+                            <li>
+                                <a onClick={this.props.setLanguage.bind(null,"en")} href="#">
+                                    <img className="langFlag" src="static/img/flags/flag_eng.png"/> English
+                                </a>
+                            </li>
+                            <li>
+                                <a onClick={this.props.setLanguage.bind(null,"se")} href="#">
+                                    <img className="langFlag" src="static/img/flags/flag_swe.png"/> Svenska
+                                </a>
+                            </li>
                         </ul>
                     </div>
-                    <Export />
+                    <Export language={this.props.language} />
                     <Button 
                         className="save-diagram" 
                         bsStyle="primary"
                         onClick={this.props.saveDiagram}
-                    >Save Diagram</Button>
+                    >
+                        {this.dict[this.props.language]["saveDiagram"]}
+                    </Button>
                     {navButtons}
                 </ButtonToolbar>
             </div>
@@ -584,6 +626,15 @@ var Bar = React.createClass({
 });
 
 var Export = React.createClass({
+    dict: {
+        se: {
+            "export":       "Exportera"
+        },
+        en: {
+            "export":       "Export"
+        }
+    },
+
     exportSVG: function(){
         var html = d3.select("svg")
             .attr({
@@ -626,7 +677,7 @@ var Export = React.createClass({
     },
     render: function(){
         return (
-        <SplitButton bsStyle="primary" title="Export" id="Export">
+        <SplitButton bsStyle="primary" title={this.dict[this.props.language]["export"]} id="Export">
             <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
             <MenuItem divider/>
             <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
