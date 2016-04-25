@@ -9,7 +9,10 @@ var d3Chart = module.exports = {};
 
 var contextMenu = require('./d3-context-menu');
 
-// context menu
+/**
+ * Most of the actions looks at the children of the current nodes parent
+ * and moves them to another list called _children that will not be drawn
+ */
 
 var menuData = [
     {
@@ -31,10 +34,13 @@ var menuData = [
     {
         title: 'Hide/show children',
         action: function(elm, d){
+            //If the node have children, put them in another list
             if (d.children) {
                 d._children = d.children;
                 d.children = null;
-            } else {
+            }
+            //Take the children back
+            else {
                 d.children = d._children;
                 d._children = null;
             }
@@ -65,11 +71,6 @@ var menuData = [
     }
 ];
 
-/**
- * These var:s are in order a index i that will give each node in our tree a
- * unique ID. The tree var is where we will store the info of the tree. It
- * will become kind of like an object.
- */
 var i = 0;
 var tree,root,treeView,svg,g,onClick;
 
@@ -83,13 +84,13 @@ const HORIZONTAL_MARGIN = 300; //Moves the horizontal view down in the y-axis
 const DURATION = 750;
 
 /**
- * This will be used to "inject" an SVG-element to our webpage that you can
- * already do with
- * <svg attr1 = "..." attr2 = "..."/>
- *      .
- *      .
- *      .
- * </svg>
+ * Called on initial render and whenever view is changed. Adds an svg-
+ * element to the page and a g-element where all the nodes will reside with
+ * a transform attribute that depends on the view. Creates a d3 tree object
+ * with size depending on view.
+ * @param element contains the element that contains the chart
+ * @param props contains function for onClick
+ * @param state contains data,view
  */
 
 d3Chart.create = function(element, props, state) {
@@ -99,23 +100,9 @@ d3Chart.create = function(element, props, state) {
     treeView = state.view;
     onClick = props.onClick;
 
-    /**
-     * Sets the variable zoom to the function zoomed. scaleExtent sets
-     * minimum and maximum values for zooming.
-     */
     var zoom = d3.behavior.zoom()
         .on("zoom", zoomed);
 
-
-    /**
-     * We append an SVG element to the page and set it's class to d3.
-     * Width and height must be 100% so that it resizes with the browser.
-     * <svg class = d3 width = 100% height = 1005>
-     *     .
-     *     .
-     *     .
-     * </svg>
-     */
     svg = d3.select(element).append("svg")
         .attr("class", "d3")
         .attr({
@@ -131,15 +118,6 @@ d3Chart.create = function(element, props, state) {
             }
         });
 
-    /**
-     * To add more than one Shape or text element to the SVG-element you have
-     * to put them in a g-element. We give this one the class diagram
-     *
-     * <svg class = d3 width = props.width height = props.height>
-     *      <g class = diagram/>
-     *      </g>
-     * </svg>
-     */
     if(treeView == 'vertical'){
         g = svg.append("g")
             .attr("class", "nodes")
@@ -162,23 +140,19 @@ d3Chart.create = function(element, props, state) {
 
     }
 
-    /**
-     * The tree variable will now grow and sprout to a real tree-object with
-     * the help of d3.layout.tree() and we give it a maximum size aswell.
-     * That way it will automatically space out the nodes and layers
-     * depending of how many nodes and layers we have, neat.
-     */
     tree = d3.layout.tree();
     if(treeView == 'vertical'){
         tree.separation(function (a, b) {
             return a.parent == b.parent ? a.parent.name.length/1.5 : a.parent.name.length;
         })
-        .nodeSize([NODE_HEIGHT/2, NODE_WIDTH/2])
+        .nodeSize([NODE_HEIGHT, NODE_WIDTH])
     } else {
-        tree.nodeSize([NODE_HEIGHT, NODE_WIDTH/2]);
+        tree.nodeSize([NODE_HEIGHT, NODE_WIDTH]);
     }
 
-        tree.sort(function(a,b){return d3.ascending(a.name,b.name)});
+    //TODO add option to sort by id
+    tree.sort(function(a,b){return d3.ascending(a.name,b.name)});
+
     this._drawTree(root);
 };
 
@@ -210,6 +184,11 @@ d3Chart.destroy = function() {
 d3Chart.getId = function() {
     return ++i;
 };
+
+/**
+ *
+ * @private
+ */
 
 d3Chart._resetZoom = function(){
     if(treeView == 'vertical'){
@@ -257,12 +236,9 @@ d3Chart._drawTree = function(data) {
      * nodes and links will become arrays which contains the data for all
      * the nodes and positions for the links (lines) between them.
      */
-
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
-    /**
-     * Defines behavior for dragging elements.
-     */
+
     var drag = d3.behavior.drag()
         .on("dragstart", dragstarted)
         .on("drag", dragmove)
@@ -271,22 +247,15 @@ d3Chart._drawTree = function(data) {
     /**
      * This manually sets the distance between the nodes
      */
-
     if(treeView == 'vertical'){
         nodes.forEach(function(d) {
-        d.y = d.depth*100; });
+            d.y = d.depth*100; });
     } else {
         nodes.forEach(function(d) {
             d.y = d.depth*500;
         });
     }
 
-
-    /**
-     * Declares a node to the g element or var that we created. I think this
-     * part can be skipped. But it also gives every node a unique id, which
-     * is nice.
-     */
     var node = gTree.selectAll("g.node").remove();
     node = gTree.selectAll("g.node")
         .data(nodes, function(d) { return d.id });
@@ -296,11 +265,6 @@ d3Chart._drawTree = function(data) {
      * g-element because we want a node to have a rect and text element.
      * Remember that with SVG you have to use a g-element to combine two or
      * more elements.
-     *
-     * This codes generates this for every node
-     * <g class = node transform = translate(d.x,d.y)>
-     *     rectangle and text go here...
-     * </g>
      */
     var nodeEnter = node.enter().append("g")
         .attr("class", "node");
@@ -345,15 +309,7 @@ d3Chart._drawTree = function(data) {
                 onClick(d.id);
             }
         });
-    /**
-     * Now we add a rectangle element and use conditional expressions to
-     * style them. The ry and rx elements are used to give the eclipse shape
-     * to an ATTRIBUTE concept and the fill color is decided on which
-     * concept the node is. So this is created for an ATTRIBUTE
-     *
-     * < rect class = node width = 20 height = 10 ry = 10px rx = 1px
-     *   style="fill:#FFFFCC;stroke:black" />
-     */
+    //Enter rectangles for every node
     if(treeView == 'vertical'){
         nodeEnter.append('rect')
             .attr('class', 'node')
@@ -370,19 +326,7 @@ d3Chart._drawTree = function(data) {
             .style('fill', '#FFF')
             .style('stroke','black');
     }
-
-    /**
-     * This adds a text element to the same g element as the rectangle. The
-     * current position has a few magic numbers now because there isn't any
-     * great way to position text automatically inside a rectangle with SVG.
-     *
-     * Anyway, we get this
-     * < text y = -18||18 dy = .35em text-anchor = middle style=fill-opacity:1>
-     *     d.text
-     * </text>
-     *
-     */
-
+    //Add text-element for every node
     if(treeView == 'vertical'){
         nodeEnter.append("text")
             .attr("y", NODE_HEIGHT/2)
@@ -405,26 +349,12 @@ d3Chart._drawTree = function(data) {
             .call(wrap, TEXT_MAX_WIDTH);
     }
 
-
-    /**
-     * Creates link which will be an array of objects with class line.link
-     * and contain all the links generated and the unique id it has been given
-     */
+    //Add links between nodes
     var link = gTree.selectAll("line.link").remove();
     link = gTree.selectAll("line.link")
         .data(links, function(d) { return d.target.id; });
 
-    /**
-     * "Enters" the nodes by creating a new g-element inside the bigger
-     * g-element same as the nodes
-     *
-     * This codes generates this for every link
-     * <g>
-     *   <line class = link x1 = d.source.x + 10 y1 = d.source.y + 10 x2 =
-     *   d.source.x + 10 y2 = d.source.y + 5>
-     * </g>
-     */
-
+    //Set the position for the links
     if(treeView == 'vertical'){
         link.enter().insert('line', 'g')
             .attr("class", "link")
@@ -467,9 +397,7 @@ d3Chart._drawTree = function(data) {
         .attr("y2", function(d) { return data.parent.y + 0; })
         .remove();
 
-    /**
-     * Function for recalculating values of links and nodes
-     */
+    //Called during mouseevent, updates position for selected nodes and links
     function tick() {
         if(treeView == 'vertical') {
             link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
@@ -491,17 +419,15 @@ d3Chart._drawTree = function(data) {
 
     }
 
-    /**
-     * Function for the event dragstarted
-     * @param d
-     */
+    //Sets behaviour for when the the mouse starts to drag
     function dragstarted(d) {
         d3.event.sourceEvent.stopPropagation();
         d3.select(this).classed("dragging", true);
     }
 
     /**
-     * Function for dragging an element.
+     * Updates the selected node(s) position depending on where the mouse is
+     * positioned
      */
     function dragmove(d, i) {
         var selection = d3.selectAll(".selected");
@@ -533,16 +459,11 @@ d3Chart._drawTree = function(data) {
         }
         tick();
     }
-    /**
-     * Function for the event dragged. Currently replaced by function dragmove.
-     * @param d
-     */
+
     function dragged(d) {
         d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
     }
-    /**
-     * Function for the event dragended
-     */
+
     function dragended(d) {
         d3.select(this).classed("dragging", false);
     }
