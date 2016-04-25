@@ -2,9 +2,8 @@ import PageClick from 'react-page-click';
 import cookie from 'react-cookie';
 
 module.exports = React.createClass({
-
     render: function() {
-        return <Search url = {this.props.url} update = {this.props.update}/>;
+        return <Search url = {this.props.url} update = {this.props.update} language={this.props.language}/>;
     }
 });
 
@@ -12,6 +11,15 @@ module.exports = React.createClass({
  Handles user input
  */
 var SearchBox = React.createClass({
+    dict: {
+        se: {
+            "search":       "Sök"
+        },
+        en: {
+            "search":       "Search"
+        }
+    },
+
     getInitialState:function(){
         return{
             timeout:null,
@@ -46,8 +54,15 @@ var SearchBox = React.createClass({
     render:function(){
         return(
             <div onClick={this.onClick}>
-                <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyUp={this.handleKeyPress} />
-                <Button onClick={this.doSearch} >Search</Button>
+                <input
+                    id="searchInput"
+                    ref="searchInput"
+                    type="text"
+                    placeholder={this.dict[this.props.language]["search"]+"..."}
+                    defaultValue={this.props.search}
+                    onKeyUp={this.handleKeyPress}
+                />
+                <Button onClick={this.doSearch}>{this.dict[this.props.language]["search"]}</Button>
             </div>
         )
     }
@@ -201,7 +216,8 @@ var Search = React.createClass({
 
         return (
             <div className="search">
-                <SearchBox query={this.state.query}
+                <SearchBox language={this.props.language}
+                           query={this.state.query}
                            doSearch={this.doSearch}
                            updateData={this.updateData}
                            updateQuery={this.updateQuery}/>

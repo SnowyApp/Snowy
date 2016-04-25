@@ -562,7 +562,7 @@ var Bar = React.createClass({
 
         return (
             <div className="bar">
-                <Search url={this.props.serverUrl} update={this.props.update}/>
+                <Search url={this.props.serverUrl} update={this.props.update} language={this.props.language}/>
                 
                 <ButtonToolbar id = "buttons">
                     {/* Database edition drop-down */}
