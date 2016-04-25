@@ -5,6 +5,7 @@ import cookie from 'react-cookie';
 import Button from 'react-bootstrap/lib/Button';
 import Table from 'react-bootstrap/lib/Table';
 import $ from 'jquery';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
 module.exports = React.createClass({
 
@@ -93,10 +94,10 @@ var TermTable = React.createClass({
         return(
             <PageClick onClick={this.handleBlur}>
                 <div className="search-results" style={style}>
-                    <Table data={tableData} hover={true} options={optionsProp}>
-                        <thead dataField="id"  width="100" hidden = {true}>ID</thead>
-                        <thead dataField="name" isKey={true} hidden = {false}>Name</thead>
-                    </Table>
+                    <BootstrapTable data={tableData} hover={true} options={optionsProp}>
+                        <TableHeaderColumn dataField="id"  width="100" hidden = {true}>ID</TableHeaderColumn>
+                        <TableHeaderColumn dataField="name" isKey={true} hidden = {false}>Name</TableHeaderColumn>
+                    </BootstrapTable>
                 </div>
             </PageClick>
         );

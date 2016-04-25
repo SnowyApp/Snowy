@@ -15,6 +15,7 @@
     "jquery": "^2.2.3",
     "react": "^0.14.8",
     "react-bootstrap": "^0.29.2",
+    "react-bootstrap-table": "^2.1.4",
     "react-cookie": "^0.4.5",
     "react-dom": "^0.14.7",
     "react-page-click": "^2.1.0",
