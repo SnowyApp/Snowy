@@ -8,7 +8,7 @@ var NavBar = require('./NavBar/NavBar');
 
 //Dictionary for supported languages. m prefix indicates that its a error/success message
 var dict = {
-    swe: {
+    se: {
         language: "Språk",
         username: "Användarnamn",
         email: "Email",
@@ -36,7 +36,7 @@ var dict = {
         m_updatePasswordSuccessful: "Ditt lösenord har uppdaterats.",
         passwordStrength: ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
     },
-    eng: {
+    en: {
         language: "Language",
         username: "Username",
         email: "Email",
@@ -257,7 +257,9 @@ module.exports = React.createClass({
             case 'terms':
                 content = <FavoriteTerms
                                 url={this.props.url}
-                                dict={dict} terms={dummyTerms}
+                                dict={dict}
+                                language={this.props.language}
+                                terms={dummyTerms}
                                 openTerm={this.props.openTerm}
                                 removeid={this.removeById}
                                 nameSort={this.sortByName}
@@ -269,6 +271,7 @@ module.exports = React.createClass({
                 content = <FavoriteDiagrams
                                 url={this.props.url}
                                 dict={dict}
+                                language={this.props.language}
                                 diagrams={dummyDiagrams}
                                 openDiagram={this.props.openDiagram}
                                 removeid={this.removeById}
@@ -280,6 +283,7 @@ module.exports = React.createClass({
                 content = <AccountPage
                                 url={this.props.url}
                                 dict={dict}
+                                language={this.props.language}
                           />;
                 break;
         }

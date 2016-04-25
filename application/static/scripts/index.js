@@ -316,6 +316,7 @@ var Container = React.createClass({
                             openTerm={this.updateSelectedTerm}
                             openDiagram={function(id){console.log(id)}}
                             url={this.state.serverUrl}
+                            language={this.state.language}
                           />
                 break;
         }
