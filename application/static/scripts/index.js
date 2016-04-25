@@ -437,7 +437,20 @@ var Bar = React.createClass({
                 <Search url={this.props.serverUrl} update={this.props.update}/>
                 
                 <ButtonToolbar id = "buttons">
-
+                    {/* Database edition drop-down */}
+                    <div className="btn-group">
+                        <button type="button" className="btn btn-success">
+                            Version
+                        </button>
+                        <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span className="caret"></span>
+                        <span className="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul className="dropdown-menu">
+                            <li><a onClick={this.props.setLanguage.bind(null,"en")} href="#">bajs</a></li>
+                            <li><a onClick={this.props.setLanguage.bind(null,"se")} href="#">bajs</a></li>
+                        </ul>
+                    </div>
                     {/* Language drop-down */}
                     <div className="btn-group">
                         <button type="button" className="btn btn-primary flagButton">
