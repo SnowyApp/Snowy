@@ -5,6 +5,7 @@ from elasticsearch import Elasticsearch
 es = Elasticsearch()
 
 requests.delete("http://localhost:9200/desc")
+
 db = psycopg2.connect("dbname=snomedct user=simon")
 cur = db.cursor()
 cur.execute("SELECT concept_id,term FROM description;")
