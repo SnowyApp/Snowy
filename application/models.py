@@ -15,6 +15,7 @@ UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, data_lang=%
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
 SELECT_CONCEPT_QUERY = "SELECT concept_id, term, type_id FROM description WHERE concept_id=%s AND id IN (SELECT referenced_component_id FROM language_refset);"
+GET_CONCEPT_PROCEDURE = "get_concept"
 
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
@@ -27,10 +28,8 @@ DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s 
 INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term) VALUES (%s, %s, %s);"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
-SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id 
-                                FROM relationship B JOIN description A 
-                                ON B.source_id=a.concept_id 
-                                WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
+SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=a.concept_id WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
+SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
 SELECT_PARENTS_QUERY = """SELECT B.source_id, A.term, B.type_id
                                 FROM relationship B JOIN description A 
                                 ON B.destination_id=a.concept_id 
@@ -355,6 +354,13 @@ class Concept():
         else:
             self.type_name = ""
 
+    def set_type_id(self, type_id):
+        """
+        Set the ID of the concept.
+        """
+        self.type_id = type_id
+        self.type_name = Concept.get_attribute(self.type_id)
+
     @staticmethod
     def fetch_relations(cid, query):
         """
@@ -364,8 +370,23 @@ class Concept():
         try:
             cur.execute(query, (cid,))
             result = []
-            for data in cur.fetchall():
-                result += [Concept(data[0], data[1], data[2])]
+            concept = None
+            for data in cur:
+                # Create a concept if needed
+                if concept is None:
+                    concept = Concept(data[0])
+                    concept.set_type_id(data[2])
+                elif concept.id != data[0]:
+                    result += [concept]
+                    concept = Concept(data[0])
+                    concept.set_type_id(data[2])
+
+                # Set the right term
+                if data[2] == 900000000000003001:
+                    concept.full_term = data[1]
+                else:
+                    concept.syn_term = data[1]
+
             return result
         except Exception as e:
             print(e)
@@ -399,17 +420,13 @@ class Concept():
         """
         cur = get_db().cursor()
         try:
-            cur.execute(SELECT_CONCEPT_QUERY, (cid,))
-            concept = None
-            for res in cur:
-                if not concept:
-                    concept = Concept(res[0])
-                if res[2] == 900000000000003001:
-                    concept.full_term = res[1]
-                else:
-                    concept.syn_term = res[1]
+            cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
+            data = cur.fetchone()
+            if not data:
+                return None
+            else:
+                return Concept(data[0], data[2], data[1])
 
-            return concept
         except Exception as e:
             print(e)
             return None
