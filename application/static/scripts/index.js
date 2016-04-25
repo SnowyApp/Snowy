@@ -299,6 +299,95 @@ var Container = React.createClass({
         //TODO: If user is logged in, save to database
     },
 
+    /**
+     * Create a json string of given diagram.
+     **/
+    stringifyDiagram: function(diagram) {
+        var s = [];
+        for (var node in diagram) {
+            s.push(
+                {
+                    "concept_id": diagram[node].concept_id,
+                    "id": diagram[node].id,
+                    "depth": diagram[node].depth,
+                    "name": diagram[node].name,
+                    "x": diagram[node].x,
+                    "y": diagram[node].y,
+                    "parent": diagram[node].parent.concept_id,
+                    "children": this.stringifyDiagram(diagram[node].children)
+                }
+            );
+        }
+
+        return s;
+    },
+
+    /**
+     * Return a Javascript object of the diagram given in JSON.
+     **/
+    objectifyDiagram: function(data) {
+        data = JSON.parse(data);
+        data[0].children = this.parseChildren(data[0].children);
+        return data;
+    },
+
+    /**
+     * Parse given list of children and recursively parse its children.
+     **/
+    parseChildren: function(children) {
+        children = JSON.parse(children);
+
+        for (var i in children) {
+            children[i].children = this.parseChildren(children[i].children);
+        }
+        return children;
+    },
+
+
+    /**
+     * Send diagram to server.
+     **/
+    saveDiagram: function() {
+        $.ajax({
+            type: "POST",
+            method: "POST",
+            headers: {
+                "Authorization" : cookie.load("userId")
+            },
+            url: this.state.serverUrl + "/diagram",
+            contentType: "application/json",
+            data: JSON.stringify(
+                    { "data" : JSON.stringify(this.stringifyDiagram(this.state.data)) }),
+            error: function(xhr) {
+                console.log("Could not store diagram.");
+            }.bind(this)
+        });
+    },
+
+    /**
+     * Load the diagram of given ID from the server and update state when the 
+     * results are received.
+     **/
+    loadDiagram: function(id) {
+        $.ajax({
+            type: "GET",
+            method: "GET",
+            headers: {
+                "Authorization": cookie.load("userId")
+            },
+            url: this.state.serverUrl + "/diagram",
+            dataType: "json",
+            error: function(error) {
+                console.log(error);
+            }.bind(this),
+            success: function(result) {
+                this.setState({
+                    data: this.objectifyDiagram(result[id-1].data)
+                });
+            }.bind(this)
+        });
+    },
+
     render: function() {
         var content = null;
         switch(this.state.content){
@@ -344,6 +433,7 @@ var Container = React.createClass({
                             language={this.state.language}
                             setLanguage={this.setLanguage}
                             setEdition={this.setEdition}
+                            saveDiagram={this.saveDiagram}
                         />
                         {content}
                     </section>
@@ -480,6 +570,11 @@ var Bar = React.createClass({
                         </ul>
                     </div>
                     <Export />
+                    <Button 
+                        className="save-diagram" 
+                        bsStyle="primary"
+                        onClick={this.props.saveDiagram}
+                    >Save Diagram</Button>
                     {navButtons}
                 </ButtonToolbar>
             </div>
@@ -542,6 +637,6 @@ var Export = React.createClass({
 
 
 ReactDOM.render(
-    <Container concept_id="138875005" url={matteUrl} />,
+    <Container concept_id="138875005" url={matteUrl}  />,
     document.getElementById('content')
 );

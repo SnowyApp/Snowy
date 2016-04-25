@@ -8,8 +8,7 @@ module.exports = React.createClass({
     getInitialState: function() {
         return {
             data: [],
-            view:  'vertical',
-            domain: this.props.domain || { x: [0, 100], y: [0, 100] }
+            view:  'vertical'
         };
     },
 
@@ -36,7 +35,7 @@ module.exports = React.createClass({
      * Update state when receiving new props
      */
     componentWillReceiveProps: function(nextProps) {
-        this.resetZoom();
+        //this.resetZoom();
         this.update(nextProps.data);
     },
 
@@ -53,7 +52,6 @@ module.exports = React.createClass({
                     ref={ (ref) => this._chart = ref }
                     data={this.state.data}
                     view={this.state.view}
-                    domain={this.state.domain}
                     onClick={this.onNodeClick} />
             </div>
         );

@@ -35,8 +35,7 @@ var LogOut = React.createClass({
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     this.props.onLogout();
-                    //console.log(textStatus, errorThrown);
-                },
+                }.bind(this),
                 contentType: "application/json",
                 dataType: "json"
             });
