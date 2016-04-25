@@ -69,7 +69,6 @@ module.exports = React.createClass({
         }
         //Last name        
         else if (event.target.id == "lastName") {
-            console.log(input);
             this.setState({
                 lastName: input,
                 validLastName: regEx.test(input),
@@ -93,7 +92,6 @@ module.exports = React.createClass({
     },
 
     render: function(){
-        console.log(this.state.validLastName);
         //First name validation style
         var firstNameDivState = "form-group";
         var firstNameGlyphState = null;        

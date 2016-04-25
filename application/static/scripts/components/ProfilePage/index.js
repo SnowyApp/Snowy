@@ -291,6 +291,7 @@ module.exports = React.createClass({
             <div>
                 <NavBar
                     dict={dict}
+                    language={this.props.language}
                     currentTab={this.state.currentTab}
                     changeActiveTab={this.changeTab}
                 />

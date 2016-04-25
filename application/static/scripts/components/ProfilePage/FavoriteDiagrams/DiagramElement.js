@@ -80,7 +80,7 @@ module.exports = React.createClass({
                                             <td>{this.props.id}</td>
                                         </tr>
                                         <tr>                                    
-                                            <td>{this.props.dict[fakeUser.language]["date"]}:</td>
+                                            <td>{this.props.dict[this.props.language]["date"]}:</td>
                                             <td>{this.props.date}</td>
                                         </tr>
                                         <tr>                                    

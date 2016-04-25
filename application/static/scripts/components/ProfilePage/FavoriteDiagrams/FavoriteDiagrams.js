@@ -139,6 +139,7 @@ module.exports = React.createClass({
                         key={diagram.id}
                         name={diagram.name}
                         dict={this.props.dict}
+                        language={this.props.language}
                         id={diagram.id}
                         date={dateString}
                         parameters={diagram.parameters}
@@ -176,7 +177,7 @@ module.exports = React.createClass({
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
-                    {this.props.dict[fakeUser.language]["savedDiagrams"]}
+                    {this.props.dict[this.props.language]["savedDiagrams"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="diagramPageWrapper">
@@ -184,19 +185,19 @@ module.exports = React.createClass({
                         <span className="input-group-addon" id="basic-addon1">
                             Filter
                         </span>
-                        <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={this.props.dict[fakeUser.language]["name"]}/>
+                        <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={this.props.dict[this.props.language]["name"]}/>
                     </div>
 
                     <table className="favorites" style={hideTable}>
                         <thead>
                             <tr>
                                 <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
-                                    {this.props.dict[fakeUser.language]["name"]}
+                                    {this.props.dict[this.props.language]["name"]}
                                     {nameSortArrow}
                                 </th>
                                 <th id="Diagram_acc" className="favorites"></th>
                                 <th id="Diagram_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>
-                                    {this.props.dict[fakeUser.language]["added"]}
+                                    {this.props.dict[this.props.language]["added"]}
                                     {dateSortArrow}
                                 </th>
                                 <th id="Diagram_remove" className="favorites"></th>
@@ -204,7 +205,7 @@ module.exports = React.createClass({
                         </thead>
                         {diagramArray}
                     </table>
-                    {this.state.diagrams.length > 0 ? "" : this.props.dict[fakeUser.language]["noSavedDiagrams"]}
+                    {this.state.diagrams.length > 0 ? "" : this.props.dict[this.props.language]["noSavedDiagrams"]}
                 </div>
             </div>
         );
