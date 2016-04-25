@@ -14,6 +14,8 @@ SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, data_la
 UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, data_lang=%s, email=%s, site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
+SELECT_CONCEPT_QUERY = "SELECT concept_id, term, type_id FROM description WHERE concept_id=%s AND id IN (SELECT referenced_component_id FROM language_refset);"
+
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
@@ -343,9 +345,10 @@ class Concept():
     Represents a concept in the Snomed CT database
     """
     
-    def __init__(self, cid, term, type_id = None):
+    def __init__(self, cid, syn_term = "", full_term = "", type_id = None):
         self.id = cid
-        self.term = term
+        self.syn_term = syn_term
+        self.full_term = full_term
         self.type_id = type_id
         if type_id is not None:
             self.type_name = Concept.get_attribute(self.type_id)
@@ -396,14 +399,17 @@ class Concept():
         """
         cur = get_db().cursor()
         try:
-            cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
-            data = cur.fetchone()
-            
-            # The user didn't send a valid concept id
-            if data is None:
-                return None
+            cur.execute(SELECT_CONCEPT_QUERY, (cid,))
+            concept = None
+            for res in cur:
+                if not concept:
+                    concept = Concept(res[0])
+                if res[2] == 900000000000003001:
+                    concept.full_term = res[1]
+                else:
+                    concept.syn_term = res[1]
 
-            return Concept(data[0], data[1])
+            return concept
         except Exception as e:
             print(e)
             return None
@@ -426,10 +432,12 @@ class Concept():
         """
         if self.type_id is None:
             return {"id": self.id,
-                    "term": self.term}
+                    "synonym": self.syn_term,
+                    "full": self.full_term}
         else:
             return {"id": self.id,
-                    "term": self.term,
+                    "synonym": self.syn_term,
+                    "full": self.full_term,
                     "type_id": self.type_id,
                     "type_name": self.type_name}
 
