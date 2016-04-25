@@ -328,15 +328,11 @@ var Container = React.createClass({
             data: JSON.stringify({ "data" :data }),
             error: function(xhr) {
                 console.log("Could not store diagram.");
-                console.log(xhr.responseText);
-            }.bind(this),
-            success: function(result) {
-                console.log("Could store diagram:");
             }.bind(this)
         });
     },
 
-    loadDiagram: function() {
+    loadDiagram: function(id) {
         $.ajax({
             type: "GET",
             method: "GET",
@@ -349,10 +345,13 @@ var Container = React.createClass({
                 console.log(error);
             }.bind(this),
             success: function(result) {
-                console.log(result);
+                this.setState({
+                    data: this.objectifyDiagram(result[id-1].data)
+                });
             }.bind(this)
         });
     },
+
 
     render: function() {
         var content = null;
