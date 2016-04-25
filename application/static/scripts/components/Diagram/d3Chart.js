@@ -1,8 +1,9 @@
 /**
- * These comments will work a little bit like a small tutorial for how
- * d3 works and why the code looks like it does. The way you "inject" a D3
- * diagram is basically the same for all different types and this will show
- * how to create a tree-structure.
+ * This file contains functions to create a d3 tree diagram. When created a
+ * svg-element and g-element is inserted to the body. The g-elements
+ * transform attribute is used to zoom and move the diagram.
+ *
+ *
  */
 
 var d3Chart = module.exports = {};
@@ -201,10 +202,8 @@ d3Chart._resetZoom = function(){
 };
 
 /**
- * This functions adds the nodes and the lines between the nodes and styles
- * them in the way we want.
+ * This functions adds the nodes and the lines between the nodes
  */
-
 d3Chart._drawTree = function(data) {
     if(!root){
         return null;
