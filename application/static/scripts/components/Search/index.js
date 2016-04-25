@@ -11,6 +11,7 @@ module.exports = React.createClass({
  Handles user input
  */
 var SearchBox = React.createClass({
+    //Dictionary for supported languages
     dict: {
         se: {
             "search":       "Sök"
