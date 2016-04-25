@@ -96,7 +96,6 @@ module.exports = React.createClass({
     },
 
     render: function(){
-        console.log(this.state.validLastName);
         //First name validation style
         var firstNameDivState = "form-group";
         var firstNameGlyphState = null;        
