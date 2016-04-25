@@ -678,11 +678,11 @@ var Export = React.createClass({
     },
     render: function(){
         return (
-        <SplitButton bsStyle="primary" title={this.dict[this.props.language]["export"]} id="Export">
+        <DropdownButton bsStyle="primary" title={this.dict[this.props.language]["export"]} id="Export">
             <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
             <MenuItem divider/>
             <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
-        </SplitButton>
+        </DropdownButton>
         );
     }
 });
