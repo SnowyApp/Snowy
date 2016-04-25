@@ -1,7 +1,7 @@
 import cookie from 'react-cookie';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
+
 
 var DiagramElement = require('./DiagramElement');
 

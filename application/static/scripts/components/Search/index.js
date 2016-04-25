@@ -4,7 +4,6 @@ import PageClick from 'react-page-click';
 import cookie from 'react-cookie';
 import Button from 'react-bootstrap/lib/Button';
 import Table from 'react-bootstrap/lib/Table';
-import $ from 'jquery';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
 module.exports = React.createClass({

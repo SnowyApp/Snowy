@@ -1,7 +1,10 @@
-var ChangePersonalInformation = require('./ChangePersonalInformation');
-var ChangePasswordForm = require('./ChangePasswordForm');
 import React from 'react';
 import ReactDOM from 'react-dom';
+require('bootstrap');
+
+var ChangePersonalInformation = require('./ChangePersonalInformation');
+var ChangePasswordForm = require('./ChangePasswordForm');
+
 
 //Temporary fake user
 var fakeUser = {

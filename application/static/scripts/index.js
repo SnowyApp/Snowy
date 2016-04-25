@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/lib/Button';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import SplitButton from 'react-bootstrap/lib/SplitButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
-import $ from 'jquery';
+
 
 var Diagram = require('./components/Diagram/index');
 var Search = require('./components/Search/index');
