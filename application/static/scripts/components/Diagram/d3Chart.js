@@ -17,13 +17,13 @@ var contextMenu = require('./d3-context-menu');
 var menuData = [
     {
         title: 'Remove Node',
-        action: function(elm, d, i) {
+        action: function(elm, d) {
             if (d.parent && d.parent.children !== undefined) {
 
                 // find child and remove it
-                for (var ii = 0; ii < d.parent.children.length; ii++) {
-                    if (d.parent.children[ii].name === d.name) {
-                        d.parent.children.splice(ii, 1);
+                for (var i = 0; i < d.parent.children.length; i++) {
+                    if (d.parent.children[i].name === d.name) {
+                        d.parent.children.splice(i, 1);
                         break;
                     }
                 }
@@ -390,10 +390,10 @@ d3Chart._drawTree = function(data) {
 
     link.exit().transition()
         .duration(DURATION)
-        .attr("x1", function(d) { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y1", function(d) { return data.parent.y + NODE_HEIGHT; })
-        .attr("x2", function(d) { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y2", function(d) { return data.parent.y + 0; })
+        .attr("x1", function() { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        .attr("y1", function() { return data.parent.y + NODE_HEIGHT; })
+        .attr("x2", function() { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+        .attr("y2", function() { return data.parent.y + 0; })
         .remove();
 
     //Called during mouseevent, updates position for selected nodes and links
@@ -419,7 +419,7 @@ d3Chart._drawTree = function(data) {
     }
 
     //Sets behaviour for when the the mouse starts to drag
-    function dragstarted(d) {
+    function dragstarted() {
         d3.event.sourceEvent.stopPropagation();
         d3.select(this).classed("dragging", true);
     }
@@ -428,18 +428,18 @@ d3Chart._drawTree = function(data) {
      * Updates the selected node(s) position depending on where the mouse is
      * positioned
      */
-    function dragmove(d, i) {
+    function dragmove(d) {
         var selection = d3.selectAll(".selected");
         if (!selection.empty()) {
             if(treeView == 'vertical'){
-                selection.attr("transform", function (d, i) {
+                selection.attr("transform", function (d) {
                     d.x += d3.event.dx;
                     d.y += d3.event.dy;
                     return "translate(" + [d.x, d.y] + ")"
                 });
             }
             else {
-                selection.attr("transform", function (d, i) {
+                selection.attr("transform", function (d) {
                     d.x += d3.event.dy;
                     d.y += d3.event.dx ;
                     return "translate(" + [d.x, d.y] + ")"
@@ -463,11 +463,11 @@ d3Chart._drawTree = function(data) {
         d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
     }
 
-    function dragended(d) {
+    function dragended() {
         d3.select(this).classed("dragging", false);
     }
 
-    function wrap(text, width, data) {
+    function wrap(text, width) {
         text.each(function() {
             var text = d3.select(this),
                 words = text.text().split(/\s+/).reverse(),
