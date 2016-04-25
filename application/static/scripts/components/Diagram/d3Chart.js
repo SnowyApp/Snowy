@@ -186,8 +186,7 @@ d3Chart.getId = function() {
 };
 
 /**
- *
- * @private
+ * Sets the transform attribute of the g-element
  */
 
 d3Chart._resetZoom = function(){
