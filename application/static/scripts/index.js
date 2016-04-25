@@ -568,12 +568,8 @@ var Bar = React.createClass({
                 <ButtonToolbar id = "buttons">
                     {/* Database edition drop-down */}
                     <div className="btn-group">
-                        <button type="button" className="btn btn-success" data-toggle="dropdown">
-                            {this.dict[this.props.language]["version"]}
-                        </button>
-                        <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span className="caret"></span>
-                        <span className="sr-only">Toggle Dropdown</span>
+                        <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                            {this.dict[this.props.language]["version"]} <span className="caret"></span>
                         </button>
                         <ul className="dropdown-menu">
                             <li>
@@ -590,12 +586,8 @@ var Bar = React.createClass({
                     </div>
                     {/* Language drop-down */}
                     <div className="btn-group">
-                        <button type="button" className="btn btn-primary flagButton" data-toggle="dropdown">
-                            <img className="langFlagHeader" src={flagSrc}/>
-                        </button>
-                        <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span className="caret"></span>
-                        <span className="sr-only">Toggle Dropdown</span>
+                        <button type="button" className="btn btn-primary dropdown-toggle flagButton" data-toggle="dropdown">
+                            <img className="langFlagHeader" src={flagSrc}/> <span className="caret"></span>
                         </button>
                         <ul className="dropdown-menu">
                             <li>
@@ -625,6 +617,30 @@ var Bar = React.createClass({
         );
     }
 });
+
+/*
+<div className="btn-group">
+                        <button type="button" className="btn btn-primary flagButton" data-toggle="dropdown">
+                            <img className="langFlagHeader" src={flagSrc}/>
+                        </button>
+                        <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span className="caret"></span>
+                        <span className="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul className="dropdown-menu">
+                            <li>
+                                <a onClick={this.props.setLanguage.bind(null,"en")} href="#">
+                                    <img className="langFlag" src="static/img/flags/flag_eng.png"/> English
+                                </a>
+                            </li>
+                            <li>
+                                <a onClick={this.props.setLanguage.bind(null,"se")} href="#">
+                                    <img className="langFlag" src="static/img/flags/flag_swe.png"/> Svenska
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+*/
 
 var Export = React.createClass({
     dict: {
