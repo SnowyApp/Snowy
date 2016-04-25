@@ -85,4 +85,24 @@ section {
     width: 80px;
 }
 
+.langFlag {
+    width: 24px;
+    height: 24px;
+    margin-right: 3px;
+}
+
+.langFlagHeader {
+    width: 24px;
+    height: 24px;
+}
+
+.flagButton {
+    padding: 4px 7px 3px 7px;
+}
+
+.dropdown-menu {
+    min-width: 50px;
+}
+
+
 

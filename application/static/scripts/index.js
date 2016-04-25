@@ -23,7 +23,8 @@ var Container = React.createClass({
             selectedTerm: this.props.concept_id,
             content: "diagram",
             data: this.props.data,
-            history: []
+            history: [],
+            language: "en"
         };
     },
 
@@ -276,6 +277,16 @@ var Container = React.createClass({
         this.setState({isLoggedIn: false, content: "diagram", userId: ''});
         cookie.remove('userId', {path: '/'});
     },
+
+   /**
+    * Sets the sites language to language
+    */
+    setLanguage: function(language){
+        this.setState({
+            language: language
+        });
+    },
+
     render: function() {
         var content = null;
         switch(this.state.content){
@@ -317,6 +328,8 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             setContent={this.setContent}
                             contentName={this.state.content}
+                            language={this.state.language}
+                            setLanguage={this.setLanguage}
                         />
                         {content}
                     </section>
@@ -404,11 +417,41 @@ var Bar = React.createClass({
                            onLogin={this.props.onLogin} url={this.props.url}/>
             </div>
         );
+    
+        //Language button
+        var flagSrc = null;
+        switch(this.props.language){
+            case "en":
+                flagSrc = "static/img/flags/flag_eng.png";
+                break;
+            case "se":
+                flagSrc = "static/img/flags/flag_swe.png";
+                break;
+            default:
+                console.log("Language prop not valid");
+                break;
+        }
 
         return (
             <div className="bar">
                 <Search url={this.props.serverUrl} update={this.props.update}/>
+                
                 <ButtonToolbar id = "buttons">
+
+                    {/* Language drop-down */}
+                    <div className="btn-group">
+                        <button type="button" className="btn btn-primary flagButton">
+                            <img className="langFlagHeader" src={flagSrc}/>
+                        </button>
+                        <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span className="caret"></span>
+                        <span className="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul className="dropdown-menu">
+                            <li><a onClick={this.props.setLanguage.bind(null,"en")} href="#"><img className="langFlag" src="static/img/flags/flag_eng.png"/> English</a></li>
+                            <li><a onClick={this.props.setLanguage.bind(null,"se")} href="#"><img className="langFlag" src="static/img/flags/flag_swe.png"/> Svenska</a></li>
+                        </ul>
+                    </div>
                     <Export />
                     {navButtons}
                 </ButtonToolbar>
