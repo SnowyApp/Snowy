@@ -297,6 +297,23 @@ var Container = React.createClass({
         return s;
     },
 
+    objectifyDiagram: function(data) {
+        data = JSON.parse(data);
+
+        data[0].children = this.parseChildren(data[0].children);
+        return data;
+    },
+
+    parseChildren: function(children) {
+        children = JSON.parse(children);
+
+        for (var i in children) {
+            children[i].children = this.parseChildren(children[i].children);
+        }
+        return children;
+    },
+
+
     saveDiagram: function() {
         var data = JSON.stringify(this.stringifyDiagram(this.state.data));
         var something = { "data": data };
