@@ -200,17 +200,17 @@ d3Chart._resetZoom = function(){
 /**
  * This functions adds the nodes and the lines between the nodes
  */
-d3Chart._drawTree = function(data) {
+d3Chart._drawTree = function() {
     if(!root){
         return null;
     }
 
     var gTree = d3.select('body').selectAll(".nodes");
 
-    // build the arrow.
-    var arrow = gTree.append("svg:defs").selectAll("marker")
+    //This creates the "is-a" arrow as a svg marker.
+    gTree.append("svg:defs").selectAll("marker")
         .data(["start"])
-        .enter().append("svg:marker")    // This section adds in the arrows
+        .enter().append("svg:marker")
         .attr("id", "ArrowMarker")
         .attr("viewBox", "0 0 22 20")
         .attr("refX", 0)
@@ -239,7 +239,7 @@ d3Chart._drawTree = function(data) {
         .on("dragend", dragended);
 
     /**
-     * This manually sets the distance between the nodes
+     * This sets the distance between the node levels
      */
     if(treeView == 'vertical'){
         nodes.forEach(function(d) {
@@ -272,7 +272,7 @@ d3Chart._drawTree = function(data) {
                 return "translate(" + d.y + ", " + d.x + ")";
             });
         }
-
+        //When right clicking on a node call the contextMenu function
         nodeEnter.on('contextmenu', d3.contextMenu(menuData))
         .call(drag)
         .on("mouseover", function(){
