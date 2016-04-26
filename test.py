@@ -95,5 +95,23 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.data.decode("utf-8")), user_data)
 
+
+    def test_favorite_term(self):
+        self.create_user()
+        response = self.login_user()
+        data = json.loads(response.data.decode('utf-8'))
+
+        req = {"id": 123, "term": "Term name"}
+        response = self.app.post("/favorite_term", data=json.dumps(req), headers={'Authorization': data['token']}, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get("/favorite_term", headers={'Authorization': data['token']}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        resp_data = json.loads(response.data.decode("utf-8"))
+        self.assertEqual(resp_data[0]['term'], req['term'])
+        self.assertEqual(resp_data[0]['id'], req['id'])
+        self.assertTrue('favorite_date' in resp_data[0])
+
 if __name__ == "__main__":
     unittest.main()

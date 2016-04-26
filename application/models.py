@@ -134,7 +134,7 @@ class User():
             cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
             result = []
             for data in cur.fetchall():
-                result += [{"id": data[0], "favorite_date": str(data[2]), "term": data[1]}]
+                result += [{"id": data[0], "favorite_date": str(data[2]), "term": data[3]}]
             return result
         except Exception as e:
             print(e)
