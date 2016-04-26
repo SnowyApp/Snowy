@@ -15,6 +15,10 @@ def register_user(username, password):
 def login(username, password):
     user = {'email': username, 'password': password}
     return json.loads(requests.post(url + "/login", json=user).text)
+
+def logout():
+    resp = requests.post(url + "/logout", headers=auth)
+    return json.loads(resp.text), resp.status_code
     
 def get_favorite_terms():
     return json.loads(requests.get(url + "/favorite_term", headers=auth).text)
