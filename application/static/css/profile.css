@@ -25,12 +25,6 @@
 
 }
 
-.langDropdown {
-    float: right;
-    margin-right: 3px;
-    margin-top: -39px;
-}
-
 a.favorites, a.favorites:hover {
     color: inherit;
     text-decoration: none;

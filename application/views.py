@@ -117,23 +117,49 @@ def logout():
     return jsonify(status="ok")
 
 
-@app.route('/update_info', methods=['PUT'])
+@app.route('/user_info', methods=['PUT', 'GET'])
 @login_required
-def update_info():
+def user_info():
     """
     Updates information for the user.
     """
+    if request.method == "GET":
+        return jsonify(g.user.to_json())
+    elif request.method == "PUT":
+        data = request.get_json()
+        if not 'first_name' in data or not isinstance(data['first_name'], str) or \
+            not 'last_name' in data or not isinstance(data['last_name'], str) or \
+            not 'data_lang' in data or not isinstance(data['data_lang'], str) or \
+            not 'site_lang' in data or not isinstance(data['site_lang'], str) or \
+            not 'email' in data or not isinstance(data['email'], str):
+            return jsonify(message="Incomplete information")
+
+        g.user.update_info(data['first_name'], data['last_name'], data['data_lang'], data['email'], data['site_lang'])
+        token = g.user.generate_token()
+        token = Token(token.decode('utf-8'), g.user.email)
+        token.store_token()
+        return jsonify(status="ok", token=token.token)
+
+
+@app.route('/password', methods=['PUT'])
+@login_required
+def update_password():
+    """
+    Update the users password
+    """
     data = request.get_json()
-    if not 'first_name' in data or not isinstance(data['first_name'], str) or \
-        not 'last_name' in data or not isinstance(data['last_name'], str) or \
-        not 'language' in data or not isinstance(data['language'], str):
-        return jsonify(message="Incomplete information")
-    
-    g.user.update_info(data['first_name'], data['last_name'], data['language'])
+    print(data)
+    if not 'password' in data or not isinstance(data['password'], str) or \
+        not 'invalidate_tokens' in data or not isinstance(data['invalidate_tokens'], bool):
+        return jsonify(message="Password or invalidate_tokens not provided")
+
+    g.user.update_password(data['password'])
+    if data['invalidate_tokens']:
+        g.user.invalidate_tokens(request.headers.get('Authorization', None))
+
     return jsonify(status="ok")
 
-
-@app.route('/favorite_term', methods=['POST', 'GET'])
+@app.route('/favorite_term', methods=['POST', 'GET', 'DELETE'])
 @login_required
 def favorite_term():
     """
@@ -144,12 +170,17 @@ def favorite_term():
 
         # Check so that the data is valid
         if not 'id' in data or not isinstance(data['id'], int) or \
-                not 'term' in data or not isinstance(data['term'], str) or \
-                not 'effective_time' in data or not isinstance(data['effective_time'], int) or \
-                not 'active' in data or not isinstance(data['active'], int):
+                not 'term' in data or not isinstance(data['term'], str):
             return jsonify(message="The concepts data is not providid accurately"), 400
         
         g.user.add_favorite_term(data['id'], data['term'])
+        return jsonify(status="ok")
+    elif request.method == "DELETE":
+        data = request.get_json()
+        if not 'id' in data or not isinstance(data['id'], int): 
+            return jsonify(message="'id' is missing")
+
+        g.user.delete_favorite_term(data['id'])
         return jsonify(status="ok")
     else:
         return json.dumps(g.user.get_favorite_terms())
@@ -211,7 +242,7 @@ def search(search_term):
     return jsonify(es.search(index="desc", body=query))
 
 
-@app.route('/diagram', methods=['POST', 'GET', 'PUT'])
+@app.route('/diagram', methods=['POST', 'GET', 'PUT', 'DELETE'])
 @login_required
 def store_diagram():
     """
@@ -219,19 +250,29 @@ def store_diagram():
     """
     if request.method == "POST":
         data = request.get_json()
-        if not 'data' in data or not isinstance(data['data'], str):
-            return jsonify(message="'data' not provided"), 400
+        if not 'data' in data or not isinstance(data['data'], str) or \
+            not 'name' in data or not isinstance(data['name'], str):
+            return jsonify(message="Data or name not provided"), 400
 
-        cid = g.user.store_diagram(data['data'])
+        cid = g.user.store_diagram(data['data'], data['name'])
         return jsonify(id=cid)
     elif request.method == "PUT":
         data = request.get_json()
         if not 'data' in data or not isinstance(data['data'], str) or \
+            not 'name' in data or not isinstance(data['name'], str) or \
             not 'id' in data or not isinstance(data['id'], int):
-            return jsonify(message="'data' not provided"), 400
+            return jsonify(message="data, name or id not provided"), 400
 
-        g.user.store_diagram(data['data'], data['id'])
+        g.user.store_diagram(data['data'], data['name'], data['id'])
         return jsonify(status="ok")
+    elif request.method == "DELETE":
+        data = request.get_json()
+        if not 'id' in data or not isinstance(data['id'], int):
+            return jsonify(message = "'id' is not provided"), 400
+
+        g.user.delete_diagram(data['id'])
+        return jsonify(status="ok")
+        
     else:
         return json.dumps(g.user.get_diagrams())
 

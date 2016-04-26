@@ -4,68 +4,6 @@ var AccountPage = require('./AccountPage/AccountPage');
 var NavBar = require('./NavBar/NavBar');
 
 
-
-
-//Dictionary for supported languages. m prefix indicates that its a error/success message
-var dict = {
-    swe: {
-        language: "Språk",
-        username: "Användarnamn",
-        email: "Email",
-        date: "Datum",
-        terms: "Termer",
-        diagrams: "Diagram",
-        savedDiagrams: "Sparade diagram",
-        account: "Konto",
-        name: "Namn",
-        firstName: "Förnamn",
-        lastName: "Efternamn",
-        password: "Lösenord",
-        added: "Tillagd",
-        savedTerms: "Sparade termer",
-        update: "Uppdatera",
-        newPassword: "Nytt lösenord",
-        currentPassword: "Nuvarande lösenord",
-        repeat: "Upprepa",
-        personalInfo: "Personlig information",
-        noSavedTerms: "Du har inga sparade termer.",
-        noSavedDiagrams: "Du har inga sparade diagram.",
-        m_wrongPassword:"Felaktigt lösenord.",
-        m_emailTaken: "Den angivna email-adressen är upptagen.",
-        m_updateSuccessful: "Din information har blivit uppdaterad.",
-        m_updatePasswordSuccessful: "Ditt lösenord har uppdaterats.",
-        passwordStrength: ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
-    },
-    eng: {
-        language: "Language",
-        username: "Username",
-        email: "Email",
-        date: "Date",
-        terms: "Terms",
-        diagrams: "Diagrams",
-        savedDiagrams: "Saved diagrams",
-        account: "Account",
-        name: "Name",
-        firstName: "First name",
-        lastName: "Last name",
-        password: "Password",
-        added: "Added",
-        savedTerms: "Saved terms",
-        update: "Update",
-        newPassword: "New password",
-        currentPassword: "Current password",
-        repeat: "Repeat",
-        personalInfo: "Personal information",
-        noSavedTerms: "You don't have any saved terms.",
-        noSavedDiagrams: "You don't have any saved diagrams.",
-        m_wrongPassword:"Wrong password.",
-        m_emailTaken: "The provided email is already in use.",
-        m_updateSuccessful: "Your information has been updated.",
-        m_updatePasswordSuccessful: "Your password has been updated.",
-        passwordStrength: ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
-    }
-}
-
 //Temporary fake user
 var fakeUser = {
     id: 1337,
@@ -73,7 +11,7 @@ var fakeUser = {
     surname: "Schwarzenegger",
     email: "arnold@schwarzenegger.com",
     language: "eng"
-}
+};
 
 //Dummy data
 var dummyTerms = 
@@ -174,6 +112,66 @@ var dummyDiagrams =
  * Profile page component
  */
 module.exports = React.createClass({
+    //Dictionary for supported languages. m prefix indicates that its a error/success message
+    dict: {
+        se: {
+            language:                   "Språk",
+            username:                   "Användarnamn",
+            email:                      "Email",
+            date:                       "Datum",
+            terms:                      "Termer",
+            diagrams:                   "Diagram",
+            savedDiagrams:              "Sparade diagram",
+            account:                    "Konto",
+            name:                       "Namn",
+            firstName:                  "Förnamn",
+            lastName:                   "Efternamn",
+            password:                   "Lösenord",
+            added:                      "Tillagd",
+            savedTerms:                 "Sparade termer",
+            update:                     "Uppdatera",
+            newPassword:                "Nytt lösenord",
+            currentPassword:            "Nuvarande lösenord",
+            repeat:                     "Upprepa",
+            personalInfo:               "Personlig information",
+            noSavedTerms:               "Du har inga sparade termer.",
+            noSavedDiagrams:            "Du har inga sparade diagram.",
+            m_wrongPassword:            "Felaktigt lösenord.",
+            m_emailTaken:               "Den angivna email-adressen är upptagen.",
+            m_updateSuccessful:         "Din information har blivit uppdaterad.",
+            m_updatePasswordSuccessful: "Ditt lösenord har uppdaterats.",
+            passwordStrength:           ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
+        },
+        en: {
+            language:                   "Language",
+            username:                   "Username",
+            email:                      "Email",
+            date:                       "Date",
+            terms:                      "Terms",
+            diagrams:                   "Diagrams",
+            savedDiagrams:              "Saved diagrams",
+            account:                    "Account",
+            name:                       "Name",
+            firstName:                  "First name",
+            lastName:                   "Last name",
+            password:                   "Password",
+            added:                      "Added",
+            savedTerms:                 "Saved terms",
+            update:                     "Update",
+            newPassword:                "New password",
+            currentPassword:            "Current password",
+            repeat:                     "Repeat",
+            personalInfo:               "Personal information",
+            noSavedTerms:               "You don't have any saved terms.",
+            noSavedDiagrams:            "You don't have any saved diagrams.",
+            m_wrongPassword:            "Wrong password.",
+            m_emailTaken:               "The provided email is already in use.",
+            m_updateSuccessful:         "Your information has been updated.",
+            m_updatePasswordSuccessful: "Your password has been updated.",
+            passwordStrength:           ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
+        }
+    },
+
     getInitialState: function(){
         return (
             {
@@ -209,7 +207,7 @@ module.exports = React.createClass({
    /**
     * Sorts table data by id
     */
-    sortByid: function(data, asc){
+    sortById: function(data, asc){
         data.sort(function(a,b){
             if(asc){
                 return a.id < b.id ? -1 : 1;
@@ -257,18 +255,21 @@ module.exports = React.createClass({
             case 'terms':
                 content = <FavoriteTerms
                                 url={this.props.url}
-                                dict={dict} terms={dummyTerms}
+                                dict={this.dict}
+                                language={this.props.language}
+                                terms={dummyTerms}
                                 openTerm={this.props.openTerm}
                                 removeid={this.removeById}
                                 nameSort={this.sortByName}
-                                idSort={this.sortByid}
+                                idSort={this.sortById}
                                 dateSort={this.sortByDate}
                           />;
                 break;
             case 'diagrams':
                 content = <FavoriteDiagrams
                                 url={this.props.url}
-                                dict={dict}
+                                dict={this.dict}
+                                language={this.props.language}
                                 diagrams={dummyDiagrams}
                                 openDiagram={this.props.openDiagram}
                                 removeid={this.removeById}
@@ -279,14 +280,16 @@ module.exports = React.createClass({
             case 'account':
                 content = <AccountPage
                                 url={this.props.url}
-                                dict={dict}
+                                dict={this.dict}
+                                language={this.props.language}
                           />;
                 break;
         }
         return(
             <div>
                 <NavBar
-                    dict={dict}
+                    dict={this.dict}
+                    language={this.props.language}
                     currentTab={this.state.currentTab}
                     changeActiveTab={this.changeTab}
                 />

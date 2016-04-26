@@ -2,6 +2,25 @@
  * Login form component
  */
 var LoginForm = React.createClass({
+    //Dictionary for supported languages. m prefix indicates that its a error/success message
+    dict: {
+        se: {
+            login:                  "Logga in",
+            email:                  "Email",
+            password:               "Lösenord",
+            m_emailTaken:           "Den angivna email-adressen är upptagen.",
+            m_loginUnsuccessful:    "Inloggningen misslyckades",
+            passwordStrength:       ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
+        },
+        en: {
+            login:                  "Log in",
+            email:                  "Email",
+            password:               "Password",
+            m_loginUnsuccessful:    "Login unsuccessful",
+            passwordStrength:       ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
+        }
+    },
+
     propTypes:{
         hideLogin: React.PropTypes.func,
         show: React.PropTypes.bool
@@ -15,11 +34,18 @@ var LoginForm = React.createClass({
             showModal: false
         });
     },
+
+   /**
+    * Closes the login popup
+    */
     close: function() {
         this.setState({ showModal: false });
         this.props.hideLogin();
     },
 
+   /**
+    * Opens the login popup
+    */
     open: function() {
         this.setState({ showModal: true });
     },
@@ -27,22 +53,37 @@ var LoginForm = React.createClass({
     componentWillReceiveProps: function(nextProps){
         this.setState({showModal: nextProps.show});
     },
+
+   /**
+    * Logs the user in, resets the form and closes the popup
+    */
     onSuccess: function(e){
         this.resetForm();
         this.close();
         this.props.onLogin(e.token);
     },
+
+   /**
+    * Sets errorMessage to "Login unsuccessful" and prints the error to console
+    */
     onError: function(t, e) {
         this.setState({
-            errorMessage: "Login unsuccessful"
+            errorMessage: this.dict[this.props.language]["m_loginUnsuccessful"]
         });
+        //Print error messages to console
+        console.log(t);
+        console.log(e);
     },
+
+   /**
+    * Resets the login form
+    */
     resetForm: function(){
         this.setState({
             email: "",
             validEmail: false,
             password: "",
-            errorMessage: "",
+            errorMessage: ""
         });
     },
 
@@ -70,8 +111,8 @@ var LoginForm = React.createClass({
     * Checks if a valid email has been input
     */
     validateEmail: function(event){
-        var input = event.target.value;
-        var regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$/;
+        const input = event.target.value;
+        const regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$/;
         this.setState({
             email: input,
             validEmail: regEx.test(input)
@@ -82,7 +123,7 @@ var LoginForm = React.createClass({
     * Updates the password state to match the input field
     */
     updatePassword: function(event){
-        var input = event.target.value;
+        const input = event.target.value;
         this.setState({
             password: input
         });
@@ -112,7 +153,7 @@ var LoginForm = React.createClass({
             <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header className="bg-primary" closeButton>
                     <Modal.Title>
-                        Logga in
+                        {this.dict[this.props.language]["login"]}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -120,7 +161,7 @@ var LoginForm = React.createClass({
                         {/* Email */}
                         <div className={emailDivState}>
                             <label htmlFor="newPassword" className="col-sm-3 control-label">
-                                Email
+                                {this.dict[this.props.language]["email"]}
                             </label>
                             <div className="col-sm-8">
                                 <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
@@ -130,7 +171,7 @@ var LoginForm = React.createClass({
                         {/* Password */}
                         <div className="form-group">
                             <label htmlFor="newPassword" className="col-sm-3 control-label">
-                                Lösenord
+                                {this.dict[this.props.language]["password"]}
                             </label>
                             <div className="col-sm-8">
                                 <input type="password" id="password" onChange={this.updatePassword} className="form-control"/>
@@ -141,7 +182,7 @@ var LoginForm = React.createClass({
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-2">
                                 <button type="submit" className="btn btn-success" disabled={disableSubmit}>
-                                    Logga in
+                                    {this.dict[this.props.language]["login"]}
                                 </button>
                             </div>
                             {message}

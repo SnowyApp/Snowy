@@ -23,7 +23,9 @@ var Container = React.createClass({
             selectedTerm: this.props.concept_id,
             content: "diagram",
             data: this.props.data,
-            history: []
+            history: [],
+            language: "en",
+            dbEdition: "en"
         };
     },
 
@@ -37,10 +39,11 @@ var Container = React.createClass({
             .then(function(rootResult, childrenResult) {
                 // get all information about children
                 var children = [];
+
                 for (var i in childrenResult[0]) {
                     children.push(
                         {
-                            "name": childrenResult[0][i].term,
+                            "name": childrenResult[0][i].synonym,
                             "concept_id": childrenResult[0][i].id,
                             "parent": rootResult[0].id,
                             "children": null,
@@ -53,7 +56,7 @@ var Container = React.createClass({
                 // of the children
                 var root = [
                     {
-                        "name": rootResult[0].term,
+                        "name": rootResult[0].synonym,
                         "concept_id": rootResult[0].id,
                         "parent": "null",
                         "children": children,
@@ -182,7 +185,7 @@ var Container = React.createClass({
                     for (var i in res) {
                         children.push(
                             {
-                                "name": res[i].term,
+                                "name": res[i].synonym,
                                 "concept_id": res[i].id,
                                 "parent": node.concept_id,
                                 "children": null,
@@ -277,6 +280,26 @@ var Container = React.createClass({
         cookie.remove('userId', {path: '/'});
     },
 
+   /**
+    * Sets the sites language to language
+    */
+    setLanguage: function(language){
+        this.setState({
+            language: language
+        });
+        //TODO: If user is logged in, save to database
+    },
+
+   /**
+    * Sets the sites language to language
+    */
+    setEdition: function(edition){
+        this.setState({
+            dbEdition: edition
+        });
+        //TODO: If user is logged in, save to database
+    },
+
     /**
      * Create a json string of given diagram.
      **/
@@ -366,7 +389,6 @@ var Container = React.createClass({
         });
     },
 
-
     render: function() {
         var content = null;
         switch(this.state.content){
@@ -377,6 +399,7 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             update={this.updateSelectedTerm}
                             updateConceptChildren={this.updateConceptChildren}
+                            language={this.state.language}
                           />
                 break;
             case "profile":
@@ -384,6 +407,7 @@ var Container = React.createClass({
                             openTerm={this.updateSelectedTerm}
                             openDiagram={function(id){console.log(id)}}
                             url={this.state.serverUrl}
+                            language={this.state.language}
                           />
                 break;
         }
@@ -408,6 +432,9 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             setContent={this.setContent}
                             contentName={this.state.content}
+                            language={this.state.language}
+                            setLanguage={this.setLanguage}
+                            setEdition={this.setEdition}
                             saveDiagram={this.saveDiagram}
                         />
                         {content}
@@ -420,6 +447,30 @@ var Container = React.createClass({
 
 
 var Bar = React.createClass({
+    //Dictionary for supported languages
+    dict: {
+        se: {
+            search:       "Sök",
+            version:      "Version",
+            saveDiagram:  "Spara diagram",
+            diagram:      "Diagram",
+            login:        "Logga in",
+            logout:       "Logga ut",
+            register:     "Registrera",
+            profile:      "Profilsida"
+        },
+        en: {
+            search:       "Search",
+            version:      "Version",
+            saveDiagram:  "Save diagram",
+            diagram:      "Diagram",
+            login:        "Log in",
+            logout:       "Log out",
+            register:     "Register",
+            profile:      "Profile"
+        }
+    },
+
     getInitialState: function(){
         return{
             showRegistration: false,
@@ -465,48 +516,115 @@ var Bar = React.createClass({
         var switchName = '';
         switch(this.props.contentName){
             case "diagram":
-                switchName = "Profile";
+                switchName = "profile";
                 break;
             case "profile":
-                switchName = "Diagram";
+                switchName = "diagram";
                 break;
         }
         const navButtons = this.props.isLoggedIn ? (
             <div>
                 <Button className="profile"
                         onClick={this.props.setContent.bind(null, switchName.toLowerCase())}
-                        bsStyle = "primary" >{switchName}</Button>
+                        bsStyle = "primary" >{this.dict[this.props.language][switchName]}</Button>
                 <Button className="Logout" bsStyle = "primary" 
-                    onClick={this.showLogout}>Logout</Button>
-                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout}
-                        onLogout={this.props.onLogout} url={this.props.url}/>
+                    onClick={this.showLogout}>{this.dict[this.props.language]["logout"]}</Button>
+                <LogOut
+                    show={this.state.showLogout}
+                    hideLogout={this.hideLogout}
+                    onLogout={this.props.onLogout}
+                    url={this.props.url}
+                    language={this.props.language}
+                />
             </div>
         ) : (
             <div>
                 <Button className="Register" bsStyle = "primary" 
-                    onClick={this.showRegistration}>Register</Button>
+                    onClick={this.showRegistration}>{this.dict[this.props.language]["register"]}</Button>
                 <Button className="Login" bsStyle = "primary" 
-                    onClick={this.showLogin}>Login</Button>
+                    onClick={this.showLogin}>{this.dict[this.props.language]["login"]}</Button>
                 {/* Registration popup */}
-                <RegisterForm show={this.state.showRegistration} 
-                    hideRegistration={this.hideRegistration} url={this.props.url}/>
+                <RegisterForm
+                    show={this.state.showRegistration} 
+                    hideRegistration={this.hideRegistration}
+                    url={this.props.url}
+                    language={this.props.language}
+                />
 
                 {/* Login popup */}
-                <LoginForm show={this.state.showLogin} hideLogin={this.hideLogin}
-                           onLogin={this.props.onLogin} url={this.props.url}/>
+                <LoginForm
+                    show={this.state.showLogin}
+                    hideLogin={this.hideLogin}
+                    onLogin={this.props.onLogin}
+                    url={this.props.url}
+                    language={this.props.language}
+                />
             </div>
         );
+    
+        //Language button
+        var flagSrc = null;
+        switch(this.props.language){
+            case "en":
+                flagSrc = "static/img/flags/flag_eng.png";
+                break;
+            case "se":
+                flagSrc = "static/img/flags/flag_swe.png";
+                break;
+            default:
+                console.log("Language prop not valid");
+                break;
+        }
 
         return (
             <div className="bar">
-                <Search url={this.props.serverUrl} update={this.props.update}/>
+                <Search url={this.props.serverUrl} update={this.props.update} language={this.props.language}/>
+                
                 <ButtonToolbar id = "buttons">
-                    <Export />
+                    {/* Database edition drop-down */}
+                    <div className="btn-group">
+                        <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                            {this.dict[this.props.language]["version"]} <span className="caret"></span>
+                        </button>
+                        <ul className="dropdown-menu">
+                            <li>
+                                <a onClick={this.props.setEdition.bind(null,"en")} href="#">
+                                    English Edition 2015-11-30
+                                </a>
+                            </li>
+                            <li>
+                                <a onClick={this.props.setEdition.bind(null,"se")} href="#">
+                                    Swedish Edition 2015-11-30
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {/* Language drop-down */}
+                    <div className="btn-group">
+                        <button type="button" className="btn btn-primary dropdown-toggle flagButton" data-toggle="dropdown">
+                            <img className="langFlagHeader" src={flagSrc}/> <span className="caret"></span>
+                        </button>
+                        <ul className="dropdown-menu">
+                            <li>
+                                <a onClick={this.props.setLanguage.bind(null,"en")} href="#">
+                                    <img className="langFlag" src="static/img/flags/flag_eng.png"/> English
+                                </a>
+                            </li>
+                            <li>
+                                <a onClick={this.props.setLanguage.bind(null,"se")} href="#">
+                                    <img className="langFlag" src="static/img/flags/flag_swe.png"/> Svenska
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <Export language={this.props.language} />
                     <Button 
                         className="save-diagram" 
                         bsStyle="primary"
                         onClick={this.props.saveDiagram}
-                    >Save Diagram</Button>
+                    >
+                        {this.dict[this.props.language]["saveDiagram"]}
+                    </Button>
                     {navButtons}
                 </ButtonToolbar>
             </div>
@@ -516,6 +634,15 @@ var Bar = React.createClass({
 });
 
 var Export = React.createClass({
+    dict: {
+        se: {
+            export:       "Exportera"
+        },
+        en: {
+            export:       "Export"
+        }
+    },
+
     exportSVG: function(){
         var html = d3.select("svg")
             .attr({
@@ -558,11 +685,11 @@ var Export = React.createClass({
     },
     render: function(){
         return (
-        <SplitButton bsStyle="primary" title="Export" id="Export">
+        <DropdownButton bsStyle="primary" title={this.dict[this.props.language]["export"]} id="Export">
             <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
             <MenuItem divider/>
             <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
-        </SplitButton>
+        </DropdownButton>
         );
     }
 });
