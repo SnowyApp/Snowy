@@ -41,12 +41,13 @@ var SearchBox = React.createClass({
      * @param target Save the key the user pressed
      */
     handleKeyPress: function(target) {
+        const ENTER_KEYCODE = 13;
         this.props.updateQuery(ReactDOM.findDOMNode(this.refs.searchInput).value);
         if(this.timeout){
             clearTimeout(this.timeout)
             this.timeout = null
         }
-        if (target.keyCode == 13){
+        if (target.keyCode == ENTER_KEYCODE){
             this.doSearch();
         }
         else{
