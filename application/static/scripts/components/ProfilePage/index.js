@@ -182,7 +182,7 @@ module.exports = React.createClass({
     getInitialState: function(){
         return (
             {
-                currentTab: 'account'
+                currentTab: 'terms'
             }
         );
     },
