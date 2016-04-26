@@ -44,8 +44,8 @@ var SearchBox = React.createClass({
         const ENTER_KEYCODE = 13;
         this.props.updateQuery(ReactDOM.findDOMNode(this.refs.searchInput).value);
         if(this.timeout){
-            clearTimeout(this.timeout)
-            this.timeout = null
+            clearTimeout(this.timeout);
+            this.timeout = null;
         }
         if (target.keyCode == ENTER_KEYCODE){
             this.doSearch();
@@ -135,7 +135,7 @@ var Search = React.createClass({
         return{
             query:'',
             searchData: [],
-            searchHistory: cookie.load('searchHistory') ? cookie.load('searchHistory') : [],
+            searchHistory: cookie.load('searchHistory') || [],
             lastData: [],
             lastSearch: ''
         }
