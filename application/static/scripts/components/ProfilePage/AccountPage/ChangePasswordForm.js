@@ -59,7 +59,7 @@ module.exports = React.createClass({
     * Checks the strength of the password (0-4)
     */
     checkPasswordStrength: function(event){
-        var input = event.target.value; //Value from input field
+        const input = event.target.value; //Value from input field
         var passwordStrength = 0;
 
         //Update state and provide a callback function for when the state is updated to check if the passwords are matching
@@ -68,12 +68,12 @@ module.exports = React.createClass({
         }, this.checkMatchingPasswords);
 
         //Minimum length to reach each password strength level
-        var STR1_MIN_LENGTH = 7;
-        var STR2_MIN_LENGTH = 9;
-        var STR3_MIN_LENGTH = 11;
-        var STR4_MIN_LENGTH = 13;
+        const STR1_MIN_LENGTH = 7;
+        const STR2_MIN_LENGTH = 9;
+        const STR3_MIN_LENGTH = 11;
+        const STR4_MIN_LENGTH = 13;
 
-        var pwStrengthRegex = [
+        const pwStrengthRegex = [
             /[A-ZÅÄÖ]/,                         //Upper case letters
             /[a-zåäö]/,                         //Lower case letters
             /[0-9]+/,                           //Digits
@@ -120,7 +120,7 @@ module.exports = React.createClass({
     * Updates the repeatedPassword state to match the input field
     */
     updateRepeatedPassword: function(event){
-        var input = event.target.value;
+        const input = event.target.value;
         //Update state and provide a callback function for when the state is updated to check if the passwords are matching
         this.setState({
             repeatPassword: input
@@ -140,7 +140,7 @@ module.exports = React.createClass({
     * Updates the currPassword state to match input
     */
     updateCurrPasswordState: function(event){
-        var input = event.target.value;
+        const input = event.target.value;
         this.setState({
             currPassword: input
         });
