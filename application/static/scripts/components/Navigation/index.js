@@ -34,7 +34,11 @@ var Navigation = React.createClass({
         this.updateState(nextProps.data);
     },
 	
-    shouldComponentUpdate: function(nextProps, nextState) {
+   /**
+    * Only update component if the data has changed.
+    * Removed unused second paremeter nextState.
+    */
+    shouldComponentUpdate: function(nextProps) {
         return nextProps.data != this.props.data;
     },
 

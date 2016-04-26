@@ -33,7 +33,7 @@ module.exports = React.createClass({
     handleSubmit: function(e){
         e.preventDefault();
 
-        //test error
+        //test error, will be replaced soon
         if(this.state.firstName == "Greger"){
             this.setState({
                 errorMessage: "Greger är ett fult namn.",

@@ -15,11 +15,18 @@ var LoginForm = React.createClass({
             showModal: false
         });
     },
+
+   /**
+    * Closes the login popup
+    */
     close: function() {
         this.setState({ showModal: false });
         this.props.hideLogin();
     },
 
+   /**
+    * Opens the login popup
+    */
     open: function() {
         this.setState({ showModal: true });
     },
@@ -27,22 +34,37 @@ var LoginForm = React.createClass({
     componentWillReceiveProps: function(nextProps){
         this.setState({showModal: nextProps.show});
     },
+
+   /**
+    * Logs the user in, resets the form and closes the popup
+    */
     onSuccess: function(e){
         this.resetForm();
         this.close();
         this.props.onLogin(e.token);
     },
+
+   /**
+    * Sets errorMessage to "Login unsuccessful" and prints the error to console
+    */
     onError: function(t, e) {
         this.setState({
             errorMessage: "Login unsuccessful"
         });
+        //Print error messages to console
+        console.log(t);
+        console.log(e);
     },
+
+   /**
+    * Resets the login form
+    */
     resetForm: function(){
         this.setState({
             email: "",
             validEmail: false,
             password: "",
-            errorMessage: "",
+            errorMessage: ""
         });
     },
 

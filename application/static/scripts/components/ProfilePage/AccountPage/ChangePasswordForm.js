@@ -78,7 +78,7 @@ module.exports = React.createClass({
             /[a-zåäö]/,                         //Lower case letters
             /[0-9]+/,                           //Digits
             /[^(A-Za-z0-9ÅÄÖåäö)]+/             //Other character (not letter or digit)
-        ]
+        ];
 
         //Check the input against all the regex and increment passwordStrength for each fulfilled condition
         for(var i = 0; i < 4; i++){
@@ -147,51 +147,57 @@ module.exports = React.createClass({
     },
     
     render: function(){
+        const passwordStrength = this.state.passwordStrength;
         //Password strength
-        var passwordDivState = "form-group"
+        var passwordDivState = "form-group";
         var passwordGlyphState = null;
         if(this.state.newPassword.length > 0){
-            passwordDivState = passwordDivState + " has-feedback " + (this.state.passwordStrength > 0 ? "has-success" : "has-error");
-            passwordGlyphState = "glyphicon form-control-feedback " + (this.state.passwordStrength > 0 ? "glyphicon-ok" : "glyphicon-remove");
+            passwordDivState = passwordDivState + " has-feedback " + (passwordStrength > 0 ? "has-success" : "has-error");
+            passwordGlyphState = "glyphicon form-control-feedback " + (passwordStrength > 0 ? "glyphicon-ok" : "glyphicon-remove");
         }
 
-        var pwStrengthBarClass = "progress-bar pwStrengthBar";
-        var pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"]
-        var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[this.state.passwordStrength];
+        const pwStrengthBarClass = "progress-bar pwStrengthBar";
+        const pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"];
+        var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[passwordStrength];
         
-        var barStyle = [
+        //Default bar color
+        const barStyle = [
             {backgroundColor: "gray"},
             {backgroundColor: "gray"},
             {backgroundColor: "gray"},
             {backgroundColor: "gray"}
         ];
 
-        for(var i = 0; i < this.state.passwordStrength; i++){
-            switch(this.state.passwordStrength){
+        //Password strength level colors
+        const PWSTR_COLOR = ["gray", "#d9534f", "#f0ad4e", "#a6c060", "#5cb85c"];
+
+        //Set the strength bar color according to password strength
+        for(var i = 0; i < passwordStrength; i++){
+            switch(passwordStrength){
             case 1:
-                barStyle[i] = {backgroundColor: "#d9534f"};
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             case 2:
-                barStyle[i] = {backgroundColor: "#f0ad4e"};
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             case 3:
-                barStyle[i] = {backgroundColor: "#a6c060"}; 
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]}; 
                 break;
             case 4:
-                barStyle[i] = {backgroundColor: "#5cb85c"};
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             }    
         }
         
         //Matching passwords
-        var repeatDivState = "form-group"
+        var repeatDivState = "form-group";
         var repeatGlyphState = null;
         if(this.state.repeatPassword.length > 0){
             repeatDivState = repeatDivState + " has-feedback " + (this.state.matchingPasswords ? "has-success" : "has-error");
             repeatGlyphState = "glyphicon form-control-feedback " + (this.state.matchingPasswords ? "glyphicon-ok" : "glyphicon-remove");
         }
         //Disable submit button if insufficient information is provided
-        var disableSubmit = (this.state.newPassword == this.state.repeatPassword && this.state.passwordStrength > 0 && this.state.currPassword.length > 0 ? "" : "disabled");
+        var disableSubmit = (this.state.newPassword == this.state.repeatPassword && passwordStrength > 0 && this.state.currPassword.length > 0 ? "" : "disabled");
 
         var message = "";
         if(this.state.successMessage.length > 0){
@@ -223,7 +229,7 @@ module.exports = React.createClass({
                         <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
                     </div>
                     <div className={pwStrengthBarTextClass}>
-                        {(this.state.newPassword.length > 0 ? this.props.dict[this.props.language]["passwordStrength"][this.state.passwordStrength] : "")}
+                        {(this.state.newPassword.length > 0 ? this.props.dict[this.props.language]["passwordStrength"][passwordStrength] : "")}
                     </div>
                 </div>
 

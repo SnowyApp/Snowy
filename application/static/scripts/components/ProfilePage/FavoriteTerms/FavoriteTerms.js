@@ -61,33 +61,31 @@ module.exports = React.createClass({
         var asc = true;
         //If already sorting by header, invert order
         if(this.state.sortBy == header){
-            var asc = !this.state.ascending;
+            asc = !this.state.ascending;
         }
         switch(header){
             case "name":
                 this.setState({
                     terms: this.props.nameSort(this.state.terms, asc),
-                    sortBy: 'name'
+                    sortBy: 'name',
+                    ascending: asc
                 });
                 break;
             case "id":
                 this.setState({
                     terms: this.props.idSort(this.state.terms, asc),
-                    sortBy: 'id'
+                    sortBy: 'id',
+                    ascending: asc
                 });
                 break;
             case "added":
                 this.setState({
                     terms: this.props.dateSort(this.state.terms, asc),
-                    sortBy: 'added'
+                    sortBy: 'added',
+                    ascending: asc
                 });
                 break;
         }
-
-        this.setState({
-            ascending: asc
-        });
-
     },
 
    /**

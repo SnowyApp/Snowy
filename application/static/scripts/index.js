@@ -539,12 +539,21 @@ var Bar = React.createClass({
                 <Button className="Login" bsStyle = "primary" 
                     onClick={this.showLogin}>{this.dict[this.props.language]["login"]}</Button>
                 {/* Registration popup */}
-                <RegisterForm show={this.state.showRegistration} 
-                    hideRegistration={this.hideRegistration} url={this.props.url}/>
+                <RegisterForm
+                    show={this.state.showRegistration} 
+                    hideRegistration={this.hideRegistration}
+                    url={this.props.url}
+                    language={this.props.language}
+                />
 
                 {/* Login popup */}
-                <LoginForm show={this.state.showLogin} hideLogin={this.hideLogin}
-                           onLogin={this.props.onLogin} url={this.props.url}/>
+                <LoginForm
+                    show={this.state.showLogin}
+                    hideLogin={this.hideLogin}
+                    onLogin={this.props.onLogin}
+                    url={this.props.url}
+                    language={this.props.language}
+                />
             </div>
         );
     
@@ -618,30 +627,6 @@ var Bar = React.createClass({
         );
     }
 });
-
-/*
-<div className="btn-group">
-                        <button type="button" className="btn btn-primary flagButton" data-toggle="dropdown">
-                            <img className="langFlagHeader" src={flagSrc}/>
-                        </button>
-                        <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span className="caret"></span>
-                        <span className="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li>
-                                <a onClick={this.props.setLanguage.bind(null,"en")} href="#">
-                                    <img className="langFlag" src="static/img/flags/flag_eng.png"/> English
-                                </a>
-                            </li>
-                            <li>
-                                <a onClick={this.props.setLanguage.bind(null,"se")} href="#">
-                                    <img className="langFlag" src="static/img/flags/flag_swe.png"/> Svenska
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-*/
 
 var Export = React.createClass({
     dict: {

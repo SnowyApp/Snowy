@@ -11,7 +11,7 @@ var fakeUser = {
     surname: "Schwarzenegger",
     email: "arnold@schwarzenegger.com",
     language: "eng"
-}
+};
 
 //Dummy data
 var dummyTerms = 
@@ -207,7 +207,7 @@ module.exports = React.createClass({
    /**
     * Sorts table data by id
     */
-    sortByid: function(data, asc){
+    sortById: function(data, asc){
         data.sort(function(a,b){
             if(asc){
                 return a.id < b.id ? -1 : 1;
@@ -261,7 +261,7 @@ module.exports = React.createClass({
                                 openTerm={this.props.openTerm}
                                 removeid={this.removeById}
                                 nameSort={this.sortByName}
-                                idSort={this.sortByid}
+                                idSort={this.sortById}
                                 dateSort={this.sortByDate}
                           />;
                 break;
