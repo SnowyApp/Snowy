@@ -529,8 +529,13 @@ var Bar = React.createClass({
                         bsStyle = "primary" >{this.dict[this.props.language][switchName]}</Button>
                 <Button className="Logout" bsStyle = "primary" 
                     onClick={this.showLogout}>{this.dict[this.props.language]["logout"]}</Button>
-                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout}
-                        onLogout={this.props.onLogout} url={this.props.url}/>
+                <LogOut
+                    show={this.state.showLogout}
+                    hideLogout={this.hideLogout}
+                    onLogout={this.props.onLogout}
+                    url={this.props.url}
+                    language={this.props.language}
+                />
             </div>
         ) : (
             <div>

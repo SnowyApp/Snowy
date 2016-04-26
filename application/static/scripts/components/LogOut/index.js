@@ -1,6 +1,21 @@
 import cookie from 'react-cookie';
 
 var LogOut = React.createClass({
+    dict: {
+        se: {
+            logout:                 "Logga ut",
+            logoutConfirmation:     "Är du säker på att du vill logga ut?",
+            yes:                    "Ja",
+            no:                     "Nej"
+        },
+        en: {
+            logout:                 "Log out",
+            logoutConfirmation:     "Are you sure you want to log out?",
+            yes:                    "Yes",
+            no:                     "No"
+        }
+    },
+
     propTypes:{
         hideLogout: React.PropTypes.func,
         show: React.PropTypes.bool
@@ -22,6 +37,7 @@ var LogOut = React.createClass({
     open: function() {
         this.setState({ showModal: true });
     },
+
     logOut: function() {
         if (cookie.load('userId') != null) {
             $.ajax({
@@ -51,14 +67,14 @@ var LogOut = React.createClass({
         return(
             <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header className="bg-primary" closeButton>
-                    <Modal.Title>Log out</Modal.Title>
+                    <Modal.Title>{this.dict[this.props.language]["logout"]}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to log out?
+                    {this.dict[this.props.language]["logoutConfirmation"]}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={this.logOut}>Yes</Button>
-                    <Button bsStyle="primary" onClick={this.close}>No</Button>
+                    <Button onClick={this.logOut}>{this.dict[this.props.language]["yes"]}</Button>
+                    <Button bsStyle="primary" onClick={this.close}>{this.dict[this.props.language]["no"]}</Button>
                 </Modal.Footer>
             </Modal>
         );
