@@ -67,6 +67,19 @@ var menuData = [
                 d3Chart._drawTree(d);
             }
         }
+    },
+    {
+        title: 'Reset node position',
+        action: function(elm, d){
+            if(d.moved != undefined){
+                if(d.moved) {
+                    d.x = d.x0;
+                    d.y = d.y0;
+                    d.moved = false;
+                    d3Chart._drawTree(d);
+                }
+            }
+        }
     }
 ];
 
@@ -233,6 +246,14 @@ d3Chart._drawTree = function() {
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
 
+    nodes.forEach(function (d) {
+        if(d.moved == undefined){
+            d.moved = false;
+            d.x0 = d.x;
+            d.y0 = d.y;
+        }
+    });
+
     var drag = d3.behavior.drag()
         .on("dragstart", dragstarted)
         .on("drag", dragmove)
@@ -392,7 +413,8 @@ d3Chart._drawTree = function() {
     }
 
     //Sets behaviour for when the the mouse starts to drag
-    function dragstarted() {
+    function dragstarted(d) {
+        d.moved = true;
         d3.event.sourceEvent.stopPropagation();
         d3.select(this).classed("dragging", true);
     }
