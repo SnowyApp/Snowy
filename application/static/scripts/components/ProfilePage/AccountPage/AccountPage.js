@@ -27,7 +27,7 @@ module.exports = React.createClass({
     * Toggles between +/- expand glyph
     */
     openAcc: function(acc){
-        var disableTime = 400;
+        const disableTime = 400;
         //Check what field was expanded
         if(acc == "name" && this.state.nameEnabled){
             //Update states and disable this function for a short time to prevent problems from clicking too fast
