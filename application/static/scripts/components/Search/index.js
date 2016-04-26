@@ -174,9 +174,9 @@ var Search = React.createClass({
 
         });
     },
-    /*
-     Clears the current result list and save it for future use
-    */
+    /**
+     * Clears the current result list and save it for future use
+     */
     clearData: function(){
         //If there is no new data, keep the previous data
         var newLastData=this.state.lastData;
@@ -227,6 +227,10 @@ var Search = React.createClass({
         })
         cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
     },
+    /**
+     * Update state with the new query, used to keep track of what the user is typing
+     * @param {string} query The user input
+     */
     updateQuery: function(query){
         this.setState({
             query: query
