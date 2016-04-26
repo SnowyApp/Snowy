@@ -114,7 +114,6 @@ var TermTable = React.createClass({
             };
         }
         var tableData = this.props.data;
-        //tableData.reverse();
         return(
             <PageClick onClick={this.handleBlur}>
                 <div className="search-results" style={style}>
