@@ -132,13 +132,13 @@ def user_info():
             not 'data_lang' in data or not isinstance(data['data_lang'], str) or \
             not 'site_lang' in data or not isinstance(data['site_lang'], str) or \
             not 'email' in data or not isinstance(data['email'], str):
-            return jsonify(message="Incomplete information")
+            return jsonify(message="Incomplete information"), 400
 
         g.user.update_info(data['first_name'], data['last_name'], data['data_lang'], data['email'], data['site_lang'])
         token = g.user.generate_token()
         token = Token(token.decode('utf-8'), g.user.email)
         token.store_token()
-        return jsonify(status="ok", token=token.token)
+        return jsonify(status="ok", token=token.token), 200
 
 
 @app.route('/password', methods=['PUT'])

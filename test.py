@@ -81,6 +81,19 @@ class TestApplication(unittest.TestCase):
 
         response = self.app.get('/verify', headers={'Authorization': data['token']})
         self.assertEqual(response.status_code, 401)
+
+
+    def test_user_info(self):
+        self.create_user()
+        response = self.login_user()
+        data = json.loads(response.data.decode('utf-8'))
+        user_data = {"first_name": "Simon", "last_name": "Lindblad", "data_lang": "en", "site_lang": "en", "email": "simli746@student.liu.se"}
+        response = self.app.put('/user_info', data=json.dumps(user_data), headers={'Authorization': data['token']}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
         
+        response = self.app.get('/user_info', headers={'Authorization': data['token']})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.data.decode("utf-8")), user_data)
+
 if __name__ == "__main__":
     unittest.main()
