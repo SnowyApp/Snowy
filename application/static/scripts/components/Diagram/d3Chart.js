@@ -2,8 +2,6 @@
  * This file contains functions to create a d3 tree diagram. When created a
  * svg-element and g-element is inserted to the body. The g-elements
  * transform attribute is used to zoom and move the diagram.
- *
- *
  */
 
 var d3Chart = module.exports = {};
@@ -81,8 +79,6 @@ const NODE_HEIGHT = 50;
 const WIDTH_MARGIN = 500;
 
 const HORIZONTAL_MARGIN = 300; //Moves the horizontal view down in the y-axis
-
-const DURATION = 750;
 
 /**
  * Called on initial render and whenever view is changed. Adds an svg-
@@ -372,28 +368,6 @@ d3Chart._drawTree = function(data) {
             .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
             .attr("marker-start", "url(#ArrowMarker)");
     }
-
-    var nodeExit = node.exit().transition()
-        .duration(DURATION)
-        .attr("transform", function(d) {
-            return "translate(" + d.parent.x + "," + d.parent.y + ")"; })
-        .style('fill-opacity', 1e-6)
-        .remove();
-
-    nodeExit.select('rect')
-        .attr('width', NODE_WIDTH)
-        .attr('height', NODE_HEIGHT);
-
-    nodeExit.select('text')
-        .style("fill-opacity", 1e-6);
-
-    link.exit().transition()
-        .duration(DURATION)
-        .attr("x1", function() { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y1", function() { return data.parent.y + NODE_HEIGHT; })
-        .attr("x2", function() { return data.parent.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-        .attr("y2", function() { return data.parent.y + 0; })
-        .remove();
 
     //Called during mouseevent, updates position for selected nodes and links
     function tick() {
