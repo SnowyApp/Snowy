@@ -71,10 +71,11 @@ var menuData = [
 ];
 
 var i = 0;
-var tree,root,treeView,svg,g,onClick;
+var tree,root,treeView,svg,g,onClick,zoom;
 
 const TEXT_MAX_WIDTH = 250;
 const NODE_WIDTH = 250;
+const NODE_MARGIN = 10;
 const NODE_HEIGHT = 50;
 const WIDTH_MARGIN = 500;
 
@@ -97,7 +98,7 @@ d3Chart.create = function(element, props, state) {
     treeView = state.view;
     onClick = props.onClick;
 
-    var zoom = d3.behavior.zoom()
+    zoom = d3.behavior.zoom()
         .on("zoom", zoomed);
 
     svg = d3.select(element).append("svg")
@@ -139,10 +140,7 @@ d3Chart.create = function(element, props, state) {
 
     tree = d3.layout.tree();
     if(treeView == 'vertical'){
-        tree.separation(function (a, b) {
-            return a.parent == b.parent ? a.parent.name.length/1.5 : a.parent.name.length;
-        })
-        .nodeSize([NODE_HEIGHT, NODE_WIDTH])
+        tree.nodeSize([NODE_WIDTH + NODE_MARGIN, NODE_HEIGHT]);
     } else {
         tree.nodeSize([NODE_HEIGHT, NODE_WIDTH]);
     }
@@ -189,12 +187,14 @@ d3Chart.getId = function() {
 d3Chart._resetZoom = function(){
     if(treeView == 'vertical'){
         d3.select('body').selectAll(".nodes")
-            .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
+            .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1
+         + ")");
     } else {
         d3.select('body').selectAll(".nodes")
             .attr("transform", "translate(" + 0 + "," + HORIZONTAL_MARGIN + ")scale(" + 1 + ")");
     }
-
+    zoom.scale(1);  //Keeps the scaling after pressing reset
+    zoom.translate([0,0])
 };
 
 /**
