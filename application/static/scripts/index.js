@@ -39,10 +39,11 @@ var Container = React.createClass({
             .then(function(rootResult, childrenResult) {
                 // get all information about children
                 var children = [];
+
                 for (var i in childrenResult[0]) {
                     children.push(
                         {
-                            "name": childrenResult[0][i].term,
+                            "name": childrenResult[0][i].synonym,
                             "concept_id": childrenResult[0][i].id,
                             "parent": rootResult[0].id,
                             "children": null,
@@ -55,7 +56,7 @@ var Container = React.createClass({
                 // of the children
                 var root = [
                     {
-                        "name": rootResult[0].term,
+                        "name": rootResult[0].synonym,
                         "concept_id": rootResult[0].id,
                         "parent": "null",
                         "children": children,
@@ -184,7 +185,7 @@ var Container = React.createClass({
                     for (var i in res) {
                         children.push(
                             {
-                                "name": res[i].term,
+                                "name": res[i].synonym,
                                 "concept_id": res[i].id,
                                 "parent": node.concept_id,
                                 "children": null,
