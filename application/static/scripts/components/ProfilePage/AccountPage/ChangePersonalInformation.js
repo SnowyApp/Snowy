@@ -57,7 +57,7 @@ module.exports = React.createClass({
     */
     validateName: function(event){
         var input = event.target.value;
-        var regEx = /^[A-Za-zåäöÅÄÖ]{2,30}$/;
+        const regEx = /^[A-Za-zåäöÅÄÖ]{2,30}$/;
 
         //First name
         if(event.target.id == "firstName"){

@@ -14,10 +14,10 @@ var SearchBox = React.createClass({
     //Dictionary for supported languages
     dict: {
         se: {
-            "search":       "Sök"
+            search:       "Sök"
         },
         en: {
-            "search":       "Search"
+            search:       "Search"
         }
     },
 

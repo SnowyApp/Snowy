@@ -450,24 +450,24 @@ var Bar = React.createClass({
     //Dictionary for supported languages
     dict: {
         se: {
-            "search":       "Sök",
-            "version":      "Version",
-            "saveDiagram":  "Spara diagram",
-            "diagram":      "Diagram",
-            "login":        "Logga in",
-            "logout":       "Logga ut",
-            "register":     "Registrera",
-            "profile":      "Profilsida"
+            search:       "Sök",
+            version:      "Version",
+            saveDiagram:  "Spara diagram",
+            diagram:      "Diagram",
+            login:        "Logga in",
+            logout:       "Logga ut",
+            register:     "Registrera",
+            profile:      "Profilsida"
         },
         en: {
-            "search":       "Search",
-            "version":      "Version",
-            "saveDiagram":  "Save diagram",
-            "diagram":      "Diagram",
-            "login":        "Log in",
-            "logout":       "Log out",
-            "register":     "Register",
-            "profile":      "Profile"
+            search:       "Search",
+            version:      "Version",
+            saveDiagram:  "Save diagram",
+            diagram:      "Diagram",
+            login:        "Log in",
+            logout:       "Log out",
+            register:     "Register",
+            profile:      "Profile"
         }
     },
 
@@ -636,10 +636,10 @@ var Bar = React.createClass({
 var Export = React.createClass({
     dict: {
         se: {
-            "export":       "Exportera"
+            export:       "Exportera"
         },
         en: {
-            "export":       "Export"
+            export:       "Export"
         }
     },
 
