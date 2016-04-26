@@ -1,4 +1,4 @@
-var d3Chart = require('./d3Chart');
+var d3Chart = require('./d3Diagram');
 
 module.exports = React.createClass({
     propTypes: {
