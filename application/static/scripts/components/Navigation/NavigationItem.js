@@ -2,6 +2,13 @@
  * Clickable items in the navigation bar
  */
 var NavigationItem = React.createClass({
+    propTypes: {
+        key:                    React.PropTypes.number,
+        id:                     React.PropTypes.number,
+        name:                   React.PropTypes.string,
+        handleClickCallback:    React.PropTypes.func
+    },
+
     //Handles clicks on the items and calls back to the parent to change the current data
     handleClick: function(e){
         this.props.handleClickCallback(e);

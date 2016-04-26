@@ -12,6 +12,13 @@ var fakeUser = {
  * Tab navigation for profile page
  */
 module.exports = React.createClass({
+    propTypes: {
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        currentTab:         React.PropTypes.string,
+        changeActiveTab:    React.PropTypes.func
+    },
+
     render: function(){
         return(
             <div>

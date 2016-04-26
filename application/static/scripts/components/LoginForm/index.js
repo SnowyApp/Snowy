@@ -2,6 +2,14 @@
  * Login form component
  */
 var LoginForm = React.createClass({
+    propTypes: {
+        show:       React.PropTypes.bool,
+        hideLogin:  React.PropTypes.bool,
+        onLogin:    React.PropTypes.func,
+        url:        React.PropTypes.string,
+        language:   React.PropTypes.string
+    },
+
     //Dictionary for supported languages. m prefix indicates that its a error/success message
     dict: {
         se: {

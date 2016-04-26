@@ -2,6 +2,13 @@
  * Registration form component
  */
 var RegisterForm = React.createClass({
+    propTypes: {
+        show:               React.PropTypes.bool,
+        hideRegistration:   React.PropTypes.func,
+        url:                React.PropTypes.string,
+        language:           React.PropTypes.string
+    },
+    
     //Dictionary for supported languages. m prefix indicates that its a error/success message
     dict: {
         se: {

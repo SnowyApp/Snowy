@@ -2,6 +2,15 @@
  * Term element in favorite terms table
  */
 module.exports = React.createClass({
+    propTypes: {
+        key:            React.PropTypes.number,
+        id:             React.PropTypes.number,
+        name:           React.PropTypes.string,
+        openTerm:       React.PropTypes.func,
+        removeTerm:     React.PropTypes.func,
+        date:           React.PropTypes.string
+    },
+
     render: function(){
         return(
             <tr className="favorites">

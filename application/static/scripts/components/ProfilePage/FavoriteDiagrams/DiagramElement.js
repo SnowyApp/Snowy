@@ -10,6 +10,18 @@ var fakeUser = {
  * Diagram element in favorite diagrams table
  */
 module.exports = React.createClass({
+    propTypes: {
+        key:                React.PropTypes.number,
+        name:               React.PropTypes.string,
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        id:                 React.PropTypes.number,
+        date:               React.PropTypes.string,
+        parameters:         React.PropTypes.object,
+        openDiagram:        React.PropTypes.func,
+        removeDiagram:      React.PropTypes.func
+    },
+
     getInitialState: function(){
         return ({
             isOpen: false,

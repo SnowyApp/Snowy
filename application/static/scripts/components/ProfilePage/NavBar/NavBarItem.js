@@ -2,6 +2,13 @@
  * Tab in the navbar
  */
 module.exports = React.createClass({
+    propTypes: {
+        id:             React.PropTypes.string,
+        name:           React.PropTypes.string,
+        active:         React.PropTypes.bool,
+        onSelect:       React.PropTypes.func
+    },
+
     render: function(){
         const navBarItemClass = (this.props.active ? 'active' : null) + " tabItem"; //Highlight active tab
         return(

@@ -112,6 +112,13 @@ var dummyDiagrams =
  * Profile page component
  */
 module.exports = React.createClass({
+    propTypes: {
+        openTerm:       React.PropTypes.func,
+        openDiagram:    React.PropTypes.func,
+        url:            React.PropTypes.string,
+        language:       React.PropTypes.string
+    },
+
     //Dictionary for supported languages. m prefix indicates that its a error/success message
     dict: {
         se: {
