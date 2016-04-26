@@ -216,7 +216,6 @@ class User():
             for data in cur:
                 result += [{"id": data[0], "data": data[1], 'created': str(data[2]), 'modified': str(data[3])}]
             cur.close()
-            print(result)
             return result
         except Exception as e:
             print(e)

@@ -42,6 +42,18 @@ CREATE TABLE concept(
     CONSTRAINT concept_pk PRIMARY KEY(id, effective_time, active)
 );
 
+-- A table that displays the favorite term relation
+DROP TABLE IF EXISTS favorite_term CASCADE;
+CREATE TABLE favorite_term(
+    concept_id BIGINT NOT NULL,
+    user_email TEXT NOT NULL,
+    date_added TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    term TEXT NOT NULL,
+    CONSTRAINT favorite_term_user_pk PRIMARY KEY (concept_id, user_email),
+    CONSTRAINT favorite_term_user_fk 
+        FOREIGN KEY (user_email) REFERENCES usr (email)
+);
+
 -- A table that stores the description data
 DROP TABLE IF EXISTS description CASCADE;
 CREATE TABLE description(
@@ -172,18 +184,6 @@ CREATE TABLE complex_map_refset(
     map_target VARCHAR(32),
     correlation_id BIGINT NOT NULL,
     CONSTRAINT complex_map_refset_pk PRIMARY KEY(id, effective_time, active)
-);
-
--- A table that displays the favorite term relation
-DROP TABLE IF EXISTS favorite_term CASCADE;
-CREATE TABLE favorite_term(
-    concept_id BIGINT NOT NULL,
-    user_email TEXT NOT NULL,
-    date_added TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    term TEXT NOT NULL,
-    CONSTRAINT favorite_term_user_pk PRIMARY KEY (concept_id, user_email),
-    CONSTRAINT favorite_term_user_fk 
-        FOREIGN KEY (user_email) REFERENCES usr (email)
 );
 
 -- Procedure that adds a favorite term for a user
