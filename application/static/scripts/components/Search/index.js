@@ -104,13 +104,25 @@ var TermTable = React.createClass({
                 this.props.clearData();
             }.bind(this)
         };
+        var adjustedMargin = "0";
+        //Make sure the relevant elements have been rendered
+        if(document.getElementById('searchInput') && document.getElementsByClassName("nav nav-pills nav-stacked")){
+            //Get the pos of the search box
+            var searchInputPos = document.getElementById('searchInput').getBoundingClientRect()["left"];
+            //Get the width of the navigation menu
+            var navPos = document.getElementsByClassName("nav nav-pills nav-stacked")[0]["clientWidth"];
+
+            adjustedMargin = searchInputPos-navPos;
+        }
         //Only display the result table if there is a result
         var style={
-            display: "none"
+            display: "none",
+            marginLeft: adjustedMargin
         };
         if(this.props.data.length > 0){
             style={
-                display: "block"
+                display: "block",
+                marginLeft: adjustedMargin
             };
         }
         var tableData = this.props.data;
