@@ -23,7 +23,7 @@ var SearchBox = React.createClass({
 
     getInitialState:function(){
         return{
-            timeout:null,
+            timeout:null
         }
     },
     /**
