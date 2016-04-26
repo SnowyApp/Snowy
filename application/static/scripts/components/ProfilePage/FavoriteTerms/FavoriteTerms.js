@@ -148,8 +148,6 @@ module.exports = React.createClass({
     },
 
     render: function(){
-        //console.log("terms: ");
-        //console.log(this.state.terms);
         //Generate the table rows
         var TermArray = null;
         var hideTable = null;
