@@ -270,7 +270,6 @@ class User():
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
-        print(user_data)
         return User(user_data[0], user_data[1], user_data[2], user_data[3], user_data[4], user_data[5])
 
     def to_json(self):
