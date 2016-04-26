@@ -4,6 +4,15 @@ var NavigationItem = require('./NavigationItem');
  * Navigation panel component
  */
 var Navigation = React.createClass({
+    propTypes: {
+        data:           React.PropTypes.array,
+        url:            React.PropTypes.string,
+        update:         React.PropTypes.func,
+        upOneLevel:     React.PropTypes.func,
+        resetRoot:      React.PropTypes.func,
+        getHistory:     React.PropTypes.func
+    },
+
     getInitialState: function(){
         return (
             {
@@ -70,8 +79,12 @@ var Navigation = React.createClass({
             //Create NavigationItem's for all the children of the current parent node
             var ItemArray = this.state.termChildren.map(function (child) {
                 return (
-                    <NavigationItem key={child.id} id={child.concept_id} name={child.name}
-                                    handleClickCallback={this.handleClick}/>
+                    <NavigationItem
+                        key={child.id}
+                        id={child.concept_id}
+                        name={child.name}
+                        handleClickCallback={this.handleClick}
+                    />
                 );
             }, this);
        }

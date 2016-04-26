@@ -13,16 +13,29 @@ var fakeUser = {
  * Component that displays favorite terms in a table
  */
 module.exports = React.createClass({
+    propTypes: {
+        url:                React.PropTypes.string,
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        terms:              React.PropTypes.array,
+        openTerm:           React.PropTypes.func,
+        removeid:           React.PropTypes.func,
+        nameSort:           React.PropTypes.func,
+        dateSort:           React.PropTypes.func
+    },
+
     getInitialState: function(){
         return (
             {
-                terms: this.props.terms // should be [] later when not using dummy data
+                terms: []
             }
         );
     },
 
     componentDidMount: function(){
-        //this.getFavoriteTerms(); //Uncomment to stop using dummy data
+        //this.addFavoriteTerm(1337, "B Test term");
+        //this.addFavoriteTerm(1338, "A Test term");
+        this.getFavoriteTerms();
         this.setState({
             terms: this.props.dateSort(this.state.terms, false),
             sortBy: 'added',
@@ -112,13 +125,21 @@ module.exports = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
+                    var terms = [];
+                    for(var i = 0; i < data.length; i++){
+                        terms.push({
+                            id: data[i].id,
+                            name: data[i].term,
+                            dateAdded: new Date("March 3, 2016 12:53:26") //TODO: Create Date from returned string
+                        });
+                    }
                     this.setState({
-                        terms: data
+                        terms: terms
                     });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
-                    /*console.log(textStatus); TODO: Re-add logs when database works
-                    console.log(errorThrown);*/
+                    console.log(textStatus);
+                    console.log(errorThrown);
                 },
                 contentType: "application/json",
                 dataType: "json"

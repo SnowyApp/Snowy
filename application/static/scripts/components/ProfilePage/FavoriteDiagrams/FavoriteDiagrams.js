@@ -14,6 +14,17 @@ var fakeUser = {
  * Component that displays favorite diagrams in a table
  */
 module.exports = React.createClass({
+    propTypes: {
+        url:                React.PropTypes.string,
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        diagrams:           React.PropTypes.array,
+        openDiagram:        React.PropTypes.func,
+        removeid:           React.PropTypes.func,
+        nameSort:           React.PropTypes.func,
+        dateSort:           React.PropTypes.func
+    },
+
     getInitialState: function(){
         return({
             diagrams: this.props.diagrams, // should be [] later when not using dummy data

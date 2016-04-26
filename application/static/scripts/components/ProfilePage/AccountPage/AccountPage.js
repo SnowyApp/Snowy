@@ -14,6 +14,12 @@ var fakeUser = {
  * A page where the user can change profile ifo
  */
 module.exports = React.createClass({
+    propTypes: {
+        url:            React.PropTypes.string,
+        dict:           React.PropTypes.object,
+        language:       React.PropTypes.string
+    },
+
     getInitialState: function(){
         return ({
             nameOpen: false,
