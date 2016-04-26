@@ -94,8 +94,8 @@ var RegisterForm = React.createClass({
     * Checks if a valid email has been input
     */
     validateEmail: function(event){
-        var input = event.target.value;
-        var regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$/;
+        const input = event.target.value;
+        const regEx = /^[A-Za-z0-9._\-åäöÅÄÖ]{1,40}\@[A-Za-z0-9.\-åäöÅÄÖ]{1,30}\.[A-Za-z\-åäöÅÄÖ]{2,25}$/;
         this.setState({
             email: input,
             validEmail: regEx.test(input)
@@ -167,7 +167,7 @@ var RegisterForm = React.createClass({
     * Updates the repeatedPassword state to match the input field
     */
     updateRepeatedPassword: function(event){
-        var input = event.target.value;
+        const input = event.target.value;
         //Update state and provide a callback function for when the state is updated to check if the passwords are matching
         this.setState({
             repeatPassword: input
