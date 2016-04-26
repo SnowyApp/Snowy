@@ -21,7 +21,7 @@ module.exports = React.createClass({
     * Toggles accordion body
     */
     openAcc: function(){
-        var disableTime = 400;
+        const disableTime = 400;
         if(this.state.buttonEnabled){
             //Update states and disable this function for a short time to prevent problems from clicking too fast
             this.setState({
@@ -39,7 +39,7 @@ module.exports = React.createClass({
 
     render: function(){
         //Different background colors depending on if the accordion is expanded
-        var openCSS = (this.state.isOpen ? {backgroundColor: "#d9edf7"} : null);
+        const openCSS = (this.state.isOpen ? {backgroundColor: "#d9edf7"} : null);
         return(
             <tbody>
                 <tr style={openCSS} className="favorites">

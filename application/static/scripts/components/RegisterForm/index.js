@@ -106,7 +106,7 @@ var RegisterForm = React.createClass({
     * Checks how strong the password is (lvl 0-4)
     */
     checkPasswordStrength: function(event){
-        var input = event.target.value; //Value from input field
+        const input = event.target.value; //Value from input field
         var passwordStrength = 0;
 
         //Update state and provide a callback function for when the state is updated to check if the passwords are matching

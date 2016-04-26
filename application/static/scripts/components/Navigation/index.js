@@ -50,12 +50,12 @@ var Navigation = React.createClass({
     * Handles clicks on the children (callback function)
     */
     handleClick: function(id){
-        var saveHistory = (this.state.currentID != id);
+        const saveHistory = (this.state.currentID != id);
         this.props.update(id, saveHistory); 
     },
 
     render: function() {
-        var history = this.props.getHistory();
+        const history = this.props.getHistory();
         var backArrow;
         var parentMarginLeft;
         //Hide back arrow if there is no history
@@ -76,7 +76,7 @@ var Navigation = React.createClass({
             }, this);
        }
         //Only display grandparent if there is one
-        var grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
+        const grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
 
         return (
             <nav>

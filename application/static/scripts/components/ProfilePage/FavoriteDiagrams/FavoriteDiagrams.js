@@ -62,8 +62,8 @@ module.exports = React.createClass({
     */
     removeDiagram: function(id){
         //Remove element locally (for responsiveness)
-        var tempFilteredDiagrams = this.props.removeid(this.state.filteredDiagrams, id);
-        var tempDiagrams = this.props.removeid(this.state.diagrams, id);
+        const tempFilteredDiagrams = this.props.removeid(this.state.filteredDiagrams, id);
+        const tempDiagrams = this.props.removeid(this.state.diagrams, id);
         this.setState({
             diagrams: tempDiagrams,
             filteredDiagrams: tempFilteredDiagrams
@@ -75,8 +75,8 @@ module.exports = React.createClass({
     * Filters the favorite list by user input
     */
     filterDiagrams: function(event){
-        var input = event.target.value;
-        var regEx = new RegExp(input.toLowerCase());
+        const input = event.target.value;
+        const regEx = new RegExp(input.toLowerCase());
         var filteredDiagrams = [];
         for(var i = 0; i < this.state.diagrams.length; i++){
             if(regEx.test(this.state.diagrams[i].name.toLowerCase())){
