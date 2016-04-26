@@ -313,7 +313,7 @@ class Token():
             cur.callproc(VALID_TOKEN_PROCEDURE, (self.token, self.user_email))
             token_data = cur.fetchone()
             cur.close()
-            return token_data is not None
+            return token_data[0]
         except Exception as e:
             print(str(e))
             return None
