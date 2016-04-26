@@ -7,8 +7,8 @@ module.exports = React.createClass({
     }
 });
 
-/*
- Handles user input
+/**
+ * Handles user input
  */
 var SearchBox = React.createClass({
     //Dictionary for supported languages
@@ -26,13 +26,20 @@ var SearchBox = React.createClass({
             timeout:null,
         }
     },
+    /**
+     * Reads the current user input and sends it back to the parent class via a callback
+     */
     doSearch: function() {
         var query = ReactDOM.findDOMNode(this.refs.searchInput).value;
         if(query.length > 2){
             this.props.doSearch(query);
         }
     },
-    //Automatic search if no keypress detected for 0.3s after typing. Instant search on enter.
+    /**
+     * Automatic search if no keypress detected for 0.3s after typing
+     * Instant search on enter
+     * @param target Save the key the user pressed
+     */
     handleKeyPress: function(target) {
         this.props.updateQuery(ReactDOM.findDOMNode(this.refs.searchInput).value);
         if(this.timeout){
@@ -49,6 +56,10 @@ var SearchBox = React.createClass({
             }.bind(this), 300);
         }
     },
+    /**
+     * Called when the user clicks the search bar
+     * Updates the result table via a callback function
+     */
     onClick: function(){
         this.props.updateData();
     },
@@ -69,20 +80,22 @@ var SearchBox = React.createClass({
     }
 });
 
-/*
- Displays the results with react-bootstrap table component
+/**
+ * Displays the results with react-bootstrap table component
  */
 var TermTable = React.createClass({
-    //Called when the user clicks outside the table
+    /**
+     * Called when the user clicks outside the table
+     */
     handleBlur: function(){
         this.props.clearData();
     },
     render:function(){
         var optionsProp = {
-            /*
-            Send the selected term back to the container component,
-            add the term to the search history and
-            clear the result table
+            /**
+             * Send the selected term back to the container component,
+             * add the term to the search history and
+             * clear the result table
              */
             onRowClick: function(row){
                 this.props.update(row.id);
@@ -114,8 +127,8 @@ var TermTable = React.createClass({
     }
 });
 
-/*
- The main component
+/**
+ * The main component
  */
 var Search = React.createClass({
     getInitialState:function(){
@@ -127,6 +140,10 @@ var Search = React.createClass({
             lastSearch: ''
         }
     },
+    /**
+     * Carry out an API request with the user input and save the result in the state
+     * @param {string} queryText The user input
+     */
     doSearch:function(queryText){
         var queryResult=[];
         var baseUrl = this.props.url;
@@ -171,10 +188,10 @@ var Search = React.createClass({
             searchData: []
         });
     },
-    /*
-     Called when the user interacts with the search box.
-     If the user didn't clear the search box set the search result to the last result.
-     Otherwise fetch the users search history from a cookie.
+    /**
+     * Called when the user interacts with the search box
+     * If the user didn't clear the search box set the search result to the last result
+     * Otherwise fetch the users esarch history from a cookie
      */
     updateData: function(){
         var searchData = this.state.searchData;
@@ -190,8 +207,9 @@ var Search = React.createClass({
             searchData: searchData
         });
     },
-    /*
-    Every time the user selects a term in the result table save it and add it to the search history cookie.
+    /**
+     * Every time the users selects a term in the result table save it and
+     * add it to the search history cookie
      */
     addHistory: function(name, id){
         var newHistory = this.state.searchHistory;
@@ -214,7 +232,6 @@ var Search = React.createClass({
         })
     },
     render:function(){
-
         return (
             <div className="search">
                 <SearchBox language={this.props.language}
