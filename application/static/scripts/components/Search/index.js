@@ -178,13 +178,14 @@ var Search = React.createClass({
      Clears the current result list and save it for future use
     */
     clearData: function(){
-        lastData=this.state.lastData;
+        //If there is no new data, keep the previous data
+        var newLastData=this.state.lastData;
+        //If there is any new data, save it and throw away the previous data
         if(this.state.searchData != undefined && this.state.searchData.length > 0){
-            var lastData = this.state.searchData;
+            newLastData = this.state.searchData;
         }
         this.setState({
-            query: this.state.query,
-            lastData: lastData,
+            lastData: newLastData,
             searchData: []
         });
     },
