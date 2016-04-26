@@ -273,7 +273,7 @@ var RegisterForm = React.createClass({
             <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header className="bg-primary" closeButton>
                     <Modal.Title>
-                        Registrering
+                        {this.dict[this.props.language]["registration"]}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -281,7 +281,7 @@ var RegisterForm = React.createClass({
                         {/* Email */}                
                         <div className={emailDivState}>
                             <label htmlFor="password" className="col-sm-3 control-label">
-                                Email
+                                {this.dict[this.props.language]["email"]}
                             </label>
                             <div className="col-sm-8">
                                 <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
@@ -291,7 +291,7 @@ var RegisterForm = React.createClass({
                         {/* Password */}
                         <div className={passwordDivState}>
                             <label htmlFor="password" className="col-sm-3 control-label">
-                                Lösenord
+                                {this.dict[this.props.language]["password"]}
                             </label>
                             <div className="col-sm-8">
                                 <input type="password" id="password" className="form-control" onChange={this.checkPasswordStrength} />
@@ -316,7 +316,7 @@ var RegisterForm = React.createClass({
                         {/* Repeat password */}
                         <div className={repeatDivState}>
                             <label htmlFor="repeatPassword" className="col-sm-3 control-label">
-                                Upprepa
+                                {this.dict[this.props.language]["repeat"]}
                             </label>
                             <div className="col-sm-8">
                                 <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
@@ -328,7 +328,7 @@ var RegisterForm = React.createClass({
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-2">
                                 <button type="submit" className="btn btn-success" disabled={disableSubmit}>
-                                    Registrera
+                                    {this.dict[this.props.language]["register"]}
                                 </button>
                             </div>
                             {message}
