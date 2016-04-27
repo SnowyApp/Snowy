@@ -107,7 +107,9 @@ Simple API for allowing accessing snowy data.
             {
                 "first_name": "Simon",
                 "last_name": "Lindblad",
-                "language": "en"
+                "language": "en",
+                "dbEdition": "Swedish-2016-16-16",
+                "email": "test@test.test"
             }
 
 
@@ -135,8 +137,35 @@ Simple API for allowing accessing snowy data.
                 "first_name": "Simon",
                 "last_name": "Lindblad",
                 "language": "en",
+                "dbEdition": "Swedish-2016-16-16",
                 "email": "test@test.com"
             }
+
+## Update password [/password]
+
+### Update info [PUT]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: token
+
+    + Body
+
+            {
+                "password": "123456789"
+            }
+
+
++ Response 200 (application/json)
+    
+    + Body 
+        
+            {
+                "status": "ok"
+            }
+
 
 ## Favorite Terms [/favorite_term]
 
