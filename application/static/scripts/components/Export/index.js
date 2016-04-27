@@ -65,7 +65,6 @@ var Export = React.createClass({
         return (
             <DropdownButton bsStyle="primary" title={this.dict[this.props.language]["export"]} id="Export">
                 <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
-                <MenuItem divider/>
                 <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
             </DropdownButton>
         );
