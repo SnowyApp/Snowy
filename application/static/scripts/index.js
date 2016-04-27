@@ -143,11 +143,13 @@ var Container = React.createClass({
             });
         }
     },
-
     componentWillMount: function() {
         this.getConcept(this.state.selectedTerm);
     },
-    
+    /**
+     * Called when the url is to be assigned the value of e
+     * @param e
+     */
     handleUrlChange: function(e){
         this.setState({
             url: e.target.value
@@ -174,7 +176,7 @@ var Container = React.createClass({
         if (id == 0)
             return;
 
-        var tree = this.state.data.slice();;
+        var tree = this.state.data.slice();
 
         // find node in data
         var node = this.findNode(tree[0], id);
