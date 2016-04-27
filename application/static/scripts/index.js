@@ -471,7 +471,6 @@ var Container = React.createClass({
     }
 });
 
-
 ReactDOM.render(
     <Container concept_id={conceptId} url={matteUrl}  />,
     document.getElementById('content')

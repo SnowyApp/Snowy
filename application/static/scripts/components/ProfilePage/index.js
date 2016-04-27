@@ -148,6 +148,7 @@ var ProfilePage = React.createClass({
             m_emailTaken:               "Den angivna email-adressen är upptagen.",
             m_updateSuccessful:         "Din information har blivit uppdaterad.",
             m_updatePasswordSuccessful: "Ditt lösenord har uppdaterats.",
+            m_failedToUpdate:           "Uppdateringen misslyckades.",
             passwordStrength:           ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
         },
         en: {
@@ -176,6 +177,7 @@ var ProfilePage = React.createClass({
             m_emailTaken:               "The provided email is already in use.",
             m_updateSuccessful:         "Your information has been updated.",
             m_updatePasswordSuccessful: "Your password has been updated.",
+            m_failedToUpdate:           "Failed to update.",
             passwordStrength:           ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
         }
     },

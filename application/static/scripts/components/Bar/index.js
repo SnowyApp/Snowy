@@ -14,7 +14,7 @@ var Bar = React.createClass({
     dict: {
         se: {
             search:       "Sök",
-            version:      "Version",
+            edition:      "Utgåva",
             saveDiagram:  "Spara diagram",
             diagram:      "Diagram",
             login:        "Logga in",
@@ -24,7 +24,7 @@ var Bar = React.createClass({
         },
         en: {
             search:       "Search",
-            version:      "Version",
+            edition:      "Edition",
             saveDiagram:  "Save diagram",
             diagram:      "Diagram",
             login:        "Log in",

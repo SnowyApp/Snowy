@@ -95,7 +95,7 @@ var AccountPage = React.createClass({
                                 </div>
                                 <div id="nameCollapse" className="panel-collapse collapse">
                                     <div className="panel-body">
-                                        <ChangePersonalInformation dict={this.props.dict} language={this.props.language}/>
+                                        <ChangePersonalInformation url={this.props.url} dict={this.props.dict} language={this.props.language}/>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@ var AccountPage = React.createClass({
                                 </div>
                                 <div id="passwordCollapse" className="panel-collapse collapse">
                                     <div className="panel-body">
-                                        <ChangePasswordForm dict={this.props.dict} language={this.props.language}/>
+                                        <ChangePasswordForm url={this.props.url} dict={this.props.dict} language={this.props.language}/>
                                     </div>
                                 </div>
                             </div>
