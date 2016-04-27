@@ -25,15 +25,35 @@ module.exports = React.createClass({
         dateSort:           React.PropTypes.func
     },
 
+    //TODO: REMOVE THIS FUNCTION
+    saveDiagram: function() {
+        $.ajax({
+            type: "POST",
+            method: "POST",
+            headers: {
+                "Authorization" : cookie.load("userId")
+            },
+            url: this.props.url + "/diagram",
+            contentType: "application/json",
+            data: JSON.stringify(
+                    { "data" : JSON.stringify({test: "333"}), "name": "Diagram 1" }),
+            error: function(xhr) {
+                console.log(xhr);
+                console.log("Could not store diagram.");
+            }.bind(this)
+        });
+    },
+
     getInitialState: function(){
         return({
-            diagrams: this.props.diagrams, // should be [] later when not using dummy data
-            filteredDiagrams: this.props.diagrams // should be [] later when not using dummy data
+            diagrams: [],
+            filteredDiagrams: []
         });
     },
 
     componentDidMount: function(){
-        //this.getFavoriteDiagrams(); //Uncomment to stop using dummy data
+        this.saveDiagram();
+        this.getFavoriteDiagrams();
         this.setState({
             diagrams: this.props.dateSort(this.state.diagrams, false),
             sortBy: 'added',
@@ -79,7 +99,28 @@ module.exports = React.createClass({
             diagrams: tempDiagrams,
             filteredDiagrams: tempFilteredDiagrams
         });
-        //TODO: Remove element from database
+        //Remove from database
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "POST",
+                method: "DELETE",
+                url: this.props.url + "/diagram",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({"id": id}),
+                success: function () {
+                    console.log("Successfully removed diagram.");
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed removing diagram.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
    /**
@@ -113,14 +154,15 @@ module.exports = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
+                    console.log(data);
                     this.setState({
                         diagrams: data,
                         filteredDiagrams: data
                     });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
-                    /*console.log(textStatus); TODO: Re-add comments when database works
-                    console.log(errorThrown);*/
+                    console.log(textStatus);
+                    console.log(errorThrown);
                 },
                 contentType: "application/json",
                 dataType: "json"
