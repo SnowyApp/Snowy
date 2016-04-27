@@ -141,6 +141,32 @@ Simple API for allowing accessing snowy data.
                 "email": "test@test.com"
             }
 
+## Update password [/password]
+
+### Update info [PUT]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: token
+
+    + Body
+
+            {
+                "password": "123456789"
+            }
+
+
++ Response 200 (application/json)
+    
+    + Body 
+        
+            {
+                "status": "ok"
+            }
+
+
 ## Favorite Terms [/favorite_term]
 
 ### Get all favorite terms [GET]
