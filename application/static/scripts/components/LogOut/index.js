@@ -17,7 +17,7 @@ var LogOut = React.createClass({
     },
 
     propTypes:{
-        hideLogout: React.PropTypes.func,
+        showLogout: React.PropTypes.func,
         show: React.PropTypes.bool
     },
     getInitialState: function(){
@@ -31,7 +31,7 @@ var LogOut = React.createClass({
     },
     close: function() {
         this.setState({ showModal: false });
-        this.props.hideLogout();
+        this.props.showLogout(false);
     },
 
     open: function() {

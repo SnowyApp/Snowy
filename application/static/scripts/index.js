@@ -505,37 +505,20 @@ var Bar = React.createClass({
         };
     },
 
-    showRegistration: function(){
+    showRegistration: function(e){
         this.setState({
-            showRegistration: true
+            showRegistration: e
         });
     },
 
-    showLogin: function(){
+    showLogin: function(e){
         this.setState({
-            showLogin: true
+            showLogin: e
         });
     },
-    hideRegistration: function(){
+    showLogout: function(e){
         this.setState({
-            showRegistration: false
-        });
-    },
-
-    hideLogin: function(){
-        this.setState({
-            showLogin: false
-        });
-
-    },
-    showLogout: function(){
-        this.setState({
-            showLogout: true
-        });
-    },
-    hideLogout: function(){
-        this.setState({
-            showLogout: false
+            showLogout: e
         });
     },
     render: function() {
@@ -557,10 +540,10 @@ var Bar = React.createClass({
                         onClick={this.props.setContent.bind(null, switchName.toLowerCase())}
                         bsStyle = "primary" >{this.dict[this.props.language][switchName]}</Button>
                 <Button className="Logout" bsStyle = "primary" 
-                    onClick={this.showLogout}>{this.dict[this.props.language]["logout"]}</Button>
+                    onClick={this.showLogout.bind(this, true)}>{this.dict[this.props.language]["logout"]}</Button>
                 <LogOut
                     show={this.state.showLogout}
-                    hideLogout={this.hideLogout}
+                    showLogout={this.showLogout}
                     onLogout={this.props.onLogout}
                     url={this.props.url}
                     language={this.props.language}
@@ -569,13 +552,13 @@ var Bar = React.createClass({
         ) : (
             <div>
                 <Button className="Register" bsStyle = "primary" 
-                    onClick={this.showRegistration}>{this.dict[this.props.language]["register"]}</Button>
+                    onClick={this.showRegistration.bind(this, true)}>{this.dict[this.props.language]["register"]}</Button>
                 <Button className="Login" bsStyle = "primary" 
-                    onClick={this.showLogin}>{this.dict[this.props.language]["login"]}</Button>
+                    onClick={this.showLogin.bind(this, true)}>{this.dict[this.props.language]["login"]}</Button>
                 {/* Registration popup */}
                 <RegisterForm
                     show={this.state.showRegistration} 
-                    hideRegistration={this.hideRegistration}
+                    showRegistration={this.showRegistration}
                     url={this.props.url}
                     language={this.props.language}
                 />
@@ -583,7 +566,7 @@ var Bar = React.createClass({
                 {/* Login popup */}
                 <LoginForm
                     show={this.state.showLogin}
-                    hideLogin={this.hideLogin}
+                    showLogin={this.showLogin}
                     onLogin={this.props.onLogin}
                     url={this.props.url}
                     language={this.props.language}
