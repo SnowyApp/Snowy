@@ -32,22 +32,6 @@ d3Chart._createMenuData = function(element) {
                 }
                 d3Chart._drawTree(element, d);
             }
-<<<<<<< HEAD:application/static/scripts/components/Diagram/d3Chart.js
-    {
-        title: 'Reset node position',
-        action: function(elm, d){
-            if(d.moved != undefined){
-                if(d.moved) {
-                    d.x = d.x0;
-                    d.y = d.y0;
-                    d.moved = false;
-                    d3Chart._drawTree(d);
-                }
-            }
-        }
-    }
-];
-=======
         },
         {
             title: 'Hide/show children',
@@ -107,7 +91,6 @@ d3Chart._createMenuData = function(element) {
         ];
 
 };  
->>>>>>> element:application/static/scripts/components/Diagram/d3Diagram.js
 
 var i = 0;
 var tree,root,treeView,svg,g,onClick,zoom;
@@ -219,28 +202,17 @@ d3Chart.getId = function() {
     return ++i;
 };
 
-<<<<<<< HEAD:application/static/scripts/components/Diagram/d3Chart.js
 /**
  * Sets the transform attribute of the g-element
  */
-
-d3Chart._resetZoom = function(){
+d3Chart._resetZoom = function(element){
     if(treeView == 'vertical'){
-        d3.select('body').selectAll('.nodes')
+        d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1
          + ')');
     } else {
-        d3.select('body').selectAll('.nodes')
+        d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')');
-=======
-d3Chart.resetZoom = function(element){
-    if(treeView == 'vertical'){
-        d3.select(element).selectAll(".nodes")
-            .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
-    } else {
-        d3.select(element).selectAll(".nodes")
-            .attr("transform", "translate(" + 0 + "," + HORIZONTAL_MARGIN + ")scale(" + 1 + ")");
->>>>>>> element:application/static/scripts/components/Diagram/d3Diagram.js
     }
     zoom.scale(1);  //Keeps the scaling after pressing reset
     zoom.translate([0,0])
@@ -249,18 +221,12 @@ d3Chart.resetZoom = function(element){
 /**
  * This functions adds the nodes and the lines between the nodes
  */
-<<<<<<< HEAD:application/static/scripts/components/Diagram/d3Chart.js
-d3Chart._drawTree = function() {
-=======
-
 d3Chart._drawTree = function(element, data) {
->>>>>>> element:application/static/scripts/components/Diagram/d3Diagram.js
     if(!root){
         return null;
     }
 
-<<<<<<< HEAD:application/static/scripts/components/Diagram/d3Chart.js
-    var gTree = d3.select('body').selectAll('.nodes');
+    var gTree = d3.select(element).selectAll('.nodes');
 
     //This creates the 'is-a' arrow as a svg marker.
     gTree.append('svg:defs').selectAll('marker')
@@ -275,23 +241,6 @@ d3Chart._drawTree = function(element, data) {
         .attr('markerUnits', 'strokeWidth')
         .attr('orient', 'auto')
         .attr('stroke-width', '2')
-=======
-    var gTree = d3.select(element).selectAll(".nodes");
-
-    // build the arrow.
-    var arrow = gTree.append("svg:defs").selectAll("marker")
-        .data(["start"])
-        .enter().append("svg:marker")    // This section adds in the arrows
-        .attr("id", "ArrowMarker")
-        .attr("viewBox", "0 0 22 20")
-        .attr("refX", 0)
-        .attr("refY", 10)
-        .attr("markerWidth", 6)
-        .attr("markerHeight", 6)
-        .attr("markerUnits", "strokeWidth")
-        .attr("orient", "auto")
-        .attr("stroke-width", "2")
->>>>>>> element:application/static/scripts/components/Diagram/d3Diagram.js
         .attr('stroke', 'black')
         .attr('fill', 'white')
         .append('svg:path')
@@ -352,13 +301,8 @@ d3Chart._drawTree = function(element, data) {
                 return 'translate(' + d.y + ', ' + d.x + ')';
             });
         }
-<<<<<<< HEAD:application/static/scripts/components/Diagram/d3Chart.js
         //When right clicking on a node call the contextMenu function
-        nodeEnter.on('contextmenu', d3.contextMenu(menuData))
-=======
-
         nodeEnter.on('contextmenu', d3.contextMenu(this._createMenuData(element)))
->>>>>>> element:application/static/scripts/components/Diagram/d3Diagram.js
         .call(drag)
         .on('mouseover', function(){
             d3.select(this).selectAll('rect.node').style( 'fill', '#ebebeb');
