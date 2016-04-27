@@ -13,7 +13,7 @@ var fakeUser = {
 /**
  * A page where the user can change profile ifo
  */
-module.exports = React.createClass({
+var AccountPage = React.createClass({
     propTypes: {
         url:            React.PropTypes.string,
         dict:           React.PropTypes.object,
@@ -122,5 +122,5 @@ module.exports = React.createClass({
         );
     }
 });
-
+module.exports = AccountPage;
 

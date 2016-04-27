@@ -10,7 +10,7 @@ var fakeUser = {
 /**
  * Form that allows the user to change password
  */
-module.exports = React.createClass({
+var ChangePasswordForm = React.createClass({
     propTypes: {
         dict:       React.PropTypes.object,
         language:   React.PropTypes.string
@@ -268,3 +268,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = ChangePasswordForm;

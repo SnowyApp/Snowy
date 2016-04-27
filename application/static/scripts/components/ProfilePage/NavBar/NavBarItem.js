@@ -1,7 +1,7 @@
 /**
  * Tab in the navbar
  */
-module.exports = React.createClass({
+var NavBarItem = React.createClass({
     propTypes: {
         id:             React.PropTypes.string,
         name:           React.PropTypes.string,
@@ -20,3 +20,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = NavBarItem;

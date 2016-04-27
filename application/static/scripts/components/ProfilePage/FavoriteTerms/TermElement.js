@@ -1,7 +1,7 @@
 /**
  * Term element in favorite terms table
  */
-module.exports = React.createClass({
+var TermElement = React.createClass({
     propTypes: {
         key:            React.PropTypes.number,
         id:             React.PropTypes.number,
@@ -34,3 +34,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = TermElement;

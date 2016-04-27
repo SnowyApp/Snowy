@@ -1,6 +1,6 @@
 var Chart = require("./Chart");
 
-module.exports = React.createClass({
+var Diagram = React.createClass({
     //Dictionary for supported languages
     dict: {
         se: {
@@ -106,3 +106,4 @@ module.exports = React.createClass({
       }
     }
 });
+module.exports = Diagram;
