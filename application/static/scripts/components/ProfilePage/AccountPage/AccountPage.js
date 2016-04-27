@@ -5,16 +5,6 @@ require('bootstrap');
 var ChangePersonalInformation = require('./ChangePersonalInformation');
 var ChangePasswordForm = require('./ChangePasswordForm');
 
-
-//Temporary fake user
-var fakeUser = {
-    id: 1337,
-    firstName: "Arnold",
-    surname: "Schwarzenegger",
-    email: "arnold@schwarzenegger.com",
-    language: "eng"
-}
-
 /**
  * A page where the user can change profile ifo
  */

@@ -2,20 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import cookie from 'react-cookie';
 
-//Temporary fake user
-var fakeUser = {
-    id: 1337,
-    firstName: "Arnold",
-    surname: "Schwarzenegger",
-    email: "arnold@schwarzenegger.com",
-    language: "eng"
-}
-
 /**
  * Form that allows the user to change password
  */
 var ChangePasswordForm = React.createClass({
     propTypes: {
+        url:        React.PropTypes.string,
         dict:       React.PropTypes.object,
         language:   React.PropTypes.string
     },

@@ -143,7 +143,7 @@ var Bar = React.createClass({
                     {/* Database edition drop-down */}
                     <div className="btn-group">
                         <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                            {this.dict[this.props.language]["version"]} <span className="caret"></span>
+                            {this.dict[this.props.language]["edition"]} <span className="caret"></span>
                         </button>
                         <ul className="dropdown-menu">
                             <li>

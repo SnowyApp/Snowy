@@ -2,15 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import cookie from 'react-cookie';
 
-//Temporary fake user
-var fakeUser = {
-    id: 1337,
-    firstName: "Arnold",
-    lastName: "Schwarzenegger",
-    email: "arnold@schwarzenegger.com",
-    language: "eng"
-}
-
 /**
  * Form that allows the user to change username and email
  */
