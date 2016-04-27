@@ -43,12 +43,12 @@ var Diagram = React.createClass({
     },
 
     componentDidMount: function() {
-        diagram.create(ReactDOM.findDOMNode(this), { onClick: this.onNodeClick },
+        diagram.create(this._d3, { onClick: this.onNodeClick },
                 this.getDiagramState());
     },
 
     componentDidUpdate: function(prevProps) {
-        var element = ReactDOM.findDOMNode(this);
+        var element = this._d3;;
 
         // if the diagram data has been initialised and contains data
         // then update the diagrams state.
@@ -101,6 +101,9 @@ var Diagram = React.createClass({
                     onClick={this.changeView}>
                     {this.dict[this.props.language]["VHView"]}
                 </Button>
+                <div className="d3diagram"
+                    ref={ (ref) => this._d3 = ref}>
+                </div>
             </div>
         );
     },
@@ -120,7 +123,7 @@ var Diagram = React.createClass({
     },
 
     resetZoom: function(){
-        diagram.resetZoom(ReactDOM.findDOMNode(this));
+        diagram.resetZoom(this._d3);
     },
 
     getDiagramState: function() {
@@ -131,7 +134,8 @@ var Diagram = React.createClass({
     },
 
     reset: function() {
-        diagram.reset(ReactDOM.findDOMNode(this), this.getDiagramState());
+        var element = this._d3;
+        diagram.reset(element, this.getDiagramState());
     },
 
     changeView: function(){
