@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PageClick from 'react-page-click';
 import cookie from 'react-cookie';
 import Button from 'react-bootstrap/lib/Button';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+require('react-bootstrap-table');
 
 /**
  * Handles user input
