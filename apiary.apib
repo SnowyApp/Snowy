@@ -202,7 +202,8 @@ Simple API for allowing accessing snowy data.
 
             {
                 "id": "708575005",
-                "term": "Secondary caries"
+                "term": "Secondary caries",
+                "definitionStatus": "Primitive"
             }
 
 ## Children [/get_children/{id}]
@@ -217,17 +218,23 @@ Simple API for allowing accessing snowy data.
                 {
                     'term': 'Wound observation', 
                     'id': 225552003,
-                    'numberofchildren': 26
+                    'numberofchildren': 26,
+                    'definitionStatus': 'Fully defined'
+
                 }, 
                 {
                     'term': 'Absence of signs and symptoms of radiation injury (situation)', 
                     'id': 397606006,
-                    'numberofchildren': 0
+                    'numberofchildren': 0,
+                    'definitionStatus': 'Primitive'
+
                 }, 
                 {
                     'term': 'Single liveborn born in hospital by cesarean section (situation)', 
                     'id': 442423001,
-                    'numberofchildren': 0
+                    'numberofchildren': 0,
+                    'definitionStatus': 'Primitive'
+
                 }
             ]
 
@@ -244,19 +251,23 @@ Simple API for allowing accessing snowy data.
                     'term': 'Wound observation', 
                     'id': 225552003,
                     'type_id': 11668003,
-                    'type_name': 'IS A'
+                    'type_name': 'IS A',
+                    'definitionStatus': 'Fully defined'
+
                 }, 
                 {
                     'term': 'Absence of signs and symptoms of radiation injury (situation)', 
                     'id': 397606006,
                     'type_id': 11668003,
-                    'type_name': 'IS A'
+                    'type_name': 'IS A',
+                    'definitionStatus': 'Primitive'
                 }, 
                 {
                     'term': 'Single liveborn born in hospital by cesarean section (situation)', 
                     'id': 442423001,
                     'type_id': 11668003,
-                    'type_name': 'IS A'
+                    'type_name': 'IS A',
+                    'definitionStatus': 'Primitive'
                 }
             ]
 
