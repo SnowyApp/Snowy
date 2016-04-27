@@ -33,7 +33,7 @@ module.exports = React.createClass({
     },
 
     componentDidMount: function(){
-        //this.addFavoriteTerm(1337, "B Test term");
+        //this.addFavoriteTerm(2877000, "Angiosperm (organism)");
         //this.addFavoriteTerm(1338, "A Test term");
         this.getFavoriteTerms();
         this.setState({
@@ -109,7 +109,28 @@ module.exports = React.createClass({
         this.setState({
             terms: this.props.removeid(this.state.terms, id)
         });
-        //TODO: Remove element from database
+        //Remove from database
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "POST",
+                method: "DELETE",
+                url: this.props.url + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({"id": id}),
+                success: function () {
+                    console.log("Successfully removed term.");
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed removing term.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
    /**
@@ -140,6 +161,7 @@ module.exports = React.createClass({
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
                     console.log(errorThrown);
+                    console.log("Failed getting favorite terms.");
                 },
                 contentType: "application/json",
                 dataType: "json"
