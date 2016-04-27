@@ -39,7 +39,7 @@ module.exports = React.createClass({
     },
 
     componentDidMount: function() {
-        diagram.create(this._d3, { onClick: this.props.onClick },
+        diagram.create(this._d3, { onClick: this.onNodeClick },
                 this.getDiagramState());
     },
 
@@ -52,7 +52,7 @@ module.exports = React.createClass({
         if (prevProps.data === undefined || prevProps.data.length != 0) {
             diagram.update(element, this.getDiagramState());
         } else {
-            diagram.create(element, { onClick: this.props.onClick }, 
+            diagram.create(element, { onClick: this.onNodeClick }, 
                 this.getDiagramState());
         }
     },
