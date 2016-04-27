@@ -35,7 +35,6 @@ var Container = React.createClass({
      * the last node is saved to history.
      */
     getConcept: function(id, saveHistory = true) {
-        console.log(id);
         $.when(this.getRoot(id), this.getChildren(id))
             .then(function(rootResult, childrenResult) {
                 // get all information about children
@@ -296,7 +295,7 @@ var Container = React.createClass({
     },
 
    /**
-    * Sets the sites language to language
+    * Sets the database edition to edition
     */
     setEdition: function(edition){
         this.setState({
