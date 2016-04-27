@@ -1,4 +1,3 @@
-var Chart = require("./Chart");
 var InfoPanel = require('./InfoPanel');
 
 import React from 'react';
@@ -6,13 +5,14 @@ import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
 import Draggable from 'react-draggable';
 
+var diagram = require("./d3Diagram");
 
 var Diagram = React.createClass({
     //Dictionary for supported languages
     dict: {
         se: {
             'reset':        'Reset',
-            'resetZoom':    'Reset zoom',
+            'resetZoom':    'Återställ zoom',
             'VHView':       'Vertikal/Horisontell vy'
         },
         en: {
@@ -41,8 +41,33 @@ var Diagram = React.createClass({
             data: data
         });
 
-        if (this._chart !== undefined) {
+        if (this.diagram !== undefined) {
             this.reset();
+        }
+    },
+
+    componentDidMount: function() {
+        diagram.create(this._d3, { onClick: this.onNodeClick },
+                this.getDiagramState());
+    },
+
+    componentDidUpdate: function(prevProps, prevState) {
+        var element = this._d3;;
+
+        // if the diagram data has been initialised and contains data
+        // then update the diagrams state.
+        // otherwise create a diagram
+        if (prevProps.data !== undefined && prevProps.data.length == 0) {
+            diagram.create(element, { onClick: this.onNodeClick }, 
+                this.getDiagramState());
+        } else if (prevState.view !== undefined &&
+                prevState.view != this.state.view) {
+            diagram.destroy();
+            diagram.create(element, { onClick: this.onNodeClick },
+                    this.getDiagramState());
+        }
+        else {
+            diagram.update(element, this.getDiagramState());
         }
     },
 
@@ -61,6 +86,7 @@ var Diagram = React.createClass({
         this.update(nextProps.data);
     },
 
+<<<<<<< HEAD
    /**
     * Toggles between showing/hiding the info panel
     */
@@ -68,6 +94,10 @@ var Diagram = React.createClass({
         this.setState({
             showInfoPanel: !this.state.showInfoPanel
         });
+=======
+    componentWillUnmount: function() {
+        diagram.destroy();
+>>>>>>> d0f1dfc38eb48cd0fef07dfdd64e52a9869b04b5
     },
 
     /**
@@ -76,6 +106,7 @@ var Diagram = React.createClass({
     render: function() {
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
         return (
+<<<<<<< HEAD
             <div className='diagram'>
                 <Button bsStyle='primary' onClick={this.reset}>{this.dict[this.props.language]['reset']}</Button>
                 <Button bsStyle='primary' onClick={this.resetZoom}>{this.dict[this.props.language]['resetZoom']}</Button>
@@ -96,6 +127,27 @@ var Diagram = React.createClass({
                         <InfoPanel />
                     </div>
                 </Draggable>
+=======
+            <div className="diagram">
+                <Button 
+                    bsStyle="primary" 
+                    onClick={this.reset}>
+                    {this.dict[this.props.language]["reset"]}
+                </Button>
+                <Button 
+                    bsStyle="primary" 
+                    onClick={this.resetZoom}>
+                    {this.dict[this.props.language]["resetZoom"]}
+                </Button>
+                <Button 
+                    bsStyle="primary" 
+                    onClick={this.changeView}>
+                    {this.dict[this.props.language]["VHView"]}
+                </Button>
+                <div className="d3diagram"
+                    ref={ (ref) => this._d3 = ref}>
+                </div>
+>>>>>>> d0f1dfc38eb48cd0fef07dfdd64e52a9869b04b5
             </div>
         );
     },
@@ -104,7 +156,7 @@ var Diagram = React.createClass({
      * Return an ID for d3 node
      */
     getId: function() {
-        return this._chart.getId();
+        return diagram.getId();
     },
 
     /**
@@ -115,23 +167,31 @@ var Diagram = React.createClass({
     },
 
     resetZoom: function(){
-        this._chart.resetZoom();
+        diagram._resetZoom(this._d3);
+    },
+
+    getDiagramState: function() {
+        return {
+            data: this.state.data,
+            view: this.state.view
+        };
     },
 
     reset: function() {
-        this._chart.resetDiagram();
+        var element = this._d3;
+        diagram.reset(element, this.getDiagramState());
     },
 
     changeView: function(){
-      if(this.state.view == 'vertical') {
-          this.setState({
-              view: 'horizontal'
-          })
-      }
+        if(this.state.view == 'vertical') {
+            this.setState({
+                view: 'horizontal'
+            });
+        }
         else {
-          this.setState({
-              view: 'vertical'
-          })
+            this.setState({
+                view: 'vertical'
+            });
       }
     }
 });

@@ -7,89 +7,114 @@ import ReactDOM from 'react-dom';
  * transform attribute is used to zoom and move the diagram.
  */
 
+var lang = 'en';
+
 var d3Chart = module.exports = {};
 
 var contextMenu = require('./d3-context-menu');
+
+const dict = {
+        se: {
+            'removeNode':   'Ta bort nod',
+            'hideShowChildren': 'Visa/Dölj barn',
+            'hideSiblings': 'Dölj syskon',
+            'showSiblings': 'Visa syskon',
+            'resetNodePosition': 'Återställ nodens position'
+            },
+        en: {
+            'removeNode':   'Remove node',
+            'hideShowChildren': 'Show/Hide children',
+            'hideSiblings': 'Hide siblings',
+            'showSiblings': 'Show siblings',
+            'resetNodePosition': 'Reset node position'
+            }
+};
 
 /**
  * Most of the actions looks at the children of the current nodes parent
  * and moves them to another list called _children that will not be drawn
  */
+d3Chart._createMenuData = function(element) {
+    return  [
+        {
+            title: dict[lang]['removeNode'],
+            action: function(elm, d) {
+                if (d.parent && d.parent.children !== undefined) {
 
-var menuData = [
-    {
-        title: 'Remove Node',
-        action: function(elm, d) {
-            if (d.parent && d.parent.children !== undefined) {
+                    // find child and remove it
+                    for (var i = 0; i < d.parent.children.length; i++) {
+                        if (d.parent.children[i].name === d.name) {
+                            d.parent.children.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                d3Chart._drawTree(element, d);
+            }
+        },
+        {
+            title: dict[lang]['hideShowChildren'],
+            action: function(elm, d){
+                
+                //If the node have children, put them in another list
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                } 
+                
+                //Take the children back
+                else {
+                    d.children = d._children;
+                    d._children = null;
+                }
 
-                // find child and remove it
-                for (var i = 0; i < d.parent.children.length; i++) {
-                    if (d.parent.children[i].name === d.name) {
-                        d.parent.children.splice(i, 1);
-                        break;
+                d3Chart._drawTree(element, d);
+            }
+        },
+        {
+            title: dict[lang]['hideSiblings'],
+            action: function(elm, d){
+                if(d.parent != "null") {
+                    var tempChild = [];
+                    tempChild.push(d);
+                    d.parent._children = d.parent.children;
+                    d.parent.children = tempChild;
+                    d3Chart._drawTree(element, d);
+                }
+            }
+        },
+        {
+            title: dict[lang]['showSiblings'],
+            action: function(elm, d){
+                if(d.parent != "null" && d.parent._children){
+                    d.parent.children = d.parent._children;
+                    d.parent._children = null;
+                    d3Chart._drawTree(element, d);
+                }
+            }
+        },
+        {
+            title: dict[lang]['resetNodePosition'],
+            action: function(elm, d){
+                if(d.moved != undefined){
+                    if(d.moved) {
+                        d.x = d.x0;
+                        d.y = d.y0;
+                        d.moved = false;
+                        d3Chart._drawTree(element, d);
                     }
                 }
             }
-            d3Chart._drawTree(d);
         }
-    },
-    {
-        title: 'Hide/show children',
-        action: function(elm, d){
-            //If the node have children, put them in another list
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            }
-            //Take the children back
-            else {
-                d.children = d._children;
-                d._children = null;
-            }
-            d3Chart._drawTree(d);
-        }
-    },
-    {
-        title: 'Hide Siblings',
-        action: function(elm, d){
-            if(d.parent != 'null') {
-                var tempChild = [];
-                tempChild.push(d);
-                d.parent._children = d.parent.children;
-                d.parent.children = tempChild;
-                d3Chart._drawTree(d);
-            }
-        }
-    },
-    {
-        title: 'Show siblings',
-        action: function(elm, d){
-            if(d.parent != 'null' && d.parent._children){
-                d.parent.children = d.parent._children;
-                d.parent._children = null;
-                d3Chart._drawTree(d);
-            }
-        }
-    },
-    {
-        title: 'Reset node position',
-        action: function(elm, d){
-            if(d.moved != undefined){
-                if(d.moved) {
-                    d.x = d.x0;
-                    d.y = d.y0;
-                    d.moved = false;
-                    d3Chart._drawTree(d);
-                }
-            }
-        }
-    }
-];
+
+        ];
+
+};  
 
 var i = 0;
 var tree,root,treeView,svg,g,onClick,zoom;
 
-const TEXT_MAX_WIDTH = 250;
+const TEXT_MAX_WIDTH = 230;
 const NODE_WIDTH = 250;
 const NODE_MARGIN = 10;
 const NODE_HEIGHT = 50;
@@ -164,7 +189,7 @@ d3Chart.create = function(element, props, state) {
     //TODO add option to sort by id
     tree.sort(function(a,b){return d3.ascending(a.name,b.name)});
 
-    this._drawTree(root);
+    this._drawTree(element, root);
 };
 
 /**
@@ -181,7 +206,7 @@ d3Chart.reset = function(element, state) {
 d3Chart.update = function(element, state) {
     if (state){
         root = state.data[0];
-        this._drawTree(root);
+        this._drawTree(element, root);
     }
 };
 
@@ -199,14 +224,13 @@ d3Chart.getId = function() {
 /**
  * Sets the transform attribute of the g-element
  */
-
-d3Chart._resetZoom = function(){
+d3Chart._resetZoom = function(element){
     if(treeView == 'vertical'){
-        d3.select('body').selectAll('.nodes')
+        d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1
          + ')');
     } else {
-        d3.select('body').selectAll('.nodes')
+        d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')');
     }
     zoom.scale(1);  //Keeps the scaling after pressing reset
@@ -216,12 +240,12 @@ d3Chart._resetZoom = function(){
 /**
  * This functions adds the nodes and the lines between the nodes
  */
-d3Chart._drawTree = function() {
+d3Chart._drawTree = function(element, data) {
     if(!root){
         return null;
     }
 
-    var gTree = d3.select('body').selectAll('.nodes');
+    var gTree = d3.select(element).selectAll('.nodes');
 
     //This creates the 'is-a' arrow as a svg marker.
     gTree.append('svg:defs').selectAll('marker')
@@ -297,7 +321,7 @@ d3Chart._drawTree = function() {
             });
         }
         //When right clicking on a node call the contextMenu function
-        nodeEnter.on('contextmenu', d3.contextMenu(menuData))
+        nodeEnter.on('contextmenu', d3.contextMenu(this._createMenuData(element)))
         .call(drag)
         .on('mouseover', function(){
             d3.select(this).selectAll('rect.node').style( 'fill', '#ebebeb');
@@ -352,17 +376,17 @@ d3Chart._drawTree = function() {
             .attr('dy', '.35em')
             .attr('text-anchor', 'middle')
             .attr('font-family', 'Helvetica, Arial, Sans-Serif')
-            .text(function(d) { return d.name; })
+            .text(function(d) { return "(" + d.concept_id + ") " + d.name; })
             .style('fill-opacity', 1)
             .call(wrap, TEXT_MAX_WIDTH);
     } else {
         nodeEnter.append('text')
-            .attr('y', 25)
+            .attr('y', NODE_HEIGHT/2)
             .attr('x', NODE_WIDTH/2)
             .attr('dy', '.35em')
             .attr('text-anchor', 'middle')
             .attr('font-family', 'Helvetica, Arial, Sans-Serif')
-            .text(function(d) { return d.name; })
+            .text(function(d) { return "(" + d.concept_id + ") " + d.name; })
             .style('fill-opacity', 1)
             .call(wrap, TEXT_MAX_WIDTH);
     }
@@ -473,6 +497,19 @@ d3Chart._drawTree = function() {
                 y = text.attr('y'),
                 dy = parseFloat(text.attr('dy')),
                 tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+            word = words.pop(); //First word is the id
+            line.push(word);
+            tspan.text(line.join(' '));
+
+            word = words.pop();
+            line.push(word);
+            tspan.text(line.join(' '));
+            line.pop();
+            tspan.text(line.join(' '));
+            line = [word];
+            tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(' '));

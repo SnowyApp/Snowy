@@ -7,7 +7,6 @@ import ReactDOM from 'react-dom';
 var Diagram = require('./components/Diagram/index');
 var Bar = require('./components/Bar/index');
 var Navigation = require('./components/Navigation/index');
-var Chart = require('./components/Diagram/Chart');
 var ProfilePage = require('./components/ProfilePage/index');
 
 
@@ -412,7 +411,6 @@ var Container = React.createClass({
                 content = <Diagram 
                             ref={ (ref) => this._diagram = ref }
                             data={this.state.data}
-                            url={this.state.serverUrl}
                             update={this.updateSelectedTerm}
                             updateConceptChildren={this.updateConceptChildren}
                             language={this.state.language}
