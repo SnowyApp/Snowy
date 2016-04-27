@@ -664,7 +664,9 @@ var Export = React.createClass({
             export:       "Export"
         }
     },
-
+    /**
+     * Exports the svg to a file which is downloaded to the user's computer
+     */
     exportSVG: function(){
         var html = d3.select("svg")
             .attr({
@@ -678,6 +680,11 @@ var Export = React.createClass({
         saveAs(blob, new Date().toJSON().slice(0,10) + ".svg");
 
     },
+
+    /**
+     * Exports the svg to a canvas which is then converted into a png file
+     * which is downloaded to the user's computer
+     */
     exportPNG: function(){
         // Create a canvas with the height and width of the parent of the svg document
         var chartArea = document.getElementsByTagName('svg')[0].parentNode;
