@@ -15,3 +15,8 @@
     overflow: hidden;
 
 }
+/* Needed for overriding styling from react-bootstrap-table-all.min.css */
+.react-bs-table{
+    border: none;
+    margin: 0;
+}
