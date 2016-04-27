@@ -128,12 +128,25 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
 
         resp_data = json.loads(resp.data.decode("utf-8"))
-        self.assertEqual(len(resp_data), 5)
+        self.assertEqual(len(resp_data), 6)
         self.assertEqual(resp_data[0]['id'], 420412004)
         self.assertEqual(resp_data[0]['synonym'], "Pseudoacanthocephalidae")
         self.assertEqual(resp_data[0]['type_name'], "IS A")
         self.assertEqual(resp_data[0]['type_id'], 116680003)
         self.assertEqual(resp_data[0]['full'], "")
+
+
+    def test_get_parents(self):
+        resp = self.app.get('/get_parents/11950008')
+        self.assertEqual(resp.status_code, 200)
+
+        resp_data = json.loads(resp.data.decode("utf-8"))
+        self.assertEqual(len(resp_data), 1)
+        self.assertEqual(resp_data[0]['type_id'], 116680003)
+        self.assertEqual(resp_data[0]['synonym'], "Phylum Acanthocephala (organism)")
+        self.assertEqual(resp_data[0]['type_name'], "IS A")
+        self.assertEqual(resp_data[0]['full'], "")
+        self.assertEqual(resp_data[0]['id'], 387961004)
 
 if __name__ == "__main__":
     unittest.main()
