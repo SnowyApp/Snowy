@@ -9,23 +9,13 @@ var Diagram = React.createClass({
     dict: {
         se: {
             'reset':        'Reset',
-            'resetZoom':    'Reset zoom',
-            'VHView':       'Vertikal/Horisontell vy',
-            'removeNode':   'Ta bort nod',
-            'hideShowChildren': 'Visa/Dölj barn',
-            'hideSiblings': 'Dölj syskon',
-            'showSiblings': 'Visa syskon',
-            'resetNodePosition': 'Återställ nodens position'
+            'resetZoom':    'Återställ zoom',
+            'VHView':       'Vertikal/Horisontell vy'
         },
         en: {
             'reset':        'Reset',
             'resetZoom':    'Reset zoom',
-            'VHView':       'Vertical/Horizontal view',
-            'removeNode':   'Remove node',
-            'hideShowChildren': 'Show/Hide children',
-            'hideSiblings': 'Hide siblings',
-            'showSiblings': 'Show siblings',
-            'resetNodePosition': 'Reset node position'
+            'VHView':       'Vertical/Horizontal view'
         }
     },
 

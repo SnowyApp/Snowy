@@ -7,9 +7,28 @@ import ReactDOM from 'react-dom';
  * transform attribute is used to zoom and move the diagram.
  */
 
+var lang = 'en';
+
 var d3Chart = module.exports = {};
 
 var contextMenu = require('./d3-context-menu');
+
+const dict = {
+        se: {
+            'removeNode':   'Ta bort nod',
+            'hideShowChildren': 'Visa/Dölj barn',
+            'hideSiblings': 'Dölj syskon',
+            'showSiblings': 'Visa syskon',
+            'resetNodePosition': 'Återställ nodens position'
+            },
+        en: {
+            'removeNode':   'Remove node',
+            'hideShowChildren': 'Show/Hide children',
+            'hideSiblings': 'Hide siblings',
+            'showSiblings': 'Show siblings',
+            'resetNodePosition': 'Reset node position'
+            }
+};
 
 /**
  * Most of the actions looks at the children of the current nodes parent
@@ -18,7 +37,7 @@ var contextMenu = require('./d3-context-menu');
 d3Chart._createMenuData = function(element) {
     return  [
         {
-            title: 'Remove Node',
+            title: dict[lang]['removeNode'],
             action: function(elm, d) {
                 if (d.parent && d.parent.children !== undefined) {
 
@@ -34,7 +53,7 @@ d3Chart._createMenuData = function(element) {
             }
         },
         {
-            title: 'Hide/show children',
+            title: dict[lang]['hideShowChildren'],
             action: function(elm, d){
                 
                 //If the node have children, put them in another list
@@ -53,7 +72,7 @@ d3Chart._createMenuData = function(element) {
             }
         },
         {
-            title: 'Hide Siblings',
+            title: dict[lang]['hideSiblings'],
             action: function(elm, d){
                 if(d.parent != "null") {
                     var tempChild = [];
@@ -65,7 +84,7 @@ d3Chart._createMenuData = function(element) {
             }
         },
         {
-            title: 'Show siblings',
+            title: dict[lang]['showSiblings'],
             action: function(elm, d){
                 if(d.parent != "null" && d.parent._children){
                     d.parent.children = d.parent._children;
@@ -75,7 +94,7 @@ d3Chart._createMenuData = function(element) {
             }
         },
         {
-            title: 'Reset node position',
+            title: dict[lang]['resetNodePosition'],
             action: function(elm, d){
                 if(d.moved != undefined){
                     if(d.moved) {
