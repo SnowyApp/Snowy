@@ -376,7 +376,7 @@ d3Chart._drawTree = function(element, data) {
             .attr('dy', '.35em')
             .attr('text-anchor', 'middle')
             .attr('font-family', 'Helvetica, Arial, Sans-Serif')
-            .text(function(d) { return d.concept_id + " " + d.name; })
+            .text(function(d) { return "(" + d.concept_id + ") " + d.name; })
             .style('fill-opacity', 1)
             .call(wrap, TEXT_MAX_WIDTH);
     } else {
@@ -386,7 +386,7 @@ d3Chart._drawTree = function(element, data) {
             .attr('dy', '.35em')
             .attr('text-anchor', 'middle')
             .attr('font-family', 'Helvetica, Arial, Sans-Serif')
-            .text(function(d) { return d.concept_id + " " + d.name; })
+            .text(function(d) { return "(" + d.concept_id + ") " + d.name; })
             .style('fill-opacity', 1)
             .call(wrap, TEXT_MAX_WIDTH);
     }
