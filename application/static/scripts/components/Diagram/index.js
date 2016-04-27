@@ -1,8 +1,8 @@
-var Chart = require("./Chart");
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
 
+var diagram = require("./d3Diagram");
 
 var Diagram = React.createClass({
     //Dictionary for supported languages
@@ -37,8 +37,27 @@ var Diagram = React.createClass({
             data: data
         });
 
-        if (this._chart !== undefined) {
+        if (this.diagram !== undefined) {
             this.reset();
+        }
+    },
+
+    componentDidMount: function() {
+        diagram.create(ReactDOM.findDOMNode(this), { onClick: this.onNodeClick },
+                this.getDiagramState());
+    },
+
+    componentDidUpdate: function(prevProps) {
+        var element = ReactDOM.findDOMNode(this);
+
+        // if the diagram data has been initialised and contains data
+        // then update the diagrams state.
+        // otherwise create a diagram
+        if (prevProps.data === undefined || prevProps.data.length != 0) {
+            diagram.update(element, this.getDiagramState());
+        } else {
+            diagram.create(element, { onClick: this.onNodeClick }, 
+                this.getDiagramState());
         }
     },
 
@@ -57,20 +76,31 @@ var Diagram = React.createClass({
         this.update(nextProps.data);
     },
 
+    componentWillUnmount: function() {
+        diagram.destroy();
+    },
+
     /**
     * Render the diagram from the current state.
     */
     render: function() {
         return (
-            <div className='diagram'>
-                <Button bsStyle='primary' onClick={this.reset}>{this.dict[this.props.language]['reset']}</Button>
-                <Button bsStyle='primary' onClick={this.resetZoom}>{this.dict[this.props.language]['resetZoom']}</Button>
-                <Button bsStyle='primary' onClick={this.changeView}>{this.dict[this.props.language]['VHView']}</Button>
-                <Chart
-                    ref={ (ref) => this._chart = ref }
-                    data={this.state.data}
-                    view={this.state.view}
-                    onClick={this.onNodeClick} />
+            <div className="diagram">
+                <Button 
+                    bsStyle="primary" 
+                    onClick={this.reset}>
+                    {this.dict[this.props.language]["reset"]}
+                </Button>
+                <Button 
+                    bsStyle="primary" 
+                    onClick={this.resetZoom}>
+                    {this.dict[this.props.language]["resetZoom"]}
+                </Button>
+                <Button 
+                    bsStyle="primary" 
+                    onClick={this.changeView}>
+                    {this.dict[this.props.language]["VHView"]}
+                </Button>
             </div>
         );
     },
@@ -79,7 +109,7 @@ var Diagram = React.createClass({
      * Return an ID for d3 node
      */
     getId: function() {
-        return this._chart.getId();
+        return diagram.getId();
     },
 
     /**
@@ -90,11 +120,18 @@ var Diagram = React.createClass({
     },
 
     resetZoom: function(){
-        this._chart.resetZoom();
+        diagram.resetZoom(ReactDOM.findDOMNode(this));
+    },
+
+    getDiagramState: function() {
+        return {
+            data: this.state.data,
+            view: this.state.view
+        };
     },
 
     reset: function() {
-        this._chart.resetDiagram();
+        diagram.reset(ReactDOM.findDOMNode(this), this.getDiagramState());
     },
 
     changeView: function(){
