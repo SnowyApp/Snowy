@@ -1,6 +1,9 @@
+var InfoPanel = require('./InfoPanel');
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
+import Draggable from 'react-draggable';
 
 var diagram = require("./d3Diagram");
 
@@ -26,7 +29,8 @@ var Diagram = React.createClass({
     getInitialState: function() {
         return {
             data: [],
-            view:  'vertical'
+            view:  'vertical',
+            showInfoPanel: false
         };
     },
 
@@ -82,6 +86,15 @@ var Diagram = React.createClass({
         this.update(nextProps.data);
     },
 
+   /**
+    * Toggles between showing/hiding the info panel
+    */
+    toggleInfoPanel: function(){
+        this.setState({
+            showInfoPanel: !this.state.showInfoPanel
+        });
+    },
+
     componentWillUnmount: function() {
         diagram.destroy();
     },
@@ -90,6 +103,7 @@ var Diagram = React.createClass({
     * Render the diagram from the current state.
     */
     render: function() {
+        const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
         return (
             <div className="diagram">
                 <Button 
@@ -110,6 +124,22 @@ var Diagram = React.createClass({
                 <div className="d3diagram"
                     ref={ (ref) => this._d3 = ref}>
                 </div>
+
+                //Button to open info panel
+                <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span> 
+
+                //Term info panel
+                <Draggable
+                    handle=".infoPanelHandle"
+                    zIndex={1000}
+                    bounds=".diagram">
+                    <div style={showInfoPanel} className="infoPanelWrapper">
+                        <InfoPanel
+                            hidePanel={this.toggleInfoPanel}
+                            data={this.state.data}
+                        />
+                    </div>
+                </Draggable>
             </div>
         );
     },

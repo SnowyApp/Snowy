@@ -28,3 +28,43 @@
     border: 4px double;
     background-color: #FFFFCC;
 }
+
+
+/* Info panel css */
+
+.infoPanelWrapper {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.infoPanel {
+    margin-bottom: 0;
+    width: 400px;
+}
+
+.infoPanelButton {
+    font-size: 2.4em;
+    color: #f0ad4e;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.infoPanelButton:hover {
+    cursor: pointer;
+    color: #e08d3e;
+}
+
+.infoPanelHandle {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently not supported by any browser */
+}
+
+.infoPanelHandle:hover {
+    cursor: move;
+}
