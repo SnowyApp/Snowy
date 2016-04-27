@@ -53,7 +53,7 @@ var Chart = React.createClass({
 
     render: function() {
         return (
-            <div className="chart"></div>
+            <div className='chart'></div>
         );
     }
 });
