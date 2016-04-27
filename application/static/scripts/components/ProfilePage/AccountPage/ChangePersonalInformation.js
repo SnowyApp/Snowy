@@ -13,7 +13,12 @@ var fakeUser = {
 /**
  * Form that allows the user to change username and email
  */
-module.exports = React.createClass({
+var ChangePersonalInformation = React.createClass({
+    propTypes: {
+        dict:       React.PropTypes.object,
+        language:   React.PropTypes.string
+    },
+
     getInitialState: function(){
         return({
             firstName: "",
@@ -36,7 +41,7 @@ module.exports = React.createClass({
     handleSubmit: function(e){
         e.preventDefault();
 
-        //test error
+        //test error, will be replaced soon
         if(this.state.firstName == "Greger"){
             this.setState({
                 errorMessage: "Greger är ett fult namn.",
@@ -47,7 +52,7 @@ module.exports = React.createClass({
         else {
             this.setState({
                 errorMessage: "",
-                successMessage: this.props.dict[fakeUser.language]["m_updateSuccessful"],
+                successMessage: this.props.dict[this.props.language]["m_updateSuccessful"],
                 firstNameHasChanged: false,
                 lastNameHasChanged: false,
                 emailHasChanged: false
@@ -60,7 +65,7 @@ module.exports = React.createClass({
     */
     validateName: function(event){
         var input = event.target.value;
-        var regEx = /^[A-Za-zåäöÅÄÖ]{2,30}$/;
+        const regEx = /^[A-Za-zåäöÅÄÖ]{2,30}$/;
 
         //First name
         if(event.target.id == "firstName"){
@@ -72,7 +77,6 @@ module.exports = React.createClass({
         }
         //Last name        
         else if (event.target.id == "lastName") {
-            console.log(input);
             this.setState({
                 lastName: input,
                 validLastName: regEx.test(input),
@@ -149,7 +153,7 @@ module.exports = React.createClass({
                 { /* First name */ }
                 <div className={firstNameDivState}>
                     <label htmlFor="firstName" className="col-sm-3 control-label ">
-                        {this.props.dict[fakeUser.language]["firstName"]}
+                        {this.props.dict[this.props.language]["firstName"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="text" className="form-control" id="firstName" defaultValue={fakeUser.firstName} onChange={this.validateName}/>
@@ -159,7 +163,7 @@ module.exports = React.createClass({
                 { /* Last name */ }
                 <div className={lastNameDivState}>
                     <label htmlFor="lastName" className="col-sm-3 control-label ">
-                        {this.props.dict[fakeUser.language]["lastName"]}
+                        {this.props.dict[this.props.language]["lastName"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="text" className="form-control" id="lastName" defaultValue={fakeUser.lastName} onChange={this.validateName}/>
@@ -169,7 +173,7 @@ module.exports = React.createClass({
                 { /* Email */ }
                 <div className={emailDivState}>
                     <label htmlFor="email" className="col-sm-3 control-label ">
-                        {this.props.dict[fakeUser.language]["email"]}
+                        {this.props.dict[this.props.language]["email"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="text" className="form-control" defaultValue={fakeUser.email} onChange={this.validateEmail}/>
@@ -180,7 +184,7 @@ module.exports = React.createClass({
                 <div className="form-group">
                     <div className="col-sm-offset-3 col-sm-2">
                         <button type="submit" className="btn btn-success" disabled={disableSubmit}>
-                            {this.props.dict[fakeUser.language]["update"]}
+                            {this.props.dict[this.props.language]["update"]}
                         </button>
                     </div>
                     {message}
@@ -189,3 +193,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = ChangePersonalInformation;

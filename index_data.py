@@ -1,9 +1,11 @@
 import psycopg2
+import requests
 
 from elasticsearch import Elasticsearch
 es = Elasticsearch()
 
-db = psycopg2.connect("dbname=snomedct user=Sehnsucht")
+requests.delete("http://localhost:9200/desc")
+db = psycopg2.connect("dbname=snomedct user=simon")
 cur = db.cursor()
 cur.execute("SELECT concept_id,term FROM description;")
 i = 0

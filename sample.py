@@ -19,8 +19,11 @@ def login(username, password):
 def get_favorite_terms():
     return json.loads(requests.get(url + "/favorite_term", headers=auth).text)
 
-def add_favorite_term(cid, term, et, a):
-    data = {"id": cid, "effective_time": et, "term": term, "active": a}
+def delete_favorite_term(id):
+    return json.loads(requests.delete(url + "/favorite_term", json={'id': id}, headers=auth).text)
+
+def add_favorite_term(cid, term):
+    data = {"id": cid, "term": term}
     return json.loads(requests.post(url + "/favorite_term", json=data, headers=auth).text)
 
 def search(term):
@@ -38,17 +41,30 @@ def get_parents(id):
 def get_concept(id):
     return json.loads(requests.get(url + "/concept/" + str(id)).text)
 
-def update_info(first_name, last_name, language):
-    data = {"first_name": first_name, "last_name": last_name, "language": language}
-    return json.loads(requests.post(url + "/update_info", json=data, headers=auth).text)
+def update_info():
+    global auth
+    data = {"first_name": "Simon", "last_name": "Lindblad", "data_lang": "en", "email": "simonlind", "site_lang": "en"}
+    data = json.loads(requests.put(url + "/user_info", json=data, headers=auth).text)
+    auth = {"Authorization": data["token"]}
+    return data
+
+def update_password(pswd):
+    data= {"password": pswd, "invalidate_tokens": True}
+    return json.loads(requests.put(url + "/password", json=data, headers=auth).text)
+
+def get_user_info():
+    return json.loads(requests.get(url + "/user_info", headers=auth).text)
 
 def store_diagram():
-    data = {"data": "This is a test diagram"}
+    data = {"data": "This is a test diagram", "name": "Simons diagram"}
     return json.loads(requests.post(url + "/diagram", json=data, headers=auth).text)
 
 def update_diagram():
-    data = {"data": "This is an updated diagram", "id": store_diagram()['id']}
+    data = {"data": "This is an updated diagram", "name": "Simons updated diagram", "id": store_diagram()['id']}
     return json.loads(requests.put(url + "/diagram", json=data, headers=auth).text)
+
+def delete_diagram(id):
+    return json.loads(requests.delete(url + "/diagram", json={"id": id}, headers=auth).text)
 
 def get_diagram():
     return json.loads(requests.get(url + "/diagram", headers=auth).text)

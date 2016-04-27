@@ -16,17 +16,30 @@ var fakeUser = {
 /**
  * Component that displays favorite terms in a table
  */
-module.exports = React.createClass({
+var FavoriteTerms = React.createClass({
+    propTypes: {
+        url:                React.PropTypes.string,
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        terms:              React.PropTypes.array,
+        openTerm:           React.PropTypes.func,
+        removeid:           React.PropTypes.func,
+        nameSort:           React.PropTypes.func,
+        dateSort:           React.PropTypes.func
+    },
+
     getInitialState: function(){
         return (
             {
-                terms: this.props.terms // should be [] later when not using dummy data
+                terms: []
             }
         );
     },
 
     componentDidMount: function(){
-        //this.getFavoriteTerms(); //Uncomment to stop using dummy data
+        //this.addFavoriteTerm(2877000, "Angiosperm (organism)");
+        //this.addFavoriteTerm(1338, "A Test term");
+        this.getFavoriteTerms();
         this.setState({
             terms: this.props.dateSort(this.state.terms, false),
             sortBy: 'added',
@@ -65,33 +78,31 @@ module.exports = React.createClass({
         var asc = true;
         //If already sorting by header, invert order
         if(this.state.sortBy == header){
-            var asc = !this.state.ascending;
+            asc = !this.state.ascending;
         }
         switch(header){
             case "name":
                 this.setState({
                     terms: this.props.nameSort(this.state.terms, asc),
-                    sortBy: 'name'
+                    sortBy: 'name',
+                    ascending: asc
                 });
                 break;
             case "id":
                 this.setState({
                     terms: this.props.idSort(this.state.terms, asc),
-                    sortBy: 'id'
+                    sortBy: 'id',
+                    ascending: asc
                 });
                 break;
             case "added":
                 this.setState({
                     terms: this.props.dateSort(this.state.terms, asc),
-                    sortBy: 'added'
+                    sortBy: 'added',
+                    ascending: asc
                 });
                 break;
         }
-
-        this.setState({
-            ascending: asc
-        });
-
     },
 
    /**
@@ -102,7 +113,28 @@ module.exports = React.createClass({
         this.setState({
             terms: this.props.removeid(this.state.terms, id)
         });
-        //TODO: Remove element from database
+        //Remove from database
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "POST",
+                method: "DELETE",
+                url: this.props.url + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({"id": id}),
+                success: function () {
+                    console.log("Successfully removed term.");
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed removing term.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
    /**
@@ -118,13 +150,22 @@ module.exports = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
+                    var terms = [];
+                    for(var i = 0; i < data.length; i++){
+                        terms.push({
+                            id: data[i].id,
+                            name: data[i].term,
+                            dateAdded: new Date("March 3, 2016 12:53:26") //TODO: Create Date from returned string
+                        });
+                    }
                     this.setState({
-                        terms: data
+                        terms: terms
                     });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
-                    /*console.log(textStatus); TODO: Re-add logs when database works
-                    console.log(errorThrown);*/
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed getting favorite terms.");
                 },
                 contentType: "application/json",
                 dataType: "json"
@@ -196,7 +237,7 @@ module.exports = React.createClass({
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
-                    {this.props.dict[fakeUser.language]["savedTerms"]}
+                    {this.props.dict[this.props.language]["savedTerms"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="termPageWrapper">
@@ -204,13 +245,13 @@ module.exports = React.createClass({
                         <thead>
                             <tr>
                                 <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
-                                    {this.props.dict[fakeUser.language]["name"]} {nameSortArrow}
+                                    {this.props.dict[this.props.language]["name"]} {nameSortArrow}
                                 </th>
                                 <th id="Term_id" className="favorites" onClick={this.sortBy.bind(this, "id")}>
                                     ID {idSortArrow}
                                 </th>
                                 <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>
-                                    {this.props.dict[fakeUser.language]["added"]} {dateSortArrow}
+                                    {this.props.dict[this.props.language]["added"]} {dateSortArrow}
                                 </th>
                                 <th id="Term_remove" className="favorites"></th>
                             </tr>
@@ -219,12 +260,12 @@ module.exports = React.createClass({
                             {TermArray}
                         </tbody>
                     </table>
-                    {this.state.terms.length > 0 ? "" : this.props.dict[fakeUser.language]["noSavedTerms"]}
+                    {this.state.terms.length > 0 ? "" : this.props.dict[this.props.language]["noSavedTerms"]}
                 </div>
             </div>
         );
     }
 });
-
+module.exports = FavoriteTerms;
 
 

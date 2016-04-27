@@ -5,36 +5,47 @@ import cookie from 'react-cookie';
 import Button from 'react-bootstrap/lib/Button';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
-module.exports = React.createClass({
-
-    render: function() {
-        return <Search url = {this.props.url} update = {this.props.update}/>;
-    }
-});
-
-/*
- Handles user input
+/**
+ * Handles user input
  */
 var SearchBox = React.createClass({
-    getInitialState:function(){
-        return{
-            timeout:null,
+    //Dictionary for supported languages
+    dict: {
+        se: {
+            search:       "Sök"
+        },
+        en: {
+            search:       "Search"
         }
     },
+
+    getInitialState:function(){
+        return{
+            timeout:null
+        }
+    },
+    /**
+     * Reads the current user input and sends it back to the parent class via a callback
+     */
     doSearch: function() {
         var query = ReactDOM.findDOMNode(this.refs.searchInput).value;
         if(query.length > 2){
             this.props.doSearch(query);
         }
     },
-    //Automatic search if no keypress detected for 0.3s after typing. Instant search on enter.
+    /**
+     * Automatic search if no keypress detected for 0.3s after typing
+     * Instant search on enter
+     * @param target Save the key the user pressed
+     */
     handleKeyPress: function(target) {
+        const ENTER_KEYCODE = 13;
         this.props.updateQuery(ReactDOM.findDOMNode(this.refs.searchInput).value);
         if(this.timeout){
-            clearTimeout(this.timeout)
-            this.timeout = null
+            clearTimeout(this.timeout);
+            this.timeout = null;
         }
-        if (target.keyCode == 13){
+        if (target.keyCode == ENTER_KEYCODE){
             this.doSearch();
         }
         else{
@@ -44,33 +55,46 @@ var SearchBox = React.createClass({
             }.bind(this), 300);
         }
     },
+    /**
+     * Called when the user clicks the search bar
+     * Updates the result table via a callback function
+     */
     onClick: function(){
         this.props.updateData();
     },
     render:function(){
         return(
             <div onClick={this.onClick}>
-                <input id="searchInput" ref="searchInput" type="text" placeholder="Search..." defaultValue={this.props.search} onKeyUp={this.handleKeyPress} />
-                <Button onClick={this.doSearch} >Search</Button>
+                <input
+                    id="searchInput"
+                    ref="searchInput"
+                    type="text"
+                    placeholder={this.dict[this.props.language]["search"]+"..."}
+                    defaultValue={this.props.search}
+                    onKeyUp={this.handleKeyPress}
+                />
+                <Button onClick={this.doSearch}>{this.dict[this.props.language]["search"]}</Button>
             </div>
         )
     }
 });
 
-/*
- Displays the results with react-bootstrap table component
+/**
+ * Displays the results with react-bootstrap table component
  */
 var TermTable = React.createClass({
-    //Called when the user clicks outside the table
+    /**
+     * Called when the user clicks outside the table
+     */
     handleBlur: function(){
         this.props.clearData();
     },
     render:function(){
         var optionsProp = {
-            /*
-            Send the selected term back to the container component,
-            add the term to the search history and
-            clear the result table
+            /**
+             * Send the selected term back to the container component,
+             * add the term to the search history and
+             * clear the result table
              */
             onRowClick: function(row){
                 this.props.update(row.id);
@@ -78,17 +102,28 @@ var TermTable = React.createClass({
                 this.props.clearData();
             }.bind(this)
         };
+        var adjustedMargin = "0";
+        //Make sure the relevant elements have been rendered
+        if(document.getElementById('searchInput') && document.getElementsByClassName("nav nav-pills nav-stacked")){
+            //Get the pos of the search box
+            var searchInputPos = document.getElementById('searchInput').getBoundingClientRect()["left"];
+            //Get the width of the navigation menu
+            var navPos = document.getElementsByClassName("nav nav-pills nav-stacked")[0]["clientWidth"];
+
+            adjustedMargin = searchInputPos-navPos;
+        }
         //Only display the result table if there is a result
         var style={
-            display: "none"
+            display: "none",
+            marginLeft: adjustedMargin
         };
         if(this.props.data.length > 0){
             style={
-                display: "block"
+                display: "block",
+                marginLeft: adjustedMargin
             };
         }
         var tableData = this.props.data;
-        //tableData.reverse();
         return(
             <PageClick onClick={this.handleBlur}>
                 <div className="search-results" style={style}>
@@ -102,19 +137,23 @@ var TermTable = React.createClass({
     }
 });
 
-/*
- The main component
+/**
+ * The main component
  */
 var Search = React.createClass({
     getInitialState:function(){
         return{
             query:'',
             searchData: [],
-            searchHistory: cookie.load('searchHistory') ? cookie.load('searchHistory') : [],
+            searchHistory: cookie.load('searchHistory') || [],
             lastData: [],
             lastSearch: ''
         }
     },
+    /**
+     * Carry out an API request with the user input and save the result in the state
+     * @param {string} queryText The user input
+     */
     doSearch:function(queryText){
         var queryResult=[];
         var baseUrl = this.props.url;
@@ -145,24 +184,25 @@ var Search = React.createClass({
 
         });
     },
-    /*
-     Clears the current result list and save it for future use
-    */
+    /**
+     * Clears the current result list and save it for future use
+     */
     clearData: function(){
-        lastData=this.state.lastData;
+        //If there is no new data, keep the previous data
+        var newLastData=this.state.lastData;
+        //If there is any new data, save it and throw away the previous data
         if(this.state.searchData != undefined && this.state.searchData.length > 0){
-            var lastData = this.state.searchData;
+            newLastData = this.state.searchData;
         }
         this.setState({
-            query: this.state.query,
-            lastData: lastData,
+            lastData: newLastData,
             searchData: []
         });
     },
-    /*
-     Called when the user interacts with the search box.
-     If the user didn't clear the search box set the search result to the last result.
-     Otherwise fetch the users search history from a cookie.
+    /**
+     * Called when the user interacts with the search box
+     * If the user didn't clear the search box set the search result to the last result
+     * Otherwise fetch the users esarch history from a cookie
      */
     updateData: function(){
         var searchData = this.state.searchData;
@@ -178,8 +218,9 @@ var Search = React.createClass({
             searchData: searchData
         });
     },
-    /*
-    Every time the user selects a term in the result table save it and add it to the search history cookie.
+    /**
+     * Every time the users selects a term in the result table save it and
+     * add it to the search history cookie
      */
     addHistory: function(name, id){
         var newHistory = this.state.searchHistory;
@@ -196,16 +237,20 @@ var Search = React.createClass({
         })
         cookie.save('searchHistory', this.state.searchHistory, { path: '/' });
     },
+    /**
+     * Update state with the new query, used to keep track of what the user is typing
+     * @param {string} query The user input
+     */
     updateQuery: function(query){
         this.setState({
             query: query
         })
     },
     render:function(){
-
         return (
             <div className="search">
-                <SearchBox query={this.state.query}
+                <SearchBox language={this.props.language}
+                           query={this.state.query}
                            doSearch={this.doSearch}
                            updateData={this.updateData}
                            updateQuery={this.updateQuery}/>
@@ -217,4 +262,4 @@ var Search = React.createClass({
         );
     }
 });
-
+module.exports = Search;

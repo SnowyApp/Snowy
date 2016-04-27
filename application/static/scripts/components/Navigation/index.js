@@ -6,6 +6,15 @@ import ReactDOM from 'react-dom';
  * Navigation panel component
  */
 var Navigation = React.createClass({
+    propTypes: {
+        data:           React.PropTypes.array,
+        url:            React.PropTypes.string,
+        update:         React.PropTypes.func,
+        upOneLevel:     React.PropTypes.func,
+        resetRoot:      React.PropTypes.func,
+        getHistory:     React.PropTypes.func
+    },
+
     getInitialState: function(){
         return (
             {
@@ -36,7 +45,11 @@ var Navigation = React.createClass({
         this.updateState(nextProps.data);
     },
 	
-    shouldComponentUpdate: function(nextProps, nextState) {
+   /**
+    * Only update component if the data has changed.
+    * Removed unused second paremeter nextState.
+    */
+    shouldComponentUpdate: function(nextProps) {
         return nextProps.data != this.props.data;
     },
 
@@ -48,12 +61,12 @@ var Navigation = React.createClass({
     * Handles clicks on the children (callback function)
     */
     handleClick: function(id){
-        var saveHistory = (this.state.currentID != id);
+        const saveHistory = (this.state.currentID != id);
         this.props.update(id, saveHistory); 
     },
 
     render: function() {
-        var history = this.props.getHistory();
+        const history = this.props.getHistory();
         var backArrow;
         var parentMarginLeft;
         //Hide back arrow if there is no history
@@ -68,13 +81,17 @@ var Navigation = React.createClass({
             //Create NavigationItem's for all the children of the current parent node
             var ItemArray = this.state.termChildren.map(function (child) {
                 return (
-                    <NavigationItem key={child.id} id={child.concept_id} name={child.name}
-                                    handleClickCallback={this.handleClick}/>
+                    <NavigationItem
+                        key={child.id}
+                        id={child.concept_id}
+                        name={child.name}
+                        handleClickCallback={this.handleClick}
+                    />
                 );
             }, this);
        }
         //Only display grandparent if there is one
-        var grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
+        const grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
 
         return (
             <nav>

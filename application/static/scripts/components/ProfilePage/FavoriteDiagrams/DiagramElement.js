@@ -13,7 +13,19 @@ var fakeUser = {
 /**
  * Diagram element in favorite diagrams table
  */
-module.exports = React.createClass({
+var DiagramElement = React.createClass({
+    propTypes: {
+        key:                React.PropTypes.number,
+        name:               React.PropTypes.string,
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        id:                 React.PropTypes.number,
+        date:               React.PropTypes.string,
+        parameters:         React.PropTypes.object,
+        openDiagram:        React.PropTypes.func,
+        removeDiagram:      React.PropTypes.func
+    },
+
     getInitialState: function(){
         return ({
             isOpen: false,
@@ -25,7 +37,7 @@ module.exports = React.createClass({
     * Toggles accordion body
     */
     openAcc: function(){
-        var disableTime = 400;
+        const disableTime = 400;
         if(this.state.buttonEnabled){
             //Update states and disable this function for a short time to prevent problems from clicking too fast
             this.setState({
@@ -43,7 +55,7 @@ module.exports = React.createClass({
 
     render: function(){
         //Different background colors depending on if the accordion is expanded
-        var openCSS = (this.state.isOpen ? {backgroundColor: "#d9edf7"} : null);
+        const openCSS = (this.state.isOpen ? {backgroundColor: "#d9edf7"} : null);
         return(
             <tbody>
                 <tr style={openCSS} className="favorites">
@@ -84,7 +96,7 @@ module.exports = React.createClass({
                                             <td>{this.props.id}</td>
                                         </tr>
                                         <tr>                                    
-                                            <td>{this.props.dict[fakeUser.language]["date"]}:</td>
+                                            <td>{this.props.dict[this.props.language]["date"]}:</td>
                                             <td>{this.props.date}</td>
                                         </tr>
                                         <tr>                                    
@@ -109,3 +121,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = DiagramElement;

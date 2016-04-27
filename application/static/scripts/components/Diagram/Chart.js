@@ -2,7 +2,7 @@ var d3Chart = require('./d3Chart');
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-module.exports = React.createClass({
+var Chart = React.createClass({
     propTypes: {
         data: React.PropTypes.array,
         view: React.PropTypes.string
@@ -57,3 +57,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = Chart;

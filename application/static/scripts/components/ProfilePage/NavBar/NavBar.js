@@ -13,23 +13,33 @@ var fakeUser = {
 /**
  * Tab navigation for profile page
  */
-module.exports = React.createClass({
+var NavBar = React.createClass({
+    propTypes: {
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        currentTab:         React.PropTypes.string,
+        changeActiveTab:    React.PropTypes.func
+    },
+
     render: function(){
         return(
             <div>
                 <ul className="nav nav-tabs">
                     <NavBarItem
-                        name={this.props.dict[fakeUser.language]["terms"]}
+                        id="terms"
+                        name={this.props.dict[this.props.language]["terms"]}
                         active={this.props.currentTab == 'terms'}
                         onSelect={this.props.changeActiveTab}
                     />
                     <NavBarItem
-                        name={this.props.dict[fakeUser.language]["diagrams"]}
+                        id="diagrams"
+                        name={this.props.dict[this.props.language]["diagrams"]}
                         active={this.props.currentTab == 'diagrams'}
                         onSelect={this.props.changeActiveTab}
                     />
                     <NavBarItem
-                        name={this.props.dict[fakeUser.language]["account"]}
+                        id="account"
+                        name={this.props.dict[this.props.language]["account"]}
                         active={this.props.currentTab == 'account'}
                         onSelect={this.props.changeActiveTab}
                     />
@@ -38,3 +48,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = NavBar;

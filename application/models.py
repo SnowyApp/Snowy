@@ -7,25 +7,29 @@ from flask import g
 import psycopg2
 
 DB_NAME = "snomedct"
-DB_USER = "Sehnsucht"
+DB_USER = "simon"
 
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
-SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, language FROM usr WHERE email=%s;"
-UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, language=%s WHERE email=%s ;"
+SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, data_lang, site_lang FROM usr WHERE email=%s;"
+UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, data_lang=%s, email=%s, site_lang=%s WHERE email=%s ;"
+UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
+
+SELECT_CONCEPT_QUERY = "SELECT concept_id, term, type_id FROM description WHERE concept_id=%s AND id IN (SELECT referenced_component_id FROM language_refset);"
+GET_CONCEPT_PROCEDURE = "get_concept"
 
 
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 VALID_TOKEN_PROCEDURE = "is_valid_token"
+INVALIDATE_TOKENS_STATEMENT = "DELETE FROM token WHERE token!=%s"
 
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
-ADD_FAVORITE_TERM_PROCEDURE = "add_favorite_term"
+DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s and concept_id=%s"
+INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term) VALUES (%s, %s, %s);"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
-SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id 
-                                FROM relationship B JOIN description A 
-                                ON B.source_id=a.concept_id 
-                                WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
+SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=a.concept_id WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
+SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
 SELECT_PARENTS_QUERY = """SELECT B.source_id, A.term, B.type_id
                                 FROM relationship B JOIN description A 
                                 ON B.destination_id=a.concept_id 
@@ -43,9 +47,10 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.term
 
 GET_CONCEPT_PROCEDURE = "get_concept"
 
-INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, user_email) VALUES (%s, %s) RETURNING id"
-UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, date_modified=NOW() WHERE user_email=%s AND id=%s"
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, user_email) VALUES (%s, %s, %s) RETURNING id"
+UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=NOW() WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
+DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
 
 def connect_db():
     """
@@ -77,12 +82,13 @@ class User():
     """
     A user of the browser.
     """
-    def __init__(self, email, password_hash, first_name = "", last_name = "", language = "en"):
+    def __init__(self, email, password_hash, first_name = "", last_name = "", data_lang = "en", site_lang = "en"):
         self.email = email
         self.password_hash = password_hash
         self.first_name = first_name
         self.last_name = last_name
-        self.language = language
+        self.data_lang = data_lang
+        self.site_lang = site_lang
 
     def check_password(self, plain_pass):
         """ Checks if the password matches the stored hash """
@@ -101,7 +107,19 @@ class User():
         """
         cur = get_db().cursor()
         try:
-            cur.callproc("add_favorite_term", (cid, self.email, term))
+            cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (cid, self.email, term))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
+
+    def delete_favorite_term(self, cid):
+        """
+        Deletes a favorite term from the database.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(DELETE_FAVORITE_TERM_STATEMENT, (self.email, cid))
             get_db().commit()
             cur.close()
         except Exception as e:
@@ -116,28 +134,59 @@ class User():
             cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
             result = []
             for data in cur.fetchall():
-                result += [{"id": data[0], "favorite_date": str(data[4]), "term": data[5]}]
+                result += [{"id": data[0], "favorite_date": str(data[2]), "term": data[1]}]
             return result
         except Exception as e:
             print(e)
             return None
 
-    def update_info(self, first_name, last_name, language):
+    def update_info(self, first_name, last_name, data_lang, email, site_lang):
         """
         Update the first name, last name and language setting for the user.
         Returns True if the operation succeeded, False otherwise.
         """
         cur = get_db().cursor()
         try:
-            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, language, self.email))
+            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, data_lang, email, site_lang,self.email))
             get_db().commit()
+            self.email = email
+            self.first_name = first_name
+            self.last_name = last_name
+            self.data_lang = data_lang
+            self.site_lang = data_lang
             cur.close()
             return True
         except Exception as e:
             print(str(e))
             return False
 
-    def store_diagram(self, data, did = None):
+    def update_password(self, new_password):
+        """
+        Updates the users password.
+        """
+        cur = get_db().cursor()
+        p_hash = generate_password_hash(new_password, salt_length=12)
+        try:
+            cur.execute(UPDATE_PASSWORD_STATEMENT, (p_hash,self.email))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
+
+
+    def invalidate_tokens(self,token):
+        """
+        Invalidate all tokens but token.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(INVALIDATE_TOKENS_STATEMENT, (token, ))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
+
+    def store_diagram(self, data, name, did = None):
         """
         Stores a diagram for the user.
         """
@@ -145,9 +194,9 @@ class User():
         try:
             new_id = None
             if did:
-                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, self.email, did))
+                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, name, self.email, did))
             else:
-                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, self.email))
+                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, self.email))
                 new_id = cur.fetchone()[0]
             get_db().commit()
             cur.close()
@@ -172,6 +221,18 @@ class User():
         except Exception as e:
             print(e)
             return None
+
+    def delete_diagram(self, cid):
+        """
+        Delete a diagram for the user.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(DELETE_DIAGRAM_STATEMENT, (cid, self.email))
+            get_db().commit()
+            cur.close()
+        except Exception as e:
+            print(e)
 
  
     @staticmethod
@@ -210,7 +271,8 @@ class User():
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
-        return User(user_data[0], user_data[1], user_data[2], user_data[3], user_data[4])
+        print(user_data)
+        return User(user_data[0], user_data[1], user_data[2], user_data[3], user_data[4], user_data[5])
 
     def to_json(self):
         """
@@ -219,7 +281,8 @@ class User():
         return {"email": self.email,
                 "first_name": self.first_name,
                 "last_name": self.last_name,
-                "language": self.language}
+                "data_lang": self.data_lang,
+                "site_lang": self.site_lang}
 
 
 class Token():
@@ -281,9 +344,20 @@ class Concept():
     Represents a concept in the Snomed CT database
     """
     
-    def __init__(self, cid, term, type_id):
+    def __init__(self, cid, syn_term = "", full_term = "", type_id = None):
         self.id = cid
-        self.term = term
+        self.syn_term = syn_term
+        self.full_term = full_term
+        self.type_id = type_id
+        if type_id is not None:
+            self.type_name = Concept.get_attribute(self.type_id)
+        else:
+            self.type_name = ""
+
+    def set_type_id(self, type_id):
+        """
+        Set the ID of the concept.
+        """
         self.type_id = type_id
         self.type_name = Concept.get_attribute(self.type_id)
 
@@ -296,8 +370,23 @@ class Concept():
         try:
             cur.execute(query, (cid,))
             result = []
-            for data in cur.fetchall():
-                result += [Concept(data[0], data[1], data[2])]
+            concept = None
+            for data in cur:
+                # Create a concept if needed
+                if concept is None:
+                    concept = Concept(data[0])
+                    concept.set_type_id(data[2])
+                elif concept.id != data[0]:
+                    result += [concept]
+                    concept = Concept(data[0])
+                    concept.set_type_id(data[2])
+
+                # Set the right term
+                if data[2] == 900000000000003001:
+                    concept.full_term = data[1]
+                else:
+                    concept.syn_term = data[1]
+
             return result
         except Exception as e:
             print(e)
@@ -333,12 +422,11 @@ class Concept():
         try:
             cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
             data = cur.fetchone()
-            
-            # The user didn't send a valid concept id
-            if data is None:
+            if not data:
                 return None
+            else:
+                return Concept(data[0], data[2], data[1])
 
-            return Concept(data[0], data[1], 0)
         except Exception as e:
             print(e)
             return None
@@ -359,10 +447,16 @@ class Concept():
         """
         Returns a JSON representation of the concept.
         """
-        return {"id": self.id,
-                "term": self.term,
-                "type_id": self.type_id,
-                "type_name": self.type_name}
+        if self.type_id is None:
+            return {"id": self.id,
+                    "synonym": self.syn_term,
+                    "full": self.full_term}
+        else:
+            return {"id": self.id,
+                    "synonym": self.syn_term,
+                    "full": self.full_term,
+                    "type_id": self.type_id,
+                    "type_name": self.type_name}
 
     def __str__(self):
         """

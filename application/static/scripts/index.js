@@ -10,17 +10,19 @@ import MenuItem from 'react-bootstrap/lib/MenuItem';
 
 
 var Diagram = require('./components/Diagram/index');
-var Search = require('./components/Search/index');
+var Bar = require('./components/Bar/index');
 var Navigation = require('./components/Navigation/index');
 var Chart = require('./components/Diagram/Chart');
-var RegisterForm = require('./components/RegisterForm/index');
-var LoginForm = require('./components/LoginForm/index');
 var ProfilePage = require('./components/ProfilePage/index');
-var LogOut = require('./components/LogOut/');
 
 
 var matteUrl = 'http://hem.ulmstedt.net:5000';
+const conceptId = "138875005";
 
+/**
+*   Contains the subcomponents of the webpage
+ *   It also initiates all the top-level variables passed to the children components
+ */
 var Container = React.createClass({
     getInitialState: function(){
         return{
@@ -30,13 +32,15 @@ var Container = React.createClass({
             selectedTerm: this.props.concept_id,
             content: "diagram",
             data: this.props.data,
-            history: []
+            history: [],
+            language: "en",
+            dbEdition: "en"
         };
     },
 
     /**
      * Fetch information used to display diagram and navigation and update
-     * state when all information is received. saveHistory determines if
+     * state when all information is receigitved. saveHistory determines if
      * the last node is saved to history.
      */
     getConcept: function(id, saveHistory = true) {
@@ -44,10 +48,13 @@ var Container = React.createClass({
             .then(function(rootResult, childrenResult) {
                 // get all information about children
                 var children = [];
+
                 for (var i in childrenResult[0]) {
+                    const childSynonym = childrenResult[0][i].synonym;
+                    const childFull = childrenResult[0][i].full;
                     children.push(
                         {
-                            "name": childrenResult[0][i].term,
+                            "name": (childSynonym != null ? childSynonym : childFull),
                             "concept_id": childrenResult[0][i].id,
                             "parent": rootResult[0].id,
                             "children": null,
@@ -58,9 +65,11 @@ var Container = React.createClass({
                 
                 // get all information about the root and add the array
                 // of the children
+                const rootSynonym = rootResult[0].synonym;
+                const rootFull = rootResult[0].full;
                 var root = [
                     {
-                        "name": rootResult[0].term,
+                        "name": (rootSynonym != null ? rootSynonym : rootFull),
                         "concept_id": rootResult[0].id,
                         "parent": "null",
                         "children": children,
@@ -139,11 +148,13 @@ var Container = React.createClass({
             });
         }
     },
-
     componentWillMount: function() {
         this.getConcept(this.state.selectedTerm);
     },
-    
+    /**
+     * Called when the url is to be assigned the value of e
+     * @param e
+     */
     handleUrlChange: function(e){
         this.setState({
             url: e.target.value
@@ -170,7 +181,7 @@ var Container = React.createClass({
         if (id == 0)
             return;
 
-        var tree = this.state.data.slice();;
+        var tree = this.state.data.slice();
 
         // find node in data
         var node = this.findNode(tree[0], id);
@@ -189,7 +200,7 @@ var Container = React.createClass({
                     for (var i in res) {
                         children.push(
                             {
-                                "name": res[i].term,
+                                "name": res[i].synonym,
                                 "concept_id": res[i].id,
                                 "parent": node.concept_id,
                                 "children": null,
@@ -221,7 +232,7 @@ var Container = React.createClass({
         if (tree.id == id) return tree;
         if (tree.children == undefined) return null;
          
-        var result = null;
+        var result;
         for(var i in tree.children) {
             result = this.findNode(tree.children[i], id);
             if (result != null) return result;
@@ -271,7 +282,10 @@ var Container = React.createClass({
         this.updateSelectedTerm(this.props.concept_id, false);
         this.clearHistory();
     },
-    
+    /**
+     * Called when a user has been logged in, uid is the token sent from the server
+     * @param uid
+     */
     onLogin: function(uid){
         this.setState({
             userId: uid,
@@ -279,9 +293,32 @@ var Container = React.createClass({
         });
         cookie.save('userId', uid,{path: '/'});
     },
+    /**
+     * Called when a user has logged out
+     */
     onLogout: function(){
         this.setState({isLoggedIn: false, content: "diagram", userId: ''});
         cookie.remove('userId', {path: '/'});
+    },
+
+   /**
+    * Sets the sites language to language
+    */
+    setLanguage: function(language){
+        this.setState({
+            language: language
+        });
+        //TODO: If user is logged in, save to database
+    },
+
+   /**
+    * Sets the database edition to edition
+    */
+    setEdition: function(edition){
+        this.setState({
+            dbEdition: edition
+        });
+        //TODO: If user is logged in, save to database
     },
 
     /**
@@ -373,7 +410,6 @@ var Container = React.createClass({
         });
     },
 
-
     render: function() {
         var content = null;
         switch(this.state.content){
@@ -384,6 +420,7 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             update={this.updateSelectedTerm}
                             updateConceptChildren={this.updateConceptChildren}
+                            language={this.state.language}
                           />
                 break;
             case "profile":
@@ -391,7 +428,18 @@ var Container = React.createClass({
                             openTerm={this.updateSelectedTerm}
                             openDiagram={function(id){console.log(id)}}
                             url={this.state.serverUrl}
+                            language={this.state.language}
                           />
+                break;
+            default:
+                content = <Diagram
+                    ref={ (ref) => this._diagram = ref }
+                    data={this.state.data}
+                    url={this.state.serverUrl}
+                    update={this.updateSelectedTerm}
+                    updateConceptChildren={this.updateConceptChildren}
+                    language={this.state.language}
+                />
                 break;
         }
         return (
@@ -415,6 +463,9 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             setContent={this.setContent}
                             contentName={this.state.content}
+                            language={this.state.language}
+                            setLanguage={this.setLanguage}
+                            setEdition={this.setEdition}
                             saveDiagram={this.saveDiagram}
                         />
                         {content}
@@ -426,156 +477,7 @@ var Container = React.createClass({
 });
 
 
-var Bar = React.createClass({
-    getInitialState: function(){
-        return{
-            showRegistration: false,
-            showLogin: false,
-            showLogout: false
-        };
-    },
-
-    showRegistration: function(){
-        this.setState({
-            showRegistration: true
-        });
-    },
-
-    showLogin: function(){
-        this.setState({
-            showLogin: true
-        });
-    },
-    hideRegistration: function(){
-        this.setState({
-            showRegistration: false
-        });
-    },
-
-    hideLogin: function(){
-        this.setState({
-            showLogin: false
-        });
-
-    },
-    showLogout: function(){
-        this.setState({
-            showLogout: true
-        });
-    },
-    hideLogout: function(){
-        this.setState({
-            showLogout: false
-        });
-    },
-    render: function() {
-        var switchName = '';
-        switch(this.props.contentName){
-            case "diagram":
-                switchName = "Profile";
-                break;
-            case "profile":
-                switchName = "Diagram";
-                break;
-        }
-        const navButtons = this.props.isLoggedIn ? (
-            <div>
-                <Button className="profile"
-                        onClick={this.props.setContent.bind(null, switchName.toLowerCase())}
-                        bsStyle = "primary" >{switchName}</Button>
-                <Button className="Logout" bsStyle = "primary" 
-                    onClick={this.showLogout}>Logout</Button>
-                <LogOut show={this.state.showLogout} hideLogout={this.hideLogout}
-                        onLogout={this.props.onLogout} url={this.props.url}/>
-            </div>
-        ) : (
-            <div>
-                <Button className="Register" bsStyle = "primary" 
-                    onClick={this.showRegistration}>Register</Button>
-                <Button className="Login" bsStyle = "primary" 
-                    onClick={this.showLogin}>Login</Button>
-                {/* Registration popup */}
-                <RegisterForm show={this.state.showRegistration} 
-                    hideRegistration={this.hideRegistration} url={this.props.url}/>
-
-                {/* Login popup */}
-                <LoginForm show={this.state.showLogin} hideLogin={this.hideLogin}
-                           onLogin={this.props.onLogin} url={this.props.url}/>
-            </div>
-        );
-
-        return (
-            <div className="bar">
-                <Search url={this.props.serverUrl} update={this.props.update}/>
-                <ButtonToolbar id = "buttons">
-                    <Export />
-                    <Button 
-                        className="save-diagram" 
-                        bsStyle="primary"
-                        onClick={this.props.saveDiagram}
-                    >Save Diagram</Button>
-                    {navButtons}
-                </ButtonToolbar>
-            </div>
-
-        );
-    }
-});
-
-var Export = React.createClass({
-    exportSVG: function(){
-        var html = d3.select("svg")
-            .attr({
-                'xmlns': 'http://www.w3.org/2000/svg',
-                'xlink': 'http://www.w3.org/1999/xlink',
-                version: '1.1'
-            })
-            .node().parentNode.innerHTML;
-
-        var blob = new Blob([html], {type: "image/svg+xml"});
-        saveAs(blob, new Date().toJSON().slice(0,10) + ".svg");
-
-    },
-    exportPNG: function(){
-        // Create a canvas with the height and width of the parent of the svg document
-        var chartArea = document.getElementsByTagName('svg')[0].parentNode;
-        var svg = chartArea.innerHTML;
-        var canvas = document.createElement('canvas');
-        canvas.setAttribute('width', chartArea.offsetWidth);
-        canvas.setAttribute('height', chartArea.offsetHeight);
-        canvas.setAttribute('display', 'none');
-
-        // Add the canvas to the body of the document and add the svg document to the canvas
-        document.body.appendChild(canvas);
-        canvg(canvas, svg);
-
-        // Draw a white background behind the content
-        var context = canvas.getContext("2d");
-        context.globalCompositeOperation = "destination-over";
-        context.fillStyle = '#fff';
-        context.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Append the image data to a link, download the image and then remove canvas
-        var dataString = canvas.toDataURL();
-        var link = document.createElement("a");
-        link.download = new Date().toJSON().slice(0,10) + ".png";
-        link.href = dataString;
-        link.click();
-        canvas.parentNode.removeChild(canvas);
-    },
-    render: function(){
-        return (
-        <SplitButton bsStyle="primary" title="Export" id="Export">
-            <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
-            <MenuItem divider/>
-            <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
-        </SplitButton>
-        );
-    }
-});
-
-
 ReactDOM.render(
-   <Container concept_id="138875005" url={matteUrl}  />,
+    <Container concept_id={conceptId} url={matteUrl}  />,
     document.getElementById('content')
 );

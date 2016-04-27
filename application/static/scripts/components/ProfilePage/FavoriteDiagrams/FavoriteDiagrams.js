@@ -16,16 +16,47 @@ var fakeUser = {
 /**
  * Component that displays favorite diagrams in a table
  */
-module.exports = React.createClass({
+var FavoriteDiagrams = React.createClass({
+    propTypes: {
+        url:                React.PropTypes.string,
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        diagrams:           React.PropTypes.array,
+        openDiagram:        React.PropTypes.func,
+        removeid:           React.PropTypes.func,
+        nameSort:           React.PropTypes.func,
+        dateSort:           React.PropTypes.func
+    },
+
+    //TODO: REMOVE THIS FUNCTION
+    saveDiagram: function() {
+        $.ajax({
+            type: "POST",
+            method: "POST",
+            headers: {
+                "Authorization" : cookie.load("userId")
+            },
+            url: this.props.url + "/diagram",
+            contentType: "application/json",
+            data: JSON.stringify(
+                    { "data" : JSON.stringify({test: "333"}), "name": "Diagram 1" }),
+            error: function(xhr) {
+                console.log(xhr);
+                console.log("Could not store diagram.");
+            }.bind(this)
+        });
+    },
+
     getInitialState: function(){
         return({
-            diagrams: this.props.diagrams, // should be [] later when not using dummy data
-            filteredDiagrams: this.props.diagrams // should be [] later when not using dummy data
+            diagrams: [],
+            filteredDiagrams: []
         });
     },
 
     componentDidMount: function(){
-        //this.getFavoriteDiagrams(); //Uncomment to stop using dummy data
+        this.saveDiagram();
+        this.getFavoriteDiagrams();
         this.setState({
             diagrams: this.props.dateSort(this.state.diagrams, false),
             sortBy: 'added',
@@ -40,27 +71,24 @@ module.exports = React.createClass({
         var asc = true;
         //If already sorting by header, invert order
         if(this.state.sortBy == header){
-            var asc = !this.state.ascending;
+            asc = !this.state.ascending;
         }
         switch(header){
             case "name":
                 this.setState({
                     terms: this.props.nameSort(this.state.diagrams, asc),
-                    sortBy: 'name'
+                    sortBy: 'name',
+                    ascending: asc
                 });
                 break;
             case "added":
                 this.setState({
                     terms: this.props.dateSort(this.state.diagrams, asc),
-                    sortBy: 'added'
+                    sortBy: 'added',
+                    ascending: asc
                 });
                 break;
         }
-
-        this.setState({
-            ascending: asc
-        });
-
     },
     
    /**
@@ -68,21 +96,42 @@ module.exports = React.createClass({
     */
     removeDiagram: function(id){
         //Remove element locally (for responsiveness)
-        var tempFilteredDiagrams = this.props.removeid(this.state.filteredDiagrams, id);
-        var tempDiagrams = this.props.removeid(this.state.diagrams, id);
+        const tempFilteredDiagrams = this.props.removeid(this.state.filteredDiagrams, id);
+        const tempDiagrams = this.props.removeid(this.state.diagrams, id);
         this.setState({
             diagrams: tempDiagrams,
             filteredDiagrams: tempFilteredDiagrams
         });
-        //TODO: Remove element from database
+        //Remove from database
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "POST",
+                method: "DELETE",
+                url: this.props.url + "/diagram",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({"id": id}),
+                success: function () {
+                    console.log("Successfully removed diagram.");
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed removing diagram.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
    /**
     * Filters the favorite list by user input
     */
     filterDiagrams: function(event){
-        var input = event.target.value;
-        var regEx = new RegExp(input.toLowerCase());
+        const input = event.target.value;
+        const regEx = new RegExp(input.toLowerCase());
         var filteredDiagrams = [];
         for(var i = 0; i < this.state.diagrams.length; i++){
             if(regEx.test(this.state.diagrams[i].name.toLowerCase())){
@@ -108,14 +157,15 @@ module.exports = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
+                    console.log(data);
                     this.setState({
                         diagrams: data,
                         filteredDiagrams: data
                     });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
-                    /*console.log(textStatus); TODO: Re-add comments when database works
-                    console.log(errorThrown);*/
+                    console.log(textStatus);
+                    console.log(errorThrown);
                 },
                 contentType: "application/json",
                 dataType: "json"
@@ -142,6 +192,7 @@ module.exports = React.createClass({
                         key={diagram.id}
                         name={diagram.name}
                         dict={this.props.dict}
+                        language={this.props.language}
                         id={diagram.id}
                         date={dateString}
                         parameters={diagram.parameters}
@@ -179,7 +230,7 @@ module.exports = React.createClass({
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
-                    {this.props.dict[fakeUser.language]["savedDiagrams"]}
+                    {this.props.dict[this.props.language]["savedDiagrams"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="diagramPageWrapper">
@@ -187,19 +238,19 @@ module.exports = React.createClass({
                         <span className="input-group-addon" id="basic-addon1">
                             Filter
                         </span>
-                        <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={this.props.dict[fakeUser.language]["name"]}/>
+                        <input type="text" className="form-control" onChange={this.filterDiagrams} placeholder={this.props.dict[this.props.language]["name"]}/>
                     </div>
 
                     <table className="favorites" style={hideTable}>
                         <thead>
                             <tr>
                                 <th id="Diagram_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
-                                    {this.props.dict[fakeUser.language]["name"]}
+                                    {this.props.dict[this.props.language]["name"]}
                                     {nameSortArrow}
                                 </th>
                                 <th id="Diagram_acc" className="favorites"></th>
                                 <th id="Diagram_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>
-                                    {this.props.dict[fakeUser.language]["added"]}
+                                    {this.props.dict[this.props.language]["added"]}
                                     {dateSortArrow}
                                 </th>
                                 <th id="Diagram_remove" className="favorites"></th>
@@ -207,12 +258,11 @@ module.exports = React.createClass({
                         </thead>
                         {diagramArray}
                     </table>
-                    {this.state.diagrams.length > 0 ? "" : this.props.dict[fakeUser.language]["noSavedDiagrams"]}
+                    {this.state.diagrams.length > 0 ? "" : this.props.dict[this.props.language]["noSavedDiagrams"]}
                 </div>
             </div>
         );
     }
 });
-
-
+module.exports = FavoriteDiagrams;
 

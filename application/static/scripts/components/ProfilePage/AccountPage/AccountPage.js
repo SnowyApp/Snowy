@@ -18,7 +18,13 @@ var fakeUser = {
 /**
  * A page where the user can change profile ifo
  */
-module.exports = React.createClass({
+var AccountPage = React.createClass({
+    propTypes: {
+        url:            React.PropTypes.string,
+        dict:           React.PropTypes.object,
+        language:       React.PropTypes.string
+    },
+
     getInitialState: function(){
         return ({
             nameOpen: false,
@@ -32,7 +38,7 @@ module.exports = React.createClass({
     * Toggles between +/- expand glyph
     */
     openAcc: function(acc){
-        var disableTime = 400;
+        const disableTime = 400;
         //Check what field was expanded
         if(acc == "name" && this.state.nameEnabled){
             //Update states and disable this function for a short time to prevent problems from clicking too fast
@@ -70,7 +76,7 @@ module.exports = React.createClass({
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> 
-                    {this.props.dict[fakeUser.language]["account"]}
+                    {this.props.dict[this.props.language]["account"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="accountPageWrapper">
@@ -82,14 +88,14 @@ module.exports = React.createClass({
                                 <div className="panel-heading">
                                     <h4 className="panel-title">
                                     <a onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse">
-                                        {this.props.dict[fakeUser.language]["personalInfo"]}
+                                        {this.props.dict[this.props.language]["personalInfo"]}
                                         <span className={expandNameClass} aria-hidden="true"></span>
                                     </a>
                                     </h4>
                                 </div>
                                 <div id="nameCollapse" className="panel-collapse collapse">
                                     <div className="panel-body">
-                                        <ChangePersonalInformation dict={this.props.dict} />
+                                        <ChangePersonalInformation dict={this.props.dict} language={this.props.language}/>
                                     </div>
                                 </div>
                             </div>
@@ -103,14 +109,14 @@ module.exports = React.createClass({
                                 <div className="panel-heading">
                                     <h4 className="panel-title">
                                     <a onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse">
-                                        {this.props.dict[fakeUser.language]["password"]}
+                                        {this.props.dict[this.props.language]["password"]}
                                         <span className={expandPasswordClass} aria-hidden="true"></span>
                                     </a>
                                     </h4>
                                 </div>
                                 <div id="passwordCollapse" className="panel-collapse collapse">
                                     <div className="panel-body">
-                                        <ChangePasswordForm dict={this.props.dict}/>
+                                        <ChangePasswordForm dict={this.props.dict} language={this.props.language}/>
                                     </div>
                                 </div>
                             </div>
@@ -121,5 +127,5 @@ module.exports = React.createClass({
         );
     }
 });
-
+module.exports = AccountPage;
 

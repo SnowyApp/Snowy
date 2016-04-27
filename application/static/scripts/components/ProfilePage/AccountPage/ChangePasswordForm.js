@@ -13,7 +13,12 @@ var fakeUser = {
 /**
  * Form that allows the user to change password
  */
-module.exports = React.createClass({
+var ChangePasswordForm = React.createClass({
+    propTypes: {
+        dict:       React.PropTypes.object,
+        language:   React.PropTypes.string
+    },
+
     getInitialState: function(){
         return({
             newPassword: "",
@@ -37,7 +42,7 @@ module.exports = React.createClass({
 
         if(this.state.currPassword != "12345"){
             this.setState({
-                errorMessage: this.props.dict[fakeUser.language]["m_wrongPassword"],
+                errorMessage: this.props.dict[this.props.language]["m_wrongPassword"],
                 successMessage: ""
             });
         }
@@ -45,7 +50,7 @@ module.exports = React.createClass({
         else {
             this.setState({
                 errorMessage: "",
-                successMessage: this.props.dict[fakeUser.language]["m_updatePasswordSuccessful"],
+                successMessage: this.props.dict[this.props.language]["m_updatePasswordSuccessful"],
                 hasChanged: false,
                 newPassword: "",
                 repeatPassword: "",
@@ -62,7 +67,7 @@ module.exports = React.createClass({
     * Checks the strength of the password (0-4)
     */
     checkPasswordStrength: function(event){
-        var input = event.target.value; //Value from input field
+        const input = event.target.value; //Value from input field
         var passwordStrength = 0;
 
         //Update state and provide a callback function for when the state is updated to check if the passwords are matching
@@ -71,17 +76,17 @@ module.exports = React.createClass({
         }, this.checkMatchingPasswords);
 
         //Minimum length to reach each password strength level
-        var STR1_MIN_LENGTH = 7;
-        var STR2_MIN_LENGTH = 9;
-        var STR3_MIN_LENGTH = 11;
-        var STR4_MIN_LENGTH = 13;
+        const STR1_MIN_LENGTH = 7;
+        const STR2_MIN_LENGTH = 9;
+        const STR3_MIN_LENGTH = 11;
+        const STR4_MIN_LENGTH = 13;
 
-        var pwStrengthRegex = [
+        const pwStrengthRegex = [
             /[A-ZÅÄÖ]/,                         //Upper case letters
             /[a-zåäö]/,                         //Lower case letters
             /[0-9]+/,                           //Digits
             /[^(A-Za-z0-9ÅÄÖåäö)]+/             //Other character (not letter or digit)
-        ]
+        ];
 
         //Check the input against all the regex and increment passwordStrength for each fulfilled condition
         for(var i = 0; i < 4; i++){
@@ -123,7 +128,7 @@ module.exports = React.createClass({
     * Updates the repeatedPassword state to match the input field
     */
     updateRepeatedPassword: function(event){
-        var input = event.target.value;
+        const input = event.target.value;
         //Update state and provide a callback function for when the state is updated to check if the passwords are matching
         this.setState({
             repeatPassword: input
@@ -143,58 +148,64 @@ module.exports = React.createClass({
     * Updates the currPassword state to match input
     */
     updateCurrPasswordState: function(event){
-        var input = event.target.value;
+        const input = event.target.value;
         this.setState({
             currPassword: input
         });
     },
     
     render: function(){
+        const passwordStrength = this.state.passwordStrength;
         //Password strength
-        var passwordDivState = "form-group"
+        var passwordDivState = "form-group";
         var passwordGlyphState = null;
         if(this.state.newPassword.length > 0){
-            passwordDivState = passwordDivState + " has-feedback " + (this.state.passwordStrength > 0 ? "has-success" : "has-error");
-            passwordGlyphState = "glyphicon form-control-feedback " + (this.state.passwordStrength > 0 ? "glyphicon-ok" : "glyphicon-remove");
+            passwordDivState = passwordDivState + " has-feedback " + (passwordStrength > 0 ? "has-success" : "has-error");
+            passwordGlyphState = "glyphicon form-control-feedback " + (passwordStrength > 0 ? "glyphicon-ok" : "glyphicon-remove");
         }
 
-        var pwStrengthBarClass = "progress-bar pwStrengthBar";
-        var pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"]
-        var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[this.state.passwordStrength];
+        const pwStrengthBarClass = "progress-bar pwStrengthBar";
+        const pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"];
+        var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[passwordStrength];
         
-        var barStyle = [
+        //Default bar color
+        const barStyle = [
             {backgroundColor: "gray"},
             {backgroundColor: "gray"},
             {backgroundColor: "gray"},
             {backgroundColor: "gray"}
         ];
 
-        for(var i = 0; i < this.state.passwordStrength; i++){
-            switch(this.state.passwordStrength){
+        //Password strength level colors
+        const PWSTR_COLOR = ["gray", "#d9534f", "#f0ad4e", "#a6c060", "#5cb85c"];
+
+        //Set the strength bar color according to password strength
+        for(var i = 0; i < passwordStrength; i++){
+            switch(passwordStrength){
             case 1:
-                barStyle[i] = {backgroundColor: "#d9534f"};
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             case 2:
-                barStyle[i] = {backgroundColor: "#f0ad4e"};
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             case 3:
-                barStyle[i] = {backgroundColor: "#a6c060"}; 
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]}; 
                 break;
             case 4:
-                barStyle[i] = {backgroundColor: "#5cb85c"};
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             }    
         }
         
         //Matching passwords
-        var repeatDivState = "form-group"
+        var repeatDivState = "form-group";
         var repeatGlyphState = null;
         if(this.state.repeatPassword.length > 0){
             repeatDivState = repeatDivState + " has-feedback " + (this.state.matchingPasswords ? "has-success" : "has-error");
             repeatGlyphState = "glyphicon form-control-feedback " + (this.state.matchingPasswords ? "glyphicon-ok" : "glyphicon-remove");
         }
         //Disable submit button if insufficient information is provided
-        var disableSubmit = (this.state.newPassword == this.state.repeatPassword && this.state.passwordStrength > 0 && this.state.currPassword.length > 0 ? "" : "disabled");
+        var disableSubmit = (this.state.newPassword == this.state.repeatPassword && passwordStrength > 0 && this.state.currPassword.length > 0 ? "" : "disabled");
 
         var message = "";
         if(this.state.successMessage.length > 0){
@@ -207,7 +218,7 @@ module.exports = React.createClass({
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <div className={passwordDivState}>
                     <label htmlFor="newPassword" className="col-sm-3 control-label">
-                        {this.props.dict[fakeUser.language]["newPassword"]}
+                        {this.props.dict[this.props.language]["newPassword"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="password" id="newPassword" className="form-control" onChange={this.checkPasswordStrength} />
@@ -226,13 +237,13 @@ module.exports = React.createClass({
                         <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
                     </div>
                     <div className={pwStrengthBarTextClass}>
-                        {(this.state.newPassword.length > 0 ? this.props.dict[fakeUser.language]["passwordStrength"][this.state.passwordStrength] : "")}
+                        {(this.state.newPassword.length > 0 ? this.props.dict[this.props.language]["passwordStrength"][passwordStrength] : "")}
                     </div>
                 </div>
 
                 <div className={repeatDivState}>
                     <label htmlFor="repeatPassword" className="col-sm-3 control-label">
-                        {this.props.dict[fakeUser.language]["repeat"]}
+                        {this.props.dict[this.props.language]["repeat"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
@@ -242,7 +253,7 @@ module.exports = React.createClass({
             
                 <div className="form-group">
                     <label htmlFor="inputPassword3" className="col-sm-3 control-label ">
-                        {this.props.dict[fakeUser.language]["currentPassword"]}
+                        {this.props.dict[this.props.language]["currentPassword"]}
                     </label>
                     <div className="col-sm-7">
                         <input type="password" id="currPassword" className="form-control" onChange={this.updateCurrPasswordState}/>
@@ -251,7 +262,7 @@ module.exports = React.createClass({
                 <div className="form-group">
                     <div className="col-sm-offset-3 col-sm-2">
                         <button type="submit" className="btn btn-success" disabled={disableSubmit}>
-                            {this.props.dict[fakeUser.language]["update"]}
+                            {this.props.dict[this.props.language]["update"]}
                         </button>
                     </div>
                     {message}
@@ -260,3 +271,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = ChangePasswordForm;
