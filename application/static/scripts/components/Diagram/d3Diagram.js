@@ -114,7 +114,7 @@ d3Chart._createMenuData = function(element) {
 var i = 0;
 var tree,root,treeView,svg,g,onClick,zoom;
 
-const TEXT_MAX_WIDTH = 250;
+const TEXT_MAX_WIDTH = 230;
 const NODE_WIDTH = 250;
 const NODE_MARGIN = 10;
 const NODE_HEIGHT = 50;
@@ -376,17 +376,17 @@ d3Chart._drawTree = function(element, data) {
             .attr('dy', '.35em')
             .attr('text-anchor', 'middle')
             .attr('font-family', 'Helvetica, Arial, Sans-Serif')
-            .text(function(d) { return d.name; })
+            .text(function(d) { return d.concept_id + " " + d.name; })
             .style('fill-opacity', 1)
             .call(wrap, TEXT_MAX_WIDTH);
     } else {
         nodeEnter.append('text')
-            .attr('y', 25)
+            .attr('y', NODE_HEIGHT/2)
             .attr('x', NODE_WIDTH/2)
             .attr('dy', '.35em')
             .attr('text-anchor', 'middle')
             .attr('font-family', 'Helvetica, Arial, Sans-Serif')
-            .text(function(d) { return d.name; })
+            .text(function(d) { return d.concept_id + " " + d.name; })
             .style('fill-opacity', 1)
             .call(wrap, TEXT_MAX_WIDTH);
     }
@@ -497,6 +497,19 @@ d3Chart._drawTree = function(element, data) {
                 y = text.attr('y'),
                 dy = parseFloat(text.attr('dy')),
                 tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+            word = words.pop(); //First word is the id
+            line.push(word);
+            tspan.text(line.join(' '));
+
+            word = words.pop();
+            line.push(word);
+            tspan.text(line.join(' '));
+            line.pop();
+            tspan.text(line.join(' '));
+            line = [word];
+            tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(' '));
