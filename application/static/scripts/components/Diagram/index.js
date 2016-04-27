@@ -69,7 +69,6 @@ module.exports = React.createClass({
      */
     componentWillReceiveProps: function(nextProps) {
         //this.resetZoom();
-        console.log("NEW PROPS");
         this.update(nextProps.data);
     },
 
