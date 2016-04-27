@@ -35,15 +35,18 @@ var Container = React.createClass({
      * the last node is saved to history.
      */
     getConcept: function(id, saveHistory = true) {
+        console.log(id);
         $.when(this.getRoot(id), this.getChildren(id))
             .then(function(rootResult, childrenResult) {
                 // get all information about children
                 var children = [];
 
                 for (var i in childrenResult[0]) {
+                    const childSynonym = childrenResult[0][i].synonym;
+                    const childFull = childrenResult[0][i].full;
                     children.push(
                         {
-                            "name": childrenResult[0][i].synonym,
+                            "name": (childSynonym != null ? childSynonym : childFull),
                             "concept_id": childrenResult[0][i].id,
                             "parent": rootResult[0].id,
                             "children": null,
@@ -54,9 +57,11 @@ var Container = React.createClass({
                 
                 // get all information about the root and add the array
                 // of the children
+                const rootSynonym = rootResult[0].synonym;
+                const rootFull = rootResult[0].full;
                 var root = [
                     {
-                        "name": rootResult[0].synonym,
+                        "name": (rootSynonym != null ? rootSynonym : rootFull),
                         "concept_id": rootResult[0].id,
                         "parent": "null",
                         "children": children,
