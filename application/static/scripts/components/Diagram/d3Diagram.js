@@ -10,60 +10,62 @@ var d3Chart = module.exports = {};
 var contextMenu = require('./d3-context-menu');
 
 // context menu
+d3Chart._createMenuData = function(element) {
+    return  [
+        {
+            title: 'Remove Node',
+            action: function(elm, d, i) {
+                if (d.parent && d.parent.children !== undefined) {
 
-var menuData = [
-    {
-        title: 'Remove Node',
-        action: function(elm, d, i) {
-            if (d.parent && d.parent.children !== undefined) {
-
-                // find child and remove it
-                for (var ii = 0; ii < d.parent.children.length; ii++) {
-                    if (d.parent.children[ii].name === d.name) {
-                        d.parent.children.splice(ii, 1);
-                        break;
+                    // find child and remove it
+                    for (var ii = 0; ii < d.parent.children.length; ii++) {
+                        if (d.parent.children[ii].name === d.name) {
+                            d.parent.children.splice(ii, 1);
+                            break;
+                        }
                     }
                 }
+                d3Chart._drawTree(element, d);
             }
-            d3Chart._drawTree(d);
-        }
-    },
-    {
-        title: 'Hide/show children',
-        action: function(elm, d){
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            } else {
-                d.children = d._children;
-                d._children = null;
+        },
+        {
+            title: 'Hide/show children',
+            action: function(elm, d){
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                } else {
+                    d.children = d._children;
+                    d._children = null;
+                }
+                d3Chart._drawTree(element, d);
             }
-            d3Chart._drawTree(d);
-        }
-    },
-    {
-        title: 'Hide Siblings',
-        action: function(elm, d){
-            if(d.parent != "null") {
-                var tempChild = [];
-                tempChild.push(d);
-                d.parent._children = d.parent.children;
-                d.parent.children = tempChild;
-                d3Chart._drawTree(d);
+        },
+        {
+            title: 'Hide Siblings',
+            action: function(elm, d){
+                if(d.parent != "null") {
+                    var tempChild = [];
+                    tempChild.push(d);
+                    d.parent._children = d.parent.children;
+                    d.parent.children = tempChild;
+                    d3Chart._drawTree(element, d);
+                }
+            }
+        },
+        {
+            title: 'Show siblings',
+            action: function(elm, d){
+                if(d.parent != "null" && d.parent._children){
+                    d.parent.children = d.parent._children;
+                    d.parent._children = null;
+                    d3Chart._drawTree(element, d);
+                }
             }
         }
-    },
-    {
-        title: 'Show siblings',
-        action: function(elm, d){
-            if(d.parent != "null" && d.parent._children){
-                d.parent.children = d.parent._children;
-                d.parent._children = null;
-                d3Chart._drawTree(d);
-            }
-        }
-    }
-];
+    ];
+
+};  
 
 /**
  * These var:s are in order a index i that will give each node in our tree a
@@ -315,7 +317,7 @@ d3Chart._drawTree = function(data) {
             });
         }
 
-        nodeEnter.on('contextmenu', d3.contextMenu(menuData))
+        nodeEnter.on('contextmenu', d3.contextMenu(this._createMenuData(element)))
         .call(drag)
         .on("mouseover", function(){
             d3.select(this).selectAll("rect.node").style( "fill", "#ebebeb");
