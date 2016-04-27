@@ -113,5 +113,15 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]['id'], req['id'])
         self.assertTrue('favorite_date' in resp_data[0])
 
+
+    def test_concept(self):
+        resp = self.app.get('/concept/709886006')
+        self.assertEqual(resp.status_code, 200)
+        
+        resp_data = json.loads(resp.data.decode("utf-8"))
+        self.assertEqual(resp_data['id'], 709886006)
+        self.assertEqual(resp_data['full'], "Antibody to Encephalitozoon cuniculi (substance)")
+        self.assertEqual(resp_data['synonym'], "Anti-Encephalitozoon cuniculi antibody")
+
 if __name__ == "__main__":
     unittest.main()
