@@ -76,7 +76,6 @@ module.exports = React.createClass({
 
         if (cookie.load('userId') != null) {
             $.ajax({
-                type: "POST",
                 method: "PUT",
                 url: this.props.url + "/user_info",
                 headers: {
