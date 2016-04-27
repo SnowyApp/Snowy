@@ -30,10 +30,7 @@ INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_em
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
 SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=a.concept_id WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
 SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
-SELECT_PARENTS_QUERY = """SELECT B.source_id, A.term, B.type_id
-                                FROM relationship B JOIN description A 
-                                ON B.destination_id=a.concept_id 
-                                WHERE B.source_id=%s and b.active=1 and b.type_id=116680003;"""
+SELECT_PARENTS_QUERY = """SELECT DISTINCT B.destination_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.source_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.destination_id;"""
 SELECT_RELATIONS_QUERY = """SELECT B.destination_id, MIN(A.term), MIN(B.type_id) 
                                 FROM relationship B JOIN description A 
                                 ON B.destination_id=a.concept_id 
@@ -134,7 +131,7 @@ class User():
             cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
             result = []
             for data in cur.fetchall():
-                result += [{"id": data[0], "favorite_date": str(data[2]), "term": data[1]}]
+                result += [{"id": data[0], "favorite_date": str(data[2]), "term": data[3]}]
             return result
         except Exception as e:
             print(e)
@@ -214,9 +211,8 @@ class User():
             result = []
             cur.execute(SELECT_DIAGRAM_QUERY, (self.email,))
             for data in cur:
-                result += [{"id": data[0], "data": data[1], 'created': str(data[2]), 'modified': str(data[3])}]
+                result += [{"id": data[0], "data": data[1], 'name': data[2], 'created': str(data[3]), 'modified': str(data[4])}]
             cur.close()
-            print(result)
             return result
         except Exception as e:
             print(e)
@@ -271,7 +267,6 @@ class User():
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
-        print(user_data)
         return User(user_data[0], user_data[1], user_data[2], user_data[3], user_data[4], user_data[5])
 
     def to_json(self):
@@ -315,7 +310,7 @@ class Token():
             cur.callproc(VALID_TOKEN_PROCEDURE, (self.token, self.user_email))
             token_data = cur.fetchone()
             cur.close()
-            return token_data is not None
+            return token_data[0]
         except Exception as e:
             print(str(e))
             return None
@@ -386,6 +381,8 @@ class Concept():
                     concept.full_term = data[1]
                 else:
                     concept.syn_term = data[1]
+            if concept is not None:
+                result += [concept]
 
             return result
         except Exception as e:
