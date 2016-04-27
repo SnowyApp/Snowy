@@ -14,6 +14,10 @@ var LogOut = require('./components/LogOut/');
 
 var matteUrl = 'http://hem.ulmstedt.net:5000';
 
+/**
+*   Contains the subcomponents of the webpage
+ *   It also initiates all the top-level variables passed to the children components
+ */
 var Container = React.createClass({
     getInitialState: function(){
         return{
