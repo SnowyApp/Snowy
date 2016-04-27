@@ -1,3 +1,5 @@
+import cookie from 'react-cookie';
+
 //Temporary fake user
 var fakeUser = {
     id: 1337,
@@ -12,6 +14,7 @@ var fakeUser = {
  */
 module.exports = React.createClass({
     propTypes: {
+        url:        React.PropTypes.string,
         dict:       React.PropTypes.object,
         language:   React.PropTypes.string
     },
@@ -32,27 +35,103 @@ module.exports = React.createClass({
         });
     },
 
+    componentDidMount: function(){
+        //Get current user data
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "GET",
+                method: "GET",
+                url: this.props.url + "/user_info",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                success: function (data) {
+                    console.log(data);
+                    this.setState({
+                        firstName: (data.first_name != null ? data.first_name : ""),
+                        lastName: (data.last_name != null ? data.last_name : ""),
+                        email: data.email
+                    });
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed getting user info.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
    /**
     * Handles submitting the form
     */
     handleSubmit: function(e){
         e.preventDefault();
+        console.log(this.state.firstName);
+        console.log(this.state.lastName);
+        console.log(this.props.language);
+        console.log(this.state.email);
 
-        //test error, will be replaced soon
-        if(this.state.firstName == "Greger"){
-            this.setState({
-                errorMessage: "Greger är ett fult namn.",
-                successMessage: ""
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "POST",
+                method: "PUT",
+                url: this.props.url + "/user_info",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "first_name": this.state.firstName,
+                    "last_name": this.state.lastName,
+                    "site_lang": this.props.language,
+                    "data_lang": "placeholder", //TODO: fix real data later
+                    "email": this.state.email
+                }),
+                success: function () {
+                    console.log("Successfully updated user info.");
+                    this.setState({
+                        errorMessage: "",
+                        successMessage: this.props.dict[this.props.language]["m_updateSuccessful"],
+                        firstNameHasChanged: false,
+                        lastNameHasChanged: false,
+                        emailHasChanged: false
+                    });
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed to update user info.");
+                    this.setState({
+                        errorMessage: this.props.dict[this.props.language]["m_failedToUpdate"],
+                        successMessage: ""
+                    });
+                },
+                contentType: "application/json",
+                dataType: "json"
             });
         }
-        //Success
-        else {
-            this.setState({
-                errorMessage: "",
-                successMessage: this.props.dict[this.props.language]["m_updateSuccessful"],
-                firstNameHasChanged: false,
-                lastNameHasChanged: false,
-                emailHasChanged: false
+
+        //TODO: REMOVE TEST
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "GET",
+                method: "GET",
+                url: this.props.url + "/user_info",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                success: function (data) {
+                    console.log(data);
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed getting user info.");
+                },
+                contentType: "application/json",
+                dataType: "json"
             });
         }
     },
@@ -100,7 +179,7 @@ module.exports = React.createClass({
         //First name validation style
         var firstNameDivState = "form-group";
         var firstNameGlyphState = null;        
-        if(this.state.firstNameHasChanged){
+        if(this.state.firstNameHasChanged && this.state.firstName.length > 0){
             firstNameDivState = firstNameDivState + " has-feedback " + (this.state.validFirstName ? "has-success" : "has-error");
             firstNameGlyphState = "glyphicon form-control-feedback " + (this.state.validFirstName ? "glyphicon-ok" : "glyphicon-remove");
         }
@@ -108,7 +187,7 @@ module.exports = React.createClass({
         //Last name validation style
         var lastNameDivState = "form-group";
         var lastNameGlyphState = null;        
-        if(this.state.lastNameHasChanged){
+        if(this.state.lastNameHasChanged && this.state.lastName.length > 0){
             lastNameDivState = lastNameDivState + " has-feedback " + (this.state.validLastName ? "has-success" : "has-error");
             lastNameGlyphState = "glyphicon form-control-feedback " + (this.state.validLastName ? "glyphicon-ok" : "glyphicon-remove");
         }
@@ -123,8 +202,8 @@ module.exports = React.createClass({
 
         //Disable submit button if bad information is provided
         var disableSubmit = (
-                                this.state.validFirstName && 
-                                this.state.validLastName &&
+                                (this.state.firstName.length == 0 || this.state.validFirstName) && 
+                                (this.state.lastName.length == 0 || this.state.validLastName) &&
                                 this.state.validEmail && 
                                 (
                                     this.state.firstNameHasChanged ||
@@ -153,7 +232,7 @@ module.exports = React.createClass({
                         {this.props.dict[this.props.language]["firstName"]}
                     </label>
                     <div className="col-sm-7">
-                        <input type="text" className="form-control" id="firstName" defaultValue={fakeUser.firstName} onChange={this.validateName}/>
+                        <input type="text" className="form-control" id="firstName" value={this.state.firstName} onChange={this.validateName}/>
                         <span className={firstNameGlyphState}></span>
                     </div>
                 </div>
@@ -163,7 +242,7 @@ module.exports = React.createClass({
                         {this.props.dict[this.props.language]["lastName"]}
                     </label>
                     <div className="col-sm-7">
-                        <input type="text" className="form-control" id="lastName" defaultValue={fakeUser.lastName} onChange={this.validateName}/>
+                        <input type="text" className="form-control" id="lastName" value={this.state.lastName} onChange={this.validateName}/>
                         <span className={lastNameGlyphState}></span>
                     </div>
                 </div>           
@@ -173,7 +252,7 @@ module.exports = React.createClass({
                         {this.props.dict[this.props.language]["email"]}
                     </label>
                     <div className="col-sm-7">
-                        <input type="text" className="form-control" defaultValue={fakeUser.email} onChange={this.validateEmail}/>
+                        <input type="text" className="form-control" value={this.state.email} onChange={this.validateEmail}/>
                         <span className={emailGlyphState}></span>
                     </div>
                 </div>  
