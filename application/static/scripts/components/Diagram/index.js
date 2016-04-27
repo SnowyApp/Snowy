@@ -93,6 +93,7 @@ var Diagram = React.createClass({
         this.setState({
             showInfoPanel: !this.state.showInfoPanel
         });
+    },
 
     componentWillUnmount: function() {
         diagram.destroy();
@@ -133,7 +134,10 @@ var Diagram = React.createClass({
                     zIndex={1000}
                     bounds=".diagram">
                     <div style={showInfoPanel} className="infoPanelWrapper">
-                        <InfoPanel />
+                        <InfoPanel
+                            hidePanel={this.toggleInfoPanel}
+                            data={this.state.data}
+                        />
                     </div>
                 </Draggable>
             </div>
