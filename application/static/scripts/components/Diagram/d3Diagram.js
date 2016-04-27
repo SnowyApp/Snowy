@@ -426,7 +426,7 @@ d3Chart._drawTree = function(element, data) {
                 .attr('y2', function(d) { return d.target.y; });
 
 
-            node.attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; });
+            node.attr('transform', function(d) { return 'translate(' + d.x + ', ' + d.y + ')'; });
         } else {
             link.attr('y1', function(d) { return d.source.x + NODE_HEIGHT/2; })
                 .attr('x1', function(d) { return d.source.y + NODE_WIDTH;})
@@ -434,7 +434,7 @@ d3Chart._drawTree = function(element, data) {
                 .attr('x2', function(d) { return d.target.y; });
 
 
-            node.attr('transform', function(d) { return 'translate(' + d.y + ',' + d.x + ')'; });
+            node.attr('transform', function(d) { return 'translate(' + d.y + ', ' + d.x + ')'; });
         }
 
     }
