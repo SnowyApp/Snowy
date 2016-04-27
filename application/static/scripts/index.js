@@ -5,7 +5,6 @@ import cookie from 'react-cookie';
 var Diagram = require('./components/Diagram/index');
 var Search = require('./components/Search/index');
 var Navigation = require('./components/Navigation/index');
-var Chart = require('./components/Diagram/Chart');
 var RegisterForm = require('./components/RegisterForm/index');
 var LoginForm = require('./components/LoginForm/index');
 var ProfilePage = require('./components/ProfilePage/index');
