@@ -227,7 +227,7 @@ var Container = React.createClass({
         if (tree.id == id) return tree;
         if (tree.children == undefined) return null;
          
-        var result = null;
+        var result;
         for(var i in tree.children) {
             result = this.findNode(tree.children[i], id);
             if (result != null) return result;
