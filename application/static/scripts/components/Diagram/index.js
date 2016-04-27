@@ -1,7 +1,10 @@
 var Chart = require("./Chart");
+var InfoPanel = require('./InfoPanel');
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
+import Draggable from 'react-draggable';
 
 
 var Diagram = React.createClass({
@@ -26,7 +29,8 @@ var Diagram = React.createClass({
     getInitialState: function() {
         return {
             data: [],
-            view:  'vertical'
+            view:  'vertical',
+            showInfoPanel: false
         };
     },
 
@@ -57,10 +61,20 @@ var Diagram = React.createClass({
         this.update(nextProps.data);
     },
 
+   /**
+    * Toggles between showing/hiding the info panel
+    */
+    toggleInfoPanel: function(){
+        this.setState({
+            showInfoPanel: !this.state.showInfoPanel
+        });
+    },
+
     /**
     * Render the diagram from the current state.
     */
     render: function() {
+        const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
         return (
             <div className='diagram'>
                 <Button bsStyle='primary' onClick={this.reset}>{this.dict[this.props.language]['reset']}</Button>
@@ -71,6 +85,17 @@ var Diagram = React.createClass({
                     data={this.state.data}
                     view={this.state.view}
                     onClick={this.onNodeClick} />
+                //Button to open info panel
+                <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span> 
+                //Term info panel
+                <Draggable
+                    handle=".infoPanelHandle"
+                    zIndex={1000}
+                    bounds=".diagram">
+                    <div style={showInfoPanel} className="infoPanelWrapper">
+                        <InfoPanel />
+                    </div>
+                </Draggable>
             </div>
         );
     },
