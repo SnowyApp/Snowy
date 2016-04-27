@@ -119,7 +119,7 @@ module.exports = React.createClass({
     },
 
     resetZoom: function(){
-        diagram.resetZoom();
+        diagram.resetZoom(this._d3);
     },
 
     getDiagramState: function() {
