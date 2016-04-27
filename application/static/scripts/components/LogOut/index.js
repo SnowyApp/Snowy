@@ -56,10 +56,10 @@ var LogOut = React.createClass({
                 headers: {
                     "Authorization": cookie.load("userId")
                 },
-                success: function (data) {
+                success: function () {
                     this.props.onLogout();
                 }.bind(this),
-                error: function (textStatus, errorThrown) {
+                error: function () {
                     this.props.onLogout();
                 }.bind(this),
                 contentType: "application/json",
