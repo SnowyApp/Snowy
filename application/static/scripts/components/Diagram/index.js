@@ -48,7 +48,7 @@ var Diagram = React.createClass({
     },
 
     componentDidUpdate: function(prevProps, prevState) {
-        var element = this._d3;;
+        var element = this._d3;
 
         // if the diagram data has been initialised and contains data
         // then update the diagrams state.
