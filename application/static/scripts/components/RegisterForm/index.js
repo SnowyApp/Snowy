@@ -4,7 +4,7 @@
 var RegisterForm = React.createClass({
     propTypes: {
         show:               React.PropTypes.bool,
-        hideRegistration:   React.PropTypes.func,
+        showRegistration:   React.PropTypes.func,
         url:                React.PropTypes.string,
         language:           React.PropTypes.string
     },
@@ -31,11 +31,6 @@ var RegisterForm = React.createClass({
             m_regUnsuccessful:      "Registration unsuccessful",
             passwordStrength:       ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
         }
-    },
-
-    propTypes:{
-        hideRegistration: React.PropTypes.func,
-        show: React.PropTypes.bool
     },
     getInitialState: function(){
         return({
@@ -195,7 +190,7 @@ var RegisterForm = React.createClass({
     */
     close() {
         this.setState({ showModal: false });
-        this.props.hideRegistration()
+        this.props.showRegistration(false)
     },
 
    /**

@@ -4,7 +4,7 @@
 var LoginForm = React.createClass({
     propTypes: {
         show:       React.PropTypes.bool,
-        hideLogin:  React.PropTypes.bool,
+        showLogin:  React.PropTypes.func,
         onLogin:    React.PropTypes.func,
         url:        React.PropTypes.string,
         language:   React.PropTypes.string
@@ -28,11 +28,6 @@ var LoginForm = React.createClass({
             passwordStrength:       ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
         }
     },
-
-    propTypes:{
-        hideLogin: React.PropTypes.func,
-        show: React.PropTypes.bool
-    },
     getInitialState: function(){
         return({
             email: "",
@@ -48,7 +43,7 @@ var LoginForm = React.createClass({
     */
     close: function() {
         this.setState({ showModal: false });
-        this.props.hideLogin();
+        this.props.showLogin(false);
     },
 
    /**
