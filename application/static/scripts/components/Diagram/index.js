@@ -47,17 +47,23 @@ var Diagram = React.createClass({
                 this.getDiagramState());
     },
 
-    componentDidUpdate: function(prevProps) {
+    componentDidUpdate: function(prevProps, prevState) {
         var element = this._d3;;
 
         // if the diagram data has been initialised and contains data
         // then update the diagrams state.
         // otherwise create a diagram
-        if (prevProps.data === undefined || prevProps.data.length != 0) {
-            diagram.update(element, this.getDiagramState());
-        } else {
+        if (prevProps.data !== undefined && prevProps.data.length == 0) {
             diagram.create(element, { onClick: this.onNodeClick }, 
                 this.getDiagramState());
+        } else if (prevState.view !== undefined &&
+                prevState.view != this.state.view) {
+            diagram.destroy();
+            diagram.create(element, { onClick: this.onNodeClick },
+                    this.getDiagramState());
+        }
+        else {
+            diagram.update(element, this.getDiagramState());
         }
     },
 
@@ -139,15 +145,15 @@ var Diagram = React.createClass({
     },
 
     changeView: function(){
-      if(this.state.view == 'vertical') {
-          this.setState({
-              view: 'horizontal'
-          })
-      }
+        if(this.state.view == 'vertical') {
+            this.setState({
+                view: 'horizontal'
+            });
+        }
         else {
-          this.setState({
-              view: 'vertical'
-          })
+            this.setState({
+                view: 'vertical'
+            });
       }
     }
 });
