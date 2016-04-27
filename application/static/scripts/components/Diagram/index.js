@@ -39,12 +39,12 @@ module.exports = React.createClass({
     },
 
     componentDidMount: function() {
-        diagram.create(this._d3, { onClick: this.onNodeClick },
+        diagram.create(ReactDOM.findDOMNode(this), { onClick: this.onNodeClick },
                 this.getDiagramState());
     },
 
     componentDidUpdate: function(prevProps) {
-        var element = this._d3;;
+        var element = ReactDOM.findDOMNode(this);
 
         // if the diagram data has been initialised and contains data
         // then update the diagrams state.
@@ -97,9 +97,6 @@ module.exports = React.createClass({
                     onClick={this.changeView}>
                     {this.dict[this.props.language]["VHView"]}
                 </Button>
-                <div className="d3diagram"
-                    ref={ (ref) => this._d3 = ref}>
-                </div>
             </div>
         );
     },
@@ -119,7 +116,7 @@ module.exports = React.createClass({
     },
 
     resetZoom: function(){
-        diagram.resetZoom(this._d3);
+        diagram.resetZoom(ReactDOM.findDOMNode(this));
     },
 
     getDiagramState: function() {
@@ -130,8 +127,7 @@ module.exports = React.createClass({
     },
 
     reset: function() {
-        var element = this._d3;
-        diagram.reset(element, this.getDiagramState());
+        diagram.reset(ReactDOM.findDOMNode(this), this.getDiagramState());
     },
 
     changeView: function(){
