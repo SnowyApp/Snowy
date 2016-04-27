@@ -16,6 +16,7 @@ var fakeUser = {
  */
 var ChangePasswordForm = React.createClass({
     propTypes: {
+        url:        React.PropTypes.string,
         dict:       React.PropTypes.object,
         language:   React.PropTypes.string
     },
