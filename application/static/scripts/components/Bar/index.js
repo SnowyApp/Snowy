@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
+import Dropdown from 'react-bootstrap/lib/Dropdown';
 
 var LogOut = require('../LogOut/index');
 var RegisterForm = require('../RegisterForm/index');
@@ -138,44 +141,32 @@ var Bar = React.createClass({
         return (
             <div className="bar">
                 <Search url={this.props.serverUrl} update={this.props.update} language={this.props.language}/>
-
                 <ButtonToolbar id = "buttons">
                     {/* Database edition drop-down */}
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                            {this.dict[this.props.language]["edition"]} <span className="caret"></span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li>
-                                <a onClick={this.props.setEdition.bind(null,"en")} href="#">
-                                    English Edition 2015-11-30
-                                </a>
-                            </li>
-                            <li>
-                                <a onClick={this.props.setEdition.bind(null,"se")} href="#">
-                                    Swedish Edition 2015-11-30
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <DropdownButton bsStyle="success" title={this.dict[this.props.language]["edition"]} id="Edition">
+                        <MenuItem onClick={this.props.setEdition.bind(null,"en")}>
+                            English Edition 2015-11-30
+                        </MenuItem>
+                        <MenuItem onClick={this.props.setEdition.bind(null,"se")}>
+                            Swedish Edition 2015-11-30
+                        </MenuItem>
+                    </DropdownButton>
                     {/* Language drop-down */}
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-primary dropdown-toggle flagButton" data-toggle="dropdown">
-                            <img className="langFlagHeader" src={flagSrc}/> <span className="caret"></span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li>
-                                <a onClick={this.props.setLanguage.bind(null,"en")} href="#">
-                                    <img className="langFlag" src="static/img/flags/flag_eng.png"/> English
-                                </a>
-                            </li>
-                            <li>
-                                <a onClick={this.props.setLanguage.bind(null,"se")} href="#">
-                                    <img className="langFlag" src="static/img/flags/flag_swe.png"/> Svenska
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <Dropdown id="language" >
+                        <Dropdown.Toggle bsStyle="primary">
+                            <img className="langFlagHeader" src={flagSrc}/>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className ="languageFlags">
+                            <MenuItem onClick={this.props.setLanguage.bind(null,"en")}>
+                                <img className="langFlag" src="static/img/flags/flag_eng.png"/>
+                                English
+                            </MenuItem>
+                            <MenuItem onClick={this.props.setLanguage.bind(null,"se")}>
+                                <img className="langFlag" src="static/img/flags/flag_swe.png"/>
+                                Svenska
+                            </MenuItem>
+                        </Dropdown.Menu>
+                    </Dropdown>
                     <Export language={this.props.language} />
                     <Button
                         className="save-diagram"

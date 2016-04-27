@@ -88,6 +88,10 @@ section {
     height: 24px;
 }
 
+#language{
+    padding: 4px 12px;
+}
+
 .flagButton {
     padding: 4px 5px 3px 6px;
 }
