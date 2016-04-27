@@ -504,18 +504,28 @@ var Bar = React.createClass({
             showLogout: false
         };
     },
-
+    /**
+     *  Sets value of showRegistration to e
+     *  Which determines if the Registration Modal is visible
+     */
     showRegistration: function(e){
         this.setState({
             showRegistration: e
         });
     },
-
+    /**
+     *  Sets value of showLogin to e
+     *  Which determines if the Login Modal is visible
+     */
     showLogin: function(e){
         this.setState({
             showLogin: e
         });
     },
+    /**
+     *  Sets value of showLogout to e
+     *  Which determines if the Logout Modal is visible
+     */
     showLogout: function(e){
         this.setState({
             showLogout: e
