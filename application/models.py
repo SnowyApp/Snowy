@@ -30,10 +30,7 @@ INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_em
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
 SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=a.concept_id WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
 SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
-SELECT_PARENTS_QUERY = """SELECT B.source_id, A.term, B.type_id
-                                FROM relationship B JOIN description A 
-                                ON B.destination_id=a.concept_id 
-                                WHERE B.source_id=%s and b.active=1 and b.type_id=116680003;"""
+SELECT_PARENTS_QUERY = """SELECT DISTINCT B.destination_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.source_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.destination_id;"""
 SELECT_RELATIONS_QUERY = """SELECT B.destination_id, MIN(A.term), MIN(B.type_id) 
                                 FROM relationship B JOIN description A 
                                 ON B.destination_id=a.concept_id 
@@ -370,6 +367,7 @@ class Concept():
             result = []
             concept = None
             for data in cur:
+                print(data)
                 # Create a concept if needed
                 if concept is None:
                     concept = Concept(data[0])
@@ -384,6 +382,8 @@ class Concept():
                     concept.full_term = data[1]
                 else:
                     concept.syn_term = data[1]
+            if concept is not None:
+                result += [concept]
 
             return result
         except Exception as e:
