@@ -86,7 +86,6 @@ var Diagram = React.createClass({
         this.update(nextProps.data);
     },
 
-<<<<<<< HEAD
    /**
     * Toggles between showing/hiding the info panel
     */
@@ -94,10 +93,9 @@ var Diagram = React.createClass({
         this.setState({
             showInfoPanel: !this.state.showInfoPanel
         });
-=======
+
     componentWillUnmount: function() {
         diagram.destroy();
->>>>>>> d0f1dfc38eb48cd0fef07dfdd64e52a9869b04b5
     },
 
     /**
@@ -106,28 +104,6 @@ var Diagram = React.createClass({
     render: function() {
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
         return (
-<<<<<<< HEAD
-            <div className='diagram'>
-                <Button bsStyle='primary' onClick={this.reset}>{this.dict[this.props.language]['reset']}</Button>
-                <Button bsStyle='primary' onClick={this.resetZoom}>{this.dict[this.props.language]['resetZoom']}</Button>
-                <Button bsStyle='primary' onClick={this.changeView}>{this.dict[this.props.language]['VHView']}</Button>
-                <Chart
-                    ref={ (ref) => this._chart = ref }
-                    data={this.state.data}
-                    view={this.state.view}
-                    onClick={this.onNodeClick} />
-                //Button to open info panel
-                <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span> 
-                //Term info panel
-                <Draggable
-                    handle=".infoPanelHandle"
-                    zIndex={1000}
-                    bounds=".diagram">
-                    <div style={showInfoPanel} className="infoPanelWrapper">
-                        <InfoPanel />
-                    </div>
-                </Draggable>
-=======
             <div className="diagram">
                 <Button 
                     bsStyle="primary" 
@@ -147,7 +123,19 @@ var Diagram = React.createClass({
                 <div className="d3diagram"
                     ref={ (ref) => this._d3 = ref}>
                 </div>
->>>>>>> d0f1dfc38eb48cd0fef07dfdd64e52a9869b04b5
+
+                //Button to open info panel
+                <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span> 
+
+                //Term info panel
+                <Draggable
+                    handle=".infoPanelHandle"
+                    zIndex={1000}
+                    bounds=".diagram">
+                    <div style={showInfoPanel} className="infoPanelWrapper">
+                        <InfoPanel />
+                    </div>
+                </Draggable>
             </div>
         );
     },
