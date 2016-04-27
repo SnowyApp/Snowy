@@ -132,7 +132,7 @@ var Container = React.createClass({
     componentWillReceiveProps: function(nextProps) {
         // set concept_id in focus if given
         if (nextProps.concept_id !== undefined) {
-            getConcept(nextProps.concept_id);
+            this.getConcept(nextProps.concept_id);
         }
 
         // set given data in focus if given, overruling concept_id
