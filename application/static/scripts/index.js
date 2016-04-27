@@ -13,6 +13,7 @@ var LogOut = require('./components/LogOut/');
 
 
 var matteUrl = 'http://hem.ulmstedt.net:5000';
+const conceptId = "138875005";
 
 /**
 *   Contains the subcomponents of the webpage
@@ -725,6 +726,6 @@ var Export = React.createClass({
 
 
 ReactDOM.render(
-    <Container concept_id="138875005" url={matteUrl}  />,
+    <Container concept_id={conceptId} url={matteUrl}  />,
     document.getElementById('content')
 );
