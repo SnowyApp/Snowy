@@ -198,7 +198,7 @@ d3Chart.reset = function(element, state) {
 d3Chart.update = function(element, state) {
     if (state){
         root = state.data[0];
-        this._drawTree(root);
+        this._drawTree(element, root);
     }
 };
 
@@ -213,12 +213,12 @@ d3Chart.getId = function() {
     return ++i;
 };
 
-d3Chart._resetZoom = function(){
+d3Chart.resetZoom = function(element){
     if(treeView == 'vertical'){
-        d3.select('body').selectAll(".nodes")
+        d3.select(element).selectAll(".nodes")
             .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
     } else {
-        d3.select('body').selectAll(".nodes")
+        d3.select(element).selectAll(".nodes")
             .attr("transform", "translate(" + 0 + "," + HORIZONTAL_MARGIN + ")scale(" + 1 + ")");
     }
 
@@ -229,12 +229,12 @@ d3Chart._resetZoom = function(){
  * them in the way we want.
  */
 
-d3Chart._drawTree = function(data) {
+d3Chart._drawTree = function(element, data) {
     if(!root){
         return null;
     }
 
-    var gTree = d3.select('body').selectAll(".nodes");
+    var gTree = d3.select(element).selectAll(".nodes");
 
     // build the arrow.
     var arrow = gTree.append("svg:defs").selectAll("marker")
