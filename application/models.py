@@ -367,7 +367,6 @@ class Concept():
             result = []
             concept = None
             for data in cur:
-                print(data)
                 # Create a concept if needed
                 if concept is None:
                     concept = Concept(data[0])
