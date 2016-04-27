@@ -148,5 +148,46 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]['full'], "")
         self.assertEqual(resp_data[0]['id'], 387961004)
 
+
+    def test_diagram(self):
+        self.create_user()
+        response = self.login_user()
+        data = json.loads(response.data.decode('utf-8'))
+
+        diagram = {"data": "This is a test diagram", "name": "Simons diagram"}
+        response = self.app.post("/diagram", data=json.dumps(diagram), headers={'Authorization': data['token']}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        resp_data = json.loads(response.data.decode("utf-8"))
+        self.assertTrue("id" in resp_data)
+
+        diagram_id = resp_data["id"]
+
+        response = self.app.get("/diagram", headers={'Authorization': data['token']}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        resp_data = json.loads(response.data.decode("utf-8"))
+        self.assertEqual(len(resp_data), 1)
+        self.assertEqual(resp_data[0]["id"], diagram_id)
+        self.assertEqual(resp_data[0]["data"], "This is a test diagram")
+        self.assertEqual(resp_data[0]["name"], "Simons diagram")
+        self.assertTrue("created" in resp_data[0])
+        self.assertTrue("modified" in resp_data[0])
+
+        diagram = {"data": "This is an updated test diagram", "name": "Simons updated diagram", "id": diagram_id}
+        response = self.app.put("/diagram", data=json.dumps(diagram), headers={'Authorization': data['token']}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get("/diagram", headers={'Authorization': data['token']}, content_type="application/json")
+        resp_data = json.loads(response.data.decode("utf-8"))
+        self.assertEqual(len(resp_data), 1)
+        self.assertEqual(resp_data[0]["id"], diagram_id)
+        self.assertEqual(resp_data[0]["data"], "This is an updated test diagram")
+        self.assertEqual(resp_data[0]["name"], "Simons updated diagram")
+        self.assertTrue("created" in resp_data[0])
+        self.assertTrue("modified" in resp_data[0])
+
+        response = self.app.put("/diagram", data=json.dumps(diagram), headers={'Authorization': data['token']}, content_type="application/json")
+        self.assertEqual(response, 200)
+
+
 if __name__ == "__main__":
     unittest.main()

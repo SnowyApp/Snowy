@@ -211,7 +211,7 @@ class User():
             result = []
             cur.execute(SELECT_DIAGRAM_QUERY, (self.email,))
             for data in cur:
-                result += [{"id": data[0], "data": data[1], 'created': str(data[2]), 'modified': str(data[3])}]
+                result += [{"id": data[0], "data": data[1], 'name': data[2], 'created': str(data[3]), 'modified': str(data[4])}]
             cur.close()
             return result
         except Exception as e:
