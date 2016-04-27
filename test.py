@@ -185,8 +185,12 @@ class TestApplication(unittest.TestCase):
         self.assertTrue("created" in resp_data[0])
         self.assertTrue("modified" in resp_data[0])
 
-        response = self.app.put("/diagram", data=json.dumps(diagram), headers={'Authorization': data['token']}, content_type="application/json")
-        self.assertEqual(response, 200)
+        response = self.app.delete("/diagram", data=json.dumps({"id": diagram_id}), headers={'Authorization': data['token']}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get("/diagram", headers={'Authorization': data['token']}, content_type="application/json")
+        resp_data = json.loads(response.data.decode("utf-8"))
+        self.assertEqual(len(resp_data), 0)
 
 
 if __name__ == "__main__":
