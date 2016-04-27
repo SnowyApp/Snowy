@@ -277,7 +277,10 @@ var Container = React.createClass({
         this.updateSelectedTerm(this.props.concept_id, false);
         this.clearHistory();
     },
-    
+    /**
+     * Called when a user has been logged in, uid is the token sent from the server
+     * @param uid
+     */
     onLogin: function(uid){
         this.setState({
             userId: uid,
@@ -285,6 +288,9 @@ var Container = React.createClass({
         });
         cookie.save('userId', uid,{path: '/'});
     },
+    /**
+     * Called when a user has logged out
+     */
     onLogout: function(){
         this.setState({isLoggedIn: false, content: "diagram", userId: ''});
         cookie.remove('userId', {path: '/'});
@@ -420,6 +426,16 @@ var Container = React.createClass({
                             language={this.state.language}
                           />
                 break;
+            default:
+                content = <Diagram
+                    ref={ (ref) => this._diagram = ref }
+                    data={this.state.data}
+                    url={this.state.serverUrl}
+                    update={this.updateSelectedTerm}
+                    updateConceptChildren={this.updateConceptChildren}
+                    language={this.state.language}
+                />
+                break;
         }
         return (
             <div className="wrapper">
@@ -530,6 +546,9 @@ var Bar = React.createClass({
                 break;
             case "profile":
                 switchName = "diagram";
+                break;
+            default:
+                switchName = "profile";
                 break;
         }
         const navButtons = this.props.isLoggedIn ? (
