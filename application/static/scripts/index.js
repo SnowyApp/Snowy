@@ -395,7 +395,6 @@ var Container = React.createClass({
                 content = <Diagram 
                             ref={ (ref) => this._diagram = ref }
                             data={this.state.data}
-                            url={this.state.serverUrl}
                             update={this.updateSelectedTerm}
                             updateConceptChildren={this.updateConceptChildren}
                             language={this.state.language}
