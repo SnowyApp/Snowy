@@ -1,3 +1,5 @@
+import cookie from 'react-cookie';
+
 //Temporary fake user
 var fakeUser = {
     id: 1337,
@@ -35,28 +37,46 @@ module.exports = React.createClass({
     handleSubmit: function(e){
         e.preventDefault();
         //TODO: Calls to database goes here
-        //inputs can be found in the states (newPassword, currPassword)        
+        //inputs can be found in the states (newPassword, currPassword)
 
-        if(this.state.currPassword != "12345"){
-            this.setState({
-                errorMessage: this.props.dict[this.props.language]["m_wrongPassword"],
-                successMessage: ""
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "PUT",
+                url: this.props.url + "/password",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "password": this.state.newPassword,
+                    "invalidate_tokens": false
+                }),
+                success: function () {
+                    console.log("Successfully updated password.");
+                    this.setState({
+                        errorMessage: "",
+                        successMessage: this.props.dict[this.props.language]["m_updatePasswordSuccessful"],
+                        hasChanged: false,
+                        newPassword: "",
+                        repeatPassword: "",
+                        currPassword: "",
+                        passwordStrength: 0
+                    });
+                    document.getElementById("newPassword").value = "";
+                    document.getElementById("repeatPassword").value = "";
+                    document.getElementById("currPassword").value = "";
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed to update password.");
+                    this.setState({
+                        errorMessage: this.props.dict[this.props.language]["m_failedToUpdate"],
+                        successMessage: ""
+                    });
+                },
+                contentType: "application/json",
+                dataType: "json"
             });
-        }
-        //Success    
-        else {
-            this.setState({
-                errorMessage: "",
-                successMessage: this.props.dict[this.props.language]["m_updatePasswordSuccessful"],
-                hasChanged: false,
-                newPassword: "",
-                repeatPassword: "",
-                currPassword: "",
-                passwordStrength: 0
-            });
-            document.getElementById("newPassword").value = "";
-            document.getElementById("repeatPassword").value = "";
-            document.getElementById("currPassword").value = "";
         }
     },
 
