@@ -3,17 +3,19 @@ import SplitPane from 'react-split-pane';
 import cookie from 'react-cookie';
 
 var Diagram = require('./components/Diagram/index');
-var Search = require('./components/Search/index');
+var Bar = require('./components/Bar/index');
 var Navigation = require('./components/Navigation/index');
 var Chart = require('./components/Diagram/Chart');
-var RegisterForm = require('./components/RegisterForm/index');
-var LoginForm = require('./components/LoginForm/index');
 var ProfilePage = require('./components/ProfilePage/index');
-var LogOut = require('./components/LogOut/');
 
 
 var matteUrl = 'http://hem.ulmstedt.net:5000';
+const conceptId = "138875005";
 
+/**
+*   Contains the subcomponents of the webpage
+ *   It also initiates all the top-level variables passed to the children components
+ */
 var Container = React.createClass({
     getInitialState: function(){
         return{
@@ -128,7 +130,7 @@ var Container = React.createClass({
     componentWillReceiveProps: function(nextProps) {
         // set concept_id in focus if given
         if (nextProps.concept_id !== undefined) {
-            getConcept(nextProps.concept_id);
+            this.getConcept(nextProps.concept_id);
         }
 
         // set given data in focus if given, overruling concept_id
@@ -139,11 +141,13 @@ var Container = React.createClass({
             });
         }
     },
-
     componentWillMount: function() {
         this.getConcept(this.state.selectedTerm);
     },
-    
+    /**
+     * Called when the url is to be assigned the value of e
+     * @param e
+     */
     handleUrlChange: function(e){
         this.setState({
             url: e.target.value
@@ -170,7 +174,7 @@ var Container = React.createClass({
         if (id == 0)
             return;
 
-        var tree = this.state.data.slice();;
+        var tree = this.state.data.slice();
 
         // find node in data
         var node = this.findNode(tree[0], id);
@@ -221,7 +225,7 @@ var Container = React.createClass({
         if (tree.id == id) return tree;
         if (tree.children == undefined) return null;
          
-        var result = null;
+        var result;
         for(var i in tree.children) {
             result = this.findNode(tree.children[i], id);
             if (result != null) return result;
@@ -271,7 +275,10 @@ var Container = React.createClass({
         this.updateSelectedTerm(this.props.concept_id, false);
         this.clearHistory();
     },
-    
+    /**
+     * Called when a user has been logged in, uid is the token sent from the server
+     * @param uid
+     */
     onLogin: function(uid){
         this.setState({
             userId: uid,
@@ -279,6 +286,9 @@ var Container = React.createClass({
         });
         cookie.save('userId', uid,{path: '/'});
     },
+    /**
+     * Called when a user has logged out
+     */
     onLogout: function(){
         this.setState({isLoggedIn: false, content: "diagram", userId: ''});
         cookie.remove('userId', {path: '/'});
@@ -414,6 +424,16 @@ var Container = React.createClass({
                             language={this.state.language}
                           />
                 break;
+            default:
+                content = <Diagram
+                    ref={ (ref) => this._diagram = ref }
+                    data={this.state.data}
+                    url={this.state.serverUrl}
+                    update={this.updateSelectedTerm}
+                    updateConceptChildren={this.updateConceptChildren}
+                    language={this.state.language}
+                />
+                break;
         }
         return (
             <div className="wrapper">
@@ -449,257 +469,7 @@ var Container = React.createClass({
     }
 });
 
-
-var Bar = React.createClass({
-    //Dictionary for supported languages
-    dict: {
-        se: {
-            search:       "Sök",
-            edition:      "Utgåva",
-            saveDiagram:  "Spara diagram",
-            diagram:      "Diagram",
-            login:        "Logga in",
-            logout:       "Logga ut",
-            register:     "Registrera",
-            profile:      "Profilsida"
-        },
-        en: {
-            search:       "Search",
-            edition:      "Edition",
-            saveDiagram:  "Save diagram",
-            diagram:      "Diagram",
-            login:        "Log in",
-            logout:       "Log out",
-            register:     "Register",
-            profile:      "Profile"
-        }
-    },
-
-    getInitialState: function(){
-        return{
-            showRegistration: false,
-            showLogin: false,
-            showLogout: false
-        };
-    },
-
-    showRegistration: function(){
-        this.setState({
-            showRegistration: true
-        });
-    },
-
-    showLogin: function(){
-        this.setState({
-            showLogin: true
-        });
-    },
-    hideRegistration: function(){
-        this.setState({
-            showRegistration: false
-        });
-    },
-
-    hideLogin: function(){
-        this.setState({
-            showLogin: false
-        });
-
-    },
-    showLogout: function(){
-        this.setState({
-            showLogout: true
-        });
-    },
-    hideLogout: function(){
-        this.setState({
-            showLogout: false
-        });
-    },
-    render: function() {
-        var switchName = '';
-        switch(this.props.contentName){
-            case "diagram":
-                switchName = "profile";
-                break;
-            case "profile":
-                switchName = "diagram";
-                break;
-        }
-        const navButtons = this.props.isLoggedIn ? (
-            <div>
-                <Button className="profile"
-                        onClick={this.props.setContent.bind(null, switchName.toLowerCase())}
-                        bsStyle = "primary" >{this.dict[this.props.language][switchName]}</Button>
-                <Button className="Logout" bsStyle = "primary" 
-                    onClick={this.showLogout}>{this.dict[this.props.language]["logout"]}</Button>
-                <LogOut
-                    show={this.state.showLogout}
-                    hideLogout={this.hideLogout}
-                    onLogout={this.props.onLogout}
-                    url={this.props.url}
-                    language={this.props.language}
-                />
-            </div>
-        ) : (
-            <div>
-                <Button className="Register" bsStyle = "primary" 
-                    onClick={this.showRegistration}>{this.dict[this.props.language]["register"]}</Button>
-                <Button className="Login" bsStyle = "primary" 
-                    onClick={this.showLogin}>{this.dict[this.props.language]["login"]}</Button>
-                {/* Registration popup */}
-                <RegisterForm
-                    show={this.state.showRegistration} 
-                    hideRegistration={this.hideRegistration}
-                    url={this.props.url}
-                    language={this.props.language}
-                />
-
-                {/* Login popup */}
-                <LoginForm
-                    show={this.state.showLogin}
-                    hideLogin={this.hideLogin}
-                    onLogin={this.props.onLogin}
-                    url={this.props.url}
-                    language={this.props.language}
-                />
-            </div>
-        );
-    
-        //Language button
-        var flagSrc = null;
-        switch(this.props.language){
-            case "en":
-                flagSrc = "static/img/flags/flag_eng.png";
-                break;
-            case "se":
-                flagSrc = "static/img/flags/flag_swe.png";
-                break;
-            default:
-                console.log("Language prop not valid");
-                break;
-        }
-
-        return (
-            <div className="bar">
-                <Search url={this.props.serverUrl} update={this.props.update} language={this.props.language}/>
-                
-                <ButtonToolbar id = "buttons">
-                    {/* Database edition drop-down */}
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                            {this.dict[this.props.language]["edition"]} <span className="caret"></span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li>
-                                <a onClick={this.props.setEdition.bind(null,"en")} href="#">
-                                    English Edition 2015-11-30
-                                </a>
-                            </li>
-                            <li>
-                                <a onClick={this.props.setEdition.bind(null,"se")} href="#">
-                                    Swedish Edition 2015-11-30
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    {/* Language drop-down */}
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-primary dropdown-toggle flagButton" data-toggle="dropdown">
-                            <img className="langFlagHeader" src={flagSrc}/> <span className="caret"></span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li>
-                                <a onClick={this.props.setLanguage.bind(null,"en")} href="#">
-                                    <img className="langFlag" src="static/img/flags/flag_eng.png"/> English
-                                </a>
-                            </li>
-                            <li>
-                                <a onClick={this.props.setLanguage.bind(null,"se")} href="#">
-                                    <img className="langFlag" src="static/img/flags/flag_swe.png"/> Svenska
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <Export language={this.props.language} />
-                    <Button 
-                        className="save-diagram" 
-                        bsStyle="primary"
-                        onClick={this.props.saveDiagram}
-                    >
-                        {this.dict[this.props.language]["saveDiagram"]}
-                    </Button>
-                    {navButtons}
-                </ButtonToolbar>
-            </div>
-
-        );
-    }
-});
-
-var Export = React.createClass({
-    dict: {
-        se: {
-            export:       "Exportera"
-        },
-        en: {
-            export:       "Export"
-        }
-    },
-
-    exportSVG: function(){
-        var html = d3.select("svg")
-            .attr({
-                'xmlns': 'http://www.w3.org/2000/svg',
-                'xlink': 'http://www.w3.org/1999/xlink',
-                version: '1.1'
-            })
-            .node().parentNode.innerHTML;
-
-        var blob = new Blob([html], {type: "image/svg+xml"});
-        saveAs(blob, new Date().toJSON().slice(0,10) + ".svg");
-
-    },
-    exportPNG: function(){
-        // Create a canvas with the height and width of the parent of the svg document
-        var chartArea = document.getElementsByTagName('svg')[0].parentNode;
-        var svg = chartArea.innerHTML;
-        var canvas = document.createElement('canvas');
-        canvas.setAttribute('width', chartArea.offsetWidth);
-        canvas.setAttribute('height', chartArea.offsetHeight);
-        canvas.setAttribute('display', 'none');
-
-        // Add the canvas to the body of the document and add the svg document to the canvas
-        document.body.appendChild(canvas);
-        canvg(canvas, svg);
-
-        // Draw a white background behind the content
-        var context = canvas.getContext("2d");
-        context.globalCompositeOperation = "destination-over";
-        context.fillStyle = '#fff';
-        context.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Append the image data to a link, download the image and then remove canvas
-        var dataString = canvas.toDataURL();
-        var link = document.createElement("a");
-        link.download = new Date().toJSON().slice(0,10) + ".png";
-        link.href = dataString;
-        link.click();
-        canvas.parentNode.removeChild(canvas);
-    },
-    render: function(){
-        return (
-        <DropdownButton bsStyle="primary" title={this.dict[this.props.language]["export"]} id="Export">
-            <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
-            <MenuItem divider/>
-            <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
-        </DropdownButton>
-        );
-    }
-});
-
-
 ReactDOM.render(
-    <Container concept_id="138875005" url={matteUrl}  />,
+    <Container concept_id={conceptId} url={matteUrl}  />,
     document.getElementById('content')
 );

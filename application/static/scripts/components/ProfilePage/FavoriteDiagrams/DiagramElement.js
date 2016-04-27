@@ -9,7 +9,7 @@ var fakeUser = {
 /**
  * Diagram element in favorite diagrams table
  */
-module.exports = React.createClass({
+var DiagramElement = React.createClass({
     propTypes: {
         key:                React.PropTypes.number,
         name:               React.PropTypes.string,
@@ -117,3 +117,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = DiagramElement;

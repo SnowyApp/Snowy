@@ -1,6 +1,6 @@
 var d3Chart = require('./d3Chart');
 
-module.exports = React.createClass({
+var Chart = React.createClass({
     propTypes: {
         data: React.PropTypes.array,
         view: React.PropTypes.string
@@ -51,7 +51,8 @@ module.exports = React.createClass({
 
     render: function() {
         return (
-            <div className="chart"></div>
+            <div className='chart'></div>
         );
     }
 });
+module.exports = Chart;

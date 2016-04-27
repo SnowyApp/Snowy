@@ -13,7 +13,7 @@ var fakeUser = {
 /**
  * Component that displays favorite diagrams in a table
  */
-module.exports = React.createClass({
+var FavoriteDiagrams = React.createClass({
     propTypes: {
         url:                React.PropTypes.string,
         dict:               React.PropTypes.object,
@@ -261,6 +261,5 @@ module.exports = React.createClass({
         );
     }
 });
-
-
+module.exports = FavoriteDiagrams;
 

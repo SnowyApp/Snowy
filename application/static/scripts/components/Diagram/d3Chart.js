@@ -49,7 +49,7 @@ var menuData = [
     {
         title: 'Hide Siblings',
         action: function(elm, d){
-            if(d.parent != "null") {
+            if(d.parent != 'null') {
                 var tempChild = [];
                 tempChild.push(d);
                 d.parent._children = d.parent.children;
@@ -61,10 +61,23 @@ var menuData = [
     {
         title: 'Show siblings',
         action: function(elm, d){
-            if(d.parent != "null" && d.parent._children){
+            if(d.parent != 'null' && d.parent._children){
                 d.parent.children = d.parent._children;
                 d.parent._children = null;
                 d3Chart._drawTree(d);
+            }
+        }
+    },
+    {
+        title: 'Reset node position',
+        action: function(elm, d){
+            if(d.moved != undefined){
+                if(d.moved) {
+                    d.x = d.x0;
+                    d.y = d.y0;
+                    d.moved = false;
+                    d3Chart._drawTree(d);
+                }
             }
         }
     }
@@ -99,41 +112,41 @@ d3Chart.create = function(element, props, state) {
     onClick = props.onClick;
 
     zoom = d3.behavior.zoom()
-        .on("zoom", zoomed);
+        .on('zoom', zoomed);
 
-    svg = d3.select(element).append("svg")
-        .attr("class", "d3")
+    svg = d3.select(element).append('svg')
+        .attr('class', 'd3')
         .attr({
             'xmlns': 'http://www.w3.org/2000/svg',
             'xlink': 'http://www.w3.org/1999/xlink',
             version: '1.1'
         })
-        .call(zoom).on("dblclick.zoom", null)
-        .on( "mousedown", function() {
+        .call(zoom).on('dblclick.zoom', null)
+        .on( 'mousedown', function() {
             if(!d3.event.ctrlKey) {
-                d3.selectAll('g.selected').classed("selected", false)
-                    .selectAll("rect.node").style("fill", "white");
+                d3.selectAll('g.selected').classed('selected', false)
+                    .selectAll('rect.node').style('fill', 'white');
             }
         });
 
     if(treeView == 'vertical'){
-        g = svg.append("g")
-            .attr("class", "nodes")
-            .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")")
-            .style("cursor","pointer");
+        g = svg.append('g')
+            .attr('class', 'nodes')
+            .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1 + ')')
+            .style('cursor','pointer');
     } else {
-        g = svg.append("g")
-            .attr("class", "nodes")
-            .attr("transform", "translate(" + 0 + "," + HORIZONTAL_MARGIN + ")scale(" + 1 + ")")
-            .style("cursor","pointer");
+        g = svg.append('g')
+            .attr('class', 'nodes')
+            .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')')
+            .style('cursor','pointer');
     }
 
     function zoomed() {
         var yOffset = d3.event.translate[1] + HORIZONTAL_MARGIN;
         if(treeView == 'vertical'){
-            g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            g.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
         } else {
-            g.attr("transform", "translate(" + d3.event.translate[0] + ',' + yOffset + ")scale(" + d3.event.scale + ")");
+            g.attr('transform', 'translate(' + d3.event.translate[0] + ',' + yOffset + ')scale(' + d3.event.scale + ')');
         }
 
     }
@@ -186,12 +199,12 @@ d3Chart.getId = function() {
 
 d3Chart._resetZoom = function(){
     if(treeView == 'vertical'){
-        d3.select('body').selectAll(".nodes")
-            .attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1
-         + ")");
+        d3.select('body').selectAll('.nodes')
+            .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1
+         + ')');
     } else {
-        d3.select('body').selectAll(".nodes")
-            .attr("transform", "translate(" + 0 + "," + HORIZONTAL_MARGIN + ")scale(" + 1 + ")");
+        d3.select('body').selectAll('.nodes')
+            .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')');
     }
     zoom.scale(1);  //Keeps the scaling after pressing reset
     zoom.translate([0,0])
@@ -205,25 +218,25 @@ d3Chart._drawTree = function() {
         return null;
     }
 
-    var gTree = d3.select('body').selectAll(".nodes");
+    var gTree = d3.select('body').selectAll('.nodes');
 
-    //This creates the "is-a" arrow as a svg marker.
-    gTree.append("svg:defs").selectAll("marker")
-        .data(["start"])
-        .enter().append("svg:marker")
-        .attr("id", "ArrowMarker")
-        .attr("viewBox", "0 0 22 20")
-        .attr("refX", 0)
-        .attr("refY", 10)
-        .attr("markerWidth", 6)
-        .attr("markerHeight", 6)
-        .attr("markerUnits", "strokeWidth")
-        .attr("orient", "auto")
-        .attr("stroke-width", "2")
+    //This creates the 'is-a' arrow as a svg marker.
+    gTree.append('svg:defs').selectAll('marker')
+        .data(['start'])
+        .enter().append('svg:marker')
+        .attr('id', 'ArrowMarker')
+        .attr('viewBox', '0 0 22 20')
+        .attr('refX', 0)
+        .attr('refY', 10)
+        .attr('markerWidth', 6)
+        .attr('markerHeight', 6)
+        .attr('markerUnits', 'strokeWidth')
+        .attr('orient', 'auto')
+        .attr('stroke-width', '2')
         .attr('stroke', 'black')
         .attr('fill', 'white')
-        .append("svg:path")
-        .attr("d", "M 0 10 L 20 0 L 20 20 z");
+        .append('svg:path')
+        .attr('d', 'M 0 10 L 20 0 L 20 20 z');
 
 
     /**
@@ -233,10 +246,18 @@ d3Chart._drawTree = function() {
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
 
+    nodes.forEach(function (d) {
+        if(d.moved == undefined){
+            d.moved = false;
+            d.x0 = d.x;
+            d.y0 = d.y;
+        }
+    });
+
     var drag = d3.behavior.drag()
-        .on("dragstart", dragstarted)
-        .on("drag", dragmove)
-        .on("dragend", dragended);
+        .on('dragstart', dragstarted)
+        .on('drag', dragmove)
+        .on('dragend', dragended);
 
     /**
      * This sets the distance between the node levels
@@ -250,53 +271,53 @@ d3Chart._drawTree = function() {
         });
     }
 
-    var node = gTree.selectAll("g.node").remove();
-    node = gTree.selectAll("g.node")
+    var node = gTree.selectAll('g.node').remove();
+    node = gTree.selectAll('g.node')
         .data(nodes, function(d) { return d.id });
 
     /**
-     * "Enters" the nodes by creating a new g-element inside the bigger
+     * 'Enters' the nodes by creating a new g-element inside the bigger
      * g-element because we want a node to have a rect and text element.
      * Remember that with SVG you have to use a g-element to combine two or
      * more elements.
      */
-    var nodeEnter = node.enter().append("g")
-        .attr("class", "node");
+    var nodeEnter = node.enter().append('g')
+        .attr('class', 'node');
 
         if(treeView == 'vertical'){
-            nodeEnter.attr("transform", function(d) {
-                return "translate(" + d.x + ", " + d.y + ")";
+            nodeEnter.attr('transform', function(d) {
+                return 'translate(' + d.x + ', ' + d.y + ')';
             });
         } else {
-            nodeEnter.attr("transform", function(d) {
-                return "translate(" + d.y + ", " + d.x + ")";
+            nodeEnter.attr('transform', function(d) {
+                return 'translate(' + d.y + ', ' + d.x + ')';
             });
         }
         //When right clicking on a node call the contextMenu function
         nodeEnter.on('contextmenu', d3.contextMenu(menuData))
         .call(drag)
-        .on("mouseover", function(){
-            d3.select(this).selectAll("rect.node").style( "fill", "#ebebeb");
+        .on('mouseover', function(){
+            d3.select(this).selectAll('rect.node').style( 'fill', '#ebebeb');
         })
-        .on("mouseout", function() {
-            if(!d3.select(this).classed("selected")) {
-                d3.select(this).selectAll("rect.node").style("fill", "white");
+        .on('mouseout', function() {
+            if(!d3.select(this).classed('selected')) {
+                d3.select(this).selectAll('rect.node').style('fill', 'white');
             }
         })
-        .on("click", function(d){
+        .on('click', function(d){
             // If we are dragging, don't call click
             if  (d3.event.defaultPrevented) return;
 
             // If we are holding down the ctrl key and clicking, invert selected
             if(d3.event.ctrlKey) {
-                var selection = d3.select(this).classed("selected");
-                d3.select(this).classed("selected", !selection)
-                    .selectAll("rect.node").style("fill", selection ? ("white") : ("ebebeb"));
+                var selection = d3.select(this).classed('selected');
+                d3.select(this).classed('selected', !selection)
+                    .selectAll('rect.node').style('fill', selection ? ('white') : ('ebebeb'));
             }else{
                 // If we are clicking on a node which is not selected, deselect all nodes
-                if(!d3.select(this).classed("selected")){
-                    d3.selectAll(".selected").classed("selected", false)
-                        .selectAll("rect.node").style("fill", "white");
+                if(!d3.select(this).classed('selected')){
+                    d3.selectAll('.selected').classed('selected', false)
+                        .selectAll('rect.node').style('fill', 'white');
                 }
 
                 // notify container of click on node
@@ -322,79 +343,80 @@ d3Chart._drawTree = function() {
     }
     //Add text-element for every node
     if(treeView == 'vertical'){
-        nodeEnter.append("text")
-            .attr("y", NODE_HEIGHT/2)
-            .attr("x", NODE_WIDTH/2 + WIDTH_MARGIN)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "middle")
+        nodeEnter.append('text')
+            .attr('y', NODE_HEIGHT/2)
+            .attr('x', NODE_WIDTH/2 + WIDTH_MARGIN)
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'middle')
             .attr('font-family', 'Helvetica, Arial, Sans-Serif')
             .text(function(d) { return d.name; })
-            .style("fill-opacity", 1)
+            .style('fill-opacity', 1)
             .call(wrap, TEXT_MAX_WIDTH);
     } else {
-        nodeEnter.append("text")
-            .attr("y", 25)
-            .attr("x", NODE_WIDTH/2)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "middle")
+        nodeEnter.append('text')
+            .attr('y', 25)
+            .attr('x', NODE_WIDTH/2)
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'middle')
             .attr('font-family', 'Helvetica, Arial, Sans-Serif')
             .text(function(d) { return d.name; })
-            .style("fill-opacity", 1)
+            .style('fill-opacity', 1)
             .call(wrap, TEXT_MAX_WIDTH);
     }
 
     //Add links between nodes
-    var link = gTree.selectAll("line.link").remove();
-    link = gTree.selectAll("line.link")
+    var link = gTree.selectAll('line.link').remove();
+    link = gTree.selectAll('line.link')
         .data(links, function(d) { return d.target.id; });
 
     //Set the position for the links
     if(treeView == 'vertical'){
         link.enter().insert('line', 'g')
-            .attr("class", "link")
-            .attr("x1", function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-            .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-            .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-            .attr("y2", function(d) { return d.target.y + 0; })
-            .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
-            .attr("marker-start", "url(#ArrowMarker)");
+            .attr('class', 'link')
+            .attr('x1', function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+            .attr('y1', function(d) { return d.source.y + NODE_HEIGHT; })
+            .attr('x2', function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+            .attr('y2', function(d) { return d.target.y + 0; })
+            .attr('style', 'stroke:rgb(0,0,0);stroke-width:2')
+            .attr('marker-start', 'url(#ArrowMarker)');
     } else {
         link.enter().insert('line', 'g')
-            .attr("class", "link")
-            .attr("y1", function(d) { return d.source.x + NODE_HEIGHT/2; })
-            .attr("x1", function(d) { return d.source.y + NODE_WIDTH;})
-            .attr("y2", function(d) { return d.target.x + NODE_HEIGHT/2; })
-            .attr("x2", function(d) { return d.target.y; })
-            .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
-            .attr("marker-start", "url(#ArrowMarker)");
+            .attr('class', 'link')
+            .attr('y1', function(d) { return d.source.x + NODE_HEIGHT/2; })
+            .attr('x1', function(d) { return d.source.y + NODE_WIDTH;})
+            .attr('y2', function(d) { return d.target.x + NODE_HEIGHT/2; })
+            .attr('x2', function(d) { return d.target.y; })
+            .attr('style', 'stroke:rgb(0,0,0);stroke-width:2')
+            .attr('marker-start', 'url(#ArrowMarker)');
     }
 
     //Called during mouseevent, updates position for selected nodes and links
     function tick() {
         if(treeView == 'vertical') {
-            link.attr("x1", function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
-                .attr("y1", function(d) { return d.source.y + NODE_HEIGHT; })
-                .attr("x2", function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
-                .attr("y2", function(d) { return d.target.y; });
+            link.attr('x1', function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
+                .attr('y1', function(d) { return d.source.y + NODE_HEIGHT; })
+                .attr('x2', function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
+                .attr('y2', function(d) { return d.target.y; });
 
 
-            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            node.attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; });
         } else {
-            link.attr("y1", function(d) { return d.source.x + NODE_HEIGHT/2; })
-                .attr("x1", function(d) { return d.source.y + NODE_WIDTH;})
-                .attr("y2", function(d) { return d.target.x + NODE_HEIGHT/2; })
-                .attr("x2", function(d) { return d.target.y; });
+            link.attr('y1', function(d) { return d.source.x + NODE_HEIGHT/2; })
+                .attr('x1', function(d) { return d.source.y + NODE_WIDTH;})
+                .attr('y2', function(d) { return d.target.x + NODE_HEIGHT/2; })
+                .attr('x2', function(d) { return d.target.y; });
 
 
-            node.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+            node.attr('transform', function(d) { return 'translate(' + d.y + ',' + d.x + ')'; });
         }
 
     }
 
     //Sets behaviour for when the the mouse starts to drag
-    function dragstarted() {
+    function dragstarted(d) {
+        d.moved = true;
         d3.event.sourceEvent.stopPropagation();
-        d3.select(this).classed("dragging", true);
+        d3.select(this).classed('dragging', true);
     }
 
     /**
@@ -402,20 +424,20 @@ d3Chart._drawTree = function() {
      * positioned
      */
     function dragmove(d) {
-        var selection = d3.selectAll(".selected");
+        var selection = d3.selectAll('.selected');
         if (!selection.empty()) {
             if(treeView == 'vertical'){
-                selection.attr("transform", function (d) {
+                selection.attr('transform', function (d) {
                     d.x += d3.event.dx;
                     d.y += d3.event.dy;
-                    return "translate(" + [d.x, d.y] + ")"
+                    return 'translate(' + [d.x, d.y] + ')'
                 });
             }
             else {
-                selection.attr("transform", function (d) {
+                selection.attr('transform', function (d) {
                     d.x += d3.event.dy;
                     d.y += d3.event.dx ;
-                    return "translate(" + [d.x, d.y] + ")"
+                    return 'translate(' + [d.x, d.y] + ')'
                 });
             }
         }
@@ -433,7 +455,7 @@ d3Chart._drawTree = function() {
     }
 
     function dragended() {
-        d3.select(this).classed("dragging", false);
+        d3.select(this).classed('dragging', false);
     }
 
     function wrap(text, width) {
@@ -444,23 +466,23 @@ d3Chart._drawTree = function() {
                 line = [],
                 lineNumber = 0,
                 lineHeight = 1.1, // ems
-                x = text.attr("x"),
-                y = text.attr("y"),
-                dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+                x = text.attr('x'),
+                y = text.attr('y'),
+                dy = parseFloat(text.attr('dy')),
+                tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
             while (word = words.pop()) {
                 line.push(word);
-                tspan.text(line.join(" "));
+                tspan.text(line.join(' '));
                 if (tspan.node().getComputedTextLength() > width) {
                     line.pop();
-                    tspan.text(line.join(" "));
+                    tspan.text(line.join(' '));
                     line = [word];
-                    tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                    tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
                 }
             }
             // If the text is 2 rows or more, increase the width of the rect
             if(lineNumber > 0){
-                d3.select(this.parentNode).selectAll("rect.node").attr("height", NODE_HEIGHT + lineNumber*15);
+                d3.select(this.parentNode).selectAll('rect.node').attr('height', NODE_HEIGHT + lineNumber*15);
             }
         });
     }

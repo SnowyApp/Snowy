@@ -12,7 +12,7 @@ var fakeUser = {
 /**
  * Component that displays favorite terms in a table
  */
-module.exports = React.createClass({
+var FavoriteTerms = React.createClass({
     propTypes: {
         url:                React.PropTypes.string,
         dict:               React.PropTypes.object,
@@ -262,6 +262,6 @@ module.exports = React.createClass({
         );
     }
 });
-
+module.exports = FavoriteTerms;
 
 

@@ -1,5 +1,8 @@
 import cookie from 'react-cookie';
 
+/**
+ * Logout modal component
+ */
 var LogOut = React.createClass({
     dict: {
         se: {
@@ -17,7 +20,7 @@ var LogOut = React.createClass({
     },
 
     propTypes:{
-        hideLogout: React.PropTypes.func,
+        showLogout: React.PropTypes.func,
         show: React.PropTypes.bool
     },
     getInitialState: function(){
@@ -29,15 +32,22 @@ var LogOut = React.createClass({
             showModal: false
         });
     },
+    /**
+     * Closes the Logout Modal
+     */
     close: function() {
         this.setState({ showModal: false });
-        this.props.hideLogout();
+        this.props.showLogout(false);
     },
-
+    /**
+     * Shows the Logout Modal
+     */
     open: function() {
         this.setState({ showModal: true });
     },
-
+    /**
+     * Logs a user out from the server, using the token saved in userId
+     */
     logOut: function() {
         if (cookie.load('userId') != null) {
             $.ajax({
@@ -46,10 +56,10 @@ var LogOut = React.createClass({
                 headers: {
                     "Authorization": cookie.load("userId")
                 },
-                success: function (data) {
+                success: function () {
                     this.props.onLogout();
                 }.bind(this),
-                error: function (textStatus, errorThrown) {
+                error: function () {
                     this.props.onLogout();
                 }.bind(this),
                 contentType: "application/json",

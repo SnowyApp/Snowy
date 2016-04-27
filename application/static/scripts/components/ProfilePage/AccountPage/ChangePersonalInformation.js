@@ -12,7 +12,7 @@ var fakeUser = {
 /**
  * Form that allows the user to change username and email
  */
-module.exports = React.createClass({
+var ChangePersonalInformation = React.createClass({
     propTypes: {
         url:        React.PropTypes.string,
         dict:       React.PropTypes.object,
@@ -268,3 +268,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = ChangePersonalInformation;

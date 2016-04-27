@@ -1,12 +1,6 @@
 import PageClick from 'react-page-click';
 import cookie from 'react-cookie';
 
-module.exports = React.createClass({
-    render: function() {
-        return <Search url = {this.props.url} update = {this.props.update} language={this.props.language}/>;
-    }
-});
-
 /**
  * Handles user input
  */
@@ -264,4 +258,4 @@ var Search = React.createClass({
         );
     }
 });
-
+module.exports = Search;

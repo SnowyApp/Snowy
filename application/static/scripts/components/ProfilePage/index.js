@@ -111,7 +111,7 @@ var dummyDiagrams =
 /**
  * Profile page component
  */
-module.exports = React.createClass({
+var ProfilePage = React.createClass({
     propTypes: {
         openTerm:       React.PropTypes.func,
         openDiagram:    React.PropTypes.func,
@@ -307,7 +307,7 @@ module.exports = React.createClass({
         );
     }
 });
-
+module.exports = ProfilePage;
 
 
 

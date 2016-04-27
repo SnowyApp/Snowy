@@ -11,7 +11,7 @@ var fakeUser = {
 /**
  * Tab navigation for profile page
  */
-module.exports = React.createClass({
+var NavBar = React.createClass({
     propTypes: {
         dict:               React.PropTypes.object,
         language:           React.PropTypes.string,
@@ -46,3 +46,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = NavBar;
