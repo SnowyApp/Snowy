@@ -1,15 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-
-//Temporary fake user
-var fakeUser = {
-    id: 1337,
-    username: "Arnold",
-    email: "arnold@schwarzenegger.com",
-    language: "eng"
-}
-
 /**
  * Diagram element in favorite diagrams table
  */
