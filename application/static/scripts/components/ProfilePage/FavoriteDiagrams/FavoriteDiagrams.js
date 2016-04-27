@@ -2,16 +2,7 @@ import cookie from 'react-cookie';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-
 var DiagramElement = require('./DiagramElement');
-
-//Temporary fake user
-var fakeUser = {
-    id: 1337,
-    username: "Arnold",
-    email: "arnold@schwarzenegger.com",
-    language: "eng"
-}
 
 /**
  * Component that displays favorite diagrams in a table

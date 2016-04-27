@@ -15,76 +15,82 @@ var contextMenu = require('./d3-context-menu');
  * Most of the actions looks at the children of the current nodes parent
  * and moves them to another list called _children that will not be drawn
  */
+d3Chart._createMenuData = function(element) {
+    return  [
+        {
+            title: 'Remove Node',
+            action: function(elm, d) {
+                if (d.parent && d.parent.children !== undefined) {
 
-var menuData = [
-    {
-        title: 'Remove Node',
-        action: function(elm, d) {
-            if (d.parent && d.parent.children !== undefined) {
+                    // find child and remove it
+                    for (var i = 0; i < d.parent.children.length; i++) {
+                        if (d.parent.children[i].name === d.name) {
+                            d.parent.children.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                d3Chart._drawTree(element, d);
+            }
+        },
+        {
+            title: 'Hide/show children',
+            action: function(elm, d){
+                
+                //If the node have children, put them in another list
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                } 
+                
+                //Take the children back
+                else {
+                    d.children = d._children;
+                    d._children = null;
+                }
 
-                // find child and remove it
-                for (var i = 0; i < d.parent.children.length; i++) {
-                    if (d.parent.children[i].name === d.name) {
-                        d.parent.children.splice(i, 1);
-                        break;
+                d3Chart._drawTree(element, d);
+            }
+        },
+        {
+            title: 'Hide Siblings',
+            action: function(elm, d){
+                if(d.parent != "null") {
+                    var tempChild = [];
+                    tempChild.push(d);
+                    d.parent._children = d.parent.children;
+                    d.parent.children = tempChild;
+                    d3Chart._drawTree(element, d);
+                }
+            }
+        },
+        {
+            title: 'Show siblings',
+            action: function(elm, d){
+                if(d.parent != "null" && d.parent._children){
+                    d.parent.children = d.parent._children;
+                    d.parent._children = null;
+                    d3Chart._drawTree(element, d);
+                }
+            }
+        },
+        {
+            title: 'Reset node position',
+            action: function(elm, d){
+                if(d.moved != undefined){
+                    if(d.moved) {
+                        d.x = d.x0;
+                        d.y = d.y0;
+                        d.moved = false;
+                        d3Chart._drawTree(element, d);
                     }
                 }
             }
-            d3Chart._drawTree(d);
         }
-    },
-    {
-        title: 'Hide/show children',
-        action: function(elm, d){
-            //If the node have children, put them in another list
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            }
-            //Take the children back
-            else {
-                d.children = d._children;
-                d._children = null;
-            }
-            d3Chart._drawTree(d);
-        }
-    },
-    {
-        title: 'Hide Siblings',
-        action: function(elm, d){
-            if(d.parent != 'null') {
-                var tempChild = [];
-                tempChild.push(d);
-                d.parent._children = d.parent.children;
-                d.parent.children = tempChild;
-                d3Chart._drawTree(d);
-            }
-        }
-    },
-    {
-        title: 'Show siblings',
-        action: function(elm, d){
-            if(d.parent != 'null' && d.parent._children){
-                d.parent.children = d.parent._children;
-                d.parent._children = null;
-                d3Chart._drawTree(d);
-            }
-        }
-    },
-    {
-        title: 'Reset node position',
-        action: function(elm, d){
-            if(d.moved != undefined){
-                if(d.moved) {
-                    d.x = d.x0;
-                    d.y = d.y0;
-                    d.moved = false;
-                    d3Chart._drawTree(d);
-                }
-            }
-        }
-    }
-];
+
+        ];
+
+};  
 
 var i = 0;
 var tree,root,treeView,svg,g,onClick,zoom;
@@ -181,7 +187,7 @@ d3Chart.reset = function(element, state) {
 d3Chart.update = function(element, state) {
     if (state){
         root = state.data[0];
-        this._drawTree(root);
+        this._drawTree(element, root);
     }
 };
 
@@ -199,14 +205,13 @@ d3Chart.getId = function() {
 /**
  * Sets the transform attribute of the g-element
  */
-
-d3Chart._resetZoom = function(){
+d3Chart._resetZoom = function(element){
     if(treeView == 'vertical'){
-        d3.select('body').selectAll('.nodes')
+        d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1
          + ')');
     } else {
-        d3.select('body').selectAll('.nodes')
+        d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')');
     }
     zoom.scale(1);  //Keeps the scaling after pressing reset
@@ -216,12 +221,12 @@ d3Chart._resetZoom = function(){
 /**
  * This functions adds the nodes and the lines between the nodes
  */
-d3Chart._drawTree = function() {
+d3Chart._drawTree = function(element, data) {
     if(!root){
         return null;
     }
 
-    var gTree = d3.select('body').selectAll('.nodes');
+    var gTree = d3.select(element).selectAll('.nodes');
 
     //This creates the 'is-a' arrow as a svg marker.
     gTree.append('svg:defs').selectAll('marker')
@@ -297,7 +302,7 @@ d3Chart._drawTree = function() {
             });
         }
         //When right clicking on a node call the contextMenu function
-        nodeEnter.on('contextmenu', d3.contextMenu(menuData))
+        nodeEnter.on('contextmenu', d3.contextMenu(this._createMenuData(element)))
         .call(drag)
         .on('mouseover', function(){
             d3.select(this).selectAll('rect.node').style( 'fill', '#ebebeb');
