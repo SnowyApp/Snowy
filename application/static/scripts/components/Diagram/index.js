@@ -123,7 +123,7 @@ var Diagram = React.createClass({
     },
 
     resetZoom: function(){
-        diagram.resetZoom(this._d3);
+        diagram._resetZoom(this._d3);
     },
 
     getDiagramState: function() {
