@@ -123,5 +123,17 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data['full'], "Antibody to Encephalitozoon cuniculi (substance)")
         self.assertEqual(resp_data['synonym'], "Anti-Encephalitozoon cuniculi antibody")
 
+    def test_children(self):
+        resp = self.app.get('/get_children/11950008')
+        self.assertEqual(resp.status_code, 200)
+
+        resp_data = json.loads(resp.data.decode("utf-8"))
+        self.assertEqual(len(resp_data), 5)
+        self.assertEqual(resp_data[0]['id'], 420412004)
+        self.assertEqual(resp_data[0]['synonym'], "Pseudoacanthocephalidae")
+        self.assertEqual(resp_data[0]['type_name'], "IS A")
+        self.assertEqual(resp_data[0]['type_id'], 116680003)
+        self.assertEqual(resp_data[0]['full'], "")
+
 if __name__ == "__main__":
     unittest.main()
