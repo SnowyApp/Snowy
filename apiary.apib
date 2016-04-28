@@ -303,6 +303,32 @@ Simple API for allowing accessing snowy data.
                 }
             ]
 
+## Names [/get_names/{id}]
+
++ Response 200 (application/json)
+
+    + Body
+
+        [
+            {
+                'name': 'Primary malignant neoplasm of lung (disorder)',
+                'type': 'full',
+                'acceptabillity': 'preferred'
+            },
+            {
+                'name': 'Primary malignant neoplasm of lung',
+                'type': 'synonym',
+                'acceptabillity': 'preferred'
+            },
+            {
+                'name': 'Lung cancer',
+                'type': 'synonym',
+                'acceptabillity': 'acceptable'
+            }
+        ]
+
+               
+
 ## Relationships [/get_relations/{id}]
 
 ### Retriving relationships [GET]
