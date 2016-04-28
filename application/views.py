@@ -193,7 +193,11 @@ def favorite_term():
         else:
             abort(500)
     else:
-        return json.dumps(g.user.get_favorite_terms())
+        res = g.user.get_favorite_terms()
+        if res:
+            return json.dumps(res)
+        else:
+            abort(500)
 
 
 @app.route('/concept/<int:cid>', methods=['POST', 'GET'])
