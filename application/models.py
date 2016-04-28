@@ -95,7 +95,7 @@ class User():
         """ Checks if the password matches the stored hash """
         return check_password_hash(self.password_hash, plain_pass)
 
-    def generate_token(self,expiration=1024):
+    def generate_token(self,expiration=5184000):
         """
         Generates a token for the user.
         """
