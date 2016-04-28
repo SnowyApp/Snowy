@@ -229,7 +229,11 @@ def get_relations(cid):
     """
     Returns the relations for the given id.
     """
-    return json.dumps([concept.to_json() for concept in Concept.get_relations(cid)])
+    relations = Concept.get_relations(cid)
+    if not relations:
+        abort(500)
+
+    return json.dumps([concept.to_json() for concept in relations])
 
 
 @app.route('/get_parents/<int:cid>', methods=['GET'])
