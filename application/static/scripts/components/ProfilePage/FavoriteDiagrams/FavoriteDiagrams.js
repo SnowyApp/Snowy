@@ -12,7 +12,6 @@ var FavoriteDiagrams = React.createClass({
         url:                React.PropTypes.string,
         dict:               React.PropTypes.object,
         language:           React.PropTypes.string,
-        diagrams:           React.PropTypes.array,
         openDiagram:        React.PropTypes.func,
         removeid:           React.PropTypes.func,
         nameSort:           React.PropTypes.func,
@@ -46,7 +45,7 @@ var FavoriteDiagrams = React.createClass({
     },
 
     componentDidMount: function(){
-        this.saveDiagram();
+        //this.saveDiagram(); //TODO: Only for testing, remove later
         this.getFavoriteDiagrams();
         this.setState({
             diagrams: this.props.dateSort(this.state.diagrams, false),
@@ -149,9 +148,19 @@ var FavoriteDiagrams = React.createClass({
                 },
                 success: function (data) {
                     console.log(data);
+                    var diagrams = [];
+                    for(var i = 0; i < data.length; i++){
+                        diagrams.push({
+                            id: data[i].id,
+                            name: data[i].name,
+                            created: new Date("March 3, 2016 12:53:26"), //TODO: Create Date from returned string
+                            modified: new Date("March 3, 2016 12:53:26"),
+                            data: data[i].data
+                        });
+                    }
                     this.setState({
-                        diagrams: data,
-                        filteredDiagrams: data
+                        diagrams: diagrams,
+                        filteredDiagrams: diagrams
                     });
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
@@ -172,9 +181,9 @@ var FavoriteDiagrams = React.createClass({
             hideTable = {}; //Show table
             diagramArray = this.state.filteredDiagrams.map(function(diagram){
                 //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
-                var day = ("0" + diagram.dateAdded.getDate()).slice(-2);
-                var month = ("0" + diagram.dateAdded.getMonth()).slice(-2);
-                var year = diagram.dateAdded.getUTCFullYear();
+                var day = ("0" + diagram.modified.getDate()).slice(-2);
+                var month = ("0" + diagram.modified.getMonth()).slice(-2);
+                var year = diagram.modified.getUTCFullYear();
                 
                 var dateString = year + "-" + month + "-" + day;
 
@@ -186,7 +195,7 @@ var FavoriteDiagrams = React.createClass({
                         language={this.props.language}
                         id={diagram.id}
                         date={dateString}
-                        parameters={diagram.parameters}
+                        data={diagram.data}
                         openDiagram={this.props.openDiagram}
                         removeDiagram={this.removeDiagram}
                     />

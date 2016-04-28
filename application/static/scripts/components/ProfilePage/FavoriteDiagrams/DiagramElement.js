@@ -12,7 +12,7 @@ var DiagramElement = React.createClass({
         language:           React.PropTypes.string,
         id:                 React.PropTypes.number,
         date:               React.PropTypes.string,
-        parameters:         React.PropTypes.object,
+        data:               React.PropTypes.object,
         openDiagram:        React.PropTypes.func,
         removeDiagram:      React.PropTypes.func
     },
@@ -91,17 +91,9 @@ var DiagramElement = React.createClass({
                                             <td>{this.props.date}</td>
                                         </tr>
                                         <tr>                                    
-                                            <td>Parameter 1:</td>
-                                            <td>{this.props.parameters.p1}</td>
-                                        </tr>
-                                        <tr>                                    
-                                            <td>Parameter 2:</td>
-                                            <td>{this.props.parameters.p2}</td>
-                                        </tr>      
-                                        <tr>                                    
-                                            <td>Parameter 3:</td>
-                                            <td>{this.props.parameters.p3}</td>
-                                        </tr>                                       
+                                            <td>Data:</td>
+                                            <td>{this.props.data}</td>
+                                        </tr>                                      
                                     </tbody>
                                 </table>
                             </div>
