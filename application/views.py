@@ -177,15 +177,21 @@ def favorite_term():
                 not 'term' in data or not isinstance(data['term'], str):
             return jsonify(message="The concepts data is not providid accurately"), 400
         
-        g.user.add_favorite_term(data['id'], data['term'])
-        return jsonify(status="ok")
+        res = g.user.add_favorite_term(data['id'], data['term'])
+        if res:
+            return jsonify(status="ok")
+        else:
+            abort(500)
     elif request.method == "DELETE":
         data = request.get_json()
         if not 'id' in data or not isinstance(data['id'], int): 
             return jsonify(message="'id' is missing")
 
-        g.user.delete_favorite_term(data['id'])
-        return jsonify(status="ok")
+        res = g.user.delete_favorite_term(data['id'])
+        if res:
+            return jsonify(status="ok")
+        else:
+            abort(500)
     else:
         return json.dumps(g.user.get_favorite_terms())
 

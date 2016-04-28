@@ -106,8 +106,10 @@ class User():
             cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (cid, self.email, term))
             get_db().commit()
             cur.close()
+            return True
         except Exception as e:
             print(e)
+            return False
 
     def delete_favorite_term(self, cid):
         """
@@ -118,8 +120,10 @@ class User():
             cur.execute(DELETE_FAVORITE_TERM_STATEMENT, (self.email, cid))
             get_db().commit()
             cur.close()
+            return True
         except Exception as e:
             print(e)
+            return False
 
     def get_favorite_terms(self):
         """
