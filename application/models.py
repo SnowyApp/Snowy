@@ -39,7 +39,12 @@ SELECT_PARENTS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.typ
                             JOIN language_refset C ON B.id=C.referenced_component_id 
                             JOIN concept D ON B.concept_id=D.id 
                             WHERE A.source_id=%s AND A.type_id=116680003 AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
-SELECT_RELATIONS_QUERY = """ select distinct b.concept_id, b.term, b.type_id, a.type_id, d.definition_status_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id join concept d on b.concept_id=d.id where a.source_id=%s and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
+SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id 
+                            FROM relationship A 
+                            JOIN description B ON A.destination_id=B.concept_id 
+                            JOIN language_refset C ON B.id=C.referenced_component_id 
+                            JOIN concept D ON B.concept_id=D.id 
+                            WHERE a.source_id=%s AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
 
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, user_email) VALUES (%s, %s, %s, %s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s WHERE user_email=%s AND id=%s"
