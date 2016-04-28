@@ -82,6 +82,10 @@ caption.parentsTable {
     font-size: 20px;
 }
 
+tr.parentsTable:hover {
+    cursor: pointer;
+}
+
 .parentsTable#parent_name {
     width: 78%;
 }

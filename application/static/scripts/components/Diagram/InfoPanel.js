@@ -8,7 +8,8 @@ var InfoPanel = React.createClass({
         hidePanel:      React.PropTypes.func,
         data:           React.PropTypes.array,
         language:       React.PropTypes.string,
-        url:            React.PropTypes.string
+        url:            React.PropTypes.string,
+        update:         React.PropTypes.func
     },
     //Dict with supported languages
     dict: {
@@ -71,7 +72,7 @@ var InfoPanel = React.createClass({
             //Create table rows for all parents
             var parentArray = this.state.parents.map(function(parent){
                 return (
-                    <tr key={parent.id}>
+                    <tr className="parentsTable" key={parent.id} onClick={this.props.update.bind(null,parent.id)}>
                         <td>
                             {parent.name}
                         </td>
@@ -80,20 +81,22 @@ var InfoPanel = React.createClass({
                         </td>
                     </tr>
                 );
-            });
+            }, this);
         } else {
             showParents = {display: "none"};
         }
+        //Get name only if defined
+        const termName = (this.props.data.length > 0 ? this.props.data[0].name : "");
         return (
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
-                    {this.dict[this.props.language]["termInfo"]}
+                    {termName}
                     <button onClick={this.props.hidePanel} className="close closeInfoButton" type="button" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div className="panel-body">
-                    <table style={showParents} className="table table-condensed">
+                    <table style={showParents} className="table table-condensed table-hover parentsTable">
                         <caption className="parentsTable">{this.dict[this.props.language]["parents"]}</caption>
                         <thead>
                             <tr>
