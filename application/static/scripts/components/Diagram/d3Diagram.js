@@ -135,6 +135,7 @@ const HORIZONTAL_MARGIN = 300; //Moves the horizontal view down in the y-axis
 d3Chart.create = function(element, props, state) {
     if(!state){return;}
 
+    lang = state.language;
     root = state.data[0];
     treeView = state.view;
     onClick = props.onClick;
@@ -205,6 +206,7 @@ d3Chart.reset = function(element, state) {
  */
 d3Chart.update = function(element, state) {
     if (state){
+        lang = state.language;
         root = state.data[0];
         this._drawTree(element, root);
     }
