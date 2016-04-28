@@ -69,7 +69,7 @@ def create_user():
     if user is None:
         abort(500)
     else:
-        return jsonify({'status': "ok", "data": user.to_json()}), 201
+        return jsonify(user.to_json()), 201
 
 
 @app.route('/login', methods=['POST'])
