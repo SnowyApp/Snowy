@@ -43,7 +43,7 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.term
 
 GET_CONCEPT_PROCEDURE = "get_concept"
 
-INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, created, user_email) VALUES (%s, %s, %s, %s) RETURNING id"
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, user_email) VALUES (%s, %s, %s, %s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
@@ -192,7 +192,7 @@ class User():
             if did:
                 cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, name, date, self.email, did))
             else:
-                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, date, self.email))
+                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, date, date, self.email))
                 new_id = cur.fetchone()[0]
             get_db().commit()
             cur.close()
@@ -210,7 +210,7 @@ class User():
             result = []
             cur.execute(SELECT_DIAGRAM_QUERY, (self.email,))
             for data in cur:
-                result += [{"id": data[0], "data": data[1], 'name': data[2], 'created': str(data[3]), 'modified': str(data[4])}]
+                result += [{"id": data[0], "data": data[1], 'name': data[2], 'created': data[3], 'modified': data[4]}]
             cur.close()
             return result
         except Exception as e:

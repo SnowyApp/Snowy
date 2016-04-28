@@ -263,7 +263,7 @@ def store_diagram():
             not 'id' in data or not isinstance(data['id'], int):
             return jsonify(message="data, name or id not provided"), 400
 
-        g.user.store_diagram(data['data'], data['name'], data['created'], data['id'])
+        g.user.store_diagram(data['data'], data['name'], data['modified'], data['id'])
         return jsonify(status="ok")
     elif request.method == "DELETE":
         data = request.get_json()
