@@ -122,6 +122,7 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data['id'], 709886006)
         self.assertEqual(resp_data['full'], "Antibody to Encephalitozoon cuniculi (substance)")
         self.assertEqual(resp_data['synonym'], "Anti-Encephalitozoon cuniculi antibody")
+        self.assertEqual(resp_data['definition_status'], "primitive")
 
     def test_children(self):
         resp = self.app.get('/get_children/11950008')
@@ -134,6 +135,7 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]['type_name'], "IS A")
         self.assertEqual(resp_data[0]['type_id'], 116680003)
         self.assertEqual(resp_data[0]['full'], "Family Pseudoacanthocephalidae (organism)")
+        self.assertEqual(resp_data[0]['definition_status'], "primitive")
 
 
     def test_get_parents(self):
@@ -147,6 +149,7 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]['type_name'], "IS A")
         self.assertEqual(resp_data[0]['full'], "Procedure (procedure)")
         self.assertEqual(resp_data[0]['id'], 71388002)
+        self.assertEqual(resp_data[0]['definition_status'], "primitive")
 
 
     def test_diagram(self):

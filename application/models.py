@@ -28,11 +28,9 @@ DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s 
 INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term, date_added) VALUES (%s, %s, %s, %s);"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
-SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
-SELECT_PARENTS_QUERY = """select distinct b.concept_id, b.term, b.type_id, a.type_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id where a.source_id=%s and a.type_id=116680003 and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
-SELECT_RELATIONS_QUERY = """select distinct b.concept_id, b.term, b.type_id, a.type_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id where a.source_id=%s and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
-
-GET_CONCEPT_PROCEDURE = "get_concept"
+SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id, D.definition_status_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id JOIN concept D ON A.concept_id=D.id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
+SELECT_PARENTS_QUERY = """ select distinct b.concept_id, b.term, b.type_id, a.type_id, d.definition_status_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id join concept d on b.concept_id=d.id where a.source_id=442006003 and a.type_id=116680003 and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
+SELECT_RELATIONS_QUERY = """ select distinct b.concept_id, b.term, b.type_id, a.type_id, d.definition_status_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id join concept d on b.concept_id=d.id where a.source_id=442006003 and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
 
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, user_email) VALUES (%s, %s, %s, %s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s WHERE user_email=%s AND id=%s"
@@ -337,12 +335,13 @@ class Concept():
     Represents a concept in the Snomed CT database
     """
     
-    def __init__(self, cid, syn_term = "", full_term = "", type_id = None):
+    def __init__(self, cid, syn_term = "", full_term = "", type_id = 0):
         self.id = cid
         self.syn_term = syn_term
         self.full_term = full_term
         self.type_id = type_id
-        if type_id is not None:
+        self.definition_status_id = 0
+        if type_id:
             self.type_name = Concept.get_attribute(self.type_id)
         else:
             self.type_name = ""
@@ -369,10 +368,12 @@ class Concept():
                 if concept is None:
                     concept = Concept(data[0])
                     concept.set_type_id(data[3])
+                    concept.definition_status_id = data[4]
                 elif concept.id != data[0]:
                     result += [concept]
                     concept = Concept(data[0])
                     concept.set_type_id(data[3])
+                    concept.definition_status_id = data[4]
 
                 # Set the right term
                 if data[2] == 900000000000003001:
@@ -420,7 +421,9 @@ class Concept():
             if not data:
                 return None
             else:
-                return Concept(data[0], data[2], data[1])
+                concept = Concept(data[0], data[2], data[1])
+                concept.definition_status_id = data[3]
+                return concept
 
         except Exception as e:
             print(e)
@@ -437,21 +440,25 @@ class Concept():
         else:
             return "UNDEFINED (PROBABLE ERROR SERVER SIDE)"
 
+    def get_definition_status(self):
+        return "primitive" if self.definition_status_id==900000000000074008 else "fully-defined"
 
     def to_json(self):
         """
         Returns a JSON representation of the concept.
         """
-        if self.type_id is None:
+        if not self.type_name:
             return {"id": self.id,
                     "synonym": self.syn_term,
-                    "full": self.full_term}
+                    "full": self.full_term,
+                    "definition_status": self.get_definition_status()}
         else:
             return {"id": self.id,
                     "synonym": self.syn_term,
                     "full": self.full_term,
                     "type_id": self.type_id,
-                    "type_name": self.type_name}
+                    "type_name": self.type_name,
+                    "definition_status": self.get_definition_status()}
 
     def __str__(self):
         """
