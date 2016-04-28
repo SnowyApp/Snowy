@@ -119,8 +119,8 @@ const NODE_WIDTH = 250;
 const NODE_MARGIN = 10;
 const NODE_HEIGHT = 50;
 const WIDTH_MARGIN = 500;
-
 const HORIZONTAL_MARGIN = 300; //Moves the horizontal view down in the y-axis
+const LINE_MARGIN = 15;
 
 /**
  * Called on initial render and whenever view is changed. Adds an svg-
@@ -257,9 +257,9 @@ d3Chart._drawTree = function(element, data) {
         .attr('viewBox', '0 0 22 20')
         .attr('refX', 0)
         .attr('refY', 10)
-        .attr('markerWidth', 6)
+        .attrT('markerWidth', 6)
         .attr('markerHeight', 6)
-        .attr('markerUnits', 'strokeWidth')
+        .attr('TmarkerUnits', 'strokeWidth')
         .attr('orient', 'auto')
         .attr('stroke-width', '2')
         .attr('stroke', 'black')
@@ -402,9 +402,9 @@ d3Chart._drawTree = function(element, data) {
     if(treeView == 'vertical'){
         link.enter().insert('line', 'g')
             .attr('class', 'link')
-            .attr('x1', function(d) { return d.source.x + NODE_WIDTH/2+WIDTH_MARGIN; })
-            .attr('y1', function(d) { return d.source.y + NODE_HEIGHT; })
-            .attr('x2', function(d) { return d.target.x + NODE_WIDTH/2+WIDTH_MARGIN; })
+            .attr('x1', function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
+            .attr('y1', function(d) { return d.source.y + NODE_HEIGHT + d.source.lineNumber*LINE_MARGIN; })
+            .attr('x2', function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
             .attr('y2', function(d) { return d.target.y + 0; })
             .attr('style', 'stroke:rgb(0,0,0);stroke-width:2')
             .attr('marker-start', 'url(#ArrowMarker)');
@@ -423,7 +423,7 @@ d3Chart._drawTree = function(element, data) {
     function tick() {
         if(treeView == 'vertical') {
             link.attr('x1', function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
-                .attr('y1', function(d) { return d.source.y + NODE_HEIGHT; })
+                .attr('y1', function(d) { return d.source.y + NODE_HEIGHT + d.source.lineNumber*LINE_MARGIN; })
                 .attr('x2', function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
                 .attr('y2', function(d) { return d.target.y; });
 
@@ -488,7 +488,7 @@ d3Chart._drawTree = function(element, data) {
     }
 
     function wrap(text, width) {
-        text.each(function() {
+        text.each(function(d) {
             var text = d3.select(this),
                 words = text.text().split(/\s+/).reverse(),
                 word,
@@ -522,9 +522,11 @@ d3Chart._drawTree = function(element, data) {
                     tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
                 }
             }
+            // Save linenumber to move links
+            d.lineNumber = lineNumber;
             // If the text is 2 rows or more, increase the width of the rect
             if(lineNumber > 0){
-                d3.select(this.parentNode).selectAll('rect.node').attr('height', NODE_HEIGHT + lineNumber*15);
+                d3.select(this.parentNode).select('rect.node').attr('height', NODE_HEIGHT + lineNumber*LINE_MARGIN);
             }
         });
     }
