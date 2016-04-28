@@ -137,6 +137,7 @@ var Diagram = React.createClass({
                         <InfoPanel
                             hidePanel={this.toggleInfoPanel}
                             data={this.state.data}
+                            language={this.props.language}
                         />
                     </div>
                 </Draggable>
