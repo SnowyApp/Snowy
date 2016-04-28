@@ -1,10 +1,9 @@
-from datetime import datetime
+import psycopg2
+
 from application import app
+from flask import g
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import g
-
-import psycopg2
 
 DB_NAME = app.config["DB_NAME"]
 DB_USER = app.config["DB_USER"]
