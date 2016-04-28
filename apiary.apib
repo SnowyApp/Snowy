@@ -113,7 +113,8 @@ Simple API for allowing accessing snowy data.
     + Body 
         
             {
-                "status": "ok"
+                "status": "ok",
+                "token": "token"
             }
 
 ### Get info [GET]
@@ -193,6 +194,12 @@ Simple API for allowing accessing snowy data.
     + Headers
 
             Authorization: token
+
+    + Body
+            {
+                "id": 123,
+                "term": "this is the name"
+            }
 
 + Response 200 (application/json)
 
