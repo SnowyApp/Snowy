@@ -6,8 +6,8 @@ from flask import g
 
 import psycopg2
 
-DB_NAME = "snomedct"
-DB_USER = "simon"
+DB_NAME = app.config["DB_NAME"]
+DB_USER = app.config["DB_USER"]
 
 # User management queries
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
