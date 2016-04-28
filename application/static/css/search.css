@@ -2,7 +2,7 @@
     display: block;
     background-color: white;
     z-index: 99;
-    position: absolute;
+    position: relative;
     width: 250px;
 }
 
@@ -24,4 +24,9 @@
 
 .react-bs-container-body{
     cursor: pointer;
+}
+
+#searchButton{
+    position:absolute;
+    margin: 5px 10px;
 }
