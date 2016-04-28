@@ -193,5 +193,27 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(len(resp_data), 0)
 
 
+    def test_password(self):
+        self.create_user()
+        response = self.login_user()
+        data = json.loads(response.data.decode('utf-8'))
+
+        # Change password
+        response = self.app.put("/password", data=json.dumps({"new_password": "emini215", "curr_password": "emini", "invalidate_tokens": True}), headers={'Authorization': data['token']}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        # The user should not be able to log in with the old password
+        response = self.login_user()
+        self.assertEqual(response.status_code, 400)
+
+        # The user should be able to log in with the new password
+        user_data = {"email": "simli746@student.liu.se", "password": "emini215"}
+        headers = {"content-type": "application/json"}
+        response = self.app.post('/login', data=json.dumps(user_data), headers=headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("token" in json.loads(response.data.decode("utf-8")))
+
+
 if __name__ == "__main__":
     unittest.main()

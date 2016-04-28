@@ -150,11 +150,15 @@ def update_password():
     Update the users password
     """
     data = request.get_json()
-    if not 'password' in data or not isinstance(data['password'], str) or \
+    if not 'new_password' in data or not isinstance(data['new_password'], str) or \
+        not 'curr_password' in data or not isinstance(data['curr_password'], str) or \
         not 'invalidate_tokens' in data or not isinstance(data['invalidate_tokens'], bool):
         return jsonify(message="Password or invalidate_tokens not provided")
 
-    res = g.user.update_password(data['password'])
+    if not g.user.check_password(data['curr_password']):
+        return jsonify(message="Wrong password")
+
+    res = g.user.update_password(data['new_password'])
     if res:
         if data['invalidate_tokens']:
             g.user.invalidate_tokens(request.headers.get('Authorization', None))
