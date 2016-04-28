@@ -60,11 +60,11 @@ def get_user_info():
     return json.loads(requests.get(url + "/user_info", headers=auth).text)
 
 def store_diagram():
-    data = {"data": "This is a test diagram", "name": "Simons diagram"}
+    data = {"data": "This is a test diagram", "name": "Simons diagram", "created": "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)"}
     return json.loads(requests.post(url + "/diagram", json=data, headers=auth).text)
 
 def update_diagram():
-    data = {"data": "This is an updated diagram", "name": "Simons updated diagram", "id": store_diagram()['id']}
+    data = {"data": "This is an updated diagram", "name": "Simons updated diagram", "id": store_diagram()['id'], "modified": "Thu Apr 28 2016 19:48:38 GMT+0200 (W. Europe Standard Time)"}
     return json.loads(requests.put(url + "/diagram", json=data, headers=auth).text)
 
 def delete_diagram(id):

@@ -133,11 +133,14 @@ def user_info():
             not 'email' in data or not isinstance(data['email'], str):
             return jsonify(message="Incomplete information"), 400
 
-        g.user.update_info(data['first_name'], data['last_name'], data['data_lang'], data['email'], data['site_lang'])
-        token = g.user.generate_token()
-        token = Token(token.decode('utf-8'), g.user.email)
-        token.store_token()
-        return jsonify(status="ok", token=token.token), 200
+        res = g.user.update_info(data['first_name'], data['last_name'], data['data_lang'], data['email'], data['site_lang'])
+        if res:
+            token = g.user.generate_token()
+            token = Token(token.decode('utf-8'), g.user.email)
+            token.store_token()
+            return jsonify(status="ok", token=token.token), 200
+        else:
+            abort(500)
 
 
 @app.route('/password', methods=['PUT'])
