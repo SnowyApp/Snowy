@@ -257,7 +257,7 @@ d3Chart._drawTree = function(element, data) {
         .attr('viewBox', '0 0 22 20')
         .attr('refX', 0)
         .attr('refY', 10)
-        .attrT('markerWidth', 6)
+        .attr('markerWidth', 6)
         .attr('markerHeight', 6)
         .attr('TmarkerUnits', 'strokeWidth')
         .attr('orient', 'auto')
