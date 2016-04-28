@@ -128,12 +128,12 @@ def user_info():
         data = request.get_json()
         if not 'first_name' in data or not isinstance(data['first_name'], str) or \
             not 'last_name' in data or not isinstance(data['last_name'], str) or \
-            not 'data_lang' in data or not isinstance(data['data_lang'], str) or \
+            not 'db_edition' in data or not isinstance(data['db_edition'], str) or \
             not 'site_lang' in data or not isinstance(data['site_lang'], str) or \
             not 'email' in data or not isinstance(data['email'], str):
             return jsonify(message="Incomplete information"), 400
 
-        res = g.user.update_info(data['first_name'], data['last_name'], data['data_lang'], data['email'], data['site_lang'])
+        res = g.user.update_info(data['first_name'], data['last_name'], data['db_edition'], data['email'], data['site_lang'])
         if res:
             token = g.user.generate_token()
             token = Token(token.decode('utf-8'), g.user.email)

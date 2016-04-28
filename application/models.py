@@ -10,8 +10,8 @@ DB_NAME = "snomedct"
 DB_USER = "simon"
 
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
-SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, data_lang, site_lang FROM usr WHERE email=%s;"
-UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, data_lang=%s, email=%s, site_lang=%s WHERE email=%s ;"
+SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, db_edition, site_lang FROM usr WHERE email=%s;"
+UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=%s, email=%s, site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
 SELECT_CONCEPT_QUERY = "SELECT concept_id, term, type_id FROM description WHERE concept_id=%s AND id IN (SELECT referenced_component_id FROM language_refset);"
@@ -69,12 +69,12 @@ class User():
     """
     A user of the browser.
     """
-    def __init__(self, email, password_hash, first_name = "", last_name = "", data_lang = "en", site_lang = "en"):
+    def __init__(self, email, password_hash, first_name = "", last_name = "", db_edition = "en", site_lang = "en"):
         self.email = email
         self.password_hash = password_hash
         self.first_name = first_name
         self.last_name = last_name
-        self.data_lang = data_lang
+        self.db_edition = db_edition
         self.site_lang = site_lang
 
     def check_password(self, plain_pass):
@@ -131,20 +131,20 @@ class User():
             print(e)
             return None
 
-    def update_info(self, first_name, last_name, data_lang, email, site_lang):
+    def update_info(self, first_name, last_name, db_edition, email, site_lang):
         """
         Update the first name, last name and language setting for the user.
         Returns True if the operation succeeded, False otherwise.
         """
         cur = get_db().cursor()
         try:
-            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, data_lang, email, site_lang,self.email))
+            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, db_edition, email, site_lang,self.email))
             get_db().commit()
             self.email = email
             self.first_name = first_name
             self.last_name = last_name
-            self.data_lang = data_lang
-            self.site_lang = data_lang
+            self.db_edition = db_edition
+            self.site_lang = db_edition
             cur.close()
             return True
         except Exception as e:
@@ -274,7 +274,7 @@ class User():
         return {"email": self.email,
                 "first_name": self.first_name,
                 "last_name": self.last_name,
-                "data_lang": self.data_lang,
+                "db_edition": self.db_edition,
                 "site_lang": self.site_lang}
 
 
