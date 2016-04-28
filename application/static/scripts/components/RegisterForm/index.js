@@ -196,7 +196,8 @@ var RegisterForm = React.createClass({
     */
     close() {
         this.setState({ showModal: false });
-        this.props.showRegistration(false)
+        this.props.showRegistration(false);
+        this.resetForm();
     },
 
    /**

@@ -50,6 +50,7 @@ var LoginForm = React.createClass({
     close: function() {
         this.setState({ showModal: false });
         this.props.showLogin(false);
+        this.resetForm();
     },
 
    /**
