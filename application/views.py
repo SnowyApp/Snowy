@@ -1,11 +1,11 @@
+import json
+
 from application import app, es
 from application.models import User,Token,Concept
-from datetime import datetime
 from flask import request, jsonify, abort, g
 from functools import wraps
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
-import json
 
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
