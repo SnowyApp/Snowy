@@ -134,7 +134,6 @@ var FavoriteTerms = React.createClass({
     getFavoriteTerms: function(){
         if (cookie.load('userId') != null) {
             $.ajax({
-                type: "GET",
                 method: "GET",
                 url: this.props.url + "/favorite_term",
                 headers: {
