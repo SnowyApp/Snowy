@@ -28,9 +28,18 @@ DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s 
 INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term, date_added) VALUES (%s, %s, %s, %s);"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
-SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id, D.definition_status_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id JOIN concept D ON A.concept_id=D.id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
-SELECT_PARENTS_QUERY = """ select distinct b.concept_id, b.term, b.type_id, a.type_id, d.definition_status_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id join concept d on b.concept_id=d.id where a.source_id=442006003 and a.type_id=116680003 and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
-SELECT_RELATIONS_QUERY = """ select distinct b.concept_id, b.term, b.type_id, a.type_id, d.definition_status_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id join concept d on b.concept_id=d.id where a.source_id=442006003 and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
+SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id, D.definition_status_id 
+                            FROM relationship B JOIN description A ON B.source_id=A.concept_id 
+                            JOIN language_refset C on A.id=C.referenced_component_id 
+                            JOIN concept D ON A.concept_id=D.id 
+                            WHERE B.destination_id=%s AND B.active=1 AND C.active=1 AND B.type_id=116680003 ORDER BY B.source_id;"""
+SELECT_PARENTS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id 
+                            FROM relationship A 
+                            JOIN description B ON A.destination_id=B.concept_id 
+                            JOIN language_refset C ON B.id=C.referenced_component_id 
+                            JOIN concept D ON B.concept_id=D.id 
+                            WHERE A.source_id=%s AND A.type_id=116680003 AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
+SELECT_RELATIONS_QUERY = """ select distinct b.concept_id, b.term, b.type_id, a.type_id, d.definition_status_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id join concept d on b.concept_id=d.id where a.source_id=%s and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
 
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, user_email) VALUES (%s, %s, %s, %s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s WHERE user_email=%s AND id=%s"
