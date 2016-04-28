@@ -223,8 +223,10 @@ class User():
             cur.execute(DELETE_DIAGRAM_STATEMENT, (cid, self.email))
             get_db().commit()
             cur.close()
+            return True
         except Exception as e:
             print(e)
+            return False
 
  
     @staticmethod
