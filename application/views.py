@@ -241,7 +241,11 @@ def get_parents(cid):
     """
     Returns the parents for the specified id.
     """
-    return json.dumps([concept.to_json() for concept in Concept.get_parents(cid)])
+    parents = Concept.get_parents(cid)
+    if not parents:
+        abort(500)
+
+    return json.dumps([concept.to_json() for concept in parents])
 
 
 
