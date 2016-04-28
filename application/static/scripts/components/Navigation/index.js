@@ -30,7 +30,7 @@ var Navigation = React.createClass({
      */
     updateState: function(data) {
         // do not try to use uninitialised data
-        if (data === undefined || data[0].children.length == 0)
+        if (data === undefined || data[0].children === undefined || data[0].children.length == 0)
             return;
 
         // update the state with the given data
