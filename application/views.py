@@ -55,7 +55,6 @@ def create_user():
     """
     # The provided data must contain password and email
     data = request.get_json()
-    print(data)
     if 'email' not in data or not isinstance(data['email'], str) \
             or 'password' not in data or not isinstance(data['password'], str):
         return jsonify(message="Email or password not provided"), 400
@@ -69,7 +68,7 @@ def create_user():
     if user is None:
         abort(500)
     else:
-        return jsonify({'status': "ok", "data": user.to_json()}), 201
+        return jsonify(user.to_json()), 201
 
 
 @app.route('/login', methods=['POST'])
