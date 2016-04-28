@@ -166,8 +166,10 @@ class User():
             cur.execute(UPDATE_PASSWORD_STATEMENT, (p_hash,self.email))
             get_db().commit()
             cur.close()
+            return True
         except Exception as e:
             print(e)
+            return False
 
 
     def invalidate_tokens(self,token):

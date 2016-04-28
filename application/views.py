@@ -154,11 +154,14 @@ def update_password():
         not 'invalidate_tokens' in data or not isinstance(data['invalidate_tokens'], bool):
         return jsonify(message="Password or invalidate_tokens not provided")
 
-    g.user.update_password(data['password'])
-    if data['invalidate_tokens']:
-        g.user.invalidate_tokens(request.headers.get('Authorization', None))
+    res = g.user.update_password(data['password'])
+    if res:
+        if data['invalidate_tokens']:
+            g.user.invalidate_tokens(request.headers.get('Authorization', None))
 
-    return jsonify(status="ok")
+        return jsonify(status="ok")
+    else:
+        abort(500)
 
 @app.route('/favorite_term', methods=['POST', 'GET', 'DELETE'])
 @login_required
