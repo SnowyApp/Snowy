@@ -25,7 +25,7 @@ INVALIDATE_TOKENS_STATEMENT = "DELETE FROM token WHERE token!=%s"
 
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s and concept_id=%s"
-INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term) VALUES (%s, %s, %s);"
+INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term, date_added) VALUES (%s, %s, %s, %s);"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
 SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
@@ -88,13 +88,13 @@ class User():
         s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'email': self.email, 'hash': self.password_hash})
 
-    def add_favorite_term(self, cid, term):
+    def add_favorite_term(self, cid, term, date_added):
         """
         Adds a favorite term for the user in the database.
         """
         cur = get_db().cursor()
         try:
-            cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (cid, self.email, term))
+            cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (cid, self.email, term, date_added))
             get_db().commit()
             cur.close()
             return True
@@ -125,7 +125,7 @@ class User():
             cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
             result = []
             for data in cur.fetchall():
-                result += [{"id": data[0], "favorite_date": str(data[2]), "term": data[3]}]
+                result += [{"id": data[0], "date_added": data[2], "term": data[3]}]
             return result
         except Exception as e:
             print(e)

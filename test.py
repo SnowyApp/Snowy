@@ -101,7 +101,7 @@ class TestApplication(unittest.TestCase):
         response = self.login_user()
         data = json.loads(response.data.decode('utf-8'))
 
-        req = {"id": 123, "term": "Term name"}
+        req = {"id": 123, "term": "Term name", "date_added": "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)"}
         response = self.app.post("/favorite_term", data=json.dumps(req), headers={'Authorization': data['token']}, content_type="application/json")
 
         self.assertEqual(response.status_code, 200)
@@ -111,7 +111,7 @@ class TestApplication(unittest.TestCase):
         resp_data = json.loads(response.data.decode("utf-8"))
         self.assertEqual(resp_data[0]['term'], req['term'])
         self.assertEqual(resp_data[0]['id'], req['id'])
-        self.assertTrue('favorite_date' in resp_data[0])
+        self.assertEqual(resp_data[0]['date_added'], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
 
 
     def test_concept(self):
