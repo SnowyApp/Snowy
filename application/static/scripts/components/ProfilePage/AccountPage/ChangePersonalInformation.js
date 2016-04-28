@@ -32,7 +32,6 @@ var ChangePersonalInformation = React.createClass({
         //Get current user data
         if (cookie.load('userId') != null) {
             $.ajax({
-                type: "GET",
                 method: "GET",
                 url: this.props.url + "/user_info",
                 headers: {
@@ -108,7 +107,6 @@ var ChangePersonalInformation = React.createClass({
         //TODO: REMOVE TEST
         if (cookie.load('userId') != null) {
             $.ajax({
-                type: "GET",
                 method: "GET",
                 url: this.props.url + "/user_info",
                 headers: {
