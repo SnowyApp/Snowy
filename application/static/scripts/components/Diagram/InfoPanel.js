@@ -31,17 +31,19 @@ var InfoPanel = React.createClass({
     },
 
     componentWillReceiveProps: function(nextProps){
-        //this.getParents(nextProps.data[0].concept_id);
-        console.log(nextProps);
+        this.props = nextProps;
+        this.getParents();
     },
 
-    getParents: function(id){
-        console.log("HEJ");
+    getParents: function(){
+        console.log("props.data:");
+        console.log(this.props.data);
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "GET",
-                url: this.props.url + "/get_parents/" + id,
+                url: this.props.url + "/get_parents/" + this.props.data[0].concept_id,
                 success: function (data) {
+                    console.log("API response");
                     console.log(data);
                     var parents = [];
                     for(var i = 0; i < data.length; i++){
