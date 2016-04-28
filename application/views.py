@@ -217,7 +217,11 @@ def get_children(cid):
     """
     Returns the children for the specified id.
     """
-    return json.dumps([concept.to_json() for concept in Concept.get_children(cid)])
+    children = Concept.get_children(cid)
+    if not children:
+        abort(500)
+
+    return json.dumps([concept.to_json() for concept in children])
 
 
 @app.route('/get_relations/<int:cid>', methods=['GET'])
