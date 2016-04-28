@@ -133,20 +133,20 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]['synonym'], "Pseudoacanthocephalidae")
         self.assertEqual(resp_data[0]['type_name'], "IS A")
         self.assertEqual(resp_data[0]['type_id'], 116680003)
-        self.assertEqual(resp_data[0]['full'], "")
+        self.assertEqual(resp_data[0]['full'], "Family Pseudoacanthocephalidae (organism)")
 
 
     def test_get_parents(self):
-        resp = self.app.get('/get_parents/11950008')
+        resp = self.app.get('/get_parents/442006003')
         self.assertEqual(resp.status_code, 200)
 
         resp_data = json.loads(resp.data.decode("utf-8"))
         self.assertEqual(len(resp_data), 1)
         self.assertEqual(resp_data[0]['type_id'], 116680003)
-        self.assertEqual(resp_data[0]['synonym'], "Phylum Acanthocephala (organism)")
+        self.assertEqual(resp_data[0]['synonym'], "Procedure")
         self.assertEqual(resp_data[0]['type_name'], "IS A")
-        self.assertEqual(resp_data[0]['full'], "")
-        self.assertEqual(resp_data[0]['id'], 387961004)
+        self.assertEqual(resp_data[0]['full'], "Procedure (procedure)")
+        self.assertEqual(resp_data[0]['id'], 71388002)
 
 
     def test_diagram(self):
@@ -154,7 +154,7 @@ class TestApplication(unittest.TestCase):
         response = self.login_user()
         data = json.loads(response.data.decode('utf-8'))
 
-        diagram = {"data": "This is a test diagram", "name": "Simons diagram"}
+        diagram = {"data": "This is a test diagram", "name": "Simons diagram", "created": "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)"}
         response = self.app.post("/diagram", data=json.dumps(diagram), headers={'Authorization': data['token']}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
         resp_data = json.loads(response.data.decode("utf-8"))
@@ -169,10 +169,10 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]["id"], diagram_id)
         self.assertEqual(resp_data[0]["data"], "This is a test diagram")
         self.assertEqual(resp_data[0]["name"], "Simons diagram")
-        self.assertTrue("created" in resp_data[0])
-        self.assertTrue("modified" in resp_data[0])
+        self.assertEqual(resp_data[0]["created"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
+        self.assertEqual(resp_data[0]["modified"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
 
-        diagram = {"data": "This is an updated test diagram", "name": "Simons updated diagram", "id": diagram_id}
+        diagram = {"data": "This is an updated test diagram", "name": "Simons updated diagram", "id": diagram_id, "modified": "Thu Apr 28 2016 19:48:38 GMT+0200 (W. Europe Standard Time)"}
         response = self.app.put("/diagram", data=json.dumps(diagram), headers={'Authorization': data['token']}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
@@ -182,8 +182,8 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]["id"], diagram_id)
         self.assertEqual(resp_data[0]["data"], "This is an updated test diagram")
         self.assertEqual(resp_data[0]["name"], "Simons updated diagram")
-        self.assertTrue("created" in resp_data[0])
-        self.assertTrue("modified" in resp_data[0])
+        self.assertEqual(resp_data[0]["created"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
+        self.assertEqual(resp_data[0]["modified"], "Thu Apr 28 2016 19:48:38 GMT+0200 (W. Europe Standard Time)")
 
         response = self.app.delete("/diagram", data=json.dumps({"id": diagram_id}), headers={'Authorization': data['token']}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
