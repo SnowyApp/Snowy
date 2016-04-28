@@ -9,25 +9,27 @@ import psycopg2
 DB_NAME = "snomedct"
 DB_USER = "simon"
 
+# User management queries
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
 SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, db_edition, site_lang FROM usr WHERE email=%s;"
 UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=%s, email=%s, site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
-SELECT_CONCEPT_QUERY = "SELECT concept_id, term, type_id FROM description WHERE concept_id=%s AND id IN (SELECT referenced_component_id FROM language_refset);"
+# Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
 
-
+# Token queries
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
 VALID_TOKEN_PROCEDURE = "is_valid_token"
 INVALIDATE_TOKENS_STATEMENT = "DELETE FROM token WHERE token!=%s"
 
+# Favorite term queries
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s and concept_id=%s"
 INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term, date_added) VALUES (%s, %s, %s, %s);"
 
-SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
+# Relations quries
 SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id, D.definition_status_id 
                             FROM relationship B JOIN description A ON B.source_id=A.concept_id 
                             JOIN language_refset C on A.id=C.referenced_component_id 
@@ -46,6 +48,7 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.t
                             JOIN concept D ON B.concept_id=D.id 
                             WHERE a.source_id=%s AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
 
+# Diagram queries
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, user_email) VALUES (%s, %s, %s, %s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
