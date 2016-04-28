@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import cookie from 'react-cookie';
 require('bootstrap');
 
+/*
+* Component to show information about selected concept
+*/
 var InfoPanel = React.createClass({
     propTypes: {
         hidePanel:      React.PropTypes.func,
@@ -34,7 +37,9 @@ var InfoPanel = React.createClass({
         //this.getParents(nextProps.data[0].concept_id);
         console.log(nextProps);
     },
-
+    /*
+    * Function to call API to get parents of selected concept
+    */
     getParents: function(id){
         console.log("HEJ");
         if (cookie.load('userId') != null) {
