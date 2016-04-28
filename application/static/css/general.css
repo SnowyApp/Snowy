@@ -40,7 +40,6 @@ section {
     height: 50px;
     line-height: 50px;
     border-bottom: 1px solid #bbb;
-    position:absolute;
 }
 
 .bar button {
@@ -64,7 +63,7 @@ section {
 
 #buttons {
     width: 40%;
-    float:left;
+    float:right;
     margin: 8px 0px 0px 0px;
 }
 #searchbar{
