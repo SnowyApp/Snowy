@@ -28,9 +28,8 @@ DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s 
 INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term) VALUES (%s, %s, %s);"
 
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
-SELECT_CHILDREN_QUERY = """SELECT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=a.concept_id WHERE B.destination_id=%s and b.active=1 and b.type_id=116680003;"""
-SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
-SELECT_PARENTS_QUERY = """SELECT DISTINCT B.destination_id, A.term, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.source_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.destination_id;"""
+SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
+SELECT_PARENTS_QUERY = """select distinct b.concept_id, b.term, b.type_id, a.type_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id where a.source_id=%s and a.type_id=116680003 and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
 SELECT_RELATIONS_QUERY = """SELECT B.destination_id, MIN(A.term), MIN(B.type_id) 
                                 FROM relationship B JOIN description A 
                                 ON B.destination_id=a.concept_id 
@@ -44,8 +43,8 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.term
 
 GET_CONCEPT_PROCEDURE = "get_concept"
 
-INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, user_email) VALUES (%s, %s, %s) RETURNING id"
-UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=NOW() WHERE user_email=%s AND id=%s"
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, created, user_email) VALUES (%s, %s, %s, %s) RETURNING id"
+UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
 
@@ -183,7 +182,7 @@ class User():
         except Exception as e:
             print(e)
 
-    def store_diagram(self, data, name, did = None):
+    def store_diagram(self, data, name, date, did = None):
         """
         Stores a diagram for the user.
         """
@@ -191,9 +190,9 @@ class User():
         try:
             new_id = None
             if did:
-                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, name, self.email, did))
+                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, name, date, self.email, did))
             else:
-                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, self.email))
+                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, date, self.email))
                 new_id = cur.fetchone()[0]
             get_db().commit()
             cur.close()
@@ -370,11 +369,11 @@ class Concept():
                 # Create a concept if needed
                 if concept is None:
                     concept = Concept(data[0])
-                    concept.set_type_id(data[2])
+                    concept.set_type_id(data[3])
                 elif concept.id != data[0]:
                     result += [concept]
                     concept = Concept(data[0])
-                    concept.set_type_id(data[2])
+                    concept.set_type_id(data[3])
 
                 # Set the right term
                 if data[2] == 900000000000003001:

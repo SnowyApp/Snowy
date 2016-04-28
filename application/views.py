@@ -249,19 +249,21 @@ def store_diagram():
     if request.method == "POST":
         data = request.get_json()
         if not 'data' in data or not isinstance(data['data'], str) or \
+            not 'created' in data or not isinstance(data['created'], str) or \
             not 'name' in data or not isinstance(data['name'], str):
             return jsonify(message="Data or name not provided"), 400
 
-        cid = g.user.store_diagram(data['data'], data['name'])
+        cid = g.user.store_diagram(data['data'], data['name'], data['created'])
         return jsonify(id=cid)
     elif request.method == "PUT":
         data = request.get_json()
         if not 'data' in data or not isinstance(data['data'], str) or \
             not 'name' in data or not isinstance(data['name'], str) or \
+            not 'modified' in data or not isinstance(data['modified'], str) or \
             not 'id' in data or not isinstance(data['id'], int):
             return jsonify(message="data, name or id not provided"), 400
 
-        g.user.store_diagram(data['data'], data['name'], data['id'])
+        g.user.store_diagram(data['data'], data['name'], data['created'], data['id'])
         return jsonify(status="ok")
     elif request.method == "DELETE":
         data = request.get_json()
