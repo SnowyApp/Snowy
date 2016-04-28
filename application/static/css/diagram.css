@@ -40,7 +40,7 @@
 
 .infoPanel {
     margin-bottom: 0;
-    width: 400px;
+    width: 600px;
 }
 
 .infoPanelButton {
@@ -73,4 +73,18 @@
 
 .infoPanelHandle:hover {
     cursor: move;
+}
+
+/* Parents table */
+
+.parentsTable {
+    
+}
+
+.parentsTable#parent_name {
+    width: 78%;
+}
+
+.parentsTable#parent_id {
+    width: 22%;
 }
