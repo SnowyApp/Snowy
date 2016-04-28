@@ -40,7 +40,6 @@ section {
     height: 50px;
     line-height: 50px;
     border-bottom: 1px solid #bbb;
-    position:absolute;
 }
 
 .bar button {
