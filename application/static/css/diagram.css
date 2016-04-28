@@ -62,6 +62,7 @@
     margin-right: -5px;
 }
 
+/* Prevent selection of text in header when moving the panel */
 .infoPanelHandle {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
@@ -77,8 +78,8 @@
 
 /* Parents table */
 
-.parentsTable {
-    
+caption.parentsTable {
+    font-size: 20px;
 }
 
 .parentsTable#parent_name {

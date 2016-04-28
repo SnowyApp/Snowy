@@ -36,20 +36,18 @@ var InfoPanel = React.createClass({
     },
 
     getParents: function(){
-        console.log("props.data:");
-        console.log(this.props.data);
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "GET",
                 url: this.props.url + "/get_parents/" + this.props.data[0].concept_id,
                 success: function (data) {
-                    console.log("API response");
-                    console.log(data);
                     var parents = [];
                     for(var i = 0; i < data.length; i++){
+                        //Get synonym if exists, otherwise full name
+                        var name = (data[i].synonym.length > 0 ? data[i].synonym : data[i].full);
                         parents.push({
                             id: data[i].id,
-                            name: data[i].term
+                            name: name
                         });
                     }
                     this.setState({
@@ -68,8 +66,26 @@ var InfoPanel = React.createClass({
     },
 
     render: function(){
+        var showParents = null;
+        if(this.state.parents.length > 0){
+            //Create table rows for all parents
+            var parentArray = this.state.parents.map(function(parent){
+                return (
+                    <tr key={parent.id}>
+                        <td>
+                            {parent.name}
+                        </td>
+                        <td>
+                            {parent.id}
+                        </td>
+                    </tr>
+                );
+            });
+        } else {
+            showParents = {display: "none"};
+        }
         return (
-            <div className="panel panel-default infoPanel">
+            <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
                     {this.dict[this.props.language]["termInfo"]}
                     <button onClick={this.props.hidePanel} className="close closeInfoButton" type="button" aria-label="Close">
@@ -77,8 +93,8 @@ var InfoPanel = React.createClass({
                     </button>
                 </div>
                 <div className="panel-body">
-                    <table className="table table-condensed">
-                        <caption>{this.dict[this.props.language]["parents"]}</caption>
+                    <table style={showParents} className="table table-condensed">
+                        <caption className="parentsTable">{this.dict[this.props.language]["parents"]}</caption>
                         <thead>
                             <tr>
                                 <th id="parent_name" className="parentsTable">
@@ -90,9 +106,7 @@ var InfoPanel = React.createClass({
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>Environment or geographical location hej hej hej hej hej (environment / location)</td><td>900000000000441003</td></tr>
-                            <tr><td>Environment or geographical location hej hej hej hej hej (environment / location)</td><td>900000000000441003</td></tr>
-                            <tr><td>Environment or geographical location hej hej hej hej hej (environment / location)</td><td>900000000000441003</td></tr>
+                            {parentArray}
                         </tbody>
                     </table>
                 </div>
