@@ -85,7 +85,7 @@ var Bar = React.createClass({
                 break;
         }
         const navButtons = this.props.isLoggedIn ? (
-            <div>
+            <ButtonToolbar id = "loginButtons">
                 <Button className="profile"
                         onClick={this.props.setContent.bind(null, switchName.toLowerCase())}
                         bsStyle = "primary" >{this.dict[this.props.language][switchName]}</Button>
@@ -98,9 +98,9 @@ var Bar = React.createClass({
                     url={this.props.url}
                     language={this.props.language}
                 />
-            </div>
+            </ButtonToolbar>
         ) : (
-            <div>
+            <ButtonToolbar id = "loginButtons">
                 <Button className="Register" bsStyle = "primary"
                         onClick={this.showRegistration.bind(this, true)}>{this.dict[this.props.language]["register"]}</Button>
                 <Button className="Login" bsStyle = "primary"
@@ -121,7 +121,7 @@ var Bar = React.createClass({
                     url={this.props.url}
                     language={this.props.language}
                 />
-            </div>
+            </ButtonToolbar>
         );
 
         //Language button
