@@ -414,6 +414,7 @@ var Container = React.createClass({
                             update={this.updateSelectedTerm}
                             updateConceptChildren={this.updateConceptChildren}
                             language={this.state.language}
+                            url={this.state.serverUrl}
                           />
                 break;
             case "profile":
