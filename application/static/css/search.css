@@ -19,4 +19,9 @@
 .react-bs-table{
     border: none;
     margin: 0;
+    cursor: default;
+}
+
+.react-bs-container-body{
+    cursor: pointer;
 }
