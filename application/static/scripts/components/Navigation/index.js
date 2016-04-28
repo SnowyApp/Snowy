@@ -95,7 +95,7 @@ var Navigation = React.createClass({
 
         return (
             <nav>
-                <ul className="nav nav-pills nav-stacked">
+                <ul className="nav nav-pills nav-stacked" id="logo_id">
                     <li role="presentation" className="active">                    
                         <a className="navigation-header">
                             <span style={backArrow} onClick={this.props.upOneLevel} className="glyphicon glyphicon-triangle-top backArrow linkPointer" aria-hidden="true"> </span>
