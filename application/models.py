@@ -30,16 +30,7 @@ INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_em
 SELECT_LATEST_ACTIVE_TERM_QUERY = "SELECT * FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1;"
 SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id FROM relationship B JOIN description A ON B.source_id=A.concept_id JOIN language_refset C on A.id=C.referenced_component_id WHERE B.destination_id=%s and b.active=1 and C.active=1 and b.type_id=116680003 order by B.source_id;"""
 SELECT_PARENTS_QUERY = """select distinct b.concept_id, b.term, b.type_id, a.type_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id where a.source_id=%s and a.type_id=116680003 and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
-SELECT_RELATIONS_QUERY = """SELECT B.destination_id, MIN(A.term), MIN(B.type_id) 
-                                FROM relationship B JOIN description A 
-                                ON B.destination_id=a.concept_id 
-                                WHERE B.source_id=%s and b.active=1 
-                                GROUP BY B.destination_id 
-                                HAVING COUNT(B.type_id) > 0;"""
-SELECT_RELATIONS_QUERY = """SELECT DISTINCT A.destination_id, B.term 
-                                FROM relationship A JOIN description B ON A.destination_id=B.concept_id 
-                                JOIN language_refset C ON B.id=C.referenced_component_id 
-                                WHERE A.source_id=%s AND A.active=1 AND B.type_id=900000000000003001;"""
+SELECT_RELATIONS_QUERY = """select distinct b.concept_id, b.term, b.type_id, a.type_id from relationship a join description b on a.destination_id=b.concept_id join language_refset c on b.id=c.referenced_component_id where a.source_id=%s and a.active=1 and b.active=1 and c.active=1 order by b.concept_id;"""
 
 GET_CONCEPT_PROCEDURE = "get_concept"
 
