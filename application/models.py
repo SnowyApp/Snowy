@@ -185,7 +185,7 @@ class User():
         """
         cur = get_db().cursor()
         try:
-            new_id = None
+            new_id = 0
             if did:
                 cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, name, date, self.email, did))
             else:

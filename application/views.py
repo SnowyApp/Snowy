@@ -194,7 +194,7 @@ def favorite_term():
             abort(500)
     else:
         res = g.user.get_favorite_terms()
-        if res:
+        if res is not None:
             return json.dumps(res)
         else:
             abort(500)
@@ -218,7 +218,7 @@ def get_children(cid):
     Returns the children for the specified id.
     """
     children = Concept.get_children(cid)
-    if not children:
+    if children is None:
         abort(500)
 
     return json.dumps([concept.to_json() for concept in children])
@@ -230,7 +230,7 @@ def get_relations(cid):
     Returns the relations for the given id.
     """
     relations = Concept.get_relations(cid)
-    if not relations:
+    if relations is None:
         abort(500)
 
     return json.dumps([concept.to_json() for concept in relations])
@@ -242,7 +242,7 @@ def get_parents(cid):
     Returns the parents for the specified id.
     """
     parents = Concept.get_parents(cid)
-    if not parents:
+    if parents is None:
         abort(500)
 
     return json.dumps([concept.to_json() for concept in parents])
@@ -296,7 +296,7 @@ def store_diagram():
 
         
         res = g.user.store_diagram(data['data'], data['name'], data['modified'], data['id'])
-        if not res:
+        if res is None:
             abort(500)
 
         return jsonify(status="ok")
@@ -313,7 +313,7 @@ def store_diagram():
         
     else:
         data = g.user.get_diagrams()
-        if not data:
+        if data is None:
             abort(500)
 
         return json.dumps(data)
