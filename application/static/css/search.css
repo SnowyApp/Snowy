@@ -2,7 +2,7 @@
     display: block;
     background-color: white;
     z-index: 99;
-    position: absolute;
+    position: relative;
     width: 250px;
 }
 
@@ -19,4 +19,14 @@
 .react-bs-table{
     border: none;
     margin: 0;
+    cursor: default;
+}
+
+.react-bs-container-body{
+    cursor: pointer;
+}
+
+#searchButton{
+    position:absolute;
+    margin: 8px 0px;
 }

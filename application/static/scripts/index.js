@@ -403,6 +403,13 @@ var Container = React.createClass({
             }.bind(this)
         });
     },
+    
+dynamicLeftPosition: function(){
+    if(document.getElementById("logo_id")) {
+         var navPos = document.getElementById("logo_id").getBoundingClientRect()["right"];
+        document.getElementById('Logo').style.left = navPos +20+ "px";
+        }
+    },
 
     render: function() {
         var content = null;
@@ -437,7 +444,7 @@ var Container = React.createClass({
         }
         return (
             <div className="wrapper">
-                <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
+                <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700} onDragFinished = {this.dynamicLeftPosition}>
                     <Navigation
                         data={this.state.data}
                         url={this.state.serverUrl}

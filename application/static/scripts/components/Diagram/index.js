@@ -167,7 +167,8 @@ var Diagram = React.createClass({
     getDiagramState: function() {
         return {
             data: this.state.data,
-            view: this.state.view
+            view: this.state.view,
+            language: this.props.language
         };
     },
 

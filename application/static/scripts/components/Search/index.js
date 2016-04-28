@@ -73,7 +73,7 @@ var SearchBox = React.createClass({
                     defaultValue={this.props.search}
                     onKeyUp={this.handleKeyPress}
                 />
-                <Button onClick={this.doSearch}>{this.dict[this.props.language]["search"]}</Button>
+                <Button id="searchButton" onClick={this.doSearch}>{this.dict[this.props.language]["search"]}</Button>
             </div>
         )
     }
@@ -115,12 +115,10 @@ var TermTable = React.createClass({
         //Only display the result table if there is a result
         var style={
             display: "none",
-            marginLeft: adjustedMargin
         };
         if(this.props.data.length > 0){
             style={
-                display: "block",
-                marginLeft: adjustedMargin
+                display: "inline-block",
             };
         }
         var tableData = this.props.data;
