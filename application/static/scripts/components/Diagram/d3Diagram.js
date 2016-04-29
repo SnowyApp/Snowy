@@ -142,6 +142,9 @@ const NODE_HEIGHT = 50;
 const WIDTH_MARGIN = 500;
 const HORIZONTAL_MARGIN = 300; //Moves the horizontal view down in the y-axis
 const LINE_MARGIN = 15;
+const CONCEPT_COLOR = '#99CCFF';
+const DEFINED_CONCEPT_COLOR = '#CCCCFF';
+const DEFINED_CONCEPT_BORDER = 4;
 
 /**
  * Called on initial render and whenever view is changed. Adds an svg-
@@ -352,7 +355,12 @@ d3Chart._drawTree = function(element, data) {
         })
         .on('mouseout', function() {
             if(!d3.select(this).classed('selected')) {
-                d3.select(this).selectAll('rect.node').style('fill', 'white');
+                d3.select(this).selectAll('rect.node').style('fill', function(d){
+                    if(d.definitionStatus == 'Primitive'){
+                        return CONCEPT_COLOR;
+                    }
+                    return DEFINED_CONCEPT_COLOR;
+                });
             }
         })
         .on('click', function(d){
@@ -382,14 +390,37 @@ d3Chart._drawTree = function(element, data) {
             .attr('x', WIDTH_MARGIN)
             .attr('width', NODE_WIDTH)
             .attr('height',NODE_HEIGHT)
-            .style('fill', '#FFF')
+            .style('fill', function (d) {
+                if(d.definitionStatus == 'Primitive'){
+                    return CONCEPT_COLOR;
+                }
+                return DEFINED_CONCEPT_COLOR;
+            })
+            .style('stroke','black');
+        nodeEnter.append('rect')
+            .attr('class', 'node')
+            .attr('x', WIDTH_MARGIN+DEFINED_CONCEPT_BORDER)
+            .attr('y', DEFINED_CONCEPT_BORDER)
+            .attr('width', NODE_WIDTH-DEFINED_CONCEPT_BORDER*2)
+            .attr('height',NODE_HEIGHT+DEFINED_CONCEPT_BORDER*2)
+            .style('fill', function (d) {
+                if(d.definitionStatus == 'Primitive'){
+                    return CONCEPT_COLOR;
+                }
+                return DEFINED_CONCEPT_COLOR;
+            })
             .style('stroke','black');
     } else {
         nodeEnter.append('rect')
             .attr('class', 'node')
             .attr('width', NODE_WIDTH)
             .attr('height',NODE_HEIGHT)
-            .style('fill', '#FFF')
+            .style('fill', function (d) {
+                if(d.definitionStatus == 'Primitive'){
+                    return CONCEPT_COLOR;
+                }
+                return DEFINED_CONCEPT_COLOR;
+            })
             .style('stroke','black');
     }
     //Add text-element for every node

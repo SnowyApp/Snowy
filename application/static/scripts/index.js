@@ -51,7 +51,8 @@ var Container = React.createClass({
                             "concept_id": childrenResult[0][i].id,
                             "parent": rootResult[0].id,
                             "children": null,
-                            "id": this._diagram.getId()
+                            "id": this._diagram.getId(),
+                            "definitionStatus": 'Primitive'
                         }
                     );
                 }
@@ -66,7 +67,8 @@ var Container = React.createClass({
                         "concept_id": rootResult[0].id,
                         "parent": "null",
                         "children": children,
-                        "id": 0
+                        "id": 0,
+                        "definitionStatus": 'Fully defined'
                     }
                 ];
 
@@ -329,7 +331,7 @@ var Container = React.createClass({
                     "x": diagram[node].x,
                     "y": diagram[node].y,
                     "parent": diagram[node].parent.concept_id,
-                    "children": this.stringifyDiagram(diagram[node].children)
+                    "children": this.stringifyDiagram(diagram[node].children),
                 }
             );
         }
