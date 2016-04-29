@@ -12,7 +12,7 @@ var DiagramElement = React.createClass({
         language:           React.PropTypes.string,
         id:                 React.PropTypes.number,
         date:               React.PropTypes.string,
-        data:               React.PropTypes.object,
+        data:               React.PropTypes.string,
         openDiagram:        React.PropTypes.func,
         removeDiagram:      React.PropTypes.func
     },
