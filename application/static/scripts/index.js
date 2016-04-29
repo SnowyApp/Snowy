@@ -371,8 +371,11 @@ var Container = React.createClass({
             },
             url: this.state.serverUrl + "/diagram",
             contentType: "application/json",
-            data: JSON.stringify(
-                    { "data" : JSON.stringify(this.stringifyDiagram(this.state.data)) }),
+            data: JSON.stringify({
+                "data": JSON.stringify(this.stringifyDiagram(this.state.data)),
+                "created": new Date().toString(),
+                "name": "NameGoesHere"
+            }),
             error: function(xhr) {
                 console.log("Could not store diagram.");
             }.bind(this)
