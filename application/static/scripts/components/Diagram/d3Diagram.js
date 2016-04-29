@@ -356,7 +356,6 @@ d3Chart._drawTree = function(element, data) {
         .on('mouseout', function() {
             if(!d3.select(this).classed('selected')) {
                 d3.select(this).selectAll('rect.node').style('fill', function(d){
-                    console.log(d);
                     if(d.definitionStatus == 'primitive'){
                         return CONCEPT_COLOR;
                     }
