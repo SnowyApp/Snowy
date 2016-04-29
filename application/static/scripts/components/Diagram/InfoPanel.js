@@ -128,6 +128,7 @@ var InfoPanel = React.createClass({
                 <div className="panel-body infoPanelBody">
                     {/* General info */}
                     <h3>{this.dict[this.props.language]["generalInfo"]}</h3>
+                    <div className="well">
                     <table className="termInfo">
                         <tbody>
                             <tr className="termInfo">
@@ -148,9 +149,9 @@ var InfoPanel = React.createClass({
                             </tr>
                         </tbody>
                     </table>
-                
+                </div>
                     {/* Names */}
-                    <h3>{this.dict[this.props.language]["names"]}</h3>
+                    <h3>{this.dict[this.props.language]["names"]}</h3><div className="well">
                     <table className="table table-condensed">
                         <thead>
                             <tr>
@@ -191,9 +192,9 @@ var InfoPanel = React.createClass({
                             </tr>
                         </tbody>
                     </table>
-
+</div>
                     {/* Parents */}
-                    <h3 style={showParents}>{this.dict[this.props.language]["parents"]}</h3>
+                    <h3 style={showParents}>{this.dict[this.props.language]["parents"]}</h3><div className="well">
                     <table style={showParents} className="table table-condensed table-hover parentsTable">
                         <thead>
                             <tr>
@@ -209,9 +210,9 @@ var InfoPanel = React.createClass({
                             {parentArray}
                         </tbody>
                     </table>
-
+</div>
                     {/* Relations */}
-                    <h3>{this.dict[this.props.language]["relations"]}</h3>
+                    <h3>{this.dict[this.props.language]["relations"]}</h3><div className="well">
                     <table className="table table-condensed">
                         <thead>
                             <tr>
@@ -251,7 +252,7 @@ var InfoPanel = React.createClass({
                                 </td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                 </div>
             </div>
         );
