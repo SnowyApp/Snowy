@@ -14,6 +14,7 @@ SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, db_edit
 UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=%s, email=%s, site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
+
 # Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
 SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
