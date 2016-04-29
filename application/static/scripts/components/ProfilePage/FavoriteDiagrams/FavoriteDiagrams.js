@@ -28,8 +28,11 @@ var FavoriteDiagrams = React.createClass({
             },
             url: this.props.url + "/diagram",
             contentType: "application/json",
-            data: JSON.stringify(
-                    { "data" : JSON.stringify({test: "333"}), "name": "Diagram 1" }),
+            data: JSON.stringify({
+                "data": JSON.stringify({test: "333"}),
+                "created": new Date().toString(),
+                "name": "Diagram 2"
+            }),
             error: function(xhr) {
                 console.log(xhr);
                 console.log("Could not store diagram.");
@@ -47,11 +50,6 @@ var FavoriteDiagrams = React.createClass({
     componentDidMount: function(){
         //this.saveDiagram(); //TODO: Only for testing, remove later
         this.getFavoriteDiagrams();
-        this.setState({
-            diagrams: this.props.dateSort(this.state.diagrams, false),
-            sortBy: 'added',
-            ascending: false
-        });
     },
 
    /**
@@ -153,15 +151,15 @@ var FavoriteDiagrams = React.createClass({
                         diagrams.push({
                             id: data[i].id,
                             name: data[i].name,
-                            created: new Date("March 3, 2016 12:53:26"), //TODO: Create Date from returned string
-                            modified: new Date("March 3, 2016 12:53:26"),
+                            created: new Date(data[i].created),
+                            modified: new Date(data[i].modified),
                             data: data[i].data
                         });
                     }
                     this.setState({
                         diagrams: diagrams,
                         filteredDiagrams: diagrams
-                    });
+                    }, this.sortBy('added'));
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
