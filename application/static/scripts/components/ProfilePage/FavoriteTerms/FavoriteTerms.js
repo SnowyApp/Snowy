@@ -28,13 +28,13 @@ var FavoriteTerms = React.createClass({
     },
 
     componentDidMount: function(){
-        //this.addFavoriteTerm(2877000, "Angiosperm (organism)");
-        //this.addFavoriteTerm(1338, "A Test term");
+        this.addFavoriteTerm(1136366, "Senaste");
+        //this.addFavoriteTerm(345345345, "A Test term");
         this.getFavoriteTerms();
         this.setState({
-            terms: this.props.dateSort(this.state.terms, false),
+            terms: this.props.dateSort(this.state.terms, true),
             sortBy: 'added',
-            ascending: false
+            ascending: true
         });
     },
 
@@ -44,12 +44,16 @@ var FavoriteTerms = React.createClass({
     addFavoriteTerm: function(id, name){
         if (cookie.load('userId') != null) {
             $.ajax({
-                type: "POST",
+                method: "POST",
                 url: this.props.url + "/favorite_term",
                 headers: {
                     "Authorization": cookie.load("userId")
                 },
-                data: JSON.stringify({"id": id, "term": name}),
+                data: JSON.stringify({
+                    "id": id,
+                    "term": name,
+                    "date_added": new Date().toString()
+                }),
                 success: function (data) {
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
@@ -140,12 +144,13 @@ var FavoriteTerms = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
+                    console.log(data);
                     var terms = [];
                     for(var i = 0; i < data.length; i++){
                         terms.push({
                             id: data[i].id,
                             name: data[i].term,
-                            dateAdded: new Date("March 3, 2016 12:53:26") //TODO: Create Date from returned string
+                            dateAdded: new Date(data[i].date_added) //TODO: Create Date from returned string
                         });
                     }
                     this.setState({
