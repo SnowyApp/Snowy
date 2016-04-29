@@ -459,7 +459,7 @@ class Concept():
                 result += [{
                             "name": desc[1],
                             "type": "synonym" if desc[0]==900000000000074008 else "full",
-                            "acceptabillity": "preffered" if desc[2]==900000000000548007 else "acceptable"
+                            "acceptability": "preferred" if desc[2]==900000000000548007 else "acceptable"
                             }]
             return result
         except Exception as e:
