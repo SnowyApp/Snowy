@@ -1,11 +1,11 @@
+import json
+
 from application import app, es
 from application.models import User,Token,Concept
-from datetime import datetime
 from flask import request, jsonify, abort, g
 from functools import wraps
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
-import json
 
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
@@ -128,16 +128,19 @@ def user_info():
         data = request.get_json()
         if not 'first_name' in data or not isinstance(data['first_name'], str) or \
             not 'last_name' in data or not isinstance(data['last_name'], str) or \
-            not 'data_lang' in data or not isinstance(data['data_lang'], str) or \
+            not 'db_edition' in data or not isinstance(data['db_edition'], str) or \
             not 'site_lang' in data or not isinstance(data['site_lang'], str) or \
             not 'email' in data or not isinstance(data['email'], str):
             return jsonify(message="Incomplete information"), 400
 
-        g.user.update_info(data['first_name'], data['last_name'], data['data_lang'], data['email'], data['site_lang'])
-        token = g.user.generate_token()
-        token = Token(token.decode('utf-8'), g.user.email)
-        token.store_token()
-        return jsonify(status="ok", token=token.token), 200
+        res = g.user.update_info(data['first_name'], data['last_name'], data['db_edition'], data['email'], data['site_lang'])
+        if res:
+            token = g.user.generate_token()
+            token = Token(token.decode('utf-8'), g.user.email)
+            token.store_token()
+            return jsonify(status="ok", token=token.token), 200
+        else:
+            abort(500)
 
 
 @app.route('/password', methods=['PUT'])
@@ -147,15 +150,22 @@ def update_password():
     Update the users password
     """
     data = request.get_json()
-    if not 'password' in data or not isinstance(data['password'], str) or \
+    if not 'new_password' in data or not isinstance(data['new_password'], str) or \
+        not 'curr_password' in data or not isinstance(data['curr_password'], str) or \
         not 'invalidate_tokens' in data or not isinstance(data['invalidate_tokens'], bool):
         return jsonify(message="Password or invalidate_tokens not provided")
 
-    g.user.update_password(data['password'])
-    if data['invalidate_tokens']:
-        g.user.invalidate_tokens(request.headers.get('Authorization', None))
+    if not g.user.check_password(data['curr_password']):
+        return jsonify(message="Wrong password")
 
-    return jsonify(status="ok")
+    res = g.user.update_password(data['new_password'])
+    if res:
+        if data['invalidate_tokens']:
+            g.user.invalidate_tokens(request.headers.get('Authorization', None))
+
+        return jsonify(status="ok")
+    else:
+        abort(500)
 
 @app.route('/favorite_term', methods=['POST', 'GET', 'DELETE'])
 @login_required
@@ -168,20 +178,31 @@ def favorite_term():
 
         # Check so that the data is valid
         if not 'id' in data or not isinstance(data['id'], int) or \
+                not 'date_added' in data or not isinstance(data['date_added'], str) or \
                 not 'term' in data or not isinstance(data['term'], str):
             return jsonify(message="The concepts data is not providid accurately"), 400
         
-        g.user.add_favorite_term(data['id'], data['term'])
-        return jsonify(status="ok")
+        res = g.user.add_favorite_term(data['id'], data['term'], data['date_added'])
+        if res:
+            return jsonify(status="ok")
+        else:
+            abort(500)
     elif request.method == "DELETE":
         data = request.get_json()
         if not 'id' in data or not isinstance(data['id'], int): 
             return jsonify(message="'id' is missing")
 
-        g.user.delete_favorite_term(data['id'])
-        return jsonify(status="ok")
+        res = g.user.delete_favorite_term(data['id'])
+        if res:
+            return jsonify(status="ok")
+        else:
+            abort(500)
     else:
-        return json.dumps(g.user.get_favorite_terms())
+        res = g.user.get_favorite_terms()
+        if res is not None:
+            return json.dumps(res)
+        else:
+            abort(500)
 
 
 @app.route('/concept/<int:cid>', methods=['POST', 'GET'])
@@ -201,7 +222,11 @@ def get_children(cid):
     """
     Returns the children for the specified id.
     """
-    return json.dumps([concept.to_json() for concept in Concept.get_children(cid)])
+    children = Concept.get_children(cid)
+    if children is None:
+        abort(500)
+
+    return json.dumps([concept.to_json() for concept in children])
 
 
 @app.route('/get_relations/<int:cid>', methods=['GET'])
@@ -209,7 +234,11 @@ def get_relations(cid):
     """
     Returns the relations for the given id.
     """
-    return json.dumps([concept.to_json() for concept in Concept.get_relations(cid)])
+    relations = Concept.get_relations(cid)
+    if relations is None:
+        abort(500)
+
+    return json.dumps([concept.to_json() for concept in relations])
 
 
 @app.route('/get_parents/<int:cid>', methods=['GET'])
@@ -217,7 +246,11 @@ def get_parents(cid):
     """
     Returns the parents for the specified id.
     """
-    return json.dumps([concept.to_json() for concept in Concept.get_parents(cid)])
+    parents = Concept.get_parents(cid)
+    if parents is None:
+        abort(500)
+
+    return json.dumps([concept.to_json() for concept in parents])
 
 
 
@@ -249,30 +282,46 @@ def store_diagram():
     if request.method == "POST":
         data = request.get_json()
         if not 'data' in data or not isinstance(data['data'], str) or \
+            not 'created' in data or not isinstance(data['created'], str) or \
             not 'name' in data or not isinstance(data['name'], str):
             return jsonify(message="Data or name not provided"), 400
 
-        cid = g.user.store_diagram(data['data'], data['name'])
+        cid = g.user.store_diagram(data['data'], data['name'], data['created'])
+        if not cid:
+            abort(500)
+
         return jsonify(id=cid)
     elif request.method == "PUT":
         data = request.get_json()
         if not 'data' in data or not isinstance(data['data'], str) or \
             not 'name' in data or not isinstance(data['name'], str) or \
+            not 'modified' in data or not isinstance(data['modified'], str) or \
             not 'id' in data or not isinstance(data['id'], int):
             return jsonify(message="data, name or id not provided"), 400
 
-        g.user.store_diagram(data['data'], data['name'], data['id'])
+        
+        res = g.user.store_diagram(data['data'], data['name'], data['modified'], data['id'])
+        if res is None:
+            abort(500)
+
         return jsonify(status="ok")
     elif request.method == "DELETE":
         data = request.get_json()
         if not 'id' in data or not isinstance(data['id'], int):
             return jsonify(message = "'id' is not provided"), 400
 
-        g.user.delete_diagram(data['id'])
+        res = g.user.delete_diagram(data['id'])
+        if not res:
+            abort(500)
+
         return jsonify(status="ok")
         
     else:
-        return json.dumps(g.user.get_diagrams())
+        data = g.user.get_diagrams()
+        if data is None:
+            abort(500)
+
+        return json.dumps(data)
 
 
 @app.errorhandler(400)

@@ -12,7 +12,9 @@ var NavigationItem = React.createClass({
         handleClickCallback:    React.PropTypes.func
     },
 
-    //Handles clicks on the items and calls back to the parent to change the current data
+    /**
+    * Handles clicks on the items and calls back to the parent to change the current data
+    */
     handleClick: function(e){
         this.props.handleClickCallback(e);
     },

@@ -30,6 +30,27 @@ const dict = {
             }
 };
 
+//Called during mouseevent, updates position for selected nodes and links
+function tick() {
+    if(treeView == 'vertical') {
+        link.attr('x1', function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
+            .attr('y1', function(d) { return d.source.y + NODE_HEIGHT + d.source.lineNumber*LINE_MARGIN; })
+            .attr('x2', function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
+            .attr('y2', function(d) { return d.target.y; });
+
+
+        node.attr('transform', function(d) { return 'translate(' + d.x + ', ' + d.y + ')'; });
+    } else {
+        link.attr('y1', function(d) { return d.source.x + NODE_HEIGHT/2; })
+            .attr('x1', function(d) { return d.source.y + NODE_WIDTH;})
+            .attr('y2', function(d) { return d.target.x + NODE_HEIGHT/2; })
+            .attr('x2', function(d) { return d.target.y; });
+
+
+        node.attr('transform', function(d) { return 'translate(' + d.y + ', ' + d.x + ')'; });
+    }
+
+}
 /**
  * Most of the actions looks at the children of the current nodes parent
  * and moves them to another list called _children that will not be drawn
@@ -101,7 +122,7 @@ d3Chart._createMenuData = function(element) {
                         d.x = d.x0;
                         d.y = d.y0;
                         d.moved = false;
-                        d3Chart._drawTree(element, d);
+                        tick();
                     }
                 }
             }
@@ -112,7 +133,7 @@ d3Chart._createMenuData = function(element) {
 };  
 
 var i = 0;
-var tree,root,treeView,svg,g,onClick,zoom;
+var tree,root,treeView,svg,g,onClick,zoom, link, node;
 
 const TEXT_MAX_WIDTH = 230;
 const NODE_WIDTH = 250;
@@ -275,19 +296,6 @@ d3Chart._drawTree = function(element, data) {
     var nodes = tree.nodes(root),
         links = tree.links(nodes);
 
-    nodes.forEach(function (d) {
-        if(d.moved == undefined){
-            d.moved = false;
-            d.x0 = d.x;
-            d.y0 = d.y;
-        }
-    });
-
-    var drag = d3.behavior.drag()
-        .on('dragstart', dragstarted)
-        .on('drag', dragmove)
-        .on('dragend', dragended);
-
     /**
      * This sets the distance between the node levels
      */
@@ -300,7 +308,21 @@ d3Chart._drawTree = function(element, data) {
         });
     }
 
-    var node = gTree.selectAll('g.node').remove();
+    nodes.forEach(function (d) {
+        if(d.moved == undefined || d.moved == false){
+            d.moved = false;
+            d.x0 = d.x;
+            d.y0 = d.y;
+        }
+    });
+
+    var drag = d3.behavior.drag()
+        .on('dragstart', dragstarted)
+        .on('drag', dragmove)
+        .on('dragend', dragended);
+
+
+    gTree.selectAll('g.node').remove();
     node = gTree.selectAll('g.node')
         .data(nodes, function(d) { return d.id });
 
@@ -394,7 +416,7 @@ d3Chart._drawTree = function(element, data) {
     }
 
     //Add links between nodes
-    var link = gTree.selectAll('line.link').remove();
+    gTree.selectAll('line.link').remove();
     link = gTree.selectAll('line.link')
         .data(links, function(d) { return d.target.id; });
 
@@ -419,27 +441,6 @@ d3Chart._drawTree = function(element, data) {
             .attr('marker-start', 'url(#ArrowMarker)');
     }
 
-    //Called during mouseevent, updates position for selected nodes and links
-    function tick() {
-        if(treeView == 'vertical') {
-            link.attr('x1', function(d) { return d.source.x + NODE_WIDTH/2 + WIDTH_MARGIN; })
-                .attr('y1', function(d) { return d.source.y + NODE_HEIGHT + d.source.lineNumber*LINE_MARGIN; })
-                .attr('x2', function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
-                .attr('y2', function(d) { return d.target.y; });
-
-
-            node.attr('transform', function(d) { return 'translate(' + d.x + ', ' + d.y + ')'; });
-        } else {
-            link.attr('y1', function(d) { return d.source.x + NODE_HEIGHT/2; })
-                .attr('x1', function(d) { return d.source.y + NODE_WIDTH;})
-                .attr('y2', function(d) { return d.target.x + NODE_HEIGHT/2; })
-                .attr('x2', function(d) { return d.target.y; });
-
-
-            node.attr('transform', function(d) { return 'translate(' + d.y + ', ' + d.x + ')'; });
-        }
-
-    }
 
     //Sets behaviour for when the the mouse starts to drag
     function dragstarted(d) {

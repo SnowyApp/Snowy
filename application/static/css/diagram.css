@@ -77,6 +77,7 @@
 }
 
 /* Parents table */
+<<<<<<< HEAD
 
 caption.parentsTable {
     font-size: 20px;
@@ -84,6 +85,10 @@ caption.parentsTable {
 
 tr.parentsTable:hover {
     cursor: pointer;
+=======
+.parentsTable {
+    /*My name is error*/
+>>>>>>> 167435c5c091a58463f0d57e8a990ead1e85cdf0
 }
 
 .parentsTable#parent_name {
