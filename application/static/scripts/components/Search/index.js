@@ -9,6 +9,13 @@ require('react-bootstrap-table');
  * Handles user input
  */
 var SearchBox = React.createClass({
+    propTypes: {
+        language:       React.PropTypes.string,
+        query:          React.PropTypes.string,
+        doSearch:       React.PropTypes.func,
+        updateData:     React.PropTypes.func,
+        updateQuery:    React.PropTypes.func
+    },
     //Dictionary for supported languages
     dict: {
         se: {
@@ -83,6 +90,12 @@ var SearchBox = React.createClass({
  * Displays the results with react-bootstrap table component
  */
 var TermTable = React.createClass({
+    propTypes: {
+        data:          React.PropTypes.array,
+        update:        React.PropTypes.func,
+        clearData:     React.PropTypes.func,
+        addHistory:    React.PropTypes.func
+    },
     /**
      * Called when the user clicks outside the table
      */
@@ -139,6 +152,11 @@ var TermTable = React.createClass({
  * The main component
  */
 var Search = React.createClass({
+    propTypes: {
+        url:          React.PropTypes.string,
+        update:       React.PropTypes.func,
+        language:     React.PropTypes.string
+    },
     getInitialState:function(){
         return{
             query:'',
