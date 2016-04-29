@@ -167,7 +167,7 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(len(resp_data), 3)
         self.assertEqual(resp_data[0]["name"], "Antibody to Encephalitozoon cuniculi (substance)")
         self.assertEqual(resp_data[0]["type"], "full")
-        self.assertEqual(resp_data[0]["acceptability"], "preffered")
+        self.assertEqual(resp_data[0]["acceptability"], "preferred")
 
     def test_children(self):
         """
