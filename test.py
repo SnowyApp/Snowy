@@ -18,7 +18,7 @@ class TestApplication(unittest.TestCase):
         conn.autocommit = True
         cur = conn.cursor()
         with conn as c:
-            f = open("sql-scripts/usr_schema.sql", "r")
+            f = open("database/scripts/usr_schema.sql", "r")
             c.cursor().execute(f.read())
             f.close()
 
