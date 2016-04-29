@@ -356,7 +356,8 @@ d3Chart._drawTree = function(element, data) {
         .on('mouseout', function() {
             if(!d3.select(this).classed('selected')) {
                 d3.select(this).selectAll('rect.node').style('fill', function(d){
-                    if(d.definitionStatus == 'Primitive'){
+                    console.log(d);
+                    if(d.definitionStatus == 'primitive'){
                         return CONCEPT_COLOR;
                     }
                     return DEFINED_CONCEPT_COLOR;
@@ -391,7 +392,7 @@ d3Chart._drawTree = function(element, data) {
             .attr('width', NODE_WIDTH)
             .attr('height',NODE_HEIGHT)
             .style('fill', function (d) {
-                if(d.definitionStatus == 'Primitive'){
+                if(d.definitionStatus == 'primitive'){
                     return CONCEPT_COLOR;
                 }
                 return DEFINED_CONCEPT_COLOR;
@@ -404,7 +405,7 @@ d3Chart._drawTree = function(element, data) {
             .attr('width', NODE_WIDTH-DEFINED_CONCEPT_BORDER*2)
             .attr('height',NODE_HEIGHT+DEFINED_CONCEPT_BORDER*2)
             .style('fill', function (d) {
-                if(d.definitionStatus == 'Primitive'){
+                if(d.definitionStatus == 'primitive'){
                     return CONCEPT_COLOR;
                 }
                 return DEFINED_CONCEPT_COLOR;
@@ -416,7 +417,7 @@ d3Chart._drawTree = function(element, data) {
             .attr('width', NODE_WIDTH)
             .attr('height',NODE_HEIGHT)
             .style('fill', function (d) {
-                if(d.definitionStatus == 'Primitive'){
+                if(d.definitionStatus == 'primitive'){
                     return CONCEPT_COLOR;
                 }
                 return DEFINED_CONCEPT_COLOR;

@@ -52,7 +52,7 @@ var Container = React.createClass({
                             "parent": rootResult[0].id,
                             "children": null,
                             "id": this._diagram.getId(),
-                            "definitionStatus": 'Primitive'
+                            "definitionStatus": childrenResult[0][i].definition_status
                         }
                     );
                 }
@@ -68,7 +68,7 @@ var Container = React.createClass({
                         "parent": "null",
                         "children": children,
                         "id": 0,
-                        "definitionStatus": 'Fully defined'
+                        "definitionStatus": rootResult[0].definition_status
                     }
                 ];
 
