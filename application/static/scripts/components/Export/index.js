@@ -9,6 +9,9 @@ import canvg from 'canvg-fixed';
 import FileSaver from 'browser-filesaver';
 
 var Export = React.createClass({
+    propTypes: {
+        language: React.PropTypes.string
+    },
     dict: {
         se: {
             export:       "Exportera"

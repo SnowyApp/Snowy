@@ -449,7 +449,6 @@ var Container = React.createClass({
                     />
                     <section>
                         <Bar
-                            serverUrl={this.state.serverUrl} 
                             update={this.updateSelectedTerm} 
                             isLoggedIn={this.state.isLoggedIn}
                             onLogin={this.onLogin}
