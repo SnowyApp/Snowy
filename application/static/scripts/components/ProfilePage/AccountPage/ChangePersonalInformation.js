@@ -72,7 +72,7 @@ var ChangePersonalInformation = React.createClass({
                     "first_name": this.state.firstName,
                     "last_name": this.state.lastName,
                     "site_lang": this.props.language,
-                    "data_lang": "placeholder", //TODO: fix real data later
+                    "db_edition": "placeholder", //TODO: fix real data later
                     "email": this.state.email
                 }),
                 success: function () {
