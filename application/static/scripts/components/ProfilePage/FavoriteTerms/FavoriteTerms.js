@@ -31,11 +31,6 @@ var FavoriteTerms = React.createClass({
         this.addFavoriteTerm(1136366, "Senaste");
         //this.addFavoriteTerm(345345345, "A Test term");
         this.getFavoriteTerms();
-        this.setState({
-            terms: this.props.dateSort(this.state.terms, true),
-            sortBy: 'added',
-            ascending: true
-        });
     },
 
    /**
@@ -70,6 +65,7 @@ var FavoriteTerms = React.createClass({
     * Sort terms by header
     */
     sortBy: function(header){
+        console.log(header);
         var asc = true;
         //If already sorting by header, invert order
         if(this.state.sortBy == header){
@@ -155,7 +151,7 @@ var FavoriteTerms = React.createClass({
                     }
                     this.setState({
                         terms: terms
-                    });
+                    }, this.sortBy('added'));
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
