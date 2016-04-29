@@ -160,6 +160,15 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data['synonym'], "Anti-Encephalitozoon cuniculi antibody")
         self.assertEqual(resp_data['definition_status'], "primitive")
 
+        resp = self.app.get('/get_names/709886006')
+        self.assertEqual(resp.status_code, 200)
+
+        resp_data = json.loads(resp.data.decode("utf-8"))
+        self.assertEqual(len(resp_data), 3)
+        self.assertEqual(resp_data[0]["name"], "Antibody to Encephalitozoon cuniculi (substance)")
+        self.assertEqual(resp_data[0]["type"], "full")
+        self.assertEqual(resp_data[0]["acceptability"], "preffered")
+
     def test_children(self):
         """
         Test so that get_children functionality works.
