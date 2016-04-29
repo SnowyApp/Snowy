@@ -23,7 +23,11 @@ var InfoPanel = React.createClass({
             type:               "Typ",
             acceptability:      "Acceptans",
             parents:            "Föräldrar",
-            generalInfo:        "Generell information"
+            generalInfo:        "Generell information",
+            relations:          "Relationer",
+            destination:        "Destination",
+            charType:           "CharType",
+            attribute:          "Attribut"
         },
         en: {
             termInfo:           "Term information",
@@ -32,7 +36,11 @@ var InfoPanel = React.createClass({
             type:               "Type",
             acceptability:      "Acceptability",
             parents:            "Parents",
-            generalInfo:        "General information"
+            generalInfo:        "General information",
+            relations:          "Relations",
+            destination:        "Destination",
+            charType:           "CharType",
+            attribute:          "Attribute"
         }
     },
 
@@ -143,7 +151,7 @@ var InfoPanel = React.createClass({
                 
                     {/* Names */}
                     <h3>{this.dict[this.props.language]["names"]}</h3>
-                    <table className="table table-condensed namesTable">
+                    <table className="table table-condensed">
                         <thead>
                             <tr>
                                 <th id="name_type" className="namesTable">
@@ -160,24 +168,24 @@ var InfoPanel = React.createClass({
                         <tbody>
                             {/* Temporary static data because API doesnt support it yet */}
                             <tr>
-                                <td className="namesTable">
+                                <td>
                                     Full
                                 </td>
-                                <td className="namesTable">
+                                <td>
                                     {termName} 
                                 </td>
-                                <td className="namesTable">
+                                <td>
                                     Preferred
                                 </td>
                             </tr>
                             <tr>
-                                <td className="namesTable">
+                                <td>
                                     Synonym
                                 </td>
-                                <td className="namesTable">
+                                <td>
                                     {termName} 
                                 </td>
-                                <td className="namesTable">
+                                <td>
                                     Acceptable
                                 </td>
                             </tr>
@@ -199,6 +207,49 @@ var InfoPanel = React.createClass({
                         </thead>
                         <tbody>
                             {parentArray}
+                        </tbody>
+                    </table>
+
+                    {/* Relations */}
+                    <h3>{this.dict[this.props.language]["relations"]}</h3>
+                    <table className="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th id="relation_type" className="relationsTable">
+                                    {this.dict[this.props.language]["attribute"]} 
+                                </th>
+                                <th id="relation_destination" className="relationsTable">
+                                    {this.dict[this.props.language]["destination"]} 
+                                </th>
+                                <th id="relation_chartype" className="relationsTable">
+                                    {this.dict[this.props.language]["charType"]} 
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* Temporary static data because API doesnt support it yet */}
+                            <tr>
+                                <td>
+                                    Is a
+                                </td>
+                                <td>
+                                    temp
+                                </td>
+                                <td>
+                                    Inferred
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Associated morphology
+                                </td>
+                                <td>
+                                    temp
+                                </td>
+                                <td>
+                                    Inferred
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

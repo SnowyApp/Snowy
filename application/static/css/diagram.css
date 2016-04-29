@@ -105,13 +105,27 @@ tr.parentsTable:hover {
 /* Names table */
 
 .namesTable#name_type {
-    width: 10%;
+    width: 17%;
 }
 
 .namesTable#name_name {
-    width: 70%;
+    width: 63%;
 }
 
 .namesTable#name_acceptability {
     width: 20%;
+}
+
+/* Relations table */
+
+.relationsTable#relation_type {
+    width: 35%;
+}
+
+.relationsTable#relation_destination {
+    width: 50%;
+}
+
+.relationsTable#relation_chartype {
+    width: 15%;
 }
