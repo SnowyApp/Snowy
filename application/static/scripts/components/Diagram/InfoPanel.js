@@ -129,130 +129,299 @@ var InfoPanel = React.createClass({
                     {/* General info */}
                     <h3>{this.dict[this.props.language]["generalInfo"]}</h3>
                     <div className="well">
-                    <table className="termInfo">
-                        <tbody>
-                            <tr className="termInfo">
-                                <td className="termInfoName">ID:</td>
-                                <td className="termInfoData">32542541</td>
-                            </tr>
-                            <tr className="termInfo">
-                                <td className="termInfoName">Descendants:</td>
-                                <td className="termInfoData">532</td>
-                            </tr>
-                            <tr className="termInfo">
-                                <td className="termInfoName">Concept type:</td>
-                                <td className="termInfoData">Primitive</td>
-                            </tr>
-                            <tr className="termInfo">
-                                <td className="termInfoName">Status:</td>
-                                <td className="termInfoData">Active</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        <table className="termInfo">
+                            <tbody>
+                                <tr className="termInfo">
+                                    <td className="termInfoName">ID:</td>
+                                    <td className="termInfoData">32542541</td>
+                                </tr>
+                                <tr className="termInfo">
+                                    <td className="termInfoName">Descendants:</td>
+                                    <td className="termInfoData">532</td>
+                                </tr>
+                                <tr className="termInfo">
+                                    <td className="termInfoName">Concept type:</td>
+                                    <td className="termInfoData">Primitive</td>
+                                </tr>
+                                <tr className="termInfo">
+                                    <td className="termInfoName">Status:</td>
+                                    <td className="termInfoData">Active</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     {/* Names */}
-                    <h3>{this.dict[this.props.language]["names"]}</h3><div className="well">
-                    <table className="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th id="name_type" className="namesTable">
-                                    {this.dict[this.props.language]["type"]} 
-                                </th>
-                                <th id="name_name" className="namesTable">
-                                    {this.dict[this.props.language]["name"]} 
-                                </th>
-                                <th id="name_acceptability" className="namesTable">
-                                    {this.dict[this.props.language]["acceptability"]} 
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* Temporary static data because API doesnt support it yet */}
-                            <tr>
-                                <td>
-                                    Full
-                                </td>
-                                <td>
-                                    {termName} 
-                                </td>
-                                <td>
-                                    Preferred
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Synonym
-                                </td>
-                                <td>
-                                    {termName} 
-                                </td>
-                                <td>
-                                    Acceptable
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-</div>
+                    <h3>{this.dict[this.props.language]["names"]}
+                    </h3><div className="well">
+                        <table className="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th id="name_type" className="namesTable">
+                                        {this.dict[this.props.language]["type"]} 
+                                    </th>
+                                    <th id="name_name" className="namesTable">
+                                        {this.dict[this.props.language]["name"]} 
+                                    </th>
+                                    <th id="name_acceptability" className="namesTable">
+                                        {this.dict[this.props.language]["acceptability"]} 
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* Temporary static data because API doesnt support it yet */}
+                                <tr>
+                                    <td>
+                                        Full
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Preferred
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Synonym
+                                    </td>
+                                    <td>
+                                        {termName} 
+                                    </td>
+                                    <td>
+                                        Acceptable
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     {/* Parents */}
-                    <h3 style={showParents}>{this.dict[this.props.language]["parents"]}</h3><div className="well">
-                    <table style={showParents} className="table table-condensed table-hover parentsTable">
-                        <thead>
-                            <tr>
-                                <th id="parent_name" className="parentsTable">
-                                    {this.dict[this.props.language]["name"]} 
-                                </th>
-                                <th id="parent_id" className="parentsTable">
-                                    ID 
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {parentArray}
-                        </tbody>
-                    </table>
-</div>
+                    <h3 style={showParents}>{this.dict[this.props.language]["parents"]}</h3>
+                    <div style={showParents} className="well">
+                        <table style={showParents} className="table table-condensed table-hover parentsTable">
+                            <thead>
+                                <tr>
+                                    <th id="parent_name" className="parentsTable">
+                                        {this.dict[this.props.language]["name"]} 
+                                    </th>
+                                    <th id="parent_id" className="parentsTable">
+                                        ID 
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {parentArray}
+                            </tbody>
+                        </table>
+                    </div>
                     {/* Relations */}
-                    <h3>{this.dict[this.props.language]["relations"]}</h3><div className="well">
-                    <table className="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th id="relation_type" className="relationsTable">
-                                    {this.dict[this.props.language]["attribute"]} 
-                                </th>
-                                <th id="relation_destination" className="relationsTable">
-                                    {this.dict[this.props.language]["destination"]} 
-                                </th>
-                                <th id="relation_chartype" className="relationsTable">
-                                    {this.dict[this.props.language]["charType"]} 
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* Temporary static data because API doesnt support it yet */}
-                            <tr>
-                                <td>
-                                    Is a
-                                </td>
-                                <td>
-                                    temp
-                                </td>
-                                <td>
-                                    Inferred
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Associated morphology
-                                </td>
-                                <td>
-                                    temp
-                                </td>
-                                <td>
-                                    Inferred
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table></div>
+                    <h3>{this.dict[this.props.language]["relations"]}</h3>
+                    <div className="well">
+                        <table className="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th id="relation_type" className="relationsTable">
+                                        {this.dict[this.props.language]["attribute"]} 
+                                    </th>
+                                    <th id="relation_destination" className="relationsTable">
+                                        {this.dict[this.props.language]["destination"]} 
+                                    </th>
+                                    <th id="relation_chartype" className="relationsTable">
+                                        {this.dict[this.props.language]["charType"]} 
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* Temporary static data because API doesnt support it yet */}
+                                <tr>
+                                    <td>
+                                        Is a
+                                    </td>
+                                    <td>
+                                        temp
+                                    </td>
+                                    <td>
+                                        Inferred
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Associated morphology
+                                    </td>
+                                    <td>
+                                        temp
+                                    </td>
+                                    <td>
+                                        Inferred
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         );
