@@ -13,6 +13,19 @@ var Search = require('../Search/index');
 var Export = require('../Export/index');
 
 var Bar = React.createClass({
+    propTypes: {
+        update: React.PropTypes.func,
+        isLoggedIn: React.PropTypes.bool,
+        onLogin: React.PropTypes.func,
+        onLogout: React.PropTypes.func,
+        url: React.PropTypes.string,
+        setContent: React.PropTypes.func,
+        contentName: React.PropTypes.string,
+        language: React.PropTypes.string,
+        setLanguage: React.PropTypes.func,
+        setEdition: React.PropTypes.func,
+        saveDiagram: React.PropTypes.func
+    },
     //Dictionary for supported languages
     dict: {
         se: {
@@ -141,7 +154,7 @@ var Bar = React.createClass({
         return (
             <div className="bar">
                 <img className="logotype" src="static/img/Snowy_official_logotype.png"/>
-                <Search url={this.props.serverUrl} update={this.props.update} language={this.props.language}/>
+                <Search url={this.props.url} update={this.props.update} language={this.props.language}/>
                 <ButtonToolbar id = "buttons">
                     {/* Database edition drop-down */}
                     <DropdownButton bsStyle="success" title={this.dict[this.props.language]["edition"]} id="Edition">

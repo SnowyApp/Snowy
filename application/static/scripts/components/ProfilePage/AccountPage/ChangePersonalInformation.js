@@ -61,11 +61,6 @@ var ChangePersonalInformation = React.createClass({
     */
     handleSubmit: function(e){
         e.preventDefault();
-        console.log(this.state.firstName);
-        console.log(this.state.lastName);
-        console.log(this.props.language);
-        console.log(this.state.email);
-
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "PUT",
@@ -98,7 +93,7 @@ var ChangePersonalInformation = React.createClass({
                         errorMessage: this.props.dict[this.props.language]["m_failedToUpdate"],
                         successMessage: ""
                     });
-                },
+                }.bind(this),
                 contentType: "application/json",
                 dataType: "json"
             });

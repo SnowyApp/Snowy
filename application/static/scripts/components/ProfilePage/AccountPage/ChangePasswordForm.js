@@ -41,7 +41,8 @@ var ChangePasswordForm = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 data: JSON.stringify({
-                    "password": this.state.newPassword,
+                    "new_password": this.state.newPassword,
+                    "curr_password": this.state.currPassword,
                     "invalidate_tokens": false
                 }),
                 success: function () {

@@ -42,7 +42,6 @@ var Container = React.createClass({
             .then(function(rootResult, childrenResult) {
                 // get all information about children
                 var children = [];
-                console.log(childrenResult[0]);
                 for (var i in childrenResult[0]) {
                     const childSynonym = childrenResult[0][i].synonym;
                     const childFull = childrenResult[0][i].full;
@@ -372,8 +371,11 @@ var Container = React.createClass({
             },
             url: this.state.serverUrl + "/diagram",
             contentType: "application/json",
-            data: JSON.stringify(
-                    { "data" : JSON.stringify(this.stringifyDiagram(this.state.data)) }),
+            data: JSON.stringify({
+                "data": JSON.stringify(this.stringifyDiagram(this.state.data)),
+                "created": new Date().toString(),
+                "name": "NameGoesHere"
+            }),
             error: function(xhr) {
                 console.log("Could not store diagram.");
             }.bind(this)
@@ -449,7 +451,6 @@ var Container = React.createClass({
                     />
                     <section>
                         <Bar
-                            serverUrl={this.state.serverUrl} 
                             update={this.updateSelectedTerm} 
                             isLoggedIn={this.state.isLoggedIn}
                             onLogin={this.onLogin}
