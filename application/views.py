@@ -1,11 +1,11 @@
+import json
+
 from application import app, es
 from application.models import User,Token,Concept
-from datetime import datetime
 from flask import request, jsonify, abort, g
 from functools import wraps
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
-import json
 
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
@@ -178,10 +178,11 @@ def favorite_term():
 
         # Check so that the data is valid
         if not 'id' in data or not isinstance(data['id'], int) or \
+                not 'date_added' in data or not isinstance(data['date_added'], str) or \
                 not 'term' in data or not isinstance(data['term'], str):
             return jsonify(message="The concepts data is not providid accurately"), 400
         
-        res = g.user.add_favorite_term(data['id'], data['term'])
+        res = g.user.add_favorite_term(data['id'], data['term'], data['date_added'])
         if res:
             return jsonify(status="ok")
         else:

@@ -30,24 +30,12 @@ CREATE TABLE diagram(
     user_email TEXT NOT NULL REFERENCES usr (email)
 );
 
-
--- A table that stores the concept data
-DROP TABLE IF EXISTS concept CASCADE;
-CREATE TABLE concept(
-    id BIGINT NOT NULL,
-    effective_time BIGINT NOT NULL,
-    active INTEGER NOT NULL,
-    module_id BIGINT NOT NULL,
-    definition_status_id BIGINT NOT NULL,
-    CONSTRAINT concept_pk PRIMARY KEY(id, effective_time, active)
-);
-
 -- A table that displays the favorite term relation
 DROP TABLE IF EXISTS favorite_term CASCADE;
 CREATE TABLE favorite_term(
     concept_id BIGINT NOT NULL,
     user_email TEXT NOT NULL,
-    date_added TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    date_added TEXT NOT NULL,
     term TEXT NOT NULL,
     CONSTRAINT favorite_term_user_pk PRIMARY KEY (concept_id, user_email),
     CONSTRAINT favorite_term_user_fk 

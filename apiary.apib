@@ -183,7 +183,7 @@ Simple API for allowing accessing snowy data.
                 {
                     'term': 'Secondary caries', 
                     'id': 708575005, 
-                    'favorite_date': '2016-04-17 17:53:44.908075+02:00'
+                    'date_added': '2016-04-17 17:53:44.908075+02:00'
                 }
             ]
 
@@ -199,7 +199,7 @@ Simple API for allowing accessing snowy data.
             {
                 "id": 123,
                 "term": "this is the name",
-                "favorite_date": "This is a date string"
+                "date_added": "This is a date string"
             }
 
 + Response 200 (application/json)
@@ -243,7 +243,9 @@ Simple API for allowing accessing snowy data.
                 "id": "708575005",
                 "full": "Secondary caries (morphologic abnormality)",
                 "synonym": "Secondary caries",
-                "definitionStatus": "Primitive"
+                "type_id": "1234", 
+                "type_name": "IS A",
+                "definition_status": "primitive"
             }
 
 ## Children [/get_children/{id}]
@@ -259,21 +261,21 @@ Simple API for allowing accessing snowy data.
                     'term': 'Wound observation', 
                     'id': 225552003,
                     'numberofchildren': 26,
-                    'definitionStatus': 'Fully defined'
+                    'definition_status': 'fully-defined'
 
                 }, 
                 {
                     'term': 'Absence of signs and symptoms of radiation injury (situation)', 
                     'id': 397606006,
                     'numberofchildren': 0,
-                    'definitionStatus': 'Primitive'
+                    'definition_status': 'primitive'
 
                 }, 
                 {
                     'term': 'Single liveborn born in hospital by cesarean section (situation)', 
                     'id': 442423001,
                     'numberofchildren': 0,
-                    'definitionStatus': 'Primitive'
+                    'definition_status': 'primitive'
                 }
             ]
 
@@ -292,7 +294,7 @@ Simple API for allowing accessing snowy data.
                     'id': 225552003,
                     'type_id': 11668003,
                     'type_name': 'IS A',
-                    'definitionStatus': 'Fully defined'
+                    'definition_status': 'fully-defined'
 
                 }, 
                 {
@@ -301,7 +303,7 @@ Simple API for allowing accessing snowy data.
                     'id': 397606006,
                     'type_id': 11668003,
                     'type_name': 'IS A',
-                    'definitionStatus': 'Primitive'
+                    'definition_status': 'primitive'
                 }, 
                 {
                     'synonym': 'Single liveborn born in hospital by cesarean section',
@@ -309,7 +311,7 @@ Simple API for allowing accessing snowy data.
                     'id': 442423001,
                     'type_id': 11668003,
                     'type_name': 'IS A',
-                    'definitionStatus': 'Primitive'
+                    'definition_status': 'primitive'
                 }
             ]
 

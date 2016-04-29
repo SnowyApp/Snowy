@@ -1,3 +1,15 @@
+
+-- A table that stores the concept data
+DROP TABLE IF EXISTS concept CASCADE;
+CREATE TABLE concept(
+    id BIGINT NOT NULL,
+    effective_time BIGINT NOT NULL,
+    active INTEGER NOT NULL,
+    module_id BIGINT NOT NULL,
+    definition_status_id BIGINT NOT NULL,
+    CONSTRAINT concept_pk PRIMARY KEY(id, effective_time, active)
+);
+ 
 -- A table that stores the description data
 DROP TABLE IF EXISTS description CASCADE;
 CREATE TABLE description(
