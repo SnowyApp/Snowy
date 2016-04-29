@@ -153,10 +153,10 @@ def update_password():
     if not 'new_password' in data or not isinstance(data['new_password'], str) or \
         not 'curr_password' in data or not isinstance(data['curr_password'], str) or \
         not 'invalidate_tokens' in data or not isinstance(data['invalidate_tokens'], bool):
-        return jsonify(message="Password or invalidate_tokens not provided")
+        return jsonify(message="Password or invalidate_tokens not provided"), 400
 
     if not g.user.check_password(data['curr_password']):
-        return jsonify(message="Wrong password")
+        return jsonify(message="Wrong password"), 400
 
     res = g.user.update_password(data['new_password'])
     if res:

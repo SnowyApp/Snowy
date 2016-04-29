@@ -42,13 +42,13 @@ var Container = React.createClass({
             .then(function(rootResult, childrenResult) {
                 // get all information about children
                 var children = [];
-
+                console.log(childrenResult[0]);
                 for (var i in childrenResult[0]) {
                     const childSynonym = childrenResult[0][i].synonym;
                     const childFull = childrenResult[0][i].full;
                     children.push(
                         {
-                            "name": (childSynonym != null ? childSynonym : childFull),
+                            "name": (childSynonym.length > 0 ? childSynonym : childFull),
                             "concept_id": childrenResult[0][i].id,
                             "parent": rootResult[0].id,
                             "children": null,
@@ -449,7 +449,6 @@ var Container = React.createClass({
                     />
                     <section>
                         <Bar
-                            serverUrl={this.state.serverUrl} 
                             update={this.updateSelectedTerm} 
                             isLoggedIn={this.state.isLoggedIn}
                             onLogin={this.onLogin}
