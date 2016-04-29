@@ -43,6 +43,10 @@
     width: 600px;
 }
 
+.infoPanelBody {
+    padding-top: 0;
+}
+
 .infoPanelButton {
     font-size: 2.4em;
     color: #f0ad4e;
@@ -76,19 +80,18 @@
     cursor: move;
 }
 
-/* Parents table */
-<<<<<<< HEAD
+/* General info */
 
-caption.parentsTable {
-    font-size: 20px;
+.termInfoName {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 12px;
 }
+
+/* Parents table */
 
 tr.parentsTable:hover {
     cursor: pointer;
-=======
-.parentsTable {
-    /*My name is error*/
->>>>>>> 167435c5c091a58463f0d57e8a990ead1e85cdf0
 }
 
 .parentsTable#parent_name {
@@ -97,4 +100,18 @@ tr.parentsTable:hover {
 
 .parentsTable#parent_id {
     width: 22%;
+}
+
+/* Names table */
+
+.namesTable#name_type {
+    width: 10%;
+}
+
+.namesTable#name_name {
+    width: 70%;
+}
+
+.namesTable#name_acceptability {
+    width: 20%;
 }

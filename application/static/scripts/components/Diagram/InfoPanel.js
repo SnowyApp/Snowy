@@ -19,12 +19,20 @@ var InfoPanel = React.createClass({
         se: {
             termInfo:           "Terminformation",
             name:               "Namn",
-            parents:            "Föräldrar"
+            names:              "Namn",
+            type:               "Typ",
+            acceptability:      "Acceptans",
+            parents:            "Föräldrar",
+            generalInfo:        "Generell information"
         },
         en: {
             termInfo:           "Term information",
             name:               "Name",
-            parents:            "Parents"
+            names:              "Names",
+            type:               "Type",
+            acceptability:      "Acceptability",
+            parents:            "Parents",
+            generalInfo:        "General information"
         }
     },
 
@@ -71,6 +79,14 @@ var InfoPanel = React.createClass({
             });
         }
     },
+/*
+    Saker att skriva ut:
+    ID
+    Descendants count
+    Alla namn (tabell)
+    Föräldrar (tabell)
+    Relations (tabell)
+*/
 
     render: function(){
         var showParents = null;
@@ -101,9 +117,76 @@ var InfoPanel = React.createClass({
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div className="panel-body">
+                <div className="panel-body infoPanelBody">
+                    {/* General info */}
+                    <h3>{this.dict[this.props.language]["generalInfo"]}</h3>
+                    <table className="termInfo">
+                        <tbody>
+                            <tr className="termInfo">
+                                <td className="termInfoName">ID:</td>
+                                <td className="termInfoData">32542541</td>
+                            </tr>
+                            <tr className="termInfo">
+                                <td className="termInfoName">Descendants:</td>
+                                <td className="termInfoData">532</td>
+                            </tr>
+                            <tr className="termInfo">
+                                <td className="termInfoName">Concept type:</td>
+                                <td className="termInfoData">Primitive</td>
+                            </tr>
+                            <tr className="termInfo">
+                                <td className="termInfoName">Status:</td>
+                                <td className="termInfoData">Active</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                
+                    {/* Names */}
+                    <h3>{this.dict[this.props.language]["names"]}</h3>
+                    <table className="table table-condensed namesTable">
+                        <thead>
+                            <tr>
+                                <th id="name_type" className="namesTable">
+                                    {this.dict[this.props.language]["type"]} 
+                                </th>
+                                <th id="name_name" className="namesTable">
+                                    {this.dict[this.props.language]["name"]} 
+                                </th>
+                                <th id="name_acceptability" className="namesTable">
+                                    {this.dict[this.props.language]["acceptability"]} 
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* Temporary static data because API doesnt support it yet */}
+                            <tr>
+                                <td className="namesTable">
+                                    Full
+                                </td>
+                                <td className="namesTable">
+                                    {termName} 
+                                </td>
+                                <td className="namesTable">
+                                    Preferred
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="namesTable">
+                                    Synonym
+                                </td>
+                                <td className="namesTable">
+                                    {termName} 
+                                </td>
+                                <td className="namesTable">
+                                    Acceptable
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {/* Parents */}
+                    <h3 style={showParents}>{this.dict[this.props.language]["parents"]}</h3>
                     <table style={showParents} className="table table-condensed table-hover parentsTable">
-                        <caption className="parentsTable">{this.dict[this.props.language]["parents"]}</caption>
                         <thead>
                             <tr>
                                 <th id="parent_name" className="parentsTable">
