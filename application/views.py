@@ -253,6 +253,18 @@ def get_parents(cid):
     return json.dumps([concept.to_json() for concept in parents])
 
 
+@app.route('/get_names/<int:concept_id>', methods=['GET'])
+def get_concept_names(concept_id):
+    """
+    Retrieves all the names for the given concept.
+    """
+    res = Concept.get_concept_names(concept_id)
+    if res is None:
+        abort(500)
+
+    return json.dumps(res)
+
+
 
 @app.route('/search/<search_term>', methods=['GET'])
 def search(search_term):
