@@ -206,9 +206,6 @@ d3Chart.create = function(element, props, state) {
         tree.nodeSize([NODE_HEIGHT, NODE_WIDTH]);
     }
 
-    //TODO add option to sort by id
-    tree.sort(function(a,b){return d3.ascending(a.name,b.name)});
-
     this._drawTree(element, root);
 };
 
