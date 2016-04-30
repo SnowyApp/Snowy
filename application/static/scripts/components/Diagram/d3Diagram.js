@@ -182,13 +182,11 @@ d3Chart.create = function(element, props, state) {
     if(treeView == 'vertical'){
         g = svg.append('g')
             .attr('class', 'nodes')
-            .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1 + ')')
-            .style('cursor','pointer');
+            .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1 + ')');
     } else {
         g = svg.append('g')
             .attr('class', 'nodes')
-            .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')')
-            .style('cursor','pointer');
+            .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')');
     }
 
     function zoomed() {
@@ -250,8 +248,7 @@ d3Chart.getId = function() {
 d3Chart._resetZoom = function(element){
     if(treeView == 'vertical'){
         d3.select(element).selectAll('.nodes')
-            .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1
-         + ')');
+            .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1 + ')');
     } else {
         d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')');
@@ -333,7 +330,8 @@ d3Chart._drawTree = function(element, data) {
      * more elements.
      */
     var nodeEnter = node.enter().append('g')
-        .attr('class', 'node');
+        .attr('class', 'node')
+        .style('cursor','pointer');
 
         if(treeView == 'vertical'){
             nodeEnter.attr('transform', function(d) {
