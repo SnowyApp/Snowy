@@ -9,7 +9,8 @@ var ChangePersonalInformation = React.createClass({
     propTypes: {
         url:        React.PropTypes.string,
         dict:       React.PropTypes.object,
-        language:   React.PropTypes.string
+        language:   React.PropTypes.string,
+        dbEdition:  React.PropTypes.string
     },
 
     getInitialState: function(){
@@ -61,6 +62,7 @@ var ChangePersonalInformation = React.createClass({
     */
     handleSubmit: function(e){
         e.preventDefault();
+       console.log(this.state.firstName + "," + this.state.lastName + "," + this.props.language + "," + this.props.dbEdition + "," + this.state.email);
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "PUT",
@@ -72,7 +74,7 @@ var ChangePersonalInformation = React.createClass({
                     "first_name": this.state.firstName,
                     "last_name": this.state.lastName,
                     "site_lang": this.props.language,
-                    "data_lang": "placeholder", //TODO: fix real data later
+                    "db_edition": this.props.dbEdition,
                     "email": this.state.email
                 }),
                 success: function () {

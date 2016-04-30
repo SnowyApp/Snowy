@@ -425,6 +425,7 @@ var Container = React.createClass({
                             openDiagram={function(id){console.log(id)}}
                             url={this.state.serverUrl}
                             language={this.state.language}
+                            dbEdition={this.state.dbEdition}
                           />
                 break;
             default:
