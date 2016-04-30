@@ -195,7 +195,8 @@ var Container = React.createClass({
                     for (var i in res) {
                         children.push(
                             {
-                                "name": res[i].synonym,
+                                "name": (res[i].synonym.length > 0) ? 
+                                    res[i].synonym : res[i].full,
                                 "concept_id": res[i].id,
                                 "parent": node.concept_id,
                                 "children": null,
