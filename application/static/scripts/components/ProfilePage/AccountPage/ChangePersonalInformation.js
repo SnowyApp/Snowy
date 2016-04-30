@@ -62,7 +62,6 @@ var ChangePersonalInformation = React.createClass({
     */
     handleSubmit: function(e){
         e.preventDefault();
-       console.log(this.state.firstName + "," + this.state.lastName + "," + this.props.language + "," + this.props.dbEdition + "," + this.state.email);
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "PUT",
