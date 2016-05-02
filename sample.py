@@ -71,7 +71,10 @@ def update_diagram():
     return json.loads(requests.put(url + "/diagram", json=data, headers=auth).text)
 
 def delete_diagram(id):
-    return json.loads(requests.delete(url + "/diagram", json={"id": id}, headers=auth).text)
+    return json.loads(requests.delete(url + "/diagram/" + str(id), headers=auth).text)
 
 def get_diagram():
     return json.loads(requests.get(url + "/diagram", headers=auth).text)
+
+def get_diagram(id):
+    return json.loads(requests.get(url + "/diagram/" + str(id), headers=auth).text)
