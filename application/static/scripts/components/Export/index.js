@@ -56,8 +56,9 @@ var Export = React.createClass({
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         // Append the image data to a link, download the image and then remove canvas
-        var dataString = canvas.toDataURL();
+        var dataString = canvas.toDataURL("image/png");
         var link = document.createElement("a");
+        document.body.appendChild(link);
         link.download = new Date().toJSON().slice(0,10) + ".png";
         link.href = dataString;
         link.click();
