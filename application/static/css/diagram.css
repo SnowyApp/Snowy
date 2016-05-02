@@ -43,6 +43,11 @@
     width: 600px;
 }
 
+.infoPanelBody {
+    padding-top: 0;
+    overflow-y: auto;
+}
+
 .infoPanelButton {
     font-size: 2.4em;
     color: #f0ad4e;
@@ -62,6 +67,7 @@
     margin-right: -5px;
 }
 
+/* Prevent selection of text in header when moving the panel */
 .infoPanelHandle {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
@@ -75,9 +81,18 @@
     cursor: move;
 }
 
+/* General info */
+
+.termInfoName {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 12px;
+}
+
 /* Parents table */
-.parentsTable {
-    /*My name is error*/
+
+tr.parentsTable:hover {
+    cursor: pointer;
 }
 
 .parentsTable#parent_name {
@@ -86,4 +101,32 @@
 
 .parentsTable#parent_id {
     width: 22%;
+}
+
+/* Names table */
+
+.namesTable#name_type {
+    width: 17%;
+}
+
+.namesTable#name_name {
+    width: 63%;
+}
+
+.namesTable#name_acceptability {
+    width: 20%;
+}
+
+/* Relations table */
+
+.relationsTable#relation_type {
+    width: 35%;
+}
+
+.relationsTable#relation_destination {
+    width: 50%;
+}
+
+.relationsTable#relation_chartype {
+    width: 15%;
 }

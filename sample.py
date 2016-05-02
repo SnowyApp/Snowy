@@ -45,6 +45,9 @@ def get_parents(id):
 def get_concept(id):
     return json.loads(requests.get(url + "/concept/" + str(id)).text)
 
+def get_concept_names(id):
+    return json.loads(requests.get(url + "/get_names/" + str(id)).text)
+
 def update_info():
     global auth
     data = {"first_name": "Simon", "last_name": "Lindblad", "data_lang": "en", "email": "simonlind", "site_lang": "en"}

@@ -14,8 +14,10 @@ SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, db_edit
 UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=%s, email=%s, site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
+
 # Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
+SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
 
 # Token queries
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
@@ -441,6 +443,26 @@ class Concept():
                 concept.definition_status_id = data[3]
                 return concept
 
+        except Exception as e:
+            print(e)
+            return None
+
+    @staticmethod
+    def get_concept_names(concept_id):
+        """
+        Returns all the names for the provided term.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(SELECT_CONCEPT_NAME_QUERY, (concept_id,))
+            result = []
+            for desc in cur:
+                result += [{
+                            "name": desc[1],
+                            "type": "synonym" if desc[0]==900000000000074008 else "full",
+                            "acceptability": "preferred" if desc[2]==900000000000548007 else "acceptable"
+                            }]
+            return result
         except Exception as e:
             print(e)
             return None

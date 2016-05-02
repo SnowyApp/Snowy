@@ -139,6 +139,7 @@ var Diagram = React.createClass({
                             data={this.state.data}
                             language={this.props.language}
                             url={this.props.url}
+                            update={this.props.update}
                         />
                     </div>
                 </Draggable>

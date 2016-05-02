@@ -317,6 +317,8 @@ Simple API for allowing accessing snowy data.
 
 ## Names [/get_names/{id}]
 
+### Retrieving names [GET]
+
 + Response 200 (application/json)
 
     + Body
@@ -325,17 +327,17 @@ Simple API for allowing accessing snowy data.
             {
                 'name': 'Primary malignant neoplasm of lung (disorder)',
                 'type': 'full',
-                'acceptabillity': 'preferred'
+                'acceptability': 'preferred'
             },
             {
                 'name': 'Primary malignant neoplasm of lung',
                 'type': 'synonym',
-                'acceptabillity': 'preferred'
+                'acceptability': 'preferred'
             },
             {
                 'name': 'Lung cancer',
                 'type': 'synonym',
-                'acceptabillity': 'acceptable'
+                'acceptability': 'acceptable'
             }
         ]
 
@@ -402,7 +404,7 @@ Simple API for allowing accessing snowy data.
                 }
             ]
 
-## Diagram [/diagram]
+## Diagrams [/diagrams]
 
 ### Get all diagrams [GET]
 
@@ -423,9 +425,34 @@ Simple API for allowing accessing snowy data.
                     'name': 'Simons diagram',
                     'created': '2016-04-17 18:44:09.154725+02:00', 
                     'modified': '2016-04-17 18:44:09.154725+02:00', 
-                    'data': 'This is a JSON formatted diagram'
+                    'desc': 'This is an optional description of the diagram'
                 }
             ]
+
+## Diagram [/diagram/{id}]
+
+### Get a diagram [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: token
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                'id': 1,
+                'name': 'Simons diagram',
+                'created': '2016-04-17 18:44:09.154725+02:00', 
+                'modified': '2016-04-17 18:44:09.154725+02:00', 
+                'data': 'This is a JSON formatted diagram',
+                'desc': 'This is an optional description of the diagram'
+            }
+
 
 ### Add a new diagram [POST]
 
@@ -440,6 +467,7 @@ Simple API for allowing accessing snowy data.
             {
                 "data": "This is a JSON formatted diagram",
                 "name": "This is the name of the diagram",
+                "desc": "This is an optional description of the diagram",
                 "created": "This is a date string"
             }
 
