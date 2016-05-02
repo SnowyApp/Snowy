@@ -57,7 +57,8 @@ var InfoPanel = React.createClass({
         return ({
             parents: [],
             names: [],
-            relations: []
+            relations: [],
+            favorited: false
         });
     },
 
@@ -66,6 +67,20 @@ var InfoPanel = React.createClass({
         this.getParents(this.props.data[0].concept_id);
         this.getNames(this.props.data[0].concept_id);
         this.getRelations(this.props.data[0].concept_id);
+        this.isFavorited(this.props.data[0].concept_id);
+    },
+
+   /**
+    * Sets the favorited state to true of the given id is in the favorites list
+    */
+    isFavorited: function(id){
+        var favorited = false;
+        for(var i = 0; i < this.props.favoriteTerms.length; i++){
+            if(this.props.favoriteTerms[i].id == id) favorited = true;
+        }
+        this.setState({
+            favorited: favorited
+        });
     },
 
     /**
@@ -167,6 +182,13 @@ var InfoPanel = React.createClass({
         }
     },
 
+   /**
+    * Calls back to the top container to add favorite term
+    */
+    addFavorite: function(args){
+        this.props.addFavoriteTerm(args.id, args.name);
+    },
+
     render: function(){
         //Check if data is set yet, otherwise return
         if(this.props.data.length == 0) return null;
@@ -235,7 +257,10 @@ var InfoPanel = React.createClass({
                     </button>
                 </div>
                 <div className="panel-body infoPanelBody">
-                    <button type="button" className="btn btn-success btn-sm saveTermButton" onClick={this.addFavoriteTerm}>
+                    <button
+                        type="button"
+                        className="btn btn-success btn-sm saveTermButton"
+                        onClick={this.addFavorite.bind(null,{id: this.props.data[0].concept_id, name: this.props.data[0].name})}>
                         {this.dict[this.props.language]["saveFavorite"]}
                     </button>
                     
