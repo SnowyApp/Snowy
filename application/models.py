@@ -512,6 +512,7 @@ class Concept():
                     "full": self.full_term,
                     "type_id": self.type_id,
                     "type_name": self.type_name,
+                     "char_type": "inferred",
                     "definition_status": self.get_definition_status()}
 
     def __str__(self):
