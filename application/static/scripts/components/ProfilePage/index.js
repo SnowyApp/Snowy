@@ -114,6 +114,7 @@ var dummyDiagrams =
  */
 var ProfilePage = React.createClass({
     propTypes: {
+        favoriteTerms:  React.PropTypes.array,
         openTerm:       React.PropTypes.func,
         openDiagram:    React.PropTypes.func,
         url:            React.PropTypes.string,
@@ -244,20 +245,6 @@ var ProfilePage = React.createClass({
         });
         return data;
     },
-    
-   /**
-    * Removes an object from array with .id == id
-    */
-    removeById: function(array, id){
-        //Find the object and remove it from the array
-        for(var i = 0; i < array.length; i++){              
-            if(array[i].id == id){
-                array.splice(i, 1);
-                break;
-            }
-        }
-        return array;
-    },
 
     render: function(){
         //Only render the current tab
@@ -265,11 +252,13 @@ var ProfilePage = React.createClass({
         switch(this.state.currentTab){
             case 'terms':
                 content = <FavoriteTerms
+                                removeFavoriteTerm={this.props.removeFavoriteTerm}
+                                favoriteTerms={this.props.favoriteTerms}
                                 url={this.props.url}
                                 dict={this.dict}
                                 language={this.props.language}
                                 openTerm={this.props.openTerm}
-                                removeid={this.removeById}
+                                removeid={this.props.removeById}
                                 nameSort={this.sortByName}
                                 idSort={this.sortById}
                                 dateSort={this.sortByDate}
@@ -281,7 +270,7 @@ var ProfilePage = React.createClass({
                                 dict={this.dict}
                                 language={this.props.language}
                                 openDiagram={this.props.openDiagram}
-                                removeid={this.removeById}
+                                removeid={this.props.removeById}
                                 nameSort={this.sortByName}
                                 dateSort={this.sortByDate}
                           />;
