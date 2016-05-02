@@ -47,7 +47,8 @@ var InfoPanel = React.createClass({
     getInitialState: function(){
         return ({
             parents: [],
-            names: []
+            names: [],
+            relations: []
         });
     },
 
@@ -55,6 +56,42 @@ var InfoPanel = React.createClass({
         this.props = nextProps;
         this.getParents(this.props.data[0].concept_id);
         this.getNames(this.props.data[0].concept_id);
+        this.getRelations(this.props.data[0].concept_id);
+    },
+
+    /**
+    * Gets all relations for a given id
+    */
+    getRelations: function(id){
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "GET",
+                url: this.props.url + "/get_relations/" + id,
+                success: function (data) {
+                    console.log(data);
+                    var relations = [];
+                    var name = "";
+                    for(var i = 0; i < data.length; i++){
+                        name = (data[i].synonym.length > 0 ? data[i].synonym : data[i].full);
+                        relations.push({
+                            name: name,
+                            type: data[i].type_name,
+                            charType: "(Inferred)" //TODO: Fix real data
+                        });
+                    }
+                    this.setState({
+                        relations: relations
+                    });
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed getting names.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
    /**
@@ -124,6 +161,9 @@ var InfoPanel = React.createClass({
     },
 
     render: function(){
+        //Check if data is set yet, otherwise return
+        if(this.props.data.length == 0) return null;
+        console.log(this.props.data);
         var showParents = null;
         if(this.state.parents.length > 0){
             //Create table rows for all parents
@@ -158,12 +198,31 @@ var InfoPanel = React.createClass({
                     </tr>
                 );
         });
-        //Get name only if defined
-        const termName = (this.props.data.length > 0 ? this.props.data[0].name : "");
+        var showRelations = null;
+        if(this.state.relations.length > 0){
+            //Create table rows for all relations
+            var relationsArray = this.state.relations.map(function(relation){
+                return (
+                        <tr key={relation.name}>
+                            <td>
+                                {relation.type}
+                            </td>
+                            <td>
+                                {relation.name}
+                            </td>
+                            <td>
+                                {relation.charType}
+                            </td>
+                        </tr>
+                    );
+            });
+        } else {
+            showRelations = {display: "none"};
+        }
         return (
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
-                    {termName}
+                    {this.props.data[0].name}
                     <button onClick={this.props.hidePanel} className="close closeInfoButton" type="button" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -176,7 +235,7 @@ var InfoPanel = React.createClass({
                             <tbody>
                                 <tr className="termInfo">
                                     <td className="termInfoName">ID:</td>
-                                    <td className="termInfoData">32542541</td>
+                                    <td className="termInfoData">{this.props.data[0].concept_id}</td>
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">Descendants:</td>
@@ -235,8 +294,8 @@ var InfoPanel = React.createClass({
                         </table>
                     </div>
                     {/* Relations */}
-                    <h3>{this.dict[this.props.language]["relations"]}</h3>
-                    <div className="well">
+                    <h3 style={showRelations}>{this.dict[this.props.language]["relations"]}</h3>
+                    <div style={showRelations} className="well">
                         <table className="table table-condensed">
                             <thead>
                                 <tr>
@@ -252,29 +311,7 @@ var InfoPanel = React.createClass({
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* Temporary static data because API doesnt support it yet */}
-                                <tr>
-                                    <td>
-                                        Is a
-                                    </td>
-                                    <td>
-                                        temp
-                                    </td>
-                                    <td>
-                                        Inferred
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Associated morphology
-                                    </td>
-                                    <td>
-                                        temp
-                                    </td>
-                                    <td>
-                                        Inferred
-                                    </td>
-                                </tr>
+                                {relationsArray}
                             </tbody>
                         </table>
                     </div>

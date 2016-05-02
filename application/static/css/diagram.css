@@ -122,11 +122,11 @@ tr.parentsTable:hover {
 /* Relations table */
 
 .relationsTable#relation_type {
-    width: 35%;
+    width: 25%;
 }
 
 .relationsTable#relation_destination {
-    width: 50%;
+    width: 60%;
 }
 
 .relationsTable#relation_chartype {
