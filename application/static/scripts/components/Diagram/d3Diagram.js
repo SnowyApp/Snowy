@@ -446,6 +446,50 @@ d3Chart._drawTree = function(element, data) {
                 return DEFINED_CONCEPT_COLOR;
             })
             .style('stroke','black');
+
+        nodeEnter.append('rect')
+            .attr('class', 'borderNode')
+            .attr('x', function(d){
+                if(d.definitionStatus == 'primitive'){
+                    return '0';
+                }
+                else{
+                    return DEFINED_CONCEPT_BORDER;
+                }
+            })
+            .attr('y', function(d){
+                if(d.definitionStatus == 'primitive'){
+                    return '0';
+                }
+                else{
+                    return DEFINED_CONCEPT_BORDER;
+                }
+            })
+            .attr('width', function (d) {
+                if(d.definitionStatus == 'primitive'){
+                    return NODE_WIDTH;
+                }
+                else{
+                    return NODE_WIDTH-DEFINED_CONCEPT_BORDER*2;
+                }
+            })
+            .attr('height',function (d) {
+                if(d.definitionStatus == 'primitive'){
+                    return NODE_HEIGHT;
+                }
+                else {
+                    return NODE_HEIGHT+DEFINED_CONCEPT_BORDER*2;
+                }
+            })
+            .style('fill', function (d) {
+                if(d.definitionStatus == 'primitive'){
+                    return CONCEPT_COLOR;
+                }
+                return DEFINED_CONCEPT_COLOR;
+            })
+            .style('stroke','black');
+
+
     }
     //Add text-element for every node
     if(treeView == 'vertical'){
