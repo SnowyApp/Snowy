@@ -163,9 +163,9 @@ var InfoPanel = React.createClass({
     },
 
     /**
-    * Adds a favorite term to the database
+    * Saves the current root term as a favorite in the database
     */
-    addFavoriteTerm: function(id, name){
+    addFavoriteTerm: function(){
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "POST",
@@ -174,8 +174,8 @@ var InfoPanel = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 data: JSON.stringify({
-                    "id": id,
-                    "term": name,
+                    "id": this.props.data[0].concept_id,
+                    "term": this.props.data[0].name,
                     "date_added": new Date().toString()
                 }),
                 success: function (data) {
@@ -258,7 +258,9 @@ var InfoPanel = React.createClass({
                     </button>
                 </div>
                 <div className="panel-body infoPanelBody">
-                    <button type="button" className="btn btn-success btn-sm saveTermButton">{this.dict[this.props.language]["saveFavorite"]}</button>
+                    <button type="button" className="btn btn-success btn-sm saveTermButton" onClick={this.addFavoriteTerm}>
+                        {this.dict[this.props.language]["saveFavorite"]}
+                    </button>
                     {/* General info TODO: Fix real data for concept type and status*/}
                     <h3>
                         {this.dict[this.props.language]["generalInfo"]}
