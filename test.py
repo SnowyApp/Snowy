@@ -227,7 +227,6 @@ class TestApplication(unittest.TestCase):
         resp_data = json.loads(response.data.decode("utf-8"))
         self.assertEqual(len(resp_data), 1)
         self.assertEqual(resp_data[0]["id"], diagram_id)
-        self.assertEqual(resp_data[0]["data"], "This is a test diagram")
         self.assertEqual(resp_data[0]["name"], "Simons diagram")
         self.assertEqual(resp_data[0]["created"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
         self.assertEqual(resp_data[0]["modified"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
@@ -242,13 +241,12 @@ class TestApplication(unittest.TestCase):
         resp_data = json.loads(response.data.decode("utf-8"))
         self.assertEqual(len(resp_data), 1)
         self.assertEqual(resp_data[0]["id"], diagram_id)
-        self.assertEqual(resp_data[0]["data"], "This is an updated test diagram")
         self.assertEqual(resp_data[0]["name"], "Simons updated diagram")
         self.assertEqual(resp_data[0]["created"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
         self.assertEqual(resp_data[0]["modified"], "Thu Apr 28 2016 19:48:38 GMT+0200 (W. Europe Standard Time)")
 
         # Test to delete the diagram
-        response = self.app.delete("/diagram", data=json.dumps({"id": diagram_id}), headers={'Authorization': data['token']}, content_type="application/json")
+        response = self.app.delete("/diagram/" + str(diagram_id), headers={'Authorization': data['token']}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
         # Check so that the diagram is actually deleted
