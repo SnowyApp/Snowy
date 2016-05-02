@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
-require('stackblur');
-require('rgbcolor');
-import canvg from 'canvg-fixed';
 import FileSaver from 'browser-filesaver';
+var Svgsaver = require('svgsaver');
 
 var Export = React.createClass({
     propTypes: {
@@ -24,11 +22,26 @@ var Export = React.createClass({
      * Exports the svg to a file which is downloaded to the user's computer
      */
     exportSVG: function(){
-        var html = d3.select("svg")
-            .node().parentNode.innerHTML;
+        // Initiates svgsaver
+        var svgsaver = new Svgsaver();
 
-        var blob = new Blob([html], {type: "image/svg+xml"});
-        FileSaver.saveAs(blob, new Date().toJSON().slice(0,10) + ".svg");
+        // Clones the svg node so that we don't modify it
+        var svg = d3.select("svg").node();
+        var svgClone = svg.cloneNode(true);
+
+        // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
+        var bb=d3.select('body').selectAll('.nodes').node().getBBox();
+        var bbx=bb.x;
+        var bby=bb.y;
+        var bbw=bb.width;
+        var bbh=bb.height;
+        var vb=[bbx,bby,bbw,bbh];
+        svgClone.setAttribute("viewBox", vb.join(" ") );
+        svgClone.setAttribute('width', bbw);
+        svgClone.setAttribute('height', bbh);
+
+        // Saves the svg to the desktop
+        svgsaver.asSvg(svgClone, new Date().toJSON().slice(0,10) + ".svg");
 
     },
 
@@ -36,33 +49,27 @@ var Export = React.createClass({
      * Exports the svg to a canvas which is then converted into a png file
      * which is downloaded to the user's computer
      */
-    exportPNG: function(){
-        // Create a canvas with the height and width of the parent of the svg document
-        var chartArea = document.getElementsByTagName('svg')[0].parentNode;
-        var svg = chartArea.innerHTML;
-        var canvas = document.createElement('canvas');
-        canvas.setAttribute('width', chartArea.offsetWidth);
-        canvas.setAttribute('height', chartArea.offsetHeight);
-        canvas.setAttribute('display', 'none');
+    exportPNG:function(){
+        // Initiates svgsaver
+        var svgsaver = new Svgsaver();
 
-        // Add the canvas to the body of the document and add the svg document to the canvas
-        document.body.appendChild(canvas);
-        canvg(canvas, svg);
+        // Clones the svg node so that we don't modify it
+        var svg = d3.select("svg").node();
+        var svgClone = svg.cloneNode(true);
 
-        // Draw a white background behind the content
-        var context = canvas.getContext("2d");
-        context.globalCompositeOperation = "destination-over";
-        context.fillStyle = '#fff';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
+        var bb=d3.select('body').selectAll('.nodes').node().getBBox();
+        var bbx=bb.x;
+        var bby=bb.y;
+        var bbw=bb.width;
+        var bbh=bb.height;
+        var vb=[bbx,bby,bbw,bbh];
+        svgClone.setAttribute("viewBox", vb.join(" ") );
+        svgClone.setAttribute('width', bbw);
+        svgClone.setAttribute('height', bbh);
 
-        // Append the image data to a link, download the image and then remove canvas
-        var dataString = canvas.toDataURL("image/png");
-        var link = document.createElement("a");
-        document.body.appendChild(link);
-        link.download = new Date().toJSON().slice(0,10) + ".png";
-        link.href = dataString;
-        link.click();
-        canvas.parentNode.removeChild(canvas);
+        // Saves the svg to the desktop
+        svgsaver.asPng(svgClone, new Date().toJSON().slice(0,10) + ".png");
     },
     render: function(){
         return (
