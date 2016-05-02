@@ -11,7 +11,7 @@ var Diagram = React.createClass({
     propTypes: {
         favoriteTerms:      React.PropTypes.array,
         removeFavoriteTerm: React.PropTypes.func
-    }
+    },
 
     //Dictionary for supported languages
     dict: {
