@@ -12,7 +12,8 @@ var AccountPage = React.createClass({
     propTypes: {
         url:            React.PropTypes.string,
         dict:           React.PropTypes.object,
-        language:       React.PropTypes.string
+        language:       React.PropTypes.string,
+        dbEdition:      React.PropTypes.string
     },
 
     getInitialState: function(){
@@ -85,7 +86,7 @@ var AccountPage = React.createClass({
                                 </div>
                                 <div id="nameCollapse" className="panel-collapse collapse">
                                     <div className="panel-body">
-                                        <ChangePersonalInformation url={this.props.url} dict={this.props.dict} language={this.props.language}/>
+                                        <ChangePersonalInformation url={this.props.url} dict={this.props.dict} language={this.props.language} dbEdition={this.props.dbEdition}/>
                                     </div>
                                 </div>
                             </div>

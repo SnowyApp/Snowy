@@ -28,7 +28,8 @@ var Container = React.createClass({
             data: this.props.data,
             history: [],
             language: "en",
-            dbEdition: "en"
+            dbEdition: "en",
+            sortAlphabetically: true
         };
     },
 
@@ -65,7 +66,8 @@ var Container = React.createClass({
                         "name": (rootSynonym != null ? rootSynonym : rootFull),
                         "concept_id": rootResult[0].id,
                         "parent": "null",
-                        "children": children,
+                        "children": this.sortChildren(children, 
+                                this.state.sortAlphabetically),
                         "id": 0
                     }
                 ];
@@ -193,7 +195,8 @@ var Container = React.createClass({
                     for (var i in res) {
                         children.push(
                             {
-                                "name": res[i].synonym,
+                                "name": (res[i].synonym.length > 0) ? 
+                                    res[i].synonym : res[i].full,
                                 "concept_id": res[i].id,
                                 "parent": node.concept_id,
                                 "children": null,
@@ -202,7 +205,8 @@ var Container = React.createClass({
                         );
                     }
                     // update node's children
-                    node.children = children;
+                    node.children = this.sortChildren(children, 
+                            this.state.sortAlphabetically);
                     this.setState({
                         data: tree
                     });
@@ -215,6 +219,21 @@ var Container = React.createClass({
                 data: tree
             });
         }
+    },
+
+    /**
+     * Sort the children in an alphabetical order if the flag is set to true
+     * otherwise sort them by ID.
+     */
+    sortChildren: function(children, alphabetical=true) {
+        if (alphabetical) {
+            return children.sort(function(a, b) {
+                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);   
+            });
+        }
+        return children.sort(function(a, b) {
+            return a.concept_id - b.concept_id;   
+        });
     },
 
     /**
@@ -425,6 +444,7 @@ var Container = React.createClass({
                             openDiagram={function(id){console.log(id)}}
                             url={this.state.serverUrl}
                             language={this.state.language}
+                            dbEdition={this.state.dbEdition}
                           />
                 break;
             default:

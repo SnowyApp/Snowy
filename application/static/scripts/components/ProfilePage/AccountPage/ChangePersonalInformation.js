@@ -9,7 +9,8 @@ var ChangePersonalInformation = React.createClass({
     propTypes: {
         url:        React.PropTypes.string,
         dict:       React.PropTypes.object,
-        language:   React.PropTypes.string
+        language:   React.PropTypes.string,
+        dbEdition:  React.PropTypes.string
     },
 
     getInitialState: function(){
@@ -72,7 +73,7 @@ var ChangePersonalInformation = React.createClass({
                     "first_name": this.state.firstName,
                     "last_name": this.state.lastName,
                     "site_lang": this.props.language,
-                    "db_edition": "placeholder", //TODO: fix real data later
+                    "db_edition": this.props.dbEdition,
                     "email": this.state.email
                 }),
                 success: function () {

@@ -117,7 +117,8 @@ var ProfilePage = React.createClass({
         openTerm:       React.PropTypes.func,
         openDiagram:    React.PropTypes.func,
         url:            React.PropTypes.string,
-        language:       React.PropTypes.string
+        language:       React.PropTypes.string,
+        dbEdition:      React.PropTypes.string
     },
 
     //Dictionary for supported languages. m prefix indicates that its a error/success message
@@ -290,6 +291,7 @@ var ProfilePage = React.createClass({
                                 url={this.props.url}
                                 dict={this.dict}
                                 language={this.props.language}
+                                dbEdition={this.props.dbEdition}
                           />;
                 break;
         }
