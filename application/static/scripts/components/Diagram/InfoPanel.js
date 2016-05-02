@@ -163,7 +163,6 @@ var InfoPanel = React.createClass({
     render: function(){
         //Check if data is set yet, otherwise return
         if(this.props.data.length == 0) return null;
-        console.log(this.props.data);
         var showParents = null;
         if(this.state.parents.length > 0){
             //Create table rows for all parents
