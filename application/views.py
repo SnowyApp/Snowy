@@ -285,7 +285,7 @@ def search(search_term):
     return jsonify(es.search(index="desc", body=query))
 
 
-@app.route('/diagram', methods=['POST', 'GET', 'PUT', 'DELETE'])
+@app.route('/diagram', methods=['POST', 'GET', 'PUT'])
 @login_required
 def store_diagram():
     """
@@ -311,29 +311,35 @@ def store_diagram():
             not 'id' in data or not isinstance(data['id'], int):
             return jsonify(message="data, name or id not provided"), 400
 
-        
         res = g.user.store_diagram(data['data'], data['name'], data['modified'], data['id'])
         if res is None:
             abort(500)
 
         return jsonify(status="ok")
-    elif request.method == "DELETE":
-        data = request.get_json()
-        if not 'id' in data or not isinstance(data['id'], int):
-            return jsonify(message = "'id' is not provided"), 400
-
-        res = g.user.delete_diagram(data['id'])
-        if not res:
-            abort(500)
-
-        return jsonify(status="ok")
-        
     else:
         data = g.user.get_diagrams()
         if data is None:
             abort(500)
 
         return json.dumps(data)
+
+@app.route('/diagram/<int:diagram_id>', methods=["GET", "DELETE"])
+@login_required
+def diagram_id(diagram_id):
+    """
+    Pass
+    """
+    if request.method == "GET":
+        res = g.user.get_diagram(diagram_id)
+        if res is None:
+            abort(500)
+        return jsonify(res)
+    else:
+        res = g.user.delete_diagram(diagram_id)
+        if not res:
+            abort(500)
+
+        return jsonify(status="ok")
 
 
 @app.errorhandler(400)
