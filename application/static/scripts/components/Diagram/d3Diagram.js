@@ -378,19 +378,6 @@ d3Chart._drawTree = function(element, data) {
                 onClick(d.id);
             }
         });
-
-    function borderWidth(d){
-        if(d.definitionStatus == 'primitive'){
-            return NODE_WIDTH;
-        }
-        return NODE_WIDTH-DEFINED_CONCEPT_BORDER*2;
-    }
-    function borderHeight(d){
-        if(d.definitionStatus == 'primitive'){
-            return NODE_HEIGHT;
-        }
-        return NODE_HEIGHT+DEFINED_CONCEPT_BORDER*2;
-    }
     //Enter rectangles for every node
     if(treeView == 'vertical'){
         nodeEnter.append('rect')
