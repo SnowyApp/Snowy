@@ -46,6 +46,7 @@
 .infoPanelBody {
     padding-top: 0;
     overflow-y: auto;
+    max-height: 60vh;
 }
 
 .infoPanelButton {
@@ -93,6 +94,7 @@
 
 tr.parentsTable:hover {
     cursor: pointer;
+    background-color: #e0e0e0;
 }
 
 .parentsTable#parent_name {
