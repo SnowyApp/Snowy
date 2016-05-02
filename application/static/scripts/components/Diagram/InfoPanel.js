@@ -46,23 +46,58 @@ var InfoPanel = React.createClass({
 
     getInitialState: function(){
         return ({
-            parents: []
+            parents: [],
+            names: []
         });
     },
 
     componentWillReceiveProps: function(nextProps){
         this.props = nextProps;
-        this.getParents();
+        this.getParents(this.props.data[0].concept_id);
+        this.getNames(this.props.data[0].concept_id);
     },
 
-    /*
-    * Function to call API to get parents of selected concept
+   /**
+    * Gets all names for a given id
     */
-    getParents: function(){
+    getNames: function(id){
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "GET",
-                url: this.props.url + "/get_parents/" + this.props.data[0].concept_id,
+                url: this.props.url + "/get_names/" + id,
+                success: function (data) {
+                    console.log(data);
+                    var names = [];
+                    for(var i = 0; i < data.length; i++){
+                        names.push({
+                            name: data[i].name,
+                            type: data[i].type,
+                            acceptability: data[i].acceptability
+                        });
+                    }
+                    this.setState({
+                        names: names
+                    });
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed getting names.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
+    /*
+    * Function to call API to get parents of id
+    */
+    getParents: function(id){
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "GET",
+                url: this.props.url + "/get_parents/" + id,
                 success: function (data) {
                     var parents = [];
                     for(var i = 0; i < data.length; i++){
@@ -87,14 +122,6 @@ var InfoPanel = React.createClass({
             });
         }
     },
-/*
-    Saker att skriva ut:
-    ID
-    Descendants count
-    Alla namn (tabell)
-    Föräldrar (tabell)
-    Relations (tabell)
-*/
 
     render: function(){
         var showParents = null;
@@ -115,6 +142,22 @@ var InfoPanel = React.createClass({
         } else {
             showParents = {display: "none"};
         }
+        //Create table rows for all names
+        var namesArray = this.state.names.map(function(name){
+            return (
+                    <tr key={name.name}>
+                        <td>
+                            {name.type}
+                        </td>
+                        <td>
+                            {name.name}
+                        </td>
+                        <td>
+                            {name.acceptability}
+                        </td>
+                    </tr>
+                );
+        });
         //Get name only if defined
         const termName = (this.props.data.length > 0 ? this.props.data[0].name : "");
         return (
@@ -168,194 +211,7 @@ var InfoPanel = React.createClass({
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* Temporary static data because API doesnt support it yet */}
-                                <tr>
-                                    <td>
-                                        Full
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Preferred
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Synonym
-                                    </td>
-                                    <td>
-                                        {termName} 
-                                    </td>
-                                    <td>
-                                        Acceptable
-                                    </td>
-                                </tr>
+                                {namesArray}
                             </tbody>
                         </table>
                     </div>
