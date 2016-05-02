@@ -14,20 +14,20 @@ var d3Chart = module.exports = {};
 var contextMenu = require('./d3-context-menu');
 
 const dict = {
-        se: {
-            'removeNode':   'Ta bort nod',
-            'hideShowChildren': 'Visa/Dölj barn',
-            'hideSiblings': 'Dölj syskon',
-            'showSiblings': 'Visa syskon',
-            'resetNodePosition': 'Återställ nodens position'
-            },
-        en: {
-            'removeNode':   'Remove node',
-            'hideShowChildren': 'Show/Hide children',
-            'hideSiblings': 'Hide siblings',
-            'showSiblings': 'Show siblings',
-            'resetNodePosition': 'Reset node position'
-            }
+    se: {
+        'removeNode':   'Ta bort nod',
+        'hideShowChildren': 'Visa/Dölj barn',
+        'hideSiblings': 'Dölj syskon',
+        'showSiblings': 'Visa syskon',
+        'resetNodePosition': 'Återställ nodens position'
+    },
+    en: {
+        'removeNode':   'Remove node',
+        'hideShowChildren': 'Show/Hide children',
+        'hideSiblings': 'Hide siblings',
+        'showSiblings': 'Show siblings',
+        'resetNodePosition': 'Reset node position'
+    }
 };
 
 //Called during mouseevent, updates position for selected nodes and links
@@ -76,13 +76,13 @@ d3Chart._createMenuData = function(element) {
         {
             title: dict[lang]['hideShowChildren'],
             action: function(elm, d){
-                
+
                 //If the node have children, put them in another list
                 if (d.children) {
                     d._children = d.children;
                     d.children = null;
-                } 
-                
+                }
+
                 //Take the children back
                 else {
                     d.children = d._children;
@@ -128,9 +128,9 @@ d3Chart._createMenuData = function(element) {
             }
         }
 
-        ];
+    ];
 
-};  
+};
 
 var i = 0;
 var tree,root,treeView,svg,g,onClick,zoom, link, node;
@@ -254,7 +254,7 @@ d3Chart._resetZoom = function(element){
     if(treeView == 'vertical'){
         d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1
-         + ')');
+                + ')');
     } else {
         d3.select(element).selectAll('.nodes')
             .attr('transform', 'translate(' + 0 + ',' + HORIZONTAL_MARGIN + ')scale(' + 1 + ')');
@@ -338,17 +338,17 @@ d3Chart._drawTree = function(element, data) {
     var nodeEnter = node.enter().append('g')
         .attr('class', 'node');
 
-        if(treeView == 'vertical'){
-            nodeEnter.attr('transform', function(d) {
-                return 'translate(' + d.x + ', ' + d.y + ')';
-            });
-        } else {
-            nodeEnter.attr('transform', function(d) {
-                return 'translate(' + d.y + ', ' + d.x + ')';
-            });
-        }
-        //When right clicking on a node call the contextMenu function
-        nodeEnter.on('contextmenu', d3.contextMenu(this._createMenuData(element)))
+    if(treeView == 'vertical'){
+        nodeEnter.attr('transform', function(d) {
+            return 'translate(' + d.x + ', ' + d.y + ')';
+        });
+    } else {
+        nodeEnter.attr('transform', function(d) {
+            return 'translate(' + d.y + ', ' + d.x + ')';
+        });
+    }
+    //When right clicking on a node call the contextMenu function
+    nodeEnter.on('contextmenu', d3.contextMenu(this._createMenuData(element)))
         .call(drag)
         .on('mouseover', function(){
             d3.select(this).selectAll('rect.node').style( 'fill', '#ebebeb');
@@ -383,6 +383,19 @@ d3Chart._drawTree = function(element, data) {
                 onClick(d.id);
             }
         });
+
+    function borderWidth(d){
+        if(d.definitionStatus == 'primitive'){
+            return NODE_WIDTH;
+        }
+        return NODE_WIDTH-DEFINED_CONCEPT_BORDER*2;
+    }
+    function borderHeight(d){
+        if(d.definitionStatus == 'primitive'){
+            return NODE_HEIGHT;
+        }
+        return NODE_HEIGHT+DEFINED_CONCEPT_BORDER*2;
+    }
     //Enter rectangles for every node
     if(treeView == 'vertical'){
         nodeEnter.append('rect')
@@ -397,12 +410,42 @@ d3Chart._drawTree = function(element, data) {
                 return DEFINED_CONCEPT_COLOR;
             })
             .style('stroke','black');
+
         nodeEnter.append('rect')
             .attr('class', 'node')
-            .attr('x', WIDTH_MARGIN+DEFINED_CONCEPT_BORDER)
-            .attr('y', DEFINED_CONCEPT_BORDER)
-            .attr('width', NODE_WIDTH-DEFINED_CONCEPT_BORDER*2)
-            .attr('height',NODE_HEIGHT+DEFINED_CONCEPT_BORDER*2)
+            .attr('x', function(d){
+                if(d.definitionStatus == 'primitive'){
+                    return WIDTH_MARGIN;
+                }
+                else{
+                    return WIDTH_MARGIN+DEFINED_CONCEPT_BORDER;
+                }
+            })
+            .attr('y', function(d){
+                if(d.definitionStatus == 'primitive'){
+                    return '0';
+                }
+                else{
+                    return DEFINED_CONCEPT_BORDER;
+                }
+            })
+            .attr('width', function (d) {
+                if(d.definitionStatus == 'primitive'){
+                    return NODE_WIDTH;
+                }
+                else{
+                    return NODE_WIDTH-DEFINED_CONCEPT_BORDER*2;
+                }
+            })
+            .attr('height',function (d) {
+                console.log(d);
+                if(d.definitionStatus == 'primitive'){
+                    return NODE_HEIGHT+15;
+                }
+                else {
+                    return NODE_HEIGHT+DEFINED_CONCEPT_BORDER*2+15;
+                }
+            })
             .style('fill', function (d) {
                 if(d.definitionStatus == 'primitive'){
                     return CONCEPT_COLOR;
@@ -410,6 +453,7 @@ d3Chart._drawTree = function(element, data) {
                 return DEFINED_CONCEPT_COLOR;
             })
             .style('stroke','black');
+
     } else {
         nodeEnter.append('rect')
             .attr('class', 'node')
@@ -504,8 +548,8 @@ d3Chart._drawTree = function(element, data) {
         }
         else {
             if(treeView == 'vertical'){
-                    d.x += d3.event.dx;
-                    d.y += d3.event.dy;
+                d.x += d3.event.dx;
+                d.y += d3.event.dy;
             }
             else{
                 d.x += d3.event.dy;
