@@ -27,7 +27,8 @@ var InfoPanel = React.createClass({
             relations:          "Relationer",
             destination:        "Destination",
             charType:           "CharType",
-            attribute:          "Attribut"
+            attribute:          "Attribut",
+            saveFavorite:       "Spara favorit"
         },
         en: {
             termInfo:           "Term information",
@@ -40,7 +41,8 @@ var InfoPanel = React.createClass({
             relations:          "Relations",
             destination:        "Destination",
             charType:           "CharType",
-            attribute:          "Attribute"
+            attribute:          "Attribute",
+            saveFavorite:       "Save favorite"
         }
     },
 
@@ -228,7 +230,7 @@ var InfoPanel = React.createClass({
                     </button>
                 </div>
                 <div className="panel-body infoPanelBody">
-                    <button type="button" className="btn btn-success btn-sm saveTermButton">Save</button>
+                    <button type="button" className="btn btn-success btn-sm saveTermButton">{this.dict[this.props.language]["saveFavorite"]}</button>
                     {/* General info TODO: Fix real data for concept type and status*/}
                     <h3>
                         {this.dict[this.props.language]["generalInfo"]}
