@@ -29,6 +29,9 @@ var Export = React.createClass({
         var svg = d3.select("svg").node();
         var svgClone = svg.cloneNode(true);
 
+        // Resets the position and zoom in the cloned diagram
+        svgClone.firstChild.setAttribute("transform", 'translate(0,0)scale(1)');
+
         // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
         var bb=d3.select('body').selectAll('.nodes').node().getBBox();
         var bbx=bb.x;
@@ -56,6 +59,9 @@ var Export = React.createClass({
         // Clones the svg node so that we don't modify it
         var svg = d3.select("svg").node();
         var svgClone = svg.cloneNode(true);
+
+        // Resets the position and zoom in the cloned diagram
+        svgClone.firstChild.setAttribute("transform", 'translate(0,0)scale(1)');
 
         // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
         var bb=d3.select('body').selectAll('.nodes').node().getBBox();
