@@ -270,7 +270,6 @@ var InfoPanel = React.createClass({
                 </div>
                 <div className="panel-body infoPanelBody">
                     <button type="button" className="btn btn-success btn-sm saveTermButton" onClick={this.addFavoriteTerm}>
-                        <Tooltip placement="top" style={{display: "none"}} className="in saveTermTooltip">Saved!</Tooltip>
                         {this.dict[this.props.language]["saveFavorite"]}
                     </button>
                     
