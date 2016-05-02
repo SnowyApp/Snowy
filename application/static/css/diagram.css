@@ -89,6 +89,10 @@
     margin-top: 20px;
 }
 
+.saveTermTooltip {
+    top: 30px; /* This is a bad solution and should probably be fixed later if we have time */
+}
+
 .termInfoName {
     font-weight: bold;
     text-align: right;

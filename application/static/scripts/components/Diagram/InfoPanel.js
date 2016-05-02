@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import cookie from 'react-cookie';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 require('bootstrap');
 
 /*
@@ -166,6 +168,7 @@ var InfoPanel = React.createClass({
     * Saves the current root term as a favorite in the database
     */
     addFavoriteTerm: function(){
+        const hideTooltipTime = 1000;
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "POST",
@@ -179,6 +182,12 @@ var InfoPanel = React.createClass({
                     "date_added": new Date().toString()
                 }),
                 success: function (data) {
+                    //Show "saved" tooltip
+                    $(".saveTermTooltip").fadeIn();
+                    //Hide tooltip after hideTooltipTime ms
+                    setTimeout($.proxy(function(){
+                        $(".saveTermTooltip").fadeOut();
+                    }), hideTooltipTime);
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
@@ -249,6 +258,7 @@ var InfoPanel = React.createClass({
         } else {
             showRelations = {display: "none"};
         }
+        const termTooltip = <Tooltip>Saved!</Tooltip>;
         return (
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
@@ -259,8 +269,10 @@ var InfoPanel = React.createClass({
                 </div>
                 <div className="panel-body infoPanelBody">
                     <button type="button" className="btn btn-success btn-sm saveTermButton" onClick={this.addFavoriteTerm}>
+                        <Tooltip placement="top" style={{display: "none"}} className="in saveTermTooltip">Saved!</Tooltip>
                         {this.dict[this.props.language]["saveFavorite"]}
                     </button>
+                    
                     {/* General info TODO: Fix real data for concept type and status*/}
                     <h3>
                         {this.dict[this.props.language]["generalInfo"]}
