@@ -24,7 +24,8 @@ var Bar = React.createClass({
         language: React.PropTypes.string,
         setLanguage: React.PropTypes.func,
         setEdition: React.PropTypes.func,
-        saveDiagram: React.PropTypes.func
+        saveDiagram: React.PropTypes.func,
+        selectedTerm: React.PropTypes.number
     },
     //Dictionary for supported languages
     dict: {
@@ -181,7 +182,7 @@ var Bar = React.createClass({
                             </MenuItem>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Export language={this.props.language} />
+                    <Export language={this.props.language} selectedTerm={this.props.selectedTerm}/>
                     <Button
                         className="save-diagram"
                         bsStyle="primary"

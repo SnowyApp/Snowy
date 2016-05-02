@@ -11,7 +11,7 @@ var ProfilePage = require('./components/ProfilePage/index');
 
 
 var matteUrl = 'http://hem.ulmstedt.net:5000';
-const conceptId = "138875005";
+const conceptId = 138875005;
 
 /**
 *   Contains the subcomponents of the webpage
@@ -91,7 +91,7 @@ var Container = React.createClass({
                 // update state so that component children can update
                 this.setState({
                     data: root,
-                    selectedTerm: root[0].id
+                    selectedTerm: root[0].concept_id
                 });     
                 
             }.bind(this)
@@ -141,7 +141,7 @@ var Container = React.createClass({
         if (nextProps.data !== undefined) {
             this.setState({
                 data: nextProps.data,
-                selectedTerm: nextProps.data[0].id
+                selectedTerm: nextProps.data[0].concept_id
             });
         }
     },
@@ -484,6 +484,7 @@ var Container = React.createClass({
                             setLanguage={this.setLanguage}
                             setEdition={this.setEdition}
                             saveDiagram={this.saveDiagram}
+                            selectedTerm={this.state.selectedTerm}
                         />
                         {content}
                     </section>

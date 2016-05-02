@@ -8,7 +8,8 @@ var Svgsaver = require('svgsaver');
 
 var Export = React.createClass({
     propTypes: {
-        language: React.PropTypes.string
+        language: React.PropTypes.string,
+        selectedTerm: React.PropTypes.number
     },
     dict: {
         se: {
@@ -44,7 +45,7 @@ var Export = React.createClass({
         svgClone.setAttribute('height', bbh);
 
         // Saves the svg to the desktop
-        svgsaver.asSvg(svgClone, new Date().toJSON().slice(0,10) + ".svg");
+        svgsaver.asSvg(svgClone, this.props.selectedTerm.toString() + ".svg");
 
     },
 
@@ -75,7 +76,7 @@ var Export = React.createClass({
         svgClone.setAttribute('height', bbh);
 
         // Saves the svg to the desktop
-        svgsaver.asPng(svgClone, new Date().toJSON().slice(0,10) + ".png");
+        svgsaver.asPng(svgClone, this.props.selectedTerm + ".png");
     },
     render: function(){
         return (
