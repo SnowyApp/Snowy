@@ -346,11 +346,11 @@ d3Chart._drawTree = function(element, data) {
     nodeEnter.on('contextmenu', d3.contextMenu(this._createMenuData(element)))
         .call(drag)
         .on('mouseover', function(){
-            d3.select(this).selectAll('rect.node').style( 'fill', '#ebebeb');
+            d3.select(this).selectAll('rect.borderNode').style( 'fill', '#ebebeb');
         })
         .on('mouseout', function() {
             if(!d3.select(this).classed('selected')) {
-                d3.select(this).selectAll('rect.node').style('fill', function(d){
+                d3.select(this).selectAll('rect.borderNode').style('fill', function(d){
                     if(d.definitionStatus == 'primitive'){
                         return CONCEPT_COLOR;
                     }
@@ -434,7 +434,6 @@ d3Chart._drawTree = function(element, data) {
                 return DEFINED_CONCEPT_COLOR;
             })
             .style('stroke','black');
-
     } else {
         nodeEnter.append('rect')
             .attr('class', 'node')
