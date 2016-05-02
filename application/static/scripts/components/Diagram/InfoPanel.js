@@ -162,6 +162,34 @@ var InfoPanel = React.createClass({
         }
     },
 
+    /**
+    * Adds a favorite term to the database
+    */
+    addFavoriteTerm: function(id, name){
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "POST",
+                url: this.props.url + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "id": id,
+                    "term": name,
+                    "date_added": new Date().toString()
+                }),
+                success: function (data) {
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
     render: function(){
         //Check if data is set yet, otherwise return
         if(this.props.data.length == 0) return null;

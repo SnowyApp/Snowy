@@ -28,38 +28,9 @@ var FavoriteTerms = React.createClass({
     },
 
     componentDidMount: function(){
-        this.addFavoriteTerm(1136366, "Senaste");
-        //this.addFavoriteTerm(345345345, "A Test term");
         this.getFavoriteTerms();
     },
 
-   /**
-    * Adds a favorite term to the database
-    */
-    addFavoriteTerm: function(id, name){
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "POST",
-                url: this.props.url + "/favorite_term",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                data: JSON.stringify({
-                    "id": id,
-                    "term": name,
-                    "date_added": new Date().toString()
-                }),
-                success: function (data) {
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
-    },
 
    /**
     * Sort terms by header
