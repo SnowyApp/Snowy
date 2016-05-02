@@ -147,7 +147,6 @@ var FavoriteDiagrams = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
-                    console.log(data);
                     var diagrams = [];
                     for(var i = 0; i < data.length; i++){
                         diagrams.push({
