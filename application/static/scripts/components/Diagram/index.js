@@ -10,7 +10,8 @@ var diagram = require("./d3Diagram");
 var Diagram = React.createClass({
     propTypes: {
         favoriteTerms:      React.PropTypes.array,
-        removeFavoriteTerm: React.PropTypes.func
+        removeFavoriteTerm: React.PropTypes.func,
+        addFavoriteTerm:    React.PropTypes.func
     },
 
     //Dictionary for supported languages
@@ -145,8 +146,9 @@ var Diagram = React.createClass({
                             language={this.props.language}
                             url={this.props.url}
                             update={this.props.update}
-                            favoriteTerms={this.state.favoriteTerms}
-                            removeFavoriteTerm={this.removeFavoriteTerm}
+                            favoriteTerms={this.props.favoriteTerms}
+                            removeFavoriteTerm={this.props.removeFavoriteTerm}
+                            addFavoriteTerm={this.props.addFavoriteTerm}
                         />
                     </div>
                 </Draggable>

@@ -246,7 +246,7 @@ var Container = React.createClass({
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "GET",
-                url: this.props.url + "/favorite_term",
+                url: this.state.serverUrl + "/favorite_term",
                 headers: {
                     "Authorization": cookie.load("userId")
                 },
@@ -267,6 +267,44 @@ var Container = React.createClass({
                     console.log(textStatus);
                     console.log(errorThrown);
                     console.log("Failed getting favorite terms.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
+    /**
+    * Saves a term to favorites
+    */
+    addFavoriteTerm: function(id, name){
+        //Add to local favorites list first to make it responsive
+        this.state.favoriteTerms.push({
+            id: id,
+            name: name,
+            dateAdded: new Date().toString()
+        });
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "POST",
+                url: this.state.serverUrl + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "id": id,
+                    "term": name,
+                    "date_added": new Date().toString()
+                }),
+                success: function (data) {
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    //Remove from local favorites list if it failed to add it to the server
+                    this.setState({
+                        favoriteTerms: removeById(this.state.favoriteTerms, id)
+                    });
+                    console.log(textStatus);
+                    console.log(errorThrown);
                 },
                 contentType: "application/json",
                 dataType: "json"
@@ -301,7 +339,7 @@ var Container = React.createClass({
             $.ajax({
                 type: "POST",
                 method: "DELETE",
-                url: this.props.url + "/favorite_term",
+                url: this.state.serverUrl + "/favorite_term",
                 headers: {
                     "Authorization": cookie.load("userId")
                 },
@@ -529,6 +567,7 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             favoriteTerms={this.state.favoriteTerms}
                             removeFavoriteTerm={this.removeFavoriteTerm}
+                            addFavoriteTerm={this.addFavoriteTerm}
                           />
                 break;
             case "profile":

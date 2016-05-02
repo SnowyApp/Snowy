@@ -16,7 +16,8 @@ var InfoPanel = React.createClass({
         url:                React.PropTypes.string,
         update:             React.PropTypes.func,
         favoriteTerms:      React.PropTypes.array,
-        removeFavoriteTerm: React.PropTypes.func
+        removeFavoriteTerm: React.PropTypes.func,
+        addFavoriteTerm:    React.PropTypes.func
     },
     //Dict with supported languages
     dict: {
@@ -159,41 +160,6 @@ var InfoPanel = React.createClass({
                     console.log(textStatus);
                     console.log(errorThrown);
                     console.log("Failed getting parents.");
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
-    },
-
-    /**
-    * Saves the current root term as a favorite in the database
-    */
-    addFavoriteTerm: function(){
-        const hideTooltipTime = 1000;
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "POST",
-                url: this.props.url + "/favorite_term",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                data: JSON.stringify({
-                    "id": this.props.data[0].concept_id,
-                    "term": this.props.data[0].name,
-                    "date_added": new Date().toString()
-                }),
-                success: function (data) {
-                    //Show "saved" tooltip
-                    $(".saveTermTooltip").fadeIn();
-                    //Hide tooltip after hideTooltipTime ms
-                    setTimeout($.proxy(function(){
-                        $(".saveTermTooltip").fadeOut();
-                    }), hideTooltipTime);
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
                 },
                 contentType: "application/json",
                 dataType: "json"
