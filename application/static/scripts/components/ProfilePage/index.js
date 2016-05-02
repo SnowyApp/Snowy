@@ -5,120 +5,19 @@ var NavBar = require('./NavBar/NavBar');
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-//Temporary fake user
-var fakeUser = {
-    id: 1337,
-    firstName: "Arnold",
-    surname: "Schwarzenegger",
-    email: "arnold@schwarzenegger.com",
-    language: "eng"
-};
-
-//Dummy data
-var dummyTerms = 
-[
-    {
-        id: 308916002,
-        name: "Environment",
-        dateAdded: new Date("March 3, 2016 12:53:26")
-    },
-    {
-        id: 363787002,
-        name: "Observable entity",
-        dateAdded: new Date("May 4, 2015 12:33:23")
-    },
-    {
-        id: 362981000,
-        name: "Qualifier value",
-        dateAdded: new Date("March 5, 2016 11:32:10")
-    },
-    {
-        id: 71388002,
-        name: "Procedure",
-        dateAdded: new Date("March 6, 2016 11:32:11")
-    },
-    {
-        id: 71388004,
-        name: "Procedure",
-        dateAdded: new Date("March 7, 2016 11:32:11")
-    }
-];
-
-
-var dummyDiagrams = 
-[
-    {
-        id: 308916002,
-        name: "Environment",
-        dateAdded: new Date("March 3, 2016 12:53:26"),
-        parameters: {
-                        p1: "stuff1",
-                        p2: "stuff2",
-                        p3: "stuff3"
-                    }
-    },
-    {
-        id: 999919999,
-        name: "beastmode",
-        dateAdded: new Date("March 2, 2016 12:53:26"),
-        parameters: {
-                        p1: "stuff1",
-                        p2: "stuff2",
-                        p3: "stuff3"
-                    }
-    },
-    {
-        id: 523000113,
-        name: "Axtra",
-        dateAdded: new Date("March 1, 2016 12:53:26"),
-        parameters: {
-                        p1: "stuff1",
-                        p2: "stuff2",
-                        p3: "stuff3"
-                    }
-    },
-    {
-        id: 523000114,
-        name: "Axtra",
-        dateAdded: new Date("March 1, 2016 12:53:26"),
-        parameters: {
-                        p1: "stuff1",
-                        p2: "stuff2",
-                        p3: "stuff3"
-                    }
-    },
-    {
-        id: 523000115,
-        name: "Axtra",
-        dateAdded: new Date("March 1, 2016 12:53:26"),
-        parameters: {
-                        p1: "stuff1",
-                        p2: "stuff2",
-                        p3: "stuff3"
-                    }
-    },
-    {
-        id: 523000116,
-        name: "Axtra",
-        dateAdded: new Date("March 1, 2016 12:53:26"),
-        parameters: {
-                        p1: "stuff1",
-                        p2: "stuff2",
-                        p3: "stuff3"
-                    }
-    }
-];
 
 /**
  * Profile page component
  */
 var ProfilePage = React.createClass({
     propTypes: {
-        openTerm:       React.PropTypes.func,
-        openDiagram:    React.PropTypes.func,
-        url:            React.PropTypes.string,
-        language:       React.PropTypes.string,
-        dbEdition:      React.PropTypes.string
+        removeFavoriteTerm: React.PropTypes.func,
+        favoriteTerms:      React.PropTypes.array,
+        openTerm:           React.PropTypes.func,
+        openDiagram:        React.PropTypes.func,
+        url:                React.PropTypes.string,
+        language:           React.PropTypes.string,
+        dbEdition:          React.PropTypes.string
     },
 
     //Dictionary for supported languages. m prefix indicates that its a error/success message
@@ -244,20 +143,6 @@ var ProfilePage = React.createClass({
         });
         return data;
     },
-    
-   /**
-    * Removes an object from array with .id == id
-    */
-    removeById: function(array, id){
-        //Find the object and remove it from the array
-        for(var i = 0; i < array.length; i++){              
-            if(array[i].id == id){
-                array.splice(i, 1);
-                break;
-            }
-        }
-        return array;
-    },
 
     render: function(){
         //Only render the current tab
@@ -265,11 +150,12 @@ var ProfilePage = React.createClass({
         switch(this.state.currentTab){
             case 'terms':
                 content = <FavoriteTerms
+                                removeFavoriteTerm={this.props.removeFavoriteTerm}
+                                favoriteTerms={this.props.favoriteTerms}
                                 url={this.props.url}
                                 dict={this.dict}
                                 language={this.props.language}
                                 openTerm={this.props.openTerm}
-                                removeid={this.removeById}
                                 nameSort={this.sortByName}
                                 idSort={this.sortById}
                                 dateSort={this.sortByDate}
@@ -281,7 +167,7 @@ var ProfilePage = React.createClass({
                                 dict={this.dict}
                                 language={this.props.language}
                                 openDiagram={this.props.openDiagram}
-                                removeid={this.removeById}
+                                removeid={this.props.removeById}
                                 nameSort={this.sortByName}
                                 dateSort={this.sortByDate}
                           />;

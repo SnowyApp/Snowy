@@ -9,12 +9,13 @@ var TermElement = require('./TermElement');
  */
 var FavoriteTerms = React.createClass({
     propTypes: {
+        removeTerm: React.PropTypes.func,
+        favoriteTerms:      React.PropTypes.array,
         url:                React.PropTypes.string,
         dict:               React.PropTypes.object,
         language:           React.PropTypes.string,
         terms:              React.PropTypes.array,
         openTerm:           React.PropTypes.func,
-        removeid:           React.PropTypes.func,
         nameSort:           React.PropTypes.func,
         dateSort:           React.PropTypes.func
     },
@@ -22,41 +23,15 @@ var FavoriteTerms = React.createClass({
     getInitialState: function(){
         return (
             {
-                terms: []
+                terms: this.props.favoriteTerms
             }
         );
     },
 
-    componentDidMount: function(){
-        this.addFavoriteTerm(1136366, "Senaste");
-        //this.addFavoriteTerm(345345345, "A Test term");
-        this.getFavoriteTerms();
-    },
-
-   /**
-    * Adds a favorite term to the database
-    */
-    addFavoriteTerm: function(id, name){
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "POST",
-                url: this.props.url + "/favorite_term",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                data: JSON.stringify({
-                    "id": id,
-                    "term": name,
-                    "date_added": new Date().toString()
-                }),
-                success: function (data) {
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                },
-                contentType: "application/json",
-                dataType: "json"
+    componentWillReceiveProps: function(nextProps){
+        if(this.props.terms != nextProps.terms){
+            this.setState({
+                terms: nextProps.favoriteTerms
             });
         }
     },
@@ -65,7 +40,6 @@ var FavoriteTerms = React.createClass({
     * Sort terms by header
     */
     sortBy: function(header){
-        console.log(header);
         var asc = true;
         //If already sorting by header, invert order
         if(this.state.sortBy == header){
@@ -96,74 +70,6 @@ var FavoriteTerms = React.createClass({
         }
     },
 
-   /**
-    * Remove element from the term table
-    */
-    removeTerm: function(id){
-        //Remove element locally (for responsiveness)
-        this.setState({
-            terms: this.props.removeid(this.state.terms, id)
-        });
-        //Remove from database
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                type: "POST",
-                method: "DELETE",
-                url: this.props.url + "/favorite_term",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                data: JSON.stringify({"id": id}),
-                success: function () {
-                    console.log("Successfully removed term.");
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    console.log("Failed removing term.");
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
-    },
-
-   /**
-    * Gets the users favorite terms and saves them to the terms state
-    */
-    getFavoriteTerms: function(){
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "GET",
-                url: this.props.url + "/favorite_term",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                success: function (data) {
-                    console.log(data);
-                    var terms = [];
-                    for(var i = 0; i < data.length; i++){
-                        terms.push({
-                            id: data[i].id,
-                            name: data[i].term,
-                            dateAdded: new Date(data[i].date_added) //TODO: Create Date from returned string
-                        });
-                    }
-                    this.setState({
-                        terms: terms
-                    }, this.sortBy('added'));
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    console.log("Failed getting favorite terms.");
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
-    },
-
     render: function(){
         //Generate the table rows
         var TermArray = null;
@@ -171,6 +77,7 @@ var FavoriteTerms = React.createClass({
         if(this.state.terms.length > 0){
             hideTable = {}; //Show table
             TermArray = this.state.terms.map(function(term){
+                console.log(term);
                 //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
                 var day = ("0" + term.dateAdded.getDate()).slice(-2);
                 var month = ("0" + term.dateAdded.getMonth()).slice(-2);
@@ -184,7 +91,7 @@ var FavoriteTerms = React.createClass({
                         id={term.id}
                         name={term.name}
                         openTerm={this.props.openTerm}
-                        removeTerm={this.removeTerm}
+                        removeTerm={this.props.removeFavoriteTerm}
                         date={dateString}
                     />
                 );

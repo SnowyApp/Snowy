@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import cookie from 'react-cookie';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 require('bootstrap');
 
 /*
@@ -8,11 +10,14 @@ require('bootstrap');
 */
 var InfoPanel = React.createClass({
     propTypes: {
-        hidePanel:      React.PropTypes.func,
-        data:           React.PropTypes.array,
-        language:       React.PropTypes.string,
-        url:            React.PropTypes.string,
-        update:         React.PropTypes.func
+        hidePanel:          React.PropTypes.func,
+        data:               React.PropTypes.array,
+        language:           React.PropTypes.string,
+        url:                React.PropTypes.string,
+        update:             React.PropTypes.func,
+        favoriteTerms:      React.PropTypes.array,
+        removeFavoriteTerm: React.PropTypes.func,
+        addFavoriteTerm:    React.PropTypes.func
     },
     //Dict with supported languages
     dict: {
@@ -27,7 +32,10 @@ var InfoPanel = React.createClass({
             relations:          "Relationer",
             destination:        "Destination",
             charType:           "CharType",
-            attribute:          "Attribut"
+            attribute:          "Attribut",
+            saveFavorite:       "Spara favorit",
+            saved:              "Sparad!",
+            removeFavorite:     "Ta bort favorit"
         },
         en: {
             termInfo:           "Term information",
@@ -40,7 +48,10 @@ var InfoPanel = React.createClass({
             relations:          "Relations",
             destination:        "Destination",
             charType:           "CharType",
-            attribute:          "Attribute"
+            attribute:          "Attribute",
+            saveFavorite:       "Save favorite",
+            saved:              "Saved!",
+            removeFavorite:     "Remove favorite"
         }
     },
 
@@ -48,7 +59,8 @@ var InfoPanel = React.createClass({
         return ({
             parents: [],
             names: [],
-            relations: []
+            relations: [],
+            isFavorited: false
         });
     },
 
@@ -57,6 +69,23 @@ var InfoPanel = React.createClass({
         this.getParents(this.props.data[0].concept_id);
         this.getNames(this.props.data[0].concept_id);
         this.getRelations(this.props.data[0].concept_id);
+        this.isFavorited(this.props.data[0].concept_id);
+    },
+
+   /**
+    * Sets the favorited state to true of the given id is in the favorites list
+    */
+    isFavorited: function(id){
+        //Return if favorites hasnt been initialized yet
+        if(this.props.favoriteTerms == null) return;
+
+        var favorited = false;
+        for(var i = 0; i < this.props.favoriteTerms.length; i++){
+            if(this.props.favoriteTerms[i].id == id) favorited = true;
+        }
+        this.setState({
+            isFavorited: favorited
+        });
     },
 
     /**
@@ -68,7 +97,6 @@ var InfoPanel = React.createClass({
                 method: "GET",
                 url: this.props.url + "/get_relations/" + id,
                 success: function (data) {
-                    console.log(data);
                     var relations = [];
                     var name = "";
                     for(var i = 0; i < data.length; i++){
@@ -103,7 +131,6 @@ var InfoPanel = React.createClass({
                 method: "GET",
                 url: this.props.url + "/get_names/" + id,
                 success: function (data) {
-                    console.log(data);
                     var names = [];
                     for(var i = 0; i < data.length; i++){
                         names.push({
@@ -160,9 +187,32 @@ var InfoPanel = React.createClass({
         }
     },
 
+   /**
+    * Calls back to the top container to add favorite term
+    */
+    addFavorite: function(args){;
+        this.props.addFavoriteTerm(args.id, args.name);
+    },
+
     render: function(){
         //Check if data is set yet, otherwise return
         if(this.props.data.length == 0) return null;
+
+        var saveTermButton = (this.state.isFavorited ?
+                                <button
+                                    type="button"
+                                    className="btn btn-danger btn-sm saveTermButton"
+                                    onClick={this.props.removeFavoriteTerm.bind(null, this.props.data[0].concept_id)}>
+                                    {this.dict[this.props.language]["removeFavorite"]}
+                                </button>
+                                :
+                                <button
+                                    type="button"
+                                    className="btn btn-success btn-sm saveTermButton"
+                                    onClick={this.addFavorite.bind(null,{id: this.props.data[0].concept_id, name: this.props.data[0].name})}>
+                                    {this.dict[this.props.language]["saveFavorite"]}
+                                </button>)
+
         var showParents = null;
         if(this.state.parents.length > 0){
             //Create table rows for all parents
@@ -218,6 +268,7 @@ var InfoPanel = React.createClass({
         } else {
             showRelations = {display: "none"};
         }
+
         return (
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
@@ -227,8 +278,12 @@ var InfoPanel = React.createClass({
                     </button>
                 </div>
                 <div className="panel-body infoPanelBody">
-                    {/* General info */}
-                    <h3>{this.dict[this.props.language]["generalInfo"]}</h3>
+                    {saveTermButton}
+                    
+                    {/* General info TODO: Fix real data for concept type and status*/}
+                    <h3>
+                        {this.dict[this.props.language]["generalInfo"]}
+                    </h3>
                     <div className="well">
                         <table className="termInfo">
                             <tbody>
@@ -242,11 +297,11 @@ var InfoPanel = React.createClass({
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">Concept type:</td>
-                                    <td className="termInfoData">Primitive</td>
+                                    <td className="termInfoData">(Fully defined)</td>
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">Status:</td>
-                                    <td className="termInfoData">Active</td>
+                                    <td className="termInfoData">(Active)</td>
                                 </tr>
                             </tbody>
                         </table>

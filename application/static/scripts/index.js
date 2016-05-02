@@ -29,7 +29,8 @@ var Container = React.createClass({
             history: [],
             language: "en",
             dbEdition: "en",
-            sortAlphabetically: true
+            sortAlphabetically: true,
+            favoriteTerms: null
         };
     },
 
@@ -239,6 +240,124 @@ var Container = React.createClass({
     },
 
     /**
+    * Gets the users favorite terms and saves them to the terms state
+    */
+    getFavoriteTerms: function(){
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "GET",
+                url: this.state.serverUrl + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                success: function (data) {
+                    var terms = [];
+                    for(var i = 0; i < data.length; i++){
+                        terms.push({
+                            id: data[i].id,
+                            name: data[i].term,
+                            dateAdded: new Date(data[i].date_added)
+                        });
+                    }
+                    this.setState({
+                        favoriteTerms: terms
+                    });
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed getting favorite terms.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
+    /**
+    * Saves a term to favorites
+    */
+    addFavoriteTerm: function(id, name){
+        //Add to local favorites list first to make it responsive
+        this.setState({
+            favoriteTerms: this.state.favoriteTerms.concat([{id: id, name: name, dateAdded: new Date()}])
+        });
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "POST",
+                url: this.state.serverUrl + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "id": id,
+                    "term": name,
+                    "date_added": new Date().toString()
+                }),
+                success: function (data) {
+                    console.log("Successfully added favorite term.");
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    //Remove from local favorites list if it failed to add it to the server
+                    this.setState({
+                        favoriteTerms: this.removeById(this.state.favoriteTerms, id)
+                    });
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
+    /**
+    * Removes an object from array with .id == id
+    */
+    removeById: function(array, id){
+        //Find the object and remove it from the array
+        for(var i = 0; i < array.length; i++){              
+            if(array[i].id == id){
+                array.splice(i, 1);
+                break;
+            }
+        }
+        return array;
+    },
+
+    /**
+    * Removes a favorite term
+    */
+    removeFavoriteTerm: function(id){
+        //Remove element locally (for responsiveness)
+        this.setState({
+            favoriteTerms: this.removeById(this.state.favoriteTerms, id)
+        });
+        //Remove from database
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                type: "POST",
+                method: "DELETE",
+                url: this.state.serverUrl + "/favorite_term",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({"id": id}),
+                success: function () {
+                    console.log("Successfully removed term.");
+                }.bind(this),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed to remove term.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    },
+
+    /**
      * Find a node with given d3 id.
      */
     findNode: function(tree, id) {
@@ -305,7 +424,10 @@ var Container = React.createClass({
             userId: uid,
             isLoggedIn:true
         });
+        
         cookie.save('userId', uid,{path: '/'});
+        //Get the users favorite terms
+        this.getFavoriteTerms();
     },
     /**
      * Called when a user has logged out
@@ -428,6 +550,10 @@ var Container = React.createClass({
     },
 
     render: function() {
+        //Get favorite terms if not yet done
+        if(this.state.favoriteTerms == null){
+            this.getFavoriteTerms();
+        }
         var content = null;
         switch(this.state.content){
             case "diagram":
@@ -438,10 +564,15 @@ var Container = React.createClass({
                             updateConceptChildren={this.updateConceptChildren}
                             language={this.state.language}
                             url={this.state.serverUrl}
+                            favoriteTerms={this.state.favoriteTerms}
+                            removeFavoriteTerm={this.removeFavoriteTerm}
+                            addFavoriteTerm={this.addFavoriteTerm}
                           />
                 break;
             case "profile":
                 content = <ProfilePage
+                            removeFavoriteTerm={this.removeFavoriteTerm}
+                            favoriteTerms={this.state.favoriteTerms}
                             openTerm={this.updateSelectedTerm}
                             openDiagram={function(id){console.log(id)}}
                             url={this.state.serverUrl}

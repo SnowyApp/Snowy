@@ -9,6 +9,8 @@ var DiagramElement = require('./DiagramElement');
  */
 var FavoriteDiagrams = React.createClass({
     propTypes: {
+        removeFavoriteTerm: React.PropTypes.func,
+        favoriteTerms:      React.PropTypes.array,
         url:                React.PropTypes.string,
         dict:               React.PropTypes.object,
         language:           React.PropTypes.string,
@@ -145,7 +147,6 @@ var FavoriteDiagrams = React.createClass({
                     "Authorization": cookie.load("userId")
                 },
                 success: function (data) {
-                    console.log(data);
                     var diagrams = [];
                     for(var i = 0; i < data.length; i++){
                         diagrams.push({
