@@ -256,7 +256,7 @@ var Container = React.createClass({
                         terms.push({
                             id: data[i].id,
                             name: data[i].term,
-                            dateAdded: new Date(data[i].date_added) //TODO: Create Date from returned string
+                            dateAdded: new Date(data[i].date_added)
                         });
                     }
                     this.setState({
@@ -279,10 +279,8 @@ var Container = React.createClass({
     */
     addFavoriteTerm: function(id, name){
         //Add to local favorites list first to make it responsive
-        this.state.favoriteTerms.push({
-            id: id,
-            name: name,
-            dateAdded: new Date().toString()
+        this.setState({
+            favoriteTerms: this.state.favoriteTerms.concat([{id: id, name: name, dateAdded: new Date()}])
         });
         if (cookie.load('userId') != null) {
             $.ajax({
@@ -297,11 +295,12 @@ var Container = React.createClass({
                     "date_added": new Date().toString()
                 }),
                 success: function (data) {
+                    console.log("Successfully added favorite term.");
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     //Remove from local favorites list if it failed to add it to the server
                     this.setState({
-                        favoriteTerms: removeById(this.state.favoriteTerms, id)
+                        favoriteTerms: this.removeById(this.state.favoriteTerms, id)
                     });
                     console.log(textStatus);
                     console.log(errorThrown);
