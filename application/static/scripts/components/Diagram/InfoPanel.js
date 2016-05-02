@@ -30,7 +30,8 @@ var InfoPanel = React.createClass({
             destination:        "Destination",
             charType:           "CharType",
             attribute:          "Attribut",
-            saveFavorite:       "Spara favorit"
+            saveFavorite:       "Spara favorit",
+            saved:              "Sparad!"
         },
         en: {
             termInfo:           "Term information",
@@ -44,7 +45,8 @@ var InfoPanel = React.createClass({
             destination:        "Destination",
             charType:           "CharType",
             attribute:          "Attribute",
-            saveFavorite:       "Save favorite"
+            saveFavorite:       "Save favorite",
+            saved:              "Saved!"
         }
     },
 
@@ -258,7 +260,7 @@ var InfoPanel = React.createClass({
         } else {
             showRelations = {display: "none"};
         }
-        const termTooltip = <Tooltip>Saved!</Tooltip>;
+
         return (
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
