@@ -9,6 +9,8 @@ var DiagramElement = require('./DiagramElement');
  */
 var FavoriteDiagrams = React.createClass({
     propTypes: {
+        removeFavoriteTerm: React.PropTypes.func,
+        favoriteTerms:      React.PropTypes.array,
         url:                React.PropTypes.string,
         dict:               React.PropTypes.object,
         language:           React.PropTypes.string,

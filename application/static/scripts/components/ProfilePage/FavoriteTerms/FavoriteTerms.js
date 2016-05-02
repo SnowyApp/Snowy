@@ -9,13 +9,13 @@ var TermElement = require('./TermElement');
  */
 var FavoriteTerms = React.createClass({
     propTypes: {
+        removeTerm: React.PropTypes.func,
         favoriteTerms:      React.PropTypes.array,
         url:                React.PropTypes.string,
         dict:               React.PropTypes.object,
         language:           React.PropTypes.string,
         terms:              React.PropTypes.array,
         openTerm:           React.PropTypes.func,
-        removeid:           React.PropTypes.func,
         nameSort:           React.PropTypes.func,
         dateSort:           React.PropTypes.func
     },

@@ -10,11 +10,13 @@ require('bootstrap');
 */
 var InfoPanel = React.createClass({
     propTypes: {
-        hidePanel:      React.PropTypes.func,
-        data:           React.PropTypes.array,
-        language:       React.PropTypes.string,
-        url:            React.PropTypes.string,
-        update:         React.PropTypes.func
+        hidePanel:          React.PropTypes.func,
+        data:               React.PropTypes.array,
+        language:           React.PropTypes.string,
+        url:                React.PropTypes.string,
+        update:             React.PropTypes.func,
+        favoriteTerms:      React.PropTypes.array,
+        removeFavoriteTerm: React.PropTypes.func
     },
     //Dict with supported languages
     dict: {

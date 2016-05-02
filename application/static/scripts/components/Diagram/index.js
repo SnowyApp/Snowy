@@ -8,6 +8,11 @@ import Draggable from 'react-draggable';
 var diagram = require("./d3Diagram");
 
 var Diagram = React.createClass({
+    propTypes: {
+        favoriteTerms:      React.PropTypes.array,
+        removeFavoriteTerm: React.PropTypes.func
+    }
+
     //Dictionary for supported languages
     dict: {
         se: {
@@ -140,6 +145,8 @@ var Diagram = React.createClass({
                             language={this.props.language}
                             url={this.props.url}
                             update={this.props.update}
+                            favoriteTerms={this.state.favoriteTerms}
+                            removeFavoriteTerm={this.removeFavoriteTerm}
                         />
                     </div>
                 </Draggable>

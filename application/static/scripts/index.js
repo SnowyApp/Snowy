@@ -527,6 +527,8 @@ var Container = React.createClass({
                             updateConceptChildren={this.updateConceptChildren}
                             language={this.state.language}
                             url={this.state.serverUrl}
+                            favoriteTerms={this.state.favoriteTerms}
+                            removeFavoriteTerm={this.removeFavoriteTerm}
                           />
                 break;
             case "profile":

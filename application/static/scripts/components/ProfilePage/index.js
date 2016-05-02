@@ -114,12 +114,13 @@ var dummyDiagrams =
  */
 var ProfilePage = React.createClass({
     propTypes: {
-        favoriteTerms:  React.PropTypes.array,
-        openTerm:       React.PropTypes.func,
-        openDiagram:    React.PropTypes.func,
-        url:            React.PropTypes.string,
-        language:       React.PropTypes.string,
-        dbEdition:      React.PropTypes.string
+        removeFavoriteTerm: React.PropTypes.func,
+        favoriteTerms:      React.PropTypes.array,
+        openTerm:           React.PropTypes.func,
+        openDiagram:        React.PropTypes.func,
+        url:                React.PropTypes.string,
+        language:           React.PropTypes.string,
+        dbEdition:          React.PropTypes.string
     },
 
     //Dictionary for supported languages. m prefix indicates that its a error/success message
@@ -258,7 +259,6 @@ var ProfilePage = React.createClass({
                                 dict={this.dict}
                                 language={this.props.language}
                                 openTerm={this.props.openTerm}
-                                removeid={this.props.removeById}
                                 nameSort={this.sortByName}
                                 idSort={this.sortById}
                                 dateSort={this.sortByDate}
