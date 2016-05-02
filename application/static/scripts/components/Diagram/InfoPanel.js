@@ -238,8 +238,8 @@ var InfoPanel = React.createClass({
                                     <td className="termInfoData">{this.props.data[0].concept_id}</td>
                                 </tr>
                                 <tr className="termInfo">
-                                    <td className="termInfoName">Descendants:</td>
-                                    <td className="termInfoData">532</td>
+                                    <td className="termInfoName">Children:</td>
+                                    <td className="termInfoData">{this.props.data[0].children.length}</td>
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">Concept type:</td>
