@@ -627,9 +627,7 @@ d3Chart._drawTree = function(element, data) {
             // If the text is 2 rows or more, increase the width of the rect
             if(lineNumber > 0){
                 d3.select(this.parentNode).select('rect.node').attr('height', NODE_HEIGHT + lineNumber*LINE_MARGIN);
-                console.log(d.definitionStatus);
                 if(d.definitionStatus == 'primitive'){
-                    console.log("1");
                     d3.select(this.parentNode).select('rect.borderNode').attr('height', NODE_HEIGHT + lineNumber*LINE_MARGIN);
                 }
                 else{
