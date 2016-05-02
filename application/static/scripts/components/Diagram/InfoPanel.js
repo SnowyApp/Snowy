@@ -362,7 +362,7 @@ var InfoPanel = React.createClass({
                     {/* Parents */}
                     <h3 style={showParents}>{this.dict[this.props.language]["parents"]}</h3>
                     <div style={showParents} className="well">
-                        <table style={showParents} className="table table-condensed table-hover parentsTable">
+                        <table style={showParents} className="table table-condensed parentsTable">
                             <thead>
                                 <tr>
                                     <th id="parent_name" className="parentsTable">
