@@ -77,12 +77,11 @@ var FavoriteTerms = React.createClass({
         if(this.state.terms.length > 0){
             hideTable = {}; //Show table
             TermArray = this.state.terms.map(function(term){
-                console.log(term);
                 //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
                 var day = ("0" + term.dateAdded.getDate()).slice(-2);
                 var month = ("0" + term.dateAdded.getMonth()).slice(-2);
                 var year = term.dateAdded.getUTCFullYear();
-                
+
                 var dateString = year + "-" + month + "-" + day;
 
                 return(
@@ -165,5 +164,3 @@ var FavoriteTerms = React.createClass({
     }
 });
 module.exports = FavoriteTerms;
-
-
