@@ -16,3 +16,7 @@
 .saveDiagramSubmitWrapper {
     padding-left: 0px;
 }
+
+.statusMessage {
+    margin-top: 7px;
+}
