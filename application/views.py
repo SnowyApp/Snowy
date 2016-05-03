@@ -294,11 +294,15 @@ def store_diagram():
     if request.method == "POST":
         data = request.get_json()
         if not 'data' in data or not isinstance(data['data'], str) or \
-            not 'created' in data or not isinstance(data['created'], str) or \
-            not 'name' in data or not isinstance(data['name'], str):
+            not 'created' in data or not isinstance(data['created'], str):
             return jsonify(message="Data or name not provided"), 400
+            
+        if not 'name' in data or not isinstance(data['name'], str) or len(data['name']) == 0:
+            name = "Nameless diagram"
+        else:
+            name = data['name']
 
-        cid = g.user.store_diagram(data['data'], data['name'], data['created'])
+        cid = g.user.store_diagram(data['data'], name, data['created'])
         if not cid:
             abort(500)
 
