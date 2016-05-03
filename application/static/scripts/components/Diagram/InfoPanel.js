@@ -87,9 +87,14 @@ var InfoPanel = React.createClass({
         for(var i = 0; i < this.props.favoriteTerms.length; i++){
             if(this.props.favoriteTerms[i].id == id) favorited = true;
         }
-        this.setState({
-            isFavorited: favorited
-        });
+        //Check if component is mounted. This has to be done because the user
+        //might go to profile before the setState is reached, and a component
+        //cannot be update (setState) if it's not mounted.
+        if(this.isMounted()){
+            this.setState({
+                isFavorited: favorited
+            });
+        }
     },
 
     /**
@@ -111,9 +116,14 @@ var InfoPanel = React.createClass({
                             charType: "(Inferred)" //TODO: Fix real data
                         });
                     }
-                    this.setState({
-                        relations: relations
-                    });
+                    //Check if component is mounted. This has to be done because the user
+                    //might go to profile before the setState is reached, and a component
+                    //cannot be update (setState) if it's not mounted.
+                    if(this.isMounted()){
+                        this.setState({
+                            relations: relations
+                        });
+                    }
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
@@ -143,9 +153,14 @@ var InfoPanel = React.createClass({
                             acceptability: data[i].acceptability
                         });
                     }
-                    this.setState({
-                        names: names
-                    });
+                    //Check if component is mounted. This has to be done because the user
+                    //might go to profile before the setState is reached, and a component
+                    //cannot be update (setState) if it's not mounted.
+                    if(this.isMounted()){
+                        this.setState({
+                            names: names
+                        });
+                    }
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
@@ -176,9 +191,14 @@ var InfoPanel = React.createClass({
                             name: name
                         });
                     }
-                    this.setState({
-                        parents: parents
-                    });
+                    //Check if component is mounted. This has to be done because the user
+                    //might go to profile before the setState is reached, and a component
+                    //cannot be update (setState) if it's not mounted.
+                    if(this.isMounted()){
+                        this.setState({
+                            parents: parents
+                        });
+                    }
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);

@@ -58,7 +58,7 @@ var Container = React.createClass({
                         }
                     );
                 }
-                
+
                 // get all information about the root and add the array
                 // of the children
                 const rootSynonym = rootResult[0].synonym;
@@ -68,7 +68,7 @@ var Container = React.createClass({
                         "name": (rootSynonym != null ? rootSynonym : rootFull),
                         "concept_id": rootResult[0].id,
                         "parent": "null",
-                        "children": this.sortChildren(children, 
+                        "children": this.sortChildren(children,
                                 this.state.sortAlphabetically),
                         "id": 0,
                         "definitionStatus": rootResult[0].definition_status
@@ -76,7 +76,7 @@ var Container = React.createClass({
                 ];
 
                 //Add to history if saveHistory == true and not root/leaf and its not already the root
-                if( saveHistory && 
+                if( saveHistory &&
                     root[0].concept_id != this.props.concept_id &&
                     root[0].children.length != 0
                   ){
@@ -93,8 +93,8 @@ var Container = React.createClass({
                 this.setState({
                     data: root,
                     selectedTerm: root[0].concept_id
-                });     
-                
+                });
+
             }.bind(this)
         );
     },
@@ -198,7 +198,7 @@ var Container = React.createClass({
                     for (var i in res) {
                         children.push(
                             {
-                                "name": (res[i].synonym.length > 0) ? 
+                                "name": (res[i].synonym.length > 0) ?
                                     res[i].synonym : res[i].full,
                                 "concept_id": res[i].id,
                                 "parent": node.concept_id,
@@ -208,7 +208,7 @@ var Container = React.createClass({
                         );
                     }
                     // update node's children
-                    node.children = this.sortChildren(children, 
+                    node.children = this.sortChildren(children,
                             this.state.sortAlphabetically);
                     this.setState({
                         data: tree
@@ -231,11 +231,11 @@ var Container = React.createClass({
     sortChildren: function(children, alphabetical=true) {
         if (alphabetical) {
             return children.sort(function(a, b) {
-                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);   
+                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
             });
         }
         return children.sort(function(a, b) {
-            return a.concept_id - b.concept_id;   
+            return a.concept_id - b.concept_id;
         });
     },
 
@@ -316,7 +316,7 @@ var Container = React.createClass({
     */
     removeById: function(array, id){
         //Find the object and remove it from the array
-        for(var i = 0; i < array.length; i++){              
+        for(var i = 0; i < array.length; i++){
             if(array[i].id == id){
                 array.splice(i, 1);
                 break;
@@ -364,7 +364,7 @@ var Container = React.createClass({
         if (tree.id == undefined) return null;
         if (tree.id == id) return tree;
         if (tree.children == undefined) return null;
-         
+
         var result;
         for(var i in tree.children) {
             result = this.findNode(tree.children[i], id);
@@ -374,7 +374,7 @@ var Container = React.createClass({
     },
 
     /**
-     * Fetch information about given concept and update state.data with 
+     * Fetch information about given concept and update state.data with
      * its information.
      */
     updateSelectedTerm: function(conceptId, saveHistory = true){
@@ -424,7 +424,7 @@ var Container = React.createClass({
             userId: uid,
             isLoggedIn:true
         });
-        
+
         cookie.save('userId', uid,{path: '/'});
         //Get the users favorite terms
         this.getFavoriteTerms();
@@ -526,7 +526,7 @@ var Container = React.createClass({
     },
 
     /**
-     * Load the diagram of given ID from the server and update state when the 
+     * Load the diagram of given ID from the server and update state when the
      * results are received.
      **/
     loadDiagram: function(id) {
@@ -557,7 +557,7 @@ var Container = React.createClass({
         var content = null;
         switch(this.state.content){
             case "diagram":
-                content = <Diagram 
+                content = <Diagram
                             ref={ (ref) => this._diagram = ref }
                             data={this.state.data}
                             update={this.updateSelectedTerm}
@@ -604,7 +604,7 @@ var Container = React.createClass({
                     />
                     <section>
                         <Bar
-                            update={this.updateSelectedTerm} 
+                            update={this.updateSelectedTerm}
                             isLoggedIn={this.state.isLoggedIn}
                             onLogin={this.onLogin}
                             onLogout={this.onLogout}
