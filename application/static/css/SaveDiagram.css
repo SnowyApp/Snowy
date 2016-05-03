@@ -9,14 +9,10 @@
     position: absolute;
 }
 
-.saveDiagramPanelBody {
-    padding: 5px 15px 0px;
-}
-
-.diagramName {
-    margin-bottom: 5px;
-}
-
 .diagramDesc {
     resize: vertical;
+}
+
+.saveDiagramSubmitWrapper {
+    padding-left: 0px;
 }
