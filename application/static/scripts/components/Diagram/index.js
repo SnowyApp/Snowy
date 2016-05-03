@@ -205,4 +205,5 @@ var Diagram = React.createClass({
       }
     }
 });
+
 module.exports = Diagram;

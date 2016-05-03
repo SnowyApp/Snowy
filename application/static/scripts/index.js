@@ -70,7 +70,7 @@ var Container = React.createClass({
                         "name": (rootSynonym != null ? rootSynonym : rootFull),
                         "concept_id": rootResult[0].id,
                         "parent": "null",
-                        "children": this.sortChildren(children,
+                        "children": this.sortConcepts(children,
                                 this.state.sortAlphabetically),
                         "id": 0,
                         "definitionStatus": rootResult[0].definition_status
@@ -127,6 +127,36 @@ var Container = React.createClass({
             dataType: "json",
             error: function() {
                 console.log("Could not get concept children.");
+            }.bind(this)
+        });
+    },
+
+    /**
+     * Return function to fetch relations of id from api.
+     */
+    getRelations: function(id) {
+        return $.ajax({
+            type: "GET",
+            method: "GET",
+            url: this.state.serverUrl + "/get_relations/" + id,
+            dataType: "json",
+            error: function() {
+                console.log("Could not get concept relations.");
+            }.bind(this)
+        });
+    },
+
+    /**
+     * Return function to fetch parents of id from api.
+     */
+    getParents: function(id) {
+        return $.ajax({
+            type: "GET",
+            method: "GET",
+            url: this.state.serverUrl + "/get_parents/" + id,
+            dataType: "json",
+            error: function() {
+                console.log("Could not get concept parents.");
             }.bind(this)
         });
     },
@@ -211,7 +241,7 @@ var Container = React.createClass({
                         );
                     }
                     // update node's children
-                    node.children = this.sortChildren(children,
+                    node.children = this.sortConcepts(children, 
                             this.state.sortAlphabetically);
                     this.setState({
                         data: tree
@@ -231,14 +261,14 @@ var Container = React.createClass({
      * Sort the children in an alphabetical order if the flag is set to true
      * otherwise sort them by ID.
      */
-    sortChildren: function(children, alphabetical=true) {
+    sortConcepts: function(concepts, alphabetical=true) {
         if (alphabetical) {
-            return children.sort(function(a, b) {
-                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
+            return concepts.sort(function(a, b) {
+                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);   
             });
         }
-        return children.sort(function(a, b) {
-            return a.concept_id - b.concept_id;
+        return concepts.sort(function(a, b) {
+            return a.concept_id - b.concept_id;   
         });
     },
 
