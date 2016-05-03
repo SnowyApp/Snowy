@@ -111,7 +111,7 @@ var Diagram = React.createClass({
     */
     saveDiagram: function (args) {
         this.props.saveDiagram(args.name, args.desc);
-    }
+    },
 
     /**
     * Render the diagram from the current state.
