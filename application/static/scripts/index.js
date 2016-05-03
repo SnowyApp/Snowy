@@ -568,6 +568,7 @@ var Container = React.createClass({
                             favoriteTerms={this.state.favoriteTerms}
                             removeFavoriteTerm={this.removeFavoriteTerm}
                             addFavoriteTerm={this.addFavoriteTerm}
+                            saveDiagram={this.saveDiagram}
                           />
                 break;
             case "profile":

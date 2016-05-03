@@ -11,7 +11,8 @@ var Diagram = React.createClass({
     propTypes: {
         favoriteTerms:      React.PropTypes.array,
         removeFavoriteTerm: React.PropTypes.func,
-        addFavoriteTerm:    React.PropTypes.func
+        addFavoriteTerm:    React.PropTypes.func,
+        saveDiagram:        React.PropTypes.func
     },
 
     //Dictionary for supported languages
@@ -64,7 +65,7 @@ var Diagram = React.createClass({
         // then update the diagrams state.
         // otherwise create a diagram
         if (prevProps.data !== undefined && prevProps.data.length == 0) {
-            diagram.create(element, { onClick: this.onNodeClick }, 
+            diagram.create(element, { onClick: this.onNodeClick },
                 this.getDiagramState());
         } else if (prevState.view !== undefined &&
                 prevState.view != this.state.view) {
@@ -106,24 +107,31 @@ var Diagram = React.createClass({
     },
 
     /**
+    * Saves diagram to favorites
+    */
+    saveDiagram: function (args) {
+        this.props.saveDiagram(args.name, args.desc);
+    }
+
+    /**
     * Render the diagram from the current state.
     */
     render: function() {
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
         return (
             <div className="diagram">
-                <Button 
-                    bsStyle="primary" 
+                <Button
+                    bsStyle="primary"
                     onClick={this.reset}>
                     {this.dict[this.props.language]["reset"]}
                 </Button>
-                <Button 
-                    bsStyle="primary" 
+                <Button
+                    bsStyle="primary"
                     onClick={this.resetZoom}>
                     {this.dict[this.props.language]["resetZoom"]}
                 </Button>
-                <Button 
-                    bsStyle="primary" 
+                <Button
+                    bsStyle="primary"
                     onClick={this.changeView}>
                     {this.dict[this.props.language]["VHView"]}
                 </Button>
@@ -132,7 +140,7 @@ var Diagram = React.createClass({
                 </div>
 
                 //Button to open info panel
-                <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span> 
+                <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span>
 
                 //Term info panel
                 <Draggable
