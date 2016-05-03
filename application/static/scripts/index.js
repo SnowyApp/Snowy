@@ -5,6 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 var Diagram = require('./components/Diagram/index');
+var ConceptGraph = require('./components/ConceptGraph/index');
 var Bar = require('./components/Bar/index');
 var Navigation = require('./components/Navigation/index');
 var ProfilePage = require('./components/ProfilePage/index');
@@ -30,7 +31,8 @@ var Container = React.createClass({
             language: "en",
             dbEdition: "en",
             sortAlphabetically: true,
-            favoriteTerms: null
+            favoriteTerms: null,
+            diagramView: "new"
         };
     },
 
@@ -564,20 +566,24 @@ var Container = React.createClass({
             this.getFavoriteTerms();
         }
         var content = null;
-        switch(this.state.content){
+        switch(this.state.content) {
             case "diagram":
-                content = <Diagram
-                            ref={ (ref) => this._diagram = ref }
-                            data={this.state.data}
-                            update={this.updateSelectedTerm}
-                            updateConceptChildren={this.updateConceptChildren}
-                            language={this.state.language}
-                            url={this.state.serverUrl}
-                            favoriteTerms={this.state.favoriteTerms}
-                            removeFavoriteTerm={this.removeFavoriteTerm}
-                            addFavoriteTerm={this.addFavoriteTerm}
-                            saveDiagram={this.saveDiagram}
-                          />
+                if (this.state.diagramView == "old") {
+                    content = <ConceptGraph />
+                } else {
+                    content = <Diagram
+                        ref={ (ref) => this._diagram = ref }
+                        data={this.state.data}
+                        update={this.updateSelectedTerm}
+                        updateConceptChildren={this.updateConceptChildren}
+                        language={this.state.language}
+                        url={this.state.serverUrl}
+                        favoriteTerms={this.state.favoriteTerms}
+                        removeFavoriteTerm={this.removeFavoriteTerm}
+                        addFavoriteTerm={this.addFavoriteTerm}
+                        saveDiagram={this.saveDiagram}
+                />
+                 }
                 break;
             case "profile":
                 content = <ProfilePage
@@ -591,15 +597,26 @@ var Container = React.createClass({
                           />
                 break;
             default:
-                content = <Diagram
-                    ref={ (ref) => this._diagram = ref }
-                    data={this.state.data}
-                    url={this.state.serverUrl}
-                    update={this.updateSelectedTerm}
-                    updateConceptChildren={this.updateConceptChildren}
-                    language={this.state.language}
-                />
+                if (this.state.diagramView == "old") {
+                    content = <ConceptGraph />
+                } else {
+                    content = <Diagram
+                        ref={ (ref) => this._diagram = ref }
+                        data={this.state.data}
+                        update={this.updateSelectedTerm}
+                        updateConceptChildren={this.updateConceptChildren}
+                        language={this.state.language}
+                        url={this.state.serverUrl}
+                        favoriteTerms={this.state.favoriteTerms}
+                        removeFavoriteTerm={this.removeFavoriteTerm}
+                        addFavoriteTerm={this.addFavoriteTerm}
+                        saveDiagram={this.saveDiagram}
+                    />
+                }
                 break;
+        }
+        if(this.state.content != "profile" && this.state.diagramView == "old"){
+            content = <ConceptGraph />
         }
         return (
             <div className="wrapper">
