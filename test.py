@@ -4,7 +4,7 @@ import unittest
 import psycopg2
 
 DB_NAME = "snomedct"
-DB_USER = "simon"
+DB_USER = "Sehnsucht"
 
 class TestApplication(unittest.TestCase):
     """
@@ -158,7 +158,7 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data['id'], 709886006)
         self.assertEqual(resp_data['full'], "Antibody to Encephalitozoon cuniculi (substance)")
         self.assertEqual(resp_data['synonym'], "Anti-Encephalitozoon cuniculi antibody")
-        self.assertEqual(resp_data['definition_status'], "primitive")
+        self.assertEqual(resp_data['definition_status'], "Primitive")
 
         resp = self.app.get('/get_names/709886006')
         self.assertEqual(resp.status_code, 200)
@@ -166,8 +166,8 @@ class TestApplication(unittest.TestCase):
         resp_data = json.loads(resp.data.decode("utf-8"))
         self.assertEqual(len(resp_data), 3)
         self.assertEqual(resp_data[0]["name"], "Antibody to Encephalitozoon cuniculi (substance)")
-        self.assertEqual(resp_data[0]["type"], "full")
-        self.assertEqual(resp_data[0]["acceptability"], "preferred")
+        self.assertEqual(resp_data[0]["type"], "Full")
+        self.assertEqual(resp_data[0]["acceptability"], "Preferred")
 
     def test_children(self):
         """
@@ -181,10 +181,10 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(len(resp_data), 6)
         self.assertEqual(resp_data[0]['id'], 420412004)
         self.assertEqual(resp_data[0]['synonym'], "Pseudoacanthocephalidae")
-        self.assertEqual(resp_data[0]['type_name'], "IS A")
+        self.assertEqual(resp_data[0]['type_name'], "Is a")
         self.assertEqual(resp_data[0]['type_id'], 116680003)
         self.assertEqual(resp_data[0]['full'], "Family Pseudoacanthocephalidae (organism)")
-        self.assertEqual(resp_data[0]['definition_status'], "primitive")
+        self.assertEqual(resp_data[0]['definition_status'], "Primitive")
 
 
     def test_get_parents(self):
@@ -199,10 +199,10 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(len(resp_data), 1)
         self.assertEqual(resp_data[0]['type_id'], 116680003)
         self.assertEqual(resp_data[0]['synonym'], "Procedure")
-        self.assertEqual(resp_data[0]['type_name'], "IS A")
+        self.assertEqual(resp_data[0]['type_name'], "Is a")
         self.assertEqual(resp_data[0]['full'], "Procedure (procedure)")
         self.assertEqual(resp_data[0]['id'], 71388002)
-        self.assertEqual(resp_data[0]['definition_status'], "primitive")
+        self.assertEqual(resp_data[0]['definition_status'], "Primitive")
 
 
     def test_diagram(self):
