@@ -47,7 +47,6 @@ var Container = React.createClass({
                 for (var i in childrenResult[0]) {
                     const childSynonym = childrenResult[0][i].synonym;
                     const childFull = childrenResult[0][i].full;
-                    console.log(childrenResult[0][i].definition_status);
                     children.push(
                         {
                             "name": (childSynonym.length > 0 ? childSynonym : childFull),
@@ -197,7 +196,6 @@ var Container = React.createClass({
                     // get all information about children
                     var children = [];
                     for (var i in res) {
-                        console.log(node);
                         children.push(
                             {
                                 "name": (res[i].synonym.length > 0) ?
