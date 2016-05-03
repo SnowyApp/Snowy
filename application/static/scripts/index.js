@@ -505,7 +505,7 @@ var Container = React.createClass({
     /**
      * Send diagram to server.
      **/
-    saveDiagram: function() {
+    saveDiagram: function(name, desc) {
         $.ajax({
             type: "POST",
             method: "POST",
@@ -517,7 +517,8 @@ var Container = React.createClass({
             data: JSON.stringify({
                 "data": JSON.stringify(this.stringifyDiagram(this.state.data)),
                 "created": new Date().toString(),
-                "name": "NameGoesHere"
+                "name": name,
+                "desc": desc
             }),
             error: function(xhr) {
                 console.log("Could not store diagram.");
