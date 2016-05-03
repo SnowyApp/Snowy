@@ -1,0 +1,22 @@
+/* Save diagram */
+
+.saveDiagramWrapper {
+    display: inline-table;;
+}
+
+.saveDiagramPanel {
+    width: 350px;
+    position: absolute;
+}
+
+.saveDiagramPanelBody {
+    padding: 5px 15px 0px;
+}
+
+.diagramName {
+    margin-bottom: 5px;
+}
+
+.diagramDesc {
+    resize: vertical;
+}
