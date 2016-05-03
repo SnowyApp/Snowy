@@ -33,8 +33,8 @@ var Container = React.createClass({
             sortAlphabetically: true,
             favoriteTerms: null,
             diagramView: "hierarchy",
-            parents: null,
-            relations: null
+            staticDiagramParents: null,
+            staticDiagramRelations: null
         };
     },
 
@@ -71,8 +71,8 @@ var Container = React.createClass({
                         );
                     }
                     this.setState({
-                        parents: parents,
-                        relations: relations
+                        staticDiagramParents: parents,
+                        staticDiagramRelations: relations
                     });
                 }.bind(this)
             );
