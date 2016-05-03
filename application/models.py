@@ -475,8 +475,8 @@ class Concept():
             for desc in cur:
                 result += [{
                             "name": desc[1],
-                            "type": "synonym" if desc[0]==900000000000074008 else "full",
-                            "acceptability": "preferred" if desc[2]==900000000000548007 else "acceptable"
+                            "type": "Synonym" if desc[0]==900000000000074008 else "Full",
+                            "acceptability": "Preferred" if desc[2]==900000000000548007 else "Acceptable"
                             }]
             return result
         except Exception as e:
@@ -486,16 +486,16 @@ class Concept():
     @staticmethod
     def get_attribute(type_id):
         if type_id == 363698007:
-            return "FINDING SITE"
+            return "Finding site"
         elif type_id == 116676008:
-            return "ASSOCIATED MORPHOLOGY"
+            return "Associated morphology"
         elif type_id == 116680003:
-            return "IS A"
+            return "Is a"
         else:
             return "UNDEFINED (PROBABLE ERROR SERVER SIDE)"
 
     def get_definition_status(self):
-        return "primitive" if self.definition_status_id==900000000000074008 else "fully-defined"
+        return "Primitive" if self.definition_status_id==900000000000074008 else "Fully-defined"
 
     def to_json(self):
         """
