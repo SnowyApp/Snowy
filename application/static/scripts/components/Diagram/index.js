@@ -1,11 +1,11 @@
-var InfoPanel = require('./InfoPanel');
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
 import Draggable from 'react-draggable';
 
 var diagram = require("./d3Diagram");
+var InfoPanel = require('./InfoPanel');
+var SaveDiagram = require('./SaveDiagram');
 
 var Diagram = React.createClass({
     propTypes: {
@@ -107,13 +107,6 @@ var Diagram = React.createClass({
     },
 
     /**
-    * Saves diagram to favorites
-    */
-    saveDiagram: function (args) {
-        this.props.saveDiagram(args.name, args.desc);
-    },
-
-    /**
     * Render the diagram from the current state.
     */
     render: function() {
@@ -135,6 +128,10 @@ var Diagram = React.createClass({
                     onClick={this.changeView}>
                     {this.dict[this.props.language]["VHView"]}
                 </Button>
+                <SaveDiagram
+                    language={this.props.language}
+                    saveDiagram={this.props.saveDiagram}
+                />
                 <div className="d3diagram"
                     ref={ (ref) => this._d3 = ref}>
                 </div>
