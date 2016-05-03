@@ -183,13 +183,6 @@ var Bar = React.createClass({
                         </Dropdown.Menu>
                     </Dropdown>
                     <Export language={this.props.language} selectedTerm={this.props.selectedTerm}/>
-                    <Button
-                        className="save-diagram"
-                        bsStyle="primary"
-                        onClick={this.props.saveDiagram}
-                    >
-                        {this.dict[this.props.language]["saveDiagram"]}
-                    </Button>
                     {navButtons}
                 </ButtonToolbar>
             </div>

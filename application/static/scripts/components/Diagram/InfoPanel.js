@@ -297,7 +297,7 @@ var InfoPanel = React.createClass({
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
                     {this.props.data[0].name}
-                    <button onClick={this.props.hidePanel} className="close closeInfoButton" type="button" aria-label="Close">
+                    <button onClick={this.props.hidePanel} className="close closeButton" type="button" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
