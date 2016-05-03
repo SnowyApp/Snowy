@@ -35,7 +35,9 @@ var InfoPanel = React.createClass({
             attribute:          "Attribut",
             saveFavorite:       "Spara favorit",
             saved:              "Sparad!",
-            removeFavorite:     "Ta bort favorit"
+            removeFavorite:     "Ta bort favorit",
+            children:           "Barn",
+            conceptType:        "Koncepttyp"
         },
         en: {
             termInfo:           "Term information",
@@ -51,7 +53,9 @@ var InfoPanel = React.createClass({
             attribute:          "Attribute",
             saveFavorite:       "Save favorite",
             saved:              "Saved!",
-            removeFavorite:     "Remove favorite"
+            removeFavorite:     "Remove favorite",
+            children:           "Children",
+            conceptType:        "Concept type"
         }
     },
 
@@ -279,7 +283,7 @@ var InfoPanel = React.createClass({
                 </div>
                 <div className="panel-body infoPanelBody">
                     {saveTermButton}
-                    
+
                     {/* General info TODO: Fix real data for concept type and status*/}
                     <h3>
                         {this.dict[this.props.language]["generalInfo"]}
@@ -292,11 +296,11 @@ var InfoPanel = React.createClass({
                                     <td className="termInfoData">{this.props.data[0].concept_id}</td>
                                 </tr>
                                 <tr className="termInfo">
-                                    <td className="termInfoName">Children:</td>
+                                    <td className="termInfoName">{this.dict[this.props.language]["children"]}:</td>
                                     <td className="termInfoData">{this.props.data[0].children.length}</td>
                                 </tr>
                                 <tr className="termInfo">
-                                    <td className="termInfoName">Concept type:</td>
+                                    <td className="termInfoName">this.dict[this.props.language]["conceptType"]}:</td>
                                     <td className="termInfoData">(Fully defined)</td>
                                 </tr>
                                 <tr className="termInfo">
@@ -313,13 +317,13 @@ var InfoPanel = React.createClass({
                             <thead>
                                 <tr>
                                     <th id="name_type" className="namesTable">
-                                        {this.dict[this.props.language]["type"]} 
+                                        {this.dict[this.props.language]["type"]}
                                     </th>
                                     <th id="name_name" className="namesTable">
-                                        {this.dict[this.props.language]["name"]} 
+                                        {this.dict[this.props.language]["name"]}
                                     </th>
                                     <th id="name_acceptability" className="namesTable">
-                                        {this.dict[this.props.language]["acceptability"]} 
+                                        {this.dict[this.props.language]["acceptability"]}
                                     </th>
                                 </tr>
                             </thead>
@@ -335,10 +339,10 @@ var InfoPanel = React.createClass({
                             <thead>
                                 <tr>
                                     <th id="parent_name" className="parentsTable">
-                                        {this.dict[this.props.language]["name"]} 
+                                        {this.dict[this.props.language]["name"]}
                                     </th>
                                     <th id="parent_id" className="parentsTable">
-                                        ID 
+                                        ID
                                     </th>
                                 </tr>
                             </thead>
@@ -354,13 +358,13 @@ var InfoPanel = React.createClass({
                             <thead>
                                 <tr>
                                     <th id="relation_type" className="relationsTable">
-                                        {this.dict[this.props.language]["attribute"]} 
+                                        {this.dict[this.props.language]["attribute"]}
                                     </th>
                                     <th id="relation_destination" className="relationsTable">
-                                        {this.dict[this.props.language]["destination"]} 
+                                        {this.dict[this.props.language]["destination"]}
                                     </th>
                                     <th id="relation_chartype" className="relationsTable">
-                                        {this.dict[this.props.language]["charType"]} 
+                                        {this.dict[this.props.language]["charType"]}
                                     </th>
                                 </tr>
                             </thead>
