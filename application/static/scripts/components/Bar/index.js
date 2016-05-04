@@ -159,11 +159,8 @@ var Bar = React.createClass({
                 <ButtonToolbar id = "buttons">
                     {/* Database edition drop-down */}
                     <DropdownButton bsStyle="success" title={this.dict[this.props.language]["edition"]} id="Edition">
-                        <MenuItem onClick={this.props.setEdition.bind(null,"en")}>
-                            English Edition 2015-11-30
-                        </MenuItem>
-                        <MenuItem onClick={this.props.setEdition.bind(null,"se")}>
-                            Swedish Edition 2015-11-30
+                        <MenuItem onClick={this.props.setEdition.bind(null,"int20150731")}>
+                            International Edition 20150731
                         </MenuItem>
                     </DropdownButton>
                     {/* Language drop-down */}
