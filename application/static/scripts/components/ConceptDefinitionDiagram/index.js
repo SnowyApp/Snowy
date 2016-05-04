@@ -39,9 +39,13 @@ var ConceptDefinitionDiagram = React.createClass({
      */
     update: function(props) {
         $.when(this.getConcept(props.id), this.getRelations(props.id))
-            .then(function(concept, relations) {            
-                // draw the diagram using newly
-                this.draw();
+            .then(function(concept, relations) {
+                // structure the data as a concept with a list of relations 
+                var data = concept[0];
+                data.relations = relations[0];
+
+                // draw the diagram with new data
+                this.draw(data);
             }.bind(this));        
     },
 
@@ -80,7 +84,7 @@ var ConceptDefinitionDiagram = React.createClass({
     /**
      * Draw the diagram.
      */
-    draw: function() {
+    draw: function(data) {
         d3.select(ReactDOM.findDOMNode(this)).append("circle")
             .attr({
                 cx: 200,
