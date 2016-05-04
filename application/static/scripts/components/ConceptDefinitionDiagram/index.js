@@ -2,7 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 var ConceptDefinitionDiagram = React.createClass({
-    
+    propTypes:{
+        serverUrl: React.PropTypes.string,
+        concept_id: React.PropTypes.number
+    },
     statics: {
         PRIMITIVE_COLOR : "#99CCFF",
         DEFINED_COLOR : "#CCCCFF"
@@ -42,7 +45,7 @@ var ConceptDefinitionDiagram = React.createClass({
      * Fetch new data and draw diagram..
      */
     update: function(props) {
-        $.when(this.getConcept(props.id), this.getRelations(props.id))
+        $.when(this.getConcept(props.concept_id), this.getRelations(props.concept_id))
             .then(function(concept, relations) {
                 // structure the data as a concept with a list of relations 
                 var data = concept[0];
@@ -79,7 +82,7 @@ var ConceptDefinitionDiagram = React.createClass({
             url: this.props.serverUrl + "/get_relations/" + conceptId,
             dataType: "json",
             error: function() {
-                console.log("Could not get releations for Concept Definitiion" + 
+                console.log("Could not get relations for Concept Definition" +
                         " Diagram.");
             }.bind(this)
         });

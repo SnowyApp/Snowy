@@ -33,8 +33,8 @@ var Container = React.createClass({
             sortAlphabetically: true,
             favoriteTerms: null,
             diagramView: "hierarchy",
-            staticDiagramParents: null,
-            staticDiagramRelations: null
+            parents: null,
+            relations: null
         };
     },
 
@@ -71,8 +71,8 @@ var Container = React.createClass({
                         );
                     }
                     this.setState({
-                        staticDiagramParents: parents,
-                        staticDiagramRelations: relations
+                        parents: parents,
+                        relations: relations
                     });
                 }.bind(this)
             );
@@ -642,10 +642,12 @@ var Container = React.createClass({
         var content = null;
         switch(this.state.content) {
             case "diagram":
-                if (this.state.diagramView == "old") {
+                if (this.state.diagramView == "definition") {
                     content = <ConceptDefinitionDiagram
-                        parents = {this.state.staticDiagramParents}
-                        relations = {this.state.staticDiagramRelations}
+                        parents = {this.state.parents}
+                        relations = {this.state.relations}
+                        serverUrl={this.state.serverUrl}
+                        concept_id={this.state.selectedTerm}
                     />
                 } else {
                     content = <Diagram
@@ -675,10 +677,12 @@ var Container = React.createClass({
                           />
                 break;
             default:
-                if (this.state.diagramView == "old") {
+                if (this.state.diagramView == "definition") {
                     content = <ConceptDefinitionDiagram
-                        parents = {this.state.staticDiagramParents}
-                        relations = {this.state.staticDiagramRelations}
+                        parents = {this.state.parents}
+                        relations = {this.state.relations}
+                        serverUrl={this.state.serverUrl}
+                        concept_id={this.state.selectedTerm}
                     />
                 } else {
                     content = <Diagram
@@ -695,12 +699,6 @@ var Container = React.createClass({
                     />
                 }
                 break;
-        }
-        if(this.state.content != "profile" && this.state.diagramView == "old"){
-            content = <ConceptDefinitionDiagram 
-                        parents={this.state.staticDiagramParents}
-                        relations={this.state.staticDiagramRelations}
-                />
         }
         return (
             <div className="wrapper">
