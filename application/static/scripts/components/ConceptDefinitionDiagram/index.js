@@ -37,10 +37,20 @@ var ConceptGraph = React.createClass({
     },
 
     /**
-     * Fetch data for concept-graph.
+     * Fetch new data and draw diagram..
      */
     update: function(props) {
-        // TODO: Calls for concept and attributes
+        $.when(this.getConcept(props.id), this.getRelations(props.id))
+            .then(function(concept, relations) {            
+                // draw the diagram using newly
+                draw();
+            }.bind(this));        
+    },
+
+    /**
+     * Draw the diagram.
+     */
+    draw: function() {
         d3.select(ReactDOM.findDOMNode(this)).append("circle")
             .attr({
                 cx: 200,
@@ -49,7 +59,7 @@ var ConceptGraph = React.createClass({
                 fill: "red",
                 stroke: "green"
             });
-    },
+    }
 });
 
 module.exports = ConceptGraph;
