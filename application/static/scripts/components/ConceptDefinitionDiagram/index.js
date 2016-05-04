@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-var ConceptGraph = React.createClass({
+var ConceptDefinitionDiagram = React.createClass({
     
 
     getInitialState: function() {
@@ -60,4 +60,4 @@ var ConceptGraph = React.createClass({
     }
 });
 
-module.exports = ConceptGraph;
+module.exports = ConceptDefinitionDiagram;
