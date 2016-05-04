@@ -157,6 +157,10 @@ var InfoPanel = React.createClass({
                     //might go to profile before the setState is reached, and a component
                     //cannot be update (setState) if it's not mounted.
                     if(this.isMounted()){
+                        //Sort so that Preffered is sorted before Acceptable
+                        names.sort(function(a,b){
+                            return a.acceptability.toLowerCase() > b.acceptability.toLowerCase() ? -1 : 1;
+                        });
                         this.setState({
                             names: names
                         });
