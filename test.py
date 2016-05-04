@@ -4,7 +4,7 @@ import unittest
 import psycopg2
 
 DB_NAME = "snomedct"
-DB_USER = "Sehnsucht"
+DB_USER = "simon"
 
 class TestApplication(unittest.TestCase):
     """
