@@ -351,7 +351,7 @@ d3Chart._drawTree = function(element, data) {
         .on('mouseout', function() {
             if(!d3.select(this).classed('selected')) {
                 d3.select(this).selectAll('rect.borderNode').style('fill', function(d){
-                    if(d.definitionStatus == 'primitive'){
+                    if(d.definitionStatus == 'Primitive'){
                         return CONCEPT_COLOR;
                     }
                     return DEFINED_CONCEPT_COLOR;
@@ -386,7 +386,7 @@ d3Chart._drawTree = function(element, data) {
             .attr('width', NODE_WIDTH)
             .attr('height',NODE_HEIGHT)
             .style('fill', function (d) {
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return CONCEPT_COLOR;
                 }
                 return DEFINED_CONCEPT_COLOR;
@@ -396,7 +396,8 @@ d3Chart._drawTree = function(element, data) {
         nodeEnter.append('rect')
             .attr('class', 'borderNode')
             .attr('x', function(d){
-                if(d.definitionStatus == 'primitive'){
+                console.log(d.definitionStatus);
+                if(d.definitionStatus == 'Primitive'){
                     return WIDTH_MARGIN;
                 }
                 else{
@@ -404,7 +405,7 @@ d3Chart._drawTree = function(element, data) {
                 }
             })
             .attr('y', function(d){
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return '0';
                 }
                 else{
@@ -412,7 +413,7 @@ d3Chart._drawTree = function(element, data) {
                 }
             })
             .attr('width', function (d) {
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return NODE_WIDTH;
                 }
                 else{
@@ -420,7 +421,7 @@ d3Chart._drawTree = function(element, data) {
                 }
             })
             .attr('height',function (d) {
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return NODE_HEIGHT;
                 }
                 else {
@@ -428,7 +429,7 @@ d3Chart._drawTree = function(element, data) {
                 }
             })
             .style('fill', function (d) {
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return CONCEPT_COLOR;
                 }
                 return DEFINED_CONCEPT_COLOR;
@@ -440,7 +441,7 @@ d3Chart._drawTree = function(element, data) {
             .attr('width', NODE_WIDTH)
             .attr('height',NODE_HEIGHT)
             .style('fill', function (d) {
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return CONCEPT_COLOR;
                 }
                 return DEFINED_CONCEPT_COLOR;
@@ -450,7 +451,7 @@ d3Chart._drawTree = function(element, data) {
         nodeEnter.append('rect')
             .attr('class', 'borderNode')
             .attr('x', function(d){
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return '0';
                 }
                 else{
@@ -458,7 +459,7 @@ d3Chart._drawTree = function(element, data) {
                 }
             })
             .attr('y', function(d){
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return '0';
                 }
                 else{
@@ -466,7 +467,7 @@ d3Chart._drawTree = function(element, data) {
                 }
             })
             .attr('width', function (d) {
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return NODE_WIDTH;
                 }
                 else{
@@ -474,7 +475,7 @@ d3Chart._drawTree = function(element, data) {
                 }
             })
             .attr('height',function (d) {
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return NODE_HEIGHT;
                 }
                 else {
@@ -482,7 +483,7 @@ d3Chart._drawTree = function(element, data) {
                 }
             })
             .style('fill', function (d) {
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     return CONCEPT_COLOR;
                 }
                 return DEFINED_CONCEPT_COLOR;
@@ -627,7 +628,7 @@ d3Chart._drawTree = function(element, data) {
             // If the text is 2 rows or more, increase the width of the rect
             if(lineNumber > 0){
                 d3.select(this.parentNode).select('rect.node').attr('height', NODE_HEIGHT + lineNumber*LINE_MARGIN);
-                if(d.definitionStatus == 'primitive'){
+                if(d.definitionStatus == 'Primitive'){
                     d3.select(this.parentNode).select('rect.borderNode').attr('height', NODE_HEIGHT + lineNumber*LINE_MARGIN);
                 }
                 else{
