@@ -14,7 +14,7 @@ var RegisterForm = React.createClass({
         url:                React.PropTypes.string,
         language:           React.PropTypes.string
     },
-    
+
     //Dictionary for supported languages. m prefix indicates that its a error/success message
     dict: {
         se: {
@@ -24,7 +24,9 @@ var RegisterForm = React.createClass({
             password:               "Lösenord",
             repeat:                 "Upprepa",
             m_emailTaken:           "Den angivna email-adressen är upptagen.",
-            m_regUnsuccessful:      "Registreringen misslyckades",
+            m_regSuccessful:        "Registreringen lyckades.",
+            m_regUnsuccessful:      "Registreringen misslyckades.",
+            m_registering:          "Registreras...",
             passwordStrength:       ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
         },
         en: {
@@ -34,7 +36,9 @@ var RegisterForm = React.createClass({
             password:               "Password",
             repeat:                 "Repeat",
             m_emailTaken:           "The provided email is already in use.",
-            m_regUnsuccessful:      "Registration unsuccessful",
+            m_regSuccessful:        "Registration successful.",
+            m_regUnsuccessful:      "Registration unsuccessful.",
+            m_registering:          "Registering...",
             passwordStrength:       ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
         }
     },
@@ -46,7 +50,10 @@ var RegisterForm = React.createClass({
             repeatPassword: "",
             matchingPasswords: false,
             passwordStrength: 0,
-            errorMessage: "",
+            statusMessage: {
+                message: "",
+                type: "none"
+            },
             showModal: false
         });
     },
@@ -56,7 +63,15 @@ var RegisterForm = React.createClass({
     */
     onSuccess: function(){
         this.resetForm();
-        this.close();
+        this.setState({
+            statusMessage: {
+                message: this.dict[this.props.language]["m_regSuccessful"],
+                type: "success"
+            }
+        });
+        document.getElementById("password").value = "";
+        document.getElementById("repeatPassword").value = "";
+        document.getElementById("email").value = "";
     },
 
    /**
@@ -64,7 +79,10 @@ var RegisterForm = React.createClass({
     */
     onError: function(t, e){
         this.setState({
-            errorMessage: this.dict[this.props.language]["m_regUnsuccessful"]
+            statusMessage: {
+                message: this.dict[this.props.language]["m_regUnsuccessful"],
+                type: "error"
+            }
         });
         //Print error to console
         console.log(t);
@@ -75,7 +93,18 @@ var RegisterForm = React.createClass({
     * Resets the form
     */
     resetForm: function(){
-        this.setState(this.getInitialState());
+        this.setState({
+            email: "",
+            validEmail: false,
+            password: "",
+            repeatPassword: "",
+            matchingPasswords: false,
+            passwordStrength: 0,
+            statusMessage: {
+                message: "",
+                type: "none"
+            }
+        });
     },
 
    /**
@@ -83,6 +112,12 @@ var RegisterForm = React.createClass({
     */
     handleSubmit: function(e){
         e.preventDefault();
+        this.setState({
+            statusMessage: {
+                message: this.dict[this.props.language]["m_registering"],
+                type: "working"
+            }
+        });
         $.ajax({
             type:"POST",
             url: this.props.url + "/register",
@@ -210,7 +245,7 @@ var RegisterForm = React.createClass({
     componentWillReceiveProps(nextProps){
         this.setState({showModal: nextProps.show});
     },
-    
+
     render: function(){
         const passwordStrength = this.state.passwordStrength;
         //Valid email
@@ -219,7 +254,7 @@ var RegisterForm = React.createClass({
         if(this.state.email.length > 0){
             emailDivState = emailDivState + " has-feedback " + (this.state.validEmail ? "has-success" : "has-error");
             emailGlyphState = "glyphicon form-control-feedback " + (this.state.validEmail ? "glyphicon-ok" : "glyphicon-remove");
-        }        
+        }
 
         //Password strength
         var passwordDivState = "form-group";
@@ -232,7 +267,7 @@ var RegisterForm = React.createClass({
         const pwStrengthBarClass = "progress-bar pwStrengthBar";
         const pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"];
         var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[passwordStrength];
-        
+
         //Default bar color
         const barStyle = [
             {backgroundColor: "gray"},
@@ -254,14 +289,14 @@ var RegisterForm = React.createClass({
                 barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             case 3:
-                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]}; 
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             case 4:
                 barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
-            }    
+            }
         }
-        
+
         //Matching passwords
         var repeatDivState = "form-group";
         var repeatGlyphState = null;
@@ -272,10 +307,15 @@ var RegisterForm = React.createClass({
         //Disable submit button if insufficient information is provided
         var disableSubmit = (this.state.validEmail && this.state.password == this.state.repeatPassword && passwordStrength > 0 ? "" : "disabled");
 
-        //Error message
-        var message = null;
-        if(this.state.errorMessage.length > 0){
-            message = <span className="col-sm-6 errorMessage">{this.state.errorMessage}</span>;
+        //Display a status message?
+        var statusMessage = this.state.statusMessage;
+        var statusMessageStyle;
+        if(statusMessage.type == "success"){
+            statusMessageStyle = {color: "#248d24"}
+        } else if (statusMessage.type == "working") {
+            statusMessageStyle = {color: "orange"}
+        } else if (statusMessage.type == "error") {
+            statusMessageStyle = {color: "red"}
         }
 
         return(
@@ -287,13 +327,18 @@ var RegisterForm = React.createClass({
                 </Modal.Header>
                 <Modal.Body>
                     <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                        {/* Email */}                
+                        {/* Email */}
                         <div className={emailDivState}>
                             <label htmlFor="password" className="col-sm-3 control-label">
                                 {this.dict[this.props.language]["email"]}
                             </label>
                             <div className="col-sm-8">
-                                <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
+                                <input
+                                    type="text"
+                                    id="email"
+                                    onChange={this.validateEmail}
+                                    className="form-control"
+                                />
                                 <span className={emailGlyphState}></span>
                             </div>
                         </div>
@@ -303,7 +348,12 @@ var RegisterForm = React.createClass({
                                 {this.dict[this.props.language]["password"]}
                             </label>
                             <div className="col-sm-8">
-                                <input type="password" id="password" className="form-control" onChange={this.checkPasswordStrength} />
+                                <input
+                                    type="password"
+                                    id="password"
+                                    className="form-control"
+                                    onChange={this.checkPasswordStrength}
+                                />
                                 <span className={passwordGlyphState}></span>
                             </div>
                         </div>
@@ -328,11 +378,16 @@ var RegisterForm = React.createClass({
                                 {this.dict[this.props.language]["repeat"]}
                             </label>
                             <div className="col-sm-8">
-                                <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
+                                <input
+                                    type="password"
+                                    id="repeatPassword"
+                                    className="form-control"
+                                    onChange={this.updateRepeatedPassword}
+                                />
                                 <span className={repeatGlyphState}></span>
                             </div>
                         </div>
-                    
+
                         {/* Submit */}
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-2">
@@ -340,7 +395,7 @@ var RegisterForm = React.createClass({
                                     {this.dict[this.props.language]["register"]}
                                 </button>
                             </div>
-                            {message}
+                            <span style={statusMessageStyle} className="col-sm-7 statusMessage">{this.state.statusMessage.message}</span>
                         </div>
                     </form>
                 </Modal.Body>
@@ -350,7 +405,3 @@ var RegisterForm = React.createClass({
 });
 
 module.exports = RegisterForm;
-
-
-
-

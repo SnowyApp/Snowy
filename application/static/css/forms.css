@@ -57,6 +57,10 @@
     color: #248d24;
 }
 
+.statusMessage {
+    margin-top: 7px;
+}
+
 .hide {
     display: none;
 }

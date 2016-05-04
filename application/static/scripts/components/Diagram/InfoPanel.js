@@ -157,6 +157,10 @@ var InfoPanel = React.createClass({
                     //might go to profile before the setState is reached, and a component
                     //cannot be update (setState) if it's not mounted.
                     if(this.isMounted()){
+                        //Sort so that Preferred is sorted before Acceptable
+                        names.sort(function(a,b){
+                            return a.acceptability.toLowerCase() > b.acceptability.toLowerCase() ? -1 : 1;
+                        });
                         this.setState({
                             names: names
                         });
@@ -321,7 +325,9 @@ var InfoPanel = React.createClass({
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">{this.dict[this.props.language]["children"]}:</td>
-                                    <td className="termInfoData">{this.props.data[0].children.length}</td>
+                                    <td className="termInfoData">
+                                        {(this.props.data[0].children !== undefined ? this.props.data[0].children.length : 0)}
+                                    </td>
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">{this.dict[this.props.language]["conceptType"]}:</td>
