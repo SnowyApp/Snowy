@@ -538,8 +538,6 @@ var Container = React.createClass({
      * Send diagram to server.
      **/
     saveDiagram: function(name, desc, succeeded) {
-        console.log(name);
-        console.log(desc);
         $.ajax({
             type: "POST",
             method: "POST",
