@@ -17,7 +17,7 @@ UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
 # Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
-SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
+SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id, a.type_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
 
 # Token queries
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
@@ -50,8 +50,8 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.t
                             WHERE a.source_id=%s AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
 
 # Diagram queries
-INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, user_email) VALUES (%s, %s, %s, %s, %s) RETURNING id"
-UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s WHERE user_email=%s AND id=%s"
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, description, user_email) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id"
+UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s, description=%s WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 SELECT_DIAGRAM_BY_ID_QUERY = "SELECT * FROM diagram WHERE user_email=%s and id=%s;"
 DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
@@ -196,7 +196,7 @@ class User():
         except Exception as e:
             print(e)
 
-    def store_diagram(self, data, name, date, did = None):
+    def store_diagram(self, data, name, date, description, did = None):
         """
         Stores a diagram for the user.
         """
@@ -204,9 +204,9 @@ class User():
         try:
             new_id = 0
             if did:
-                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, name, date, self.email, did))
+                cur.execute(UPDATE_DIAGRAM_STATEMENT, (data, name, date, description, self.email, did))
             else:
-                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, date, date, self.email))
+                cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, date, date, description, self.email))
                 new_id = cur.fetchone()[0]
             get_db().commit()
             cur.close()
@@ -224,7 +224,7 @@ class User():
             result = []
             cur.execute(SELECT_DIAGRAM_QUERY, (self.email,))
             for data in cur:
-                result += [{"id": data[0], 'name': data[2], 'created': data[3], 'modified': data[4]}]
+                result += [{"id": data[0], 'name': data[2], 'description': data[3], 'created': data[4], 'modified': data[5]}]
             cur.close()
             return result
         except Exception as e:
@@ -475,7 +475,7 @@ class Concept():
             for desc in cur:
                 result += [{
                             "name": desc[1],
-                            "type": "Synonym" if desc[0]==900000000000074008 else "Full",
+                            "type": "Synonym" if desc[3]==900000000000013009 else "Full",
                             "acceptability": "Preferred" if desc[2]==900000000000548007 else "Acceptable"
                             }]
             return result
@@ -512,6 +512,7 @@ class Concept():
                     "full": self.full_term,
                     "type_id": self.type_id,
                     "type_name": self.type_name,
+                     "char_type": "inferred",
                     "definition_status": self.get_definition_status()}
 
     def __str__(self):

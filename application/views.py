@@ -302,7 +302,12 @@ def store_diagram():
         else:
             name = data['name']
 
-        cid = g.user.store_diagram(data['data'], name, data['created'])
+        if not 'description' in data or not isinstance(data['description'], str):
+            description = ""
+        else:
+            description = data['description']
+
+        cid = g.user.store_diagram(data['data'], name, data['created'], description)
         if not cid:
             abort(500)
 
@@ -312,10 +317,11 @@ def store_diagram():
         if not 'data' in data or not isinstance(data['data'], str) or \
             not 'name' in data or not isinstance(data['name'], str) or \
             not 'modified' in data or not isinstance(data['modified'], str) or \
-            not 'id' in data or not isinstance(data['id'], int):
-            return jsonify(message="data, name or id not provided"), 400
+            not 'id' in data or not isinstance(data['id'], int) or \
+            not 'description' in data or not isinstance(data['description'], str):
+            return jsonify(message="data, name, description or id not provided"), 400
 
-        res = g.user.store_diagram(data['data'], data['name'], data['modified'], data['id'])
+        res = g.user.store_diagram(data['data'], data['name'], data['modified'], data['description'], data['id'])
         if res is None:
             abort(500)
 

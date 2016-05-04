@@ -25,6 +25,7 @@ CREATE TABLE diagram(
     id BIGSERIAL PRIMARY KEY,
     data TEXT NOT NULL,
     name TEXT NOT NULL,
+    description TEXT NOT NULL,
     date_created TEXT NOT NULL,
     date_modified TEXT NOT NULL,
     user_email TEXT NOT NULL REFERENCES usr (email)
