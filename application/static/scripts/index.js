@@ -5,7 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 var Diagram = require('./components/Diagram/index');
-var ConceptGraph = require('./components/ConceptGraph/index');
+var ConceptDefinitionDiagram = require('./components/ConceptDefinitionDiagram/index');
 var Bar = require('./components/Bar/index');
 var Navigation = require('./components/Navigation/index');
 var ProfilePage = require('./components/ProfilePage/index');
@@ -644,9 +644,9 @@ var Container = React.createClass({
         switch(this.state.content) {
             case "diagram":
                 if (this.state.diagramView == "old") {
-                    content = <ConceptGraph
-                        parents = {this.state.parents}
-                        relations = {this.state.relations}
+                    content = <ConceptDefinitionDiagram
+                        parents = {this.state.staticDiagramParents}
+                        relations = {this.state.staticDiagramRelations}
                     />
                 } else {
                     content = <Diagram
@@ -677,9 +677,9 @@ var Container = React.createClass({
                 break;
             default:
                 if (this.state.diagramView == "old") {
-                    content = <ConceptGraph
-                        parents = {this.state.parents}
-                        relations = {this.state.relations}
+                    content = <ConceptDefinitionDiagram
+                        parents = {this.state.staticDiagramParents}
+                        relations = {this.state.staticDiagramRelations}
                     />
                 } else {
                     content = <Diagram
@@ -698,7 +698,10 @@ var Container = React.createClass({
                 break;
         }
         if(this.state.content != "profile" && this.state.diagramView == "old"){
-            content = <ConceptGraph />
+            content = <ConceptDefinitionDiagram 
+                        parents={this.state.staticDiagramParents}
+                        relations={this.state.staticDiagramRelations}
+                />
         }
         return (
             <div className="wrapper">
