@@ -536,9 +536,10 @@ var Container = React.createClass({
 
     /**
      * Send diagram to server.
-     * Returns true on success.
      **/
     saveDiagram: function(name, desc, succeeded) {
+        console.log(name);
+        console.log(desc);
         $.ajax({
             type: "POST",
             method: "POST",
@@ -550,8 +551,8 @@ var Container = React.createClass({
             data: JSON.stringify({
                 "data": JSON.stringify(this.stringifyDiagram(this.state.data)),
                 "created": new Date().toString(),
-                "name": name//,
-                //"desc": desc TODO: Uncomment when API is updated
+                "name": name,
+                "desc": desc
             }),
             success: function(){
                 //Let the caller know that it succeeded
