@@ -4,7 +4,7 @@ import unittest
 import psycopg2
 
 DB_NAME = "snomedct"
-DB_USER = "Sehnsucht"
+DB_USER = "simon"
 
 class TestApplication(unittest.TestCase):
     """
@@ -214,7 +214,7 @@ class TestApplication(unittest.TestCase):
         data = json.loads(response.data.decode('utf-8'))
 
         # Test to save a new diagram
-        diagram = {"data": "This is a test diagram", "name": "Simons diagram", "created": "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)"}
+        diagram = {"data": "This is a test diagram", "name": "Simons diagram", "description": "This is the description", "created": "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)"}
         response = self.app.post("/diagram", data=json.dumps(diagram), headers={'Authorization': data['token']}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
         resp_data = json.loads(response.data.decode("utf-8"))
@@ -228,11 +228,12 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(len(resp_data), 1)
         self.assertEqual(resp_data[0]["id"], diagram_id)
         self.assertEqual(resp_data[0]["name"], "Simons diagram")
+        self.assertEqual(resp_data[0]["description"], "This is the description")
         self.assertEqual(resp_data[0]["created"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
         self.assertEqual(resp_data[0]["modified"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
 
         # Test to update the diagram
-        diagram = {"data": "This is an updated test diagram", "name": "Simons updated diagram", "id": diagram_id, "modified": "Thu Apr 28 2016 19:48:38 GMT+0200 (W. Europe Standard Time)"}
+        diagram = {"data": "This is an updated test diagram", "description": "An updated description", "name": "Simons updated diagram", "id": diagram_id, "modified": "Thu Apr 28 2016 19:48:38 GMT+0200 (W. Europe Standard Time)"}
         response = self.app.put("/diagram", data=json.dumps(diagram), headers={'Authorization': data['token']}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
@@ -243,6 +244,7 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]["id"], diagram_id)
         self.assertEqual(resp_data[0]["name"], "Simons updated diagram")
         self.assertEqual(resp_data[0]["created"], "Thu Apr 28 2016 18:48:38 GMT+0200 (W. Europe Standard Time)")
+        self.assertEqual(resp_data[0]["description"], "An updated description")
         self.assertEqual(resp_data[0]["modified"], "Thu Apr 28 2016 19:48:38 GMT+0200 (W. Europe Standard Time)")
 
         # Test to delete the diagram
