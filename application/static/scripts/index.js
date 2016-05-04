@@ -550,7 +550,7 @@ var Container = React.createClass({
                 "data": JSON.stringify(this.stringifyDiagram(this.state.data)),
                 "created": new Date().toString(),
                 "name": name,
-                "desc": desc
+                "description": desc
             }),
             success: function(){
                 //Let the caller know that it succeeded
