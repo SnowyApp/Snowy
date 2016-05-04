@@ -46,6 +46,38 @@ var ConceptDefinitionDiagram = React.createClass({
     },
 
     /**
+     * Retrieve the concept with given id.
+     */
+    getConcept: function(conceptId) {
+        return $.ajax({
+            type: "GET",
+            method: "GET",
+            url: this.state.serverUrl + "/concept/" + id,
+            dataType: "json",
+            error: function() {
+                console.log("Could not get concept for Concept Definition" +
+                        " Diagram.");
+            }.bind(this)
+        });
+    },
+
+    /**
+     * Retrieve relations to concept with given id.
+     */
+    getRelations: function(conceptId) {
+        return $.ajax({
+            type: "GET",
+            method: "GET",
+            url: this.state.serverUrl + "/get_relations/" + id,
+            dataType: "json",
+            error: function() {
+                console.log("Could not get releations for Concept Definitiion" + 
+                        " Diagram.");
+            }.bind(this)
+        });
+    },
+
+    /**
      * Draw the diagram.
      */
     draw: function() {
