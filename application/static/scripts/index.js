@@ -239,7 +239,7 @@ var Container = React.createClass({
                         );
                     }
                     // update node's children
-                    node.children = this.sortConcepts(children, 
+                    node.children = this.sortConcepts(children,
                             this.state.sortAlphabetically);
                     this.setState({
                         data: tree
@@ -262,11 +262,11 @@ var Container = React.createClass({
     sortConcepts: function(concepts, alphabetical=true) {
         if (alphabetical) {
             return concepts.sort(function(a, b) {
-                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);   
+                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
             });
         }
         return concepts.sort(function(a, b) {
-            return a.concept_id - b.concept_id;   
+            return a.concept_id - b.concept_id;
         });
     },
 
