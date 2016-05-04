@@ -5,7 +5,6 @@ var ConceptGraph = React.createClass({
     
 
     getInitialState: function() {
-        console.log("GET INITIAL STATE");
         return {};
     },
     
@@ -32,7 +31,6 @@ var ConceptGraph = React.createClass({
      * Render the contents of the ConceptGraph
      */
     render: function() {
-        console.log("RENDER");
         return <svg width="100%" height="100%"></svg>;
     },
 
