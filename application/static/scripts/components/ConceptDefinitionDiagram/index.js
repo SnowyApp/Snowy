@@ -3,6 +3,10 @@ import ReactDOM from "react-dom";
 
 var ConceptDefinitionDiagram = React.createClass({
     
+    statics: {
+        PRIMITIVE_COLOR : "#99CCFF",
+        DEFINED_COLOR : "#CCCCFF"
+    }, 
 
     getInitialState: function() {
         return {};
