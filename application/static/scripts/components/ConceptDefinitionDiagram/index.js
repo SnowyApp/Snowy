@@ -89,14 +89,79 @@ var ConceptDefinitionDiagram = React.createClass({
      * Draw the diagram.
      */
     draw: function(data) {
-        d3.select(ReactDOM.findDOMNode(this)).append("circle")
-            .attr({
-                cx: 200,
-                cy: 200,
-                r: 20,
-                fill: "red",
-                stroke: "green"
-            });
+        console.log(data);
+
+        // fetch the svg element
+        var svg = d3.select(ReactDOM.findDOMNode(this));
+
+        // draw the concept
+        this.drawConcept(svg, data);
+    },
+
+    /**
+     * Draw the given concept.
+     *
+     * Concept must be on the form:
+     * {
+     *      definition_status: "fully_defined"|"primitive"
+     *      full: <full name>
+     *      synonym: <synonym>
+     *      id: <concept id>
+     * }
+     */
+    drawConcept: function(element, concept) {
+        var g = element.append("g")
+            .attr("class", "concept");
+
+        // draw a rectangle and text
+        this.drawConceptRectangle(g, concept);
+        this.drawConceptText(g, concept);
+
+        // return the grouping element
+        return g;
+    },
+
+    /**
+     * Draw a concept rectangle in given grouping element.
+     */
+    drawConceptRectangle: function(group, concept) {
+        return group.append("rect")
+            .attr("x", 50)
+            .attr("width", 50)
+            .attr("height", 50)
+            // apply the correct colours depending on definition status
+            .style("fill", (concept.definition_status != "Primitive") ? 
+                    ConceptDefinitionDiagram.PRIMITIVE_COLOR : 
+                    ConceptDefinitionDiagram.DEFINED_COLOR);
+    },
+
+    /**
+     * Draw text inside given grouping element.
+     */
+    drawConceptText: function(group, concept) {
+        return group.append("text")
+            // position text centered in the concept
+            .attr("y", 25)
+            .attr("x", 50)
+            .attr("text-anchor", "middle")
+
+            .attr("dy", ".35em")
+            .attr("font-family", "Helvetica, Arial, Sans-Serif")
+
+            // use the full name if possible, if not available use the synonym
+            // and if neither is defined use a default "NO NAME" name.
+            .text(function() {
+                if (concept.full == null && 
+                        concept.synonym == null) {
+                    return "NO NAME";
+                }
+                else if (concept.full == null) {
+                    return concept.synonym;
+                }
+                return concept.full;
+            })
+
+            .style("fill-opacity", 1);
     }
 });
 
