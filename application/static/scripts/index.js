@@ -33,8 +33,8 @@ var Container = React.createClass({
             sortAlphabetically: true,
             favoriteTerms: null,
             diagramView: "hierarchy",
-            staticDiagramParents: null,
-            staticDiagramRelations: null
+            parents: null,
+            relations: null
         };
     },
 
@@ -71,8 +71,8 @@ var Container = React.createClass({
                         );
                     }
                     this.setState({
-                        staticDiagramParents: parents,
-                        staticDiagramRelations: relations
+                        parents: parents,
+                        relations: relations
                     });
                 }.bind(this)
             );
@@ -641,7 +641,10 @@ var Container = React.createClass({
         switch(this.state.content) {
             case "diagram":
                 if (this.state.diagramView == "old") {
-                    content = <ConceptGraph />
+                    content = <ConceptGraph
+                        parents = {this.state.parents}
+                        relations = {this.state.relations}
+                    />
                 } else {
                     content = <Diagram
                         ref={ (ref) => this._diagram = ref }
@@ -670,7 +673,10 @@ var Container = React.createClass({
                 break;
             default:
                 if (this.state.diagramView == "old") {
-                    content = <ConceptGraph />
+                    content = <ConceptGraph
+                        parents = {this.state.parents}
+                        relations = {this.state.relations}
+                    />
                 } else {
                     content = <Diagram
                         ref={ (ref) => this._diagram = ref }

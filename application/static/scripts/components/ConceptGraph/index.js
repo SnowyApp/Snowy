@@ -24,7 +24,7 @@ var ConceptGraph = React.createClass({
     shouldComponentUpdate: function(props) {
         console.log("SHOULD COMPONENENT UPDEATE");
         // no point of doing anything if the same id was given
-        if (props.conceptId == this.props.conceptId) return false;
+        if (props.concept_id == this.props.concept_id) return false;
 
         this.update(props);
         return false;
