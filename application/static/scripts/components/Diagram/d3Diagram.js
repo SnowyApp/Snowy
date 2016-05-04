@@ -396,7 +396,6 @@ d3Chart._drawTree = function(element, data) {
         nodeEnter.append('rect')
             .attr('class', 'borderNode')
             .attr('x', function(d){
-                console.log(d.definitionStatus);
                 if(d.definitionStatus == 'Primitive'){
                     return WIDTH_MARGIN;
                 }
