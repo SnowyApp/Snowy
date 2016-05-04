@@ -325,7 +325,9 @@ var InfoPanel = React.createClass({
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">{this.dict[this.props.language]["children"]}:</td>
-                                    <td className="termInfoData">{this.props.data[0].children.length}</td>
+                                    <td className="termInfoData">
+                                        {(this.props.data[0].children !== undefined ? this.props.data[0].children.length : 0)}
+                                    </td>
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">{this.dict[this.props.language]["conceptType"]}:</td>
