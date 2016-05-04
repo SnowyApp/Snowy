@@ -30,9 +30,9 @@ var Diagram = React.createClass({
     },
 
     /**
-    * Set the state of data and domain to given props or default values if not
-    * given.
-    */
+     * Set the state of data and domain to given props or default values if not
+     * given.
+     */
     getInitialState: function() {
         return {
             data: [],
@@ -55,7 +55,7 @@ var Diagram = React.createClass({
 
     componentDidMount: function() {
         diagram.create(this._d3, { onClick: this.onNodeClick },
-                this.getDiagramState());
+            this.getDiagramState());
     },
 
     componentDidUpdate: function(prevProps, prevState) {
@@ -68,10 +68,10 @@ var Diagram = React.createClass({
             diagram.create(element, { onClick: this.onNodeClick },
                 this.getDiagramState());
         } else if (prevState.view !== undefined &&
-                prevState.view != this.state.view) {
+            prevState.view != this.state.view) {
             diagram.destroy();
             diagram.create(element, { onClick: this.onNodeClick },
-                    this.getDiagramState());
+                this.getDiagramState());
         }
         else {
             diagram.update(element, this.getDiagramState());
@@ -93,9 +93,9 @@ var Diagram = React.createClass({
         this.update(nextProps.data);
     },
 
-   /**
-    * Toggles between showing/hiding the info panel
-    */
+    /**
+     * Toggles between showing/hiding the info panel
+     */
     toggleInfoPanel: function(){
         this.setState({
             showInfoPanel: !this.state.showInfoPanel
@@ -107,12 +107,12 @@ var Diagram = React.createClass({
     },
 
     /**
-    * Render the diagram from the current state.
-    */
+     * Render the diagram from the current state.
+     */
     render: function() {
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
         return (
-            <div className="diagram">
+            <div className="diagram" id="diagram">
                 <Button
                     bsStyle="primary"
                     onClick={this.reset}>
@@ -133,12 +133,13 @@ var Diagram = React.createClass({
                     saveDiagram={this.props.saveDiagram}
                 />
                 <Button
+                    id="fullscreenButton"
                     bsStyle = "primary"
                     onClick={this.toggleFullscreen}>
                     Fullscreen
                 </Button>
                 <div className="d3diagram"
-                    ref={ (ref) => this._d3 = ref}>
+                     ref={ (ref) => this._d3 = ref}>
                 </div>
 
                 //Button to open info panel
@@ -207,10 +208,19 @@ var Diagram = React.createClass({
             this.setState({
                 view: 'vertical'
             });
-      }
+        }
     },
     toggleFullscreen: function(){
-        console.log("xd");
+        const elem = document.getElementById('diagram');
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        }
     }
 });
 
