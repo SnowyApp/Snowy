@@ -41,7 +41,7 @@ var ConceptGraph = React.createClass({
         $.when(this.getConcept(props.id), this.getRelations(props.id))
             .then(function(concept, relations) {            
                 // draw the diagram using newly
-                draw();
+                this.draw();
             }.bind(this));        
     },
 
