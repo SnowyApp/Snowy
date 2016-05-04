@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 var ProfilePage = React.createClass({
     propTypes: {
         removeFavoriteTerm: React.PropTypes.func,
+        removeid:           React.PropTypes.func,
         favoriteTerms:      React.PropTypes.array,
         openTerm:           React.PropTypes.func,
         openDiagram:        React.PropTypes.func,
@@ -32,10 +33,7 @@ var ProfilePage = React.createClass({
             savedDiagrams:              "Sparade diagram",
             account:                    "Konto",
             name:                       "Namn",
-            firstName:                  "Förnamn",
-            lastName:                   "Efternamn",
-            password:                   "Lösenord",
-            added:                      "Tillagd",
+            firstName:                  "Tillagd",
             savedTerms:                 "Sparade termer",
             update:                     "Uppdatera",
             newPassword:                "Nytt lösenord",
@@ -93,7 +91,7 @@ var ProfilePage = React.createClass({
    /**
     * Sets current tab
     */
-    changeTab: function(tab){    
+    changeTab: function(tab){
         this.setState({
             currentTab: tab
         });
@@ -167,7 +165,7 @@ var ProfilePage = React.createClass({
                                 dict={this.dict}
                                 language={this.props.language}
                                 openDiagram={this.props.openDiagram}
-                                removeid={this.props.removeById}
+                                removeid={this.props.removeid}
                                 nameSort={this.sortByName}
                                 dateSort={this.sortByDate}
                           />;
@@ -197,14 +195,3 @@ var ProfilePage = React.createClass({
     }
 });
 module.exports = ProfilePage;
-
-
-
-
-
-
-
-
-
-
-

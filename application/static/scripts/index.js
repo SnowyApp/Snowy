@@ -665,14 +665,15 @@ var Container = React.createClass({
                 break;
             case "profile":
                 content = <ProfilePage
-                    removeFavoriteTerm={this.removeFavoriteTerm}
-                    favoriteTerms={this.state.favoriteTerms}
-                    openTerm={this.updateSelectedTerm}
-                    openDiagram={function(id){console.log(id)}}
-                    url={this.state.serverUrl}
-                    language={this.state.language}
-                    dbEdition={this.state.dbEdition}
-                />
+                            removeFavoriteTerm={this.removeFavoriteTerm}
+                            removeid={this.removeById}
+                            favoriteTerms={this.state.favoriteTerms}
+                            openTerm={this.updateSelectedTerm}
+                            openDiagram={this.loadDiagram}
+                            url={this.state.serverUrl}
+                            language={this.state.language}
+                            dbEdition={this.state.dbEdition}
+                          />
                 break;
             default:
                 if (this.state.diagramView == "old") {
