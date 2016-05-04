@@ -584,6 +584,7 @@ var Container = React.createClass({
             case "profile":
                 content = <ProfilePage
                             removeFavoriteTerm={this.removeFavoriteTerm}
+                            removeid={this.removeById}
                             favoriteTerms={this.state.favoriteTerms}
                             openTerm={this.updateSelectedTerm}
                             openDiagram={this.loadDiagram}
