@@ -14,7 +14,6 @@ var ConceptGraph = React.createClass({
      *
      */
     componentDidMount: function() {
-        console.log("COMPONENT DID MOUNT");
         this.update(this.props);
     },
 
@@ -22,7 +21,6 @@ var ConceptGraph = React.createClass({
      * 
      */
     shouldComponentUpdate: function(props) {
-        console.log("SHOULD COMPONENENT UPDEATE");
         // no point of doing anything if the same id was given
         if (props.concept_id == this.props.concept_id) return false;
 
