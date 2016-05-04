@@ -554,23 +554,24 @@ var Container = React.createClass({
 
         return s;
     },
+    //var test = "[{\"concept_id\":138875005,\"id\":0,\"depth\":0,\"name\":\"SNOMED CT Concept\",\"x\":-352,\"y\":273,\"children\":[{\"concept_id\":260787004,\"id\":8,\"depth\":1,\"name\":\"Physical object (physical object)\",\"x\":237,\"y\":293,\"parent\":138875005,\"children\":[]}]}]";
 
     /**
      * Return a Javascript object of the diagram given in JSON.
      **/
-    objectifyDiagram: function(data) {
-        data = JSON.parse(data);
-        data[0].children = this.parseChildren(data[0].children);
-        return data;
-    },
+     objectifyDiagram: function(data) {
+         data = JSON.parse(data);
+         data[0].children = this.parseChildren(data[0].children);
+         return data;
+     },
 
     /**
      * Parse given list of children and recursively parse its children.
      **/
     parseChildren: function(children) {
         children = JSON.parse(children);
-
         for (var i in children) {
+            console.log("Parse child");
             children[i].children = this.parseChildren(children[i].children);
         }
         return children;
@@ -619,14 +620,16 @@ var Container = React.createClass({
             headers: {
                 "Authorization": cookie.load("userId")
             },
-            url: this.state.serverUrl + "/diagram",
+            url: this.state.serverUrl + "/diagram/" + id,
             dataType: "json",
             error: function(error) {
                 console.log(error);
             }.bind(this),
             success: function(result) {
+                console.log(result);
                 this.setState({
-                    data: this.objectifyDiagram(result[id-1].data)
+                    data: JSON.parse(result.data),
+                    content: "diagram"
                 });
             }.bind(this)
         });
