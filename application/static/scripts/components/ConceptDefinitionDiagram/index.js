@@ -52,7 +52,7 @@ var ConceptDefinitionDiagram = React.createClass({
         return $.ajax({
             type: "GET",
             method: "GET",
-            url: this.props.serverUrl + "/concept/" + id,
+            url: this.props.serverUrl + "/concept/" + conceptId,
             dataType: "json",
             error: function() {
                 console.log("Could not get concept for Concept Definition" +
@@ -68,7 +68,7 @@ var ConceptDefinitionDiagram = React.createClass({
         return $.ajax({
             type: "GET",
             method: "GET",
-            url: this.props.serverUrl + "/get_relations/" + id,
+            url: this.props.serverUrl + "/get_relations/" + conceptId,
             dataType: "json",
             error: function() {
                 console.log("Could not get releations for Concept Definitiion" + 
