@@ -17,7 +17,7 @@ UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
 # Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
-SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
+SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id, a.type_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
 
 # Token queries
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
@@ -475,7 +475,7 @@ class Concept():
             for desc in cur:
                 result += [{
                             "name": desc[1],
-                            "type": "Synonym" if desc[0]==900000000000074008 else "Full",
+                            "type": "Synonym" if desc[3]==900000000000013009 else "Full",
                             "acceptability": "Preferred" if desc[2]==900000000000548007 else "Acceptable"
                             }]
             return result
