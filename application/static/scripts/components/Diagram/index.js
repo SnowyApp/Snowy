@@ -132,6 +132,11 @@ var Diagram = React.createClass({
                     language={this.props.language}
                     saveDiagram={this.props.saveDiagram}
                 />
+                <Button
+                    bsStyle = "primary"
+                    onClick={this.toggleFullscreen}>
+                    Fullscreen
+                </Button>
                 <div className="d3diagram"
                     ref={ (ref) => this._d3 = ref}>
                 </div>
@@ -203,6 +208,9 @@ var Diagram = React.createClass({
                 view: 'vertical'
             });
       }
+    },
+    toggleFullscreen: function(){
+        console.log("xd");
     }
 });
 
