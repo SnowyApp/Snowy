@@ -101,118 +101,112 @@ var InfoPanel = React.createClass({
     * Gets all relations for a given id
     */
     getRelations: function(id){
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "GET",
-                url: this.props.url + "/get_relations/" + id,
-                success: function (data) {
-                    var relations = [];
-                    var name = "";
-                    for(var i = 0; i < data.length; i++){
-                        name = (data[i].synonym.length > 0 ? data[i].synonym : data[i].full);
-                        relations.push({
-                            name: name,
-                            type: data[i].type_name,
-                            charType: "(Inferred)" //TODO: Fix real data
-                        });
-                    }
-                    //Check if component is mounted. This has to be done because the user
-                    //might go to profile before the setState is reached, and a component
-                    //cannot be update (setState) if it's not mounted.
-                    if(this.isMounted()){
-                        this.setState({
-                            relations: relations
-                        });
-                    }
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    console.log("Failed getting names.");
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
+        $.ajax({
+            method: "GET",
+            url: this.props.url + "/get_relations/" + id,
+            success: function (data) {
+                var relations = [];
+                var name = "";
+                for(var i = 0; i < data.length; i++){
+                    name = (data[i].synonym.length > 0 ? data[i].synonym : data[i].full);
+                    relations.push({
+                        name: name,
+                        type: data[i].type_name,
+                        charType: "(Inferred)" //TODO: Fix real data
+                    });
+                }
+                //Check if component is mounted. This has to be done because the user
+                //might go to profile before the setState is reached, and a component
+                //cannot be update (setState) if it's not mounted.
+                if(this.isMounted()){
+                    this.setState({
+                        relations: relations
+                    });
+                }
+            }.bind(this),
+            error: function (textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log("Failed getting names.");
+            },
+            contentType: "application/json",
+            dataType: "json"
+        });
     },
 
    /**
     * Gets all names for a given id
     */
     getNames: function(id){
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "GET",
-                url: this.props.url + "/get_names/" + id,
-                success: function (data) {
-                    var names = [];
-                    for(var i = 0; i < data.length; i++){
-                        names.push({
-                            name: data[i].name,
-                            type: data[i].type,
-                            acceptability: data[i].acceptability
-                        });
-                    }
-                    //Check if component is mounted. This has to be done because the user
-                    //might go to profile before the setState is reached, and a component
-                    //cannot be update (setState) if it's not mounted.
-                    if(this.isMounted()){
-                        //Sort so that Preferred is sorted before Acceptable
-                        names.sort(function(a,b){
-                            return a.acceptability.toLowerCase() > b.acceptability.toLowerCase() ? -1 : 1;
-                        });
-                        this.setState({
-                            names: names
-                        });
-                    }
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    console.log("Failed getting names.");
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
+        $.ajax({
+            method: "GET",
+            url: this.props.url + "/get_names/" + id,
+            success: function (data) {
+                var names = [];
+                for(var i = 0; i < data.length; i++){
+                    names.push({
+                        name: data[i].name,
+                        type: data[i].type,
+                        acceptability: data[i].acceptability
+                    });
+                }
+                //Check if component is mounted. This has to be done because the user
+                //might go to profile before the setState is reached, and a component
+                //cannot be update (setState) if it's not mounted.
+                if(this.isMounted()){
+                    //Sort so that Preferred is sorted before Acceptable
+                    names.sort(function(a,b){
+                        return a.acceptability.toLowerCase() > b.acceptability.toLowerCase() ? -1 : 1;
+                    });
+                    this.setState({
+                        names: names
+                    });
+                }
+            }.bind(this),
+            error: function (textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log("Failed getting names.");
+            },
+            contentType: "application/json",
+            dataType: "json"
+        });
     },
 
     /*
     * Function to call API to get parents of id
     */
     getParents: function(id){
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "GET",
-                url: this.props.url + "/get_parents/" + id,
-                success: function (data) {
-                    var parents = [];
-                    for(var i = 0; i < data.length; i++){
-                        //Get synonym if exists, otherwise full name
-                        var name = (data[i].synonym.length > 0 ? data[i].synonym : data[i].full);
-                        parents.push({
-                            id: data[i].id,
-                            name: name
-                        });
-                    }
-                    //Check if component is mounted. This has to be done because the user
-                    //might go to profile before the setState is reached, and a component
-                    //cannot be update (setState) if it's not mounted.
-                    if(this.isMounted()){
-                        this.setState({
-                            parents: parents
-                        });
-                    }
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    console.log("Failed getting parents.");
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
+        $.ajax({
+            method: "GET",
+            url: this.props.url + "/get_parents/" + id,
+            success: function (data) {
+                var parents = [];
+                for(var i = 0; i < data.length; i++){
+                    //Get synonym if exists, otherwise full name
+                    var name = (data[i].synonym.length > 0 ? data[i].synonym : data[i].full);
+                    parents.push({
+                        id: data[i].id,
+                        name: name
+                    });
+                }
+                //Check if component is mounted. This has to be done because the user
+                //might go to profile before the setState is reached, and a component
+                //cannot be update (setState) if it's not mounted.
+                if(this.isMounted()){
+                    this.setState({
+                        parents: parents
+                    });
+                }
+            }.bind(this),
+            error: function (textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log("Failed getting parents.");
+            },
+            contentType: "application/json",
+            dataType: "json"
+        });
     },
 
    /**
