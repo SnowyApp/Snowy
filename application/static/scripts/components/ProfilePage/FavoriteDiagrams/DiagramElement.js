@@ -13,6 +13,7 @@ var DiagramElement = React.createClass({
         id:                 React.PropTypes.number,
         date:               React.PropTypes.string,
         data:               React.PropTypes.string,
+        description:        React.PropTypes.string,
         openDiagram:        React.PropTypes.func,
         removeDiagram:      React.PropTypes.func
     },
@@ -36,7 +37,7 @@ var DiagramElement = React.createClass({
                 buttonEnabled: false
             })
         }
-        //Reenable function after disableTime ms 
+        //Reenable function after disableTime ms
         setTimeout($.proxy(function(){
             this.setState({
                 buttonEnabled: true
@@ -80,22 +81,7 @@ var DiagramElement = React.createClass({
                     <td colSpan="4">
                         <div id={this.props.id} className="panel-collapse collapse" role="tabpanel">
                             <div className="diagramHidden">
-                                <table className="diagramHidden">
-                                    <tbody>
-                                        <tr>                                    
-                                            <td>id:</td>
-                                            <td>{this.props.id}</td>
-                                        </tr>
-                                        <tr>                                    
-                                            <td>{this.props.dict[this.props.language]["date"]}:</td>
-                                            <td>{this.props.date}</td>
-                                        </tr>
-                                        <tr>                                    
-                                            <td>Data:</td>
-                                            <td>{this.props.data}</td>
-                                        </tr>                                      
-                                    </tbody>
-                                </table>
+                                {this.props.description}
                             </div>
                         </div>
                     </td>

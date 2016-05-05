@@ -20,28 +20,6 @@ var FavoriteDiagrams = React.createClass({
         dateSort:           React.PropTypes.func
     },
 
-    //TODO: REMOVE THIS FUNCTION
-    saveDiagram: function() {
-        $.ajax({
-            type: "POST",
-            method: "POST",
-            headers: {
-                "Authorization" : cookie.load("userId")
-            },
-            url: this.props.url + "/diagram",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "data": JSON.stringify({test: "333"}),
-                "created": new Date().toString(),
-                "name": "Diagram 2"
-            }),
-            error: function(xhr) {
-                console.log(xhr);
-                console.log("Could not store diagram.");
-            }.bind(this)
-        });
-    },
-
     getInitialState: function(){
         return({
             diagrams: [],
@@ -50,7 +28,6 @@ var FavoriteDiagrams = React.createClass({
     },
 
     componentDidMount: function(){
-        //this.saveDiagram(); //TODO: Only for testing, remove later
         this.getFavoriteDiagrams();
     },
 
@@ -80,7 +57,7 @@ var FavoriteDiagrams = React.createClass({
                 break;
         }
     },
-    
+
    /**
     * Remove element from the diagram table
     */
@@ -97,18 +74,17 @@ var FavoriteDiagrams = React.createClass({
             $.ajax({
                 type: "POST",
                 method: "DELETE",
-                url: this.props.url + "/diagram",
+                url: this.props.url + "/diagram/" + id,
                 headers: {
                     "Authorization": cookie.load("userId")
                 },
-                data: JSON.stringify({"id": id}),
                 success: function () {
                     console.log("Successfully removed diagram.");
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
                     console.log(errorThrown);
-                    console.log("Failed removing diagram.");
+                    console.log("Failed to remove diagram.");
                 },
                 contentType: "application/json",
                 dataType: "json"
@@ -154,7 +130,7 @@ var FavoriteDiagrams = React.createClass({
                             name: data[i].name,
                             created: new Date(data[i].created),
                             modified: new Date(data[i].modified),
-                            data: data[i].data
+                            description: data[i].description
                         });
                     }
                     this.setState({
@@ -171,7 +147,7 @@ var FavoriteDiagrams = React.createClass({
             });
         }
     },
-    
+
     render: function(){
         //Generate the diagram elements
         var diagramArray = null;
@@ -183,11 +159,11 @@ var FavoriteDiagrams = React.createClass({
                 var day = ("0" + diagram.modified.getDate()).slice(-2);
                 var month = ("0" + diagram.modified.getMonth()).slice(-2);
                 var year = diagram.modified.getUTCFullYear();
-                
+
                 var dateString = year + "-" + month + "-" + day;
 
                 return(
-                    <DiagramElement 
+                    <DiagramElement
                         key={diagram.id}
                         name={diagram.name}
                         dict={this.props.dict}
@@ -195,6 +171,7 @@ var FavoriteDiagrams = React.createClass({
                         id={diagram.id}
                         date={dateString}
                         data={diagram.data}
+                        description={diagram.description}
                         openDiagram={this.props.openDiagram}
                         removeDiagram={this.removeDiagram}
                     />
@@ -264,4 +241,3 @@ var FavoriteDiagrams = React.createClass({
     }
 });
 module.exports = FavoriteDiagrams;
-

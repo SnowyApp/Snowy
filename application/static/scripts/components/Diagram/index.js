@@ -73,7 +73,7 @@ var Diagram = React.createClass({
             diagram.create(element, { onClick: this.onNodeClick },
                 this.getDiagramState());
         }
-        else {
+        else if (prevProps.data != this.props.data){
             diagram.update(element, this.getDiagramState());
         }
     },
@@ -89,8 +89,9 @@ var Diagram = React.createClass({
      * Update state when receiving new props
      */
     componentWillReceiveProps: function(nextProps) {
-        //this.resetZoom();
-        this.update(nextProps.data);
+        if (nextProps.data != this.props.data) {
+            this.update(nextProps.data);
+        }
     },
 
     /**

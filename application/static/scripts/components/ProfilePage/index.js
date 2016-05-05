@@ -12,12 +12,15 @@ import ReactDOM from 'react-dom';
 var ProfilePage = React.createClass({
     propTypes: {
         removeFavoriteTerm: React.PropTypes.func,
+        removeid:           React.PropTypes.func,
         favoriteTerms:      React.PropTypes.array,
         openTerm:           React.PropTypes.func,
         openDiagram:        React.PropTypes.func,
         url:                React.PropTypes.string,
         language:           React.PropTypes.string,
-        dbEdition:          React.PropTypes.string
+        dbEdition:          React.PropTypes.string,
+        user:               React.PropTypes.object,
+        updateUser:         React.PropTypes.func
     },
 
     //Dictionary for supported languages. m prefix indicates that its a error/success message
@@ -93,7 +96,7 @@ var ProfilePage = React.createClass({
    /**
     * Sets current tab
     */
-    changeTab: function(tab){    
+    changeTab: function(tab){
         this.setState({
             currentTab: tab
         });
@@ -167,7 +170,7 @@ var ProfilePage = React.createClass({
                                 dict={this.dict}
                                 language={this.props.language}
                                 openDiagram={this.props.openDiagram}
-                                removeid={this.props.removeById}
+                                removeid={this.props.removeid}
                                 nameSort={this.sortByName}
                                 dateSort={this.sortByDate}
                           />;
@@ -178,6 +181,8 @@ var ProfilePage = React.createClass({
                                 dict={this.dict}
                                 language={this.props.language}
                                 dbEdition={this.props.dbEdition}
+                                user={this.props.user}
+                                updateUser={this.props.updateUser}
                           />;
                 break;
         }
@@ -197,14 +202,3 @@ var ProfilePage = React.createClass({
     }
 });
 module.exports = ProfilePage;
-
-
-
-
-
-
-
-
-
-
-

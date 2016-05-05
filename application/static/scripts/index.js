@@ -5,6 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 var Diagram = require('./components/Diagram/index');
+var ConceptDefinitionDiagram = require('./components/ConceptDefinitionDiagram/index');
 var Bar = require('./components/Bar/index');
 var Navigation = require('./components/Navigation/index');
 var ProfilePage = require('./components/ProfilePage/index');
@@ -14,7 +15,7 @@ var matteUrl = 'http://hem.ulmstedt.net:5000';
 const conceptId = 138875005;
 
 /**
-*   Contains the subcomponents of the webpage
+ *   Contains the subcomponents of the webpage
  *   It also initiates all the top-level variables passed to the children components
  */
 var Container = React.createClass({
@@ -29,74 +30,76 @@ var Container = React.createClass({
             history: [],
             language: "en",
             dbEdition: "en",
+            user: null,
             sortAlphabetically: true,
-            favoriteTerms: null
+            favoriteTerms: null,
+            diagramView: "hierarchy"
         };
     },
 
     /**
      * Fetch information used to display diagram and navigation and update
-     * state when all information is receigitved. saveHistory determines if
+     * state when all information is received. saveHistory determines if
      * the last node is saved to history.
      */
     getConcept: function(id, saveHistory = true) {
         $.when(this.getRoot(id), this.getChildren(id))
             .then(function(rootResult, childrenResult) {
-                // get all information about children
-                var children = [];
-                for (var i in childrenResult[0]) {
-                    const childSynonym = childrenResult[0][i].synonym;
-                    const childFull = childrenResult[0][i].full;
-                    children.push(
+                    // get all information about children
+                    var children = [];
+                    for (var i in childrenResult[0]) {
+                        const childSynonym = childrenResult[0][i].synonym;
+                        const childFull = childrenResult[0][i].full;
+                        children.push(
+                            {
+                                "name": (childSynonym.length > 0 ? childSynonym : childFull),
+                                "concept_id": childrenResult[0][i].id,
+                                "parent": rootResult[0].id,
+                                "children": null,
+                                "id": this._diagram.getId(),
+                                "definitionStatus": childrenResult[0][i].definition_status
+                            }
+                        );
+                    }
+
+                    // get all information about the root and add the array
+                    // of the children
+                    const rootSynonym = rootResult[0].synonym;
+                    const rootFull = rootResult[0].full;
+                    var root = [
                         {
-                            "name": (childSynonym.length > 0 ? childSynonym : childFull),
-                            "concept_id": childrenResult[0][i].id,
-                            "parent": rootResult[0].id,
-                            "children": null,
-                            "id": this._diagram.getId(),
-                            "definitionStatus": childrenResult[0][i].definition_status
-                        }
-                    );
-                }
-
-                // get all information about the root and add the array
-                // of the children
-                const rootSynonym = rootResult[0].synonym;
-                const rootFull = rootResult[0].full;
-                var root = [
-                    {
-                        "name": (rootSynonym != null ? rootSynonym : rootFull),
-                        "concept_id": rootResult[0].id,
-                        "parent": "null",
-                        "children": this.sortConcepts(children,
+                            "name": (rootSynonym != null ? rootSynonym : rootFull),
+                            "concept_id": rootResult[0].id,
+                            "parent": "null",
+                            "children": this.sortConcepts(children,
                                 this.state.sortAlphabetically),
-                        "id": 0,
-                        "definitionStatus": rootResult[0].definition_status
+                            "id": 0,
+                            "definitionStatus": rootResult[0].definition_status
+                        }
+                    ];
+
+                    //Add to history if saveHistory == true and not root/leaf and its not already the root
+                    if( saveHistory &&
+                        root[0].concept_id != this.props.concept_id &&
+                        root[0].children.length != 0
+                    ){
+                        //Push current parent to history
+                        var historyObject = {id: this.state.data[0].concept_id, name: this.state.data[0].name};
+                        //Prevent term from being added multiple times to history due to fast clicking
+                        var currHistory = this.state.history;
+                        if(currHistory.length == 0 || currHistory[currHistory.length-1].id != historyObject.id){
+                            this.state.history.push(historyObject);
+                        }
                     }
-                ];
 
-                //Add to history if saveHistory == true and not root/leaf and its not already the root
-                if( saveHistory &&
-                    root[0].concept_id != this.props.concept_id &&
-                    root[0].children.length != 0
-                  ){
-                    //Push current parent to history
-                    var historyObject = {id: this.state.data[0].concept_id, name: this.state.data[0].name};
-                    //Prevent term from being added multiple times to history due to fast clicking
-                    var currHistory = this.state.history;
-                    if(currHistory.length == 0 || currHistory[currHistory.length-1].id != historyObject.id){
-                        this.state.history.push(historyObject);
-                    }
-                }
+                    // update state so that component children can update
+                    this.setState({
+                        data: root,
+                        selectedTerm: root[0].concept_id
+                    });
 
-                // update state so that component children can update
-                this.setState({
-                    data: root,
-                    selectedTerm: root[0].concept_id
-                });
-
-            }.bind(this)
-        );
+                }.bind(this)
+            );
     },
 
     /**
@@ -176,9 +179,16 @@ var Container = React.createClass({
             });
         }
     },
+
     componentWillMount: function() {
         this.getConcept(this.state.selectedTerm);
+        //Get user data if logged in
+        if(cookie.load('userId') != null){
+            this.getUser();
+            this.getFavoriteTerms();
+        }
     },
+
     /**
      * Called when the url is to be assigned the value of e
      * @param e
@@ -189,9 +199,9 @@ var Container = React.createClass({
         });
     },
 
-   /**
-    * Set what content to display in the content area
-    */
+    /**
+     * Set what content to display in the content area
+     */
     setContent: function(content){
         if(this.state.content == content) return;
         this.setState({
@@ -239,7 +249,7 @@ var Container = React.createClass({
                         );
                     }
                     // update node's children
-                    node.children = this.sortConcepts(children, 
+                    node.children = this.sortConcepts(children,
                             this.state.sortAlphabetically);
                     this.setState({
                         data: tree
@@ -262,17 +272,17 @@ var Container = React.createClass({
     sortConcepts: function(concepts, alphabetical=true) {
         if (alphabetical) {
             return concepts.sort(function(a, b) {
-                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);   
+                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
             });
         }
         return concepts.sort(function(a, b) {
-            return a.concept_id - b.concept_id;   
+            return a.concept_id - b.concept_id;
         });
     },
 
     /**
-    * Gets the users favorite terms and saves them to the terms state
-    */
+     * Gets the users favorite terms and saves them to the terms state
+     */
     getFavoriteTerms: function(){
         if (cookie.load('userId') != null) {
             $.ajax({
@@ -306,8 +316,8 @@ var Container = React.createClass({
     },
 
     /**
-    * Saves a term to favorites
-    */
+     * Saves a term to favorites
+     */
     addFavoriteTerm: function(id, name){
         //Add to local favorites list first to make it responsive
         this.setState({
@@ -343,8 +353,8 @@ var Container = React.createClass({
     },
 
     /**
-    * Removes an object from array with .id == id
-    */
+     * Removes an object from array with .id == id
+     */
     removeById: function(array, id){
         //Find the object and remove it from the array
         for(var i = 0; i < array.length; i++){
@@ -357,8 +367,8 @@ var Container = React.createClass({
     },
 
     /**
-    * Removes a favorite term
-    */
+     * Removes a favorite term
+     */
     removeFavoriteTerm: function(id){
         //Remove element locally (for responsiveness)
         this.setState({
@@ -413,23 +423,23 @@ var Container = React.createClass({
         this.setContent("diagram");
     },
 
-   /**
-    * Returns array with the navigation history
-    */
+    /**
+     * Returns array with the navigation history
+     */
     getHistory: function(){
         return this.state.history;
     },
 
-   /**
-    * Clears the navigation history
-    */
+    /**
+     * Clears the navigation history
+     */
     clearHistory: function(){
         this.state.history.length = 0;
     },
 
-   /**
-    * Move up one level in the tree (from history)
-    */
+    /**
+     * Move up one level in the tree (from history)
+     */
     upOneLevel: function(){
         if(this.state.history.length == 0) return;
         var id = this.state.history.pop().id;
@@ -439,13 +449,14 @@ var Container = React.createClass({
         this.updateSelectedTerm(id, false);
     },
 
-   /**
-    * Resets navigation to SNOMED CT root node
-    */
+    /**
+     * Resets navigation to SNOMED CT root node
+     */
     resetRoot: function(){
         this.updateSelectedTerm(this.props.concept_id, false);
         this.clearHistory();
     },
+
     /**
      * Called when a user has been logged in, uid is the token sent from the server
      * @param uid
@@ -459,13 +470,53 @@ var Container = React.createClass({
         cookie.save('userId', uid,{path: '/'});
         //Get the users favorite terms
         this.getFavoriteTerms();
+        //Get user data
+        this.getUser();
     },
+
     /**
      * Called when a user has logged out
      */
     onLogout: function(){
-        this.setState({isLoggedIn: false, content: "diagram", userId: ''});
+        this.setState({
+            isLoggedIn: false,
+            content: "diagram",
+            userId: '',
+            user: null
+        });
         cookie.remove('userId', {path: '/'});
+    },
+
+    /**
+    * Returns user data for the logged in user
+    */
+    getUser: function () {
+        $.ajax({
+            method: "GET",
+            url: this.props.url + "/user_info",
+            headers: {
+                "Authorization": cookie.load("userId")
+            },
+            success: function (data) {
+                console.log("Successfully collected user data");
+                this.setState({
+                    user: {
+                        firstName: (data.first_name != null ? data.first_name : ""),
+                        lastName: (data.last_name != null ? data.last_name : ""),
+                        email: data.email
+                    },
+                    dbEdition: (data.db_edition != null ? data.db_edition : this.props.defaultEdition),
+                    language: (data.site_lang != null ? data.site_lang : this.props.defaultLanguage)
+                });
+            }.bind(this),
+            error: function (textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log("Failed getting user info.");
+            },
+            contentType: "application/json",
+            dataType: "json"
+        });
     },
 
    /**
@@ -475,17 +526,63 @@ var Container = React.createClass({
         this.setState({
             language: language
         });
-        //TODO: If user is logged in, save to database
+        //Save to database if logged in
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "PUT",
+                url: this.props.url + "/user_info",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "first_name": this.state.user.firstName,
+                    "last_name": this.state.user.lastName,
+                    "site_lang": language,
+                    "db_edition": this.state.dbEdition,
+                    "email": this.state.user.email
+                }),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed to update user language.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
-   /**
-    * Sets the database edition to edition
-    */
+    /**
+     * Sets the database edition to edition
+     */
     setEdition: function(edition){
         this.setState({
             dbEdition: edition
         });
-        //TODO: If user is logged in, save to database
+        //Save to database if logged in
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "PUT",
+                url: this.props.url + "/user_info",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "first_name": this.state.user.firstName,
+                    "last_name": this.state.user.lastName,
+                    "site_lang": this.state.dbEdition,
+                    "db_edition": edition,
+                    "email": this.state.user.email
+                }),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed to update user language.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
     /**
@@ -514,19 +611,19 @@ var Container = React.createClass({
     /**
      * Return a Javascript object of the diagram given in JSON.
      **/
-    objectifyDiagram: function(data) {
-        data = JSON.parse(data);
-        data[0].children = this.parseChildren(data[0].children);
-        return data;
-    },
+     objectifyDiagram: function(data) {
+         data = JSON.parse(data);
+         data[0].children = this.parseChildren(data[0].children);
+         return data;
+     },
 
     /**
      * Parse given list of children and recursively parse its children.
      **/
     parseChildren: function(children) {
         children = JSON.parse(children);
-
         for (var i in children) {
+            console.log("Parse child");
             children[i].children = this.parseChildren(children[i].children);
         }
         return children;
@@ -535,7 +632,6 @@ var Container = React.createClass({
 
     /**
      * Send diagram to server.
-     * Returns true on success.
      **/
     saveDiagram: function(name, desc, succeeded) {
         $.ajax({
@@ -549,8 +645,8 @@ var Container = React.createClass({
             data: JSON.stringify({
                 "data": JSON.stringify(this.stringifyDiagram(this.state.data)),
                 "created": new Date().toString(),
-                "name": name//,
-                //"desc": desc TODO: Uncomment when API is updated
+                "name": name,
+                "description": desc
             }),
             success: function(){
                 //Let the caller know that it succeeded
@@ -575,66 +671,85 @@ var Container = React.createClass({
             headers: {
                 "Authorization": cookie.load("userId")
             },
-            url: this.state.serverUrl + "/diagram",
+            url: this.state.serverUrl + "/diagram/" + id,
             dataType: "json",
             error: function(error) {
                 console.log(error);
             }.bind(this),
             success: function(result) {
+                console.log(result);
                 this.setState({
-                    data: this.objectifyDiagram(result[id-1].data)
+                    data: JSON.parse(result.data),
+                    content: "diagram"
                 });
             }.bind(this)
         });
     },
 
     render: function() {
-        //Get favorite terms if not yet done
-        if(this.state.favoriteTerms == null){
-            this.getFavoriteTerms();
-        }
+        //var language = (cookie.load('userId') != null ? this.state.user.language : this.state.language);
         var content = null;
-        switch(this.state.content){
+        switch(this.state.content) {
             case "diagram":
-                content = <Diagram
-                            ref={ (ref) => this._diagram = ref }
-                            data={this.state.data}
-                            update={this.updateSelectedTerm}
-                            updateConceptChildren={this.updateConceptChildren}
-                            updateConceptRelations={this.updateConceptRelations}
-                            language={this.state.language}
-                            url={this.state.serverUrl}
-                            favoriteTerms={this.state.favoriteTerms}
-                            removeFavoriteTerm={this.removeFavoriteTerm}
-                            addFavoriteTerm={this.addFavoriteTerm}
-                            saveDiagram={this.saveDiagram}
-                          />
+                if (this.state.diagramView == "definition") {
+                    content = <ConceptDefinitionDiagram
+                        serverUrl={this.state.serverUrl}
+                        concept_id={this.state.selectedTerm}
+                    />
+                } else {
+                    content = <Diagram
+                        ref={ (ref) => this._diagram = ref }
+                        data={this.state.data}
+                        update={this.updateSelectedTerm}
+                        updateConceptChildren={this.updateConceptChildren}
+                        language={this.state.language}
+                        url={this.state.serverUrl}
+                        favoriteTerms={this.state.favoriteTerms}
+                        removeFavoriteTerm={this.removeFavoriteTerm}
+                        addFavoriteTerm={this.addFavoriteTerm}
+                        saveDiagram={this.saveDiagram}
+                    />
+                }
                 break;
             case "profile":
                 content = <ProfilePage
                             removeFavoriteTerm={this.removeFavoriteTerm}
+                            removeid={this.removeById}
                             favoriteTerms={this.state.favoriteTerms}
                             openTerm={this.updateSelectedTerm}
-                            openDiagram={function(id){console.log(id)}}
+                            openDiagram={this.loadDiagram}
                             url={this.state.serverUrl}
                             language={this.state.language}
                             dbEdition={this.state.dbEdition}
+                            user={this.state.user}
+                            updateUser={this.getUser}
                           />
                 break;
             default:
-                content = <Diagram
-                    ref={ (ref) => this._diagram = ref }
-                    data={this.state.data}
-                    url={this.state.serverUrl}
-                    update={this.updateSelectedTerm}
-                    updateConceptChildren={this.updateConceptChildren}
-                    language={this.state.language}
-                />
+                if (this.state.diagramView == "definition") {
+                    content = <ConceptDefinitionDiagram
+                        serverUrl={this.state.serverUrl}
+                        concept_id={this.state.selectedTerm}
+                    />
+                } else {
+                    content = <Diagram
+                        ref={ (ref) => this._diagram = ref }
+                        data={this.state.data}
+                        update={this.updateSelectedTerm}
+                        updateConceptChildren={this.updateConceptChildren}
+                        language={this.state.language}
+                        url={this.state.serverUrl}
+                        favoriteTerms={this.state.favoriteTerms}
+                        removeFavoriteTerm={this.removeFavoriteTerm}
+                        addFavoriteTerm={this.addFavoriteTerm}
+                        saveDiagram={this.saveDiagram}
+                    />
+                }
                 break;
         }
         return (
             <div className="wrapper">
-                <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
+                <SplitPane split="vertical" defaultSize={350} minSize={10} maxSize={700}>
                     <Navigation
                         data={this.state.data}
                         url={this.state.serverUrl}
@@ -667,6 +782,6 @@ var Container = React.createClass({
 });
 
 ReactDOM.render(
-    <Container concept_id={conceptId} url={matteUrl}  />,
+    <Container concept_id={conceptId} url={matteUrl} defaultEdition="int20150731" defaultLanguage="en" />,
     document.getElementById('content')
 );
