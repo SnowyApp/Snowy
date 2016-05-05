@@ -12,7 +12,7 @@ const WIDTH_MARGIN = 20;
 // Styling according to SNOMED CT diagramming guidelines
 const DEFINED_CONCEPT_BORDER = 4;
 // Radius of circle
-const RELATION_RADIUS = 20;
+const RELATION_RADIUS = 25;
 // Radius of conjunction 
 const CONJUNCTION_RADIUS = 10;
 
@@ -123,21 +123,25 @@ var ConceptDefinitionDiagram = React.createClass({
             }.bind(this)
         });
     },
+    initMarkers: function(element){
+        var defs = element.append('defs');
+        defs.append('marker')
+            .attr('id', 'BlackMarker')
+            .attr('viewBox', '0 0 22 20')
+            .attr('refX', 0)
+            .attr('refY', 10)
+            .attr('markerWidth', 15)
+            .attr('markerHeight', 15)
+            .attr('markerUnits', 'strokeWidth')
+            .attr('orient', 'auto')
+            .attr('stroke-width', '2')
+            .attr('stroke', 'black')
+            .attr('fill', 'black')
+            .append('svg:path')
+            .attr('d', 'M 0 0 L 20 10 L 0 20 z');
 
-    /**
-     * Draw the diagram.
-     */
-    draw: function(data) {
-        console.log(data);
-        var x = 0;
-        var y = 0;
-        // fetch the svg element
-        var svg = d3.select(ReactDOM.findDOMNode(this));
-        
-            svg.append('svg:defs').selectAll('marker')
-            .data(['start'])
-            .enter().append('svg:marker')
-            .attr('id', 'ArrowMarker')
+        defs.append('marker')
+            .attr('id', 'ClearMarker')
             .attr('viewBox', '0 0 22 20')
             .attr('refX', 0)
             .attr('refY', 10)
@@ -151,14 +155,43 @@ var ConceptDefinitionDiagram = React.createClass({
             .append('svg:path')
             .attr('d', 'M 0 0 L 20 10 L 0 20 z');
 
+        defs.append('marker')
+            .attr('id', 'LineMarker')
+            .attr('viewBox', '0 0 22 20')
+            .attr('refX', 0)
+            .attr('refY', 10)
+            .attr('markerWidth', 17)
+            .attr('markerHeight', 15)
+            .attr('markerUnits', 'strokeWidth')
+            .attr('orient', 'auto')
+            .attr('stroke-width', '1')
+            .attr('stroke', 'black')
+            .attr('fill', 'white')
+            .append('svg:path')
+            .attr('d', 'M 0 10 L 20 10');
+    },
+
+    /**
+     * Draw the diagram.
+     */
+    draw: function(data) {
+        console.log(data);
+        var x = 0;
+        var y = 0;
+        // fetch the svg element
+        var svg = d3.select(ReactDOM.findDOMNode(this));
+        this.initMarkers(svg);
+
         // draw the concept
-        var con = this.drawConcept(svg, data, x, y);
+        var conc = this.drawConcept(svg, data, x, y);
         x += 200;
         y += LEVEL_MARGIN;
         var rel = this.drawRelationalOperator(svg, data, x, y);
-        this.connectElements(svg, con, rel, "bottom", "left", "");
-        x += 200;
-        this.drawConjunction(svg, data, x, y);
+        this.connectElements(svg, conc, rel, "bottom", "left", "ClearMarker");
+        x += 100;
+        var conj = this.drawConjunction(svg, data, x, y);
+        this.connectElements(svg, rel, conj, "right", "left", "LineMarker");
+        x += 100;
         for(var i in data.relations) {
             this.drawConcept(svg, data.relations[i], x, y);
             x += 200;
@@ -232,7 +265,7 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("stroke", "black")
             .attr("points", [[originX, originY],
                 [originX, destinationY], [destinationX, destinationY]])
-            .attr('marker-end', 'url(#ArrowMarker)');;
+            .attr('marker-end', 'url(#' + endMarker + ')');
     },
 
     drawAttributeGroup: function(element, concept, x, y){
@@ -240,14 +273,16 @@ var ConceptDefinitionDiagram = React.createClass({
     },
 
     drawConjunction: function(element, concept, x, y){
-        element.append("circle")
+        var centerY = y + NODE_HEIGHT/2 - CONJUNCTION_RADIUS;
+        var conj = element.append("circle")
             .attr("x", x)
-            .attr("y", y)
-            .attr('transform', 'translate(' + x + ', ' + y + ')' )
+            .attr("y", centerY)
+            .attr('transform', 'translate(' + x + ', ' + centerY + ')' )
             .attr("r", CONJUNCTION_RADIUS)
             .attr("cx", CONJUNCTION_RADIUS)
             .attr("cy", CONJUNCTION_RADIUS)
-            .attr("fill", black);
+            .attr("fill", "black");
+        return conj;
     },
 
     drawRelationalOperator: function(element, concept, x, y){
