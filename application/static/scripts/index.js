@@ -12,7 +12,7 @@ var ProfilePage = require('./components/ProfilePage/index');
 
 
 var matteUrl = 'http://hem.ulmstedt.net:5000';
-const conceptId = 138875005;
+const conceptId = 123703002;
 
 /**
  *   Contains the subcomponents of the webpage
@@ -33,7 +33,7 @@ var Container = React.createClass({
             user: null,
             sortAlphabetically: true,
             favoriteTerms: null,
-            diagramView: "hierarchy"
+            diagramView: "definition"
         };
     },
 
