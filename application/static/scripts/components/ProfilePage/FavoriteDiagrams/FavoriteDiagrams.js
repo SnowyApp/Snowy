@@ -131,7 +131,7 @@ var FavoriteDiagrams = React.createClass({
                             name: data[i].name,
                             created: new Date(data[i].created),
                             modified: new Date(data[i].modified),
-                            data: data[i].data
+                            description: data[i].description
                         });
                     }
                     this.setState({
@@ -172,6 +172,7 @@ var FavoriteDiagrams = React.createClass({
                         id={diagram.id}
                         date={dateString}
                         data={diagram.data}
+                        description={diagram.description}
                         openDiagram={this.props.openDiagram}
                         removeDiagram={this.removeDiagram}
                     />
