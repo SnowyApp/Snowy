@@ -510,7 +510,6 @@ var Container = React.createClass({
 
         return s;
     },
-    //var test = "[{\"concept_id\":138875005,\"id\":0,\"depth\":0,\"name\":\"SNOMED CT Concept\",\"x\":-352,\"y\":273,\"children\":[{\"concept_id\":260787004,\"id\":8,\"depth\":1,\"name\":\"Physical object (physical object)\",\"x\":237,\"y\":293,\"parent\":138875005,\"children\":[]}]}]";
 
     /**
      * Return a Javascript object of the diagram given in JSON.
