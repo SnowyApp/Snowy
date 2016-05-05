@@ -28,7 +28,6 @@ var FavoriteDiagrams = React.createClass({
     },
 
     componentDidMount: function(){
-        //this.saveDiagram(); //TODO: Only for testing, remove later
         this.getFavoriteDiagrams();
     },
 
