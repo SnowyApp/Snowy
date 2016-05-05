@@ -1,4 +1,5 @@
 COPY concept(id, effective_time, active, module_id, definition_status_id)
+
 FROM 'C:/Users/Sehnsucht/Desktop/TDDD96/SnomedCT_RF2Release_INT_20150731/Snapshot/Terminology/sct2_Concept_Snapshot_INT_20150731.txt'
 WITH (FORMAT csv, HEADER true, DELIMITER '	');
 
@@ -36,4 +37,5 @@ WITH (FORMAT csv, HEADER true, DELIMITER '	');
 
 COPY complex_map_refset(id, effective_time, active, module_id, refset_id,  referenced_component_id, map_group, map_priority, map_rule,  map_advice, map_target, correlation_id)
 FROM 'C:/Users/Sehnsucht/Desktop/TDDD96/SnomedCT_RF2Release_INT_20150731/Snapshot/Refset/Map/der2_iissscRefset_ComplexMapSnapshot_INT_20150731.txt'
+
 WITH (FORMAT csv, HEADER true, DELIMITER '	');
