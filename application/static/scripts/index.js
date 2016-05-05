@@ -504,7 +504,7 @@ var Container = React.createClass({
                         email: data.email
                     },
                     dbEdition: (data.db_edition != null ? data.db_edition : this.props.defaultEdition),
-                    siteLang: (data.site_lang != null ? data.site_lang : this.props.defaultLanguage)
+                    language: (data.site_lang != null ? data.site_lang : this.props.defaultLanguage)
                 });
             }.bind(this),
             error: function (textStatus, errorThrown) {
