@@ -293,7 +293,6 @@ var InfoPanel = React.createClass({
         } else {
             showRelations = {display: "none"};
         }
-        console.log(this.props.data);
         return (
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
@@ -328,11 +327,11 @@ var InfoPanel = React.createClass({
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">{this.dict[this.props.language]["conceptType"]}:</td>
-                                    <td className="termInfoData">{this.props.data[0].definition_status}</td>
+                                    <td className="termInfoData">{this.props.data[0].definitionStatus}</td>
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">Status:</td>
-                                    <td className="termInfoData">{this.props.data[0].status}</td>
+                                    <td className="termInfoData">(Active)</td>
                                 </tr>
                             </tbody>
                         </table>
