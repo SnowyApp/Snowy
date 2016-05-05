@@ -32,50 +32,8 @@ var Container = React.createClass({
             dbEdition: "en",
             sortAlphabetically: true,
             favoriteTerms: null,
-            diagramView: "hierarchy",
-            parents: null,
-            relations: null
+            diagramView: "hierarchy"
         };
-    },
-
-    getStaticDiagramData: function(id){
-        $.when(this.getParents(id), this.getRelations(id))
-            .then(function(parentsResult, relationsResult){
-                    var parents = [];
-                    for (var i in parentsResult[0]) {
-                        const parentSynonym = parentsResult[0][i].synonym;
-                        const parentFull = parentsResult[0][i].full;
-                        parents.push(
-                            {
-                                "name": (parentSynonym.length > 0 ? parentSynonym : parentFull),
-                                "concept_id": parentsResult[0][i].id,
-                                "relation_id": parentsResult[0][i].type_id,
-                                "relation": parentsResult[0][i].type_name,
-                                "definitionStatus": parentsResult[0][i].definition_status
-                            }
-                        );
-                    }
-                    var relations = [];
-                    for (var i in relationsResult[0]) {
-                        const relationSynonym = relationsResult[0][i].synonym;
-                        const relationFull = relationsResult[0][i].full;
-                        relations.push(
-                            {
-                                "name": (relationSynonym.length > 0 ? relationSynonym : relationFull),
-                                "concept_id": relationsResult[0][i].id,
-                                "relation_id": relationsResult[0][i].type_id,
-                                "relation": relationsResult[0][i].type_name,
-                                "definitionStatus": relationsResult[0][i].definition_status,
-                                "char_type": relationsResult[0][i].char_type
-                            }
-                        );
-                    }
-                    this.setState({
-                        parents: parents,
-                        relations: relations
-                    });
-                }.bind(this)
-            );
     },
 
     /**
@@ -644,8 +602,6 @@ var Container = React.createClass({
             case "diagram":
                 if (this.state.diagramView == "definition") {
                     content = <ConceptDefinitionDiagram
-                        parents = {this.state.parents}
-                        relations = {this.state.relations}
                         serverUrl={this.state.serverUrl}
                         concept_id={this.state.selectedTerm}
                     />
@@ -679,8 +635,6 @@ var Container = React.createClass({
             default:
                 if (this.state.diagramView == "definition") {
                     content = <ConceptDefinitionDiagram
-                        parents = {this.state.parents}
-                        relations = {this.state.relations}
                         serverUrl={this.state.serverUrl}
                         concept_id={this.state.selectedTerm}
                     />
