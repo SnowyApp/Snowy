@@ -557,7 +557,30 @@ var Container = React.createClass({
         this.setState({
             dbEdition: edition
         });
-        //TODO: If user is logged in, save to database
+        //Save to database if logged in
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "PUT",
+                url: this.props.url + "/user_info",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "first_name": this.state.user.firstName,
+                    "last_name": this.state.user.lastName,
+                    "site_lang": this.state.dbEdition,
+                    "db_edition": edition,
+                    "email": this.state.user.email
+                }),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed to update user language.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
     /**
