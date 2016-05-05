@@ -1,6 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+const TEXT_MAX_WIDTH = 230;
+// Width of the nodes
+const NODE_WIDTH = 250;
+// The margin between every level of attributes and concepts
+const LEVEL_MARGIN = 10;
+// Height of the nodes
+const NODE_HEIGHT = 50;
+// Margin between attributes and concepts (length of arrows)
+const WIDTH_MARGIN = 20;
+
+const CONCEPT_COLOR = '#99CCFF';
+const DEFINED_CONCEPT_COLOR = '#CCCCFF';
+const DEFINED_CONCEPT_BORDER = 4;
+
 var ConceptDefinitionDiagram = React.createClass({
     propTypes:{
         serverUrl: React.PropTypes.string,
@@ -9,13 +23,13 @@ var ConceptDefinitionDiagram = React.createClass({
     statics: {
         PRIMITIVE_COLOR : "#99CCFF",
         DEFINED_COLOR : "#CCCCFF"
-    }, 
+    },
 
     getInitialState: function() {
         return {};
     },
-    
-    
+
+
     /**
      *
      */
@@ -24,7 +38,7 @@ var ConceptDefinitionDiagram = React.createClass({
     },
 
     /**
-     * 
+     *
      */
     shouldComponentUpdate: function(props) {
         // no point of doing anything if the same id was given
@@ -53,7 +67,7 @@ var ConceptDefinitionDiagram = React.createClass({
 
                 // draw the diagram with new data
                 this.draw(data);
-            }.bind(this));        
+            }.bind(this));
     },
 
     /**
@@ -67,7 +81,7 @@ var ConceptDefinitionDiagram = React.createClass({
             dataType: "json",
             error: function() {
                 console.log("Could not get concept for Concept Definition" +
-                        " Diagram.");
+                    " Diagram.");
             }.bind(this)
         });
     },
@@ -83,7 +97,7 @@ var ConceptDefinitionDiagram = React.createClass({
             dataType: "json",
             error: function() {
                 console.log("Could not get relations for Concept Definition" +
-                        " Diagram.");
+                    " Diagram.");
             }.bind(this)
         });
     },
@@ -133,9 +147,9 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("width", 50)
             .attr("height", 50)
             // apply the correct colours depending on definition status
-            .style("fill", (concept.definition_status != "Primitive") ? 
-                    ConceptDefinitionDiagram.PRIMITIVE_COLOR : 
-                    ConceptDefinitionDiagram.DEFINED_COLOR);
+            .style("fill", (concept.definition_status != "Primitive") ?
+                ConceptDefinitionDiagram.PRIMITIVE_COLOR :
+                ConceptDefinitionDiagram.DEFINED_COLOR);
     },
 
     /**
@@ -154,8 +168,8 @@ var ConceptDefinitionDiagram = React.createClass({
             // use the full name if possible, if not available use the synonym
             // and if neither is defined use a default "NO NAME" name.
             .text(function() {
-                if (concept.full == null && 
-                        concept.synonym == null) {
+                if (concept.full == null &&
+                    concept.synonym == null) {
                     return "NO NAME";
                 }
                 else if (concept.full == null) {
