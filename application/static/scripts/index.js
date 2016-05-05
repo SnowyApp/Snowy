@@ -186,7 +186,7 @@ var Container = React.createClass({
             this.getFavoriteTerms();
         }
     },
-    
+
     /**
      * Called when the url is to be assigned the value of e
      * @param e
@@ -501,10 +501,10 @@ var Container = React.createClass({
                     user: {
                         firstName: (data.first_name != null ? data.first_name : ""),
                         lastName: (data.last_name != null ? data.last_name : ""),
-                        dbEdition: data.db_edition,
-                        siteLang: data.site_lang,
                         email: data.email
-                    }
+                    },
+                    dbEdition: (data.db_edition != null ? data.db_edition : this.props.defaultEdition),
+                    siteLang: (data.site_lang != null ? data.site_lang : this.props.defaultLanguage)
                 });
             }.bind(this),
             error: function (textStatus, errorThrown) {
@@ -639,6 +639,7 @@ var Container = React.createClass({
     },
 
     render: function() {
+        //var language = (cookie.load('userId') != null ? this.state.user.language : this.state.language);
         var content = null;
         switch(this.state.content){
             case "diagram":
@@ -666,6 +667,8 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             language={this.state.language}
                             dbEdition={this.state.dbEdition}
+                            user={this.state.user}
+                            updateUser={this.getUser}
                           />
                 break;
             default:
@@ -714,6 +717,6 @@ var Container = React.createClass({
 });
 
 ReactDOM.render(
-    <Container concept_id={conceptId} url={matteUrl}  />,
+    <Container concept_id={conceptId} url={matteUrl} defaultEdition="int20150731" defaultLanguage="en" />,
     document.getElementById('content')
 );

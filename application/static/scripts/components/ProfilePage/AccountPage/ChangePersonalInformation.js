@@ -10,16 +10,18 @@ var ChangePersonalInformation = React.createClass({
         url:        React.PropTypes.string,
         dict:       React.PropTypes.object,
         language:   React.PropTypes.string,
-        dbEdition:  React.PropTypes.string
+        dbEdition:  React.PropTypes.string,
+        user:       React.PropTypes.object,
+        updateUser: React.PropTypes.func
     },
 
     getInitialState: function(){
         return({
-            firstName: "",
+            firstName: this.props.user.firstName,
             firstNameHasChanged: false,
-            lastName: "",
+            lastName: this.props.user.lastName,
             lastNameHasChanged: false,
-            email: "",
+            email: this.props.user.email,
             emailHasChanged: false,
             validFirstName: true,
             validLastName: true,
@@ -57,6 +59,7 @@ var ChangePersonalInformation = React.createClass({
                         lastNameHasChanged: false,
                         emailHasChanged: false
                     });
+                    this.props.updateUser();
                 }.bind(this),
                 error: function (textStatus, errorThrown) {
                     console.log(textStatus);
@@ -67,27 +70,6 @@ var ChangePersonalInformation = React.createClass({
                         successMessage: ""
                     });
                 }.bind(this),
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
-
-        //TODO: REMOVE TEST
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "GET",
-                url: this.props.url + "/user_info",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                success: function (data) {
-                    console.log(data);
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    console.log("Failed getting user info.");
-                },
                 contentType: "application/json",
                 dataType: "json"
             });

@@ -13,7 +13,9 @@ var AccountPage = React.createClass({
         url:            React.PropTypes.string,
         dict:           React.PropTypes.object,
         language:       React.PropTypes.string,
-        dbEdition:      React.PropTypes.string
+        dbEdition:      React.PropTypes.string,
+        user:           React.PropTypes.object,
+        updateUser:     React.PropTypes.func
     },
 
     getInitialState: function(){
@@ -35,7 +37,7 @@ var AccountPage = React.createClass({
             //Update states and disable this function for a short time to prevent problems from clicking too fast
             this.setState({
                 nameOpen: !this.state.nameOpen,
-                nameEnabled: false 
+                nameEnabled: false
             });
             //Reenable function after disableTime ms
             setTimeout($.proxy(function(){
@@ -66,7 +68,7 @@ var AccountPage = React.createClass({
         return(
             <div>
                 <h1>
-                    <span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span> 
+                    <span className="glyphicon glyphicon-user accHeaderGlyph accountGlyph" aria-hidden="true"> </span>
                     {this.props.dict[this.props.language]["account"]}
                 </h1>
                 <hr className="profileHr"/>
@@ -86,7 +88,14 @@ var AccountPage = React.createClass({
                                 </div>
                                 <div id="nameCollapse" className="panel-collapse collapse">
                                     <div className="panel-body">
-                                        <ChangePersonalInformation url={this.props.url} dict={this.props.dict} language={this.props.language} dbEdition={this.props.dbEdition}/>
+                                        <ChangePersonalInformation
+                                            url={this.props.url}
+                                            dict={this.props.dict}
+                                            language={this.props.language}
+                                            dbEdition={this.props.dbEdition}
+                                            user={this.props.user}
+                                            updateUser={this.props.updateUser}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +116,11 @@ var AccountPage = React.createClass({
                                 </div>
                                 <div id="passwordCollapse" className="panel-collapse collapse">
                                     <div className="panel-body">
-                                        <ChangePasswordForm url={this.props.url} dict={this.props.dict} language={this.props.language}/>
+                                        <ChangePasswordForm
+                                            url={this.props.url}
+                                            dict={this.props.dict}
+                                            language={this.props.language}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -119,4 +132,3 @@ var AccountPage = React.createClass({
     }
 });
 module.exports = AccountPage;
-
