@@ -749,7 +749,7 @@ var Container = React.createClass({
         }
         return (
             <div className="wrapper">
-                <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
+                <SplitPane split="vertical" defaultSize={350} minSize={10} maxSize={700}>
                     <Navigation
                         data={this.state.data}
                         url={this.state.serverUrl}
