@@ -12,7 +12,9 @@ const WIDTH_MARGIN = 20;
 // Styling according to SNOMED CT diagramming guidelines
 const DEFINED_CONCEPT_BORDER = 4;
 // Radius of circle
-const CIRCLE_RADIUS = 20;
+const RELATION_RADIUS = 20;
+// Radius of conjunction 
+const CONJUNCTION_RADIUS = 10;
 
 
 
@@ -131,6 +133,7 @@ var ConceptDefinitionDiagram = React.createClass({
         var y = 0;
         // fetch the svg element
         var svg = d3.select(ReactDOM.findDOMNode(this));
+        
             svg.append('svg:defs').selectAll('marker')
             .data(['start'])
             .enter().append('svg:marker')
@@ -155,6 +158,7 @@ var ConceptDefinitionDiagram = React.createClass({
         var rel = this.drawRelationalOperator(svg, data, x, y);
         this.connectElements(svg, con, rel, "bottom", "left", "");
         x += 200;
+        this.drawConjunction(svg, data, x, y);
         for(var i in data.relations) {
             this.drawConcept(svg, data.relations[i], x, y);
             x += 200;
@@ -236,7 +240,14 @@ var ConceptDefinitionDiagram = React.createClass({
     },
 
     drawConjunction: function(element, concept, x, y){
-
+        element.append("circle")
+            .attr("x", x)
+            .attr("y", y)
+            .attr('transform', 'translate(' + x + ', ' + y + ')' )
+            .attr("r", CONJUNCTION_RADIUS)
+            .attr("cx", CONJUNCTION_RADIUS)
+            .attr("cy", CONJUNCTION_RADIUS)
+            .attr("fill", black);
     },
 
     drawRelationalOperator: function(element, concept, x, y){
@@ -247,9 +258,9 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr('transform', 'translate(' + x + ', ' + y + ')' );
 
         g.append("circle")
-            .attr("r", CIRCLE_RADIUS)
-            .attr("cx",CIRCLE_RADIUS)
-            .attr("cy",CIRCLE_RADIUS)
+            .attr("r", RELATION_RADIUS)
+            .attr("cx",RELATION_RADIUS)
+            .attr("cy",RELATION_RADIUS)
             .attr("fill", "white")
             .attr("stroke", "black");
 
@@ -257,8 +268,8 @@ var ConceptDefinitionDiagram = React.createClass({
             // position text centered in the concept
             .attr("class", "name")
             .attr("text-anchor", "middle")
-            .attr("x",CIRCLE_RADIUS)
-            .attr("y",CIRCLE_RADIUS)
+            .attr("x",RELATION_RADIUS)
+            .attr("y",RELATION_RADIUS)
             .attr("dy", ".35em")
             .attr("font-size", 30)
             .attr("font-family", "Helvetica, Arial, Sans-Serif")
