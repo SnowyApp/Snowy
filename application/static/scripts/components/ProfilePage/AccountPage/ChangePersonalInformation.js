@@ -29,34 +29,6 @@ var ChangePersonalInformation = React.createClass({
         });
     },
 
-    componentDidMount: function(){
-        //Get current user data
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                method: "GET",
-                url: this.props.url + "/user_info",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                success: function (data) {
-                    console.log(data);
-                    this.setState({
-                        firstName: (data.first_name != null ? data.first_name : ""),
-                        lastName: (data.last_name != null ? data.last_name : ""),
-                        email: data.email
-                    });
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    console.log("Failed getting user info.");
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
-    },
-
    /**
     * Handles submitting the form
     */
@@ -137,7 +109,7 @@ var ChangePersonalInformation = React.createClass({
                 firstNameHasChanged: true
             });
         }
-        //Last name        
+        //Last name
         else if (event.target.id == "lastName") {
             this.setState({
                 lastName: input,
@@ -164,7 +136,7 @@ var ChangePersonalInformation = React.createClass({
     render: function(){
         //First name validation style
         var firstNameDivState = "form-group";
-        var firstNameGlyphState = null;        
+        var firstNameGlyphState = null;
         if(this.state.firstNameHasChanged && this.state.firstName.length > 0){
             firstNameDivState = firstNameDivState + " has-feedback " + (this.state.validFirstName ? "has-success" : "has-error");
             firstNameGlyphState = "glyphicon form-control-feedback " + (this.state.validFirstName ? "glyphicon-ok" : "glyphicon-remove");
@@ -172,7 +144,7 @@ var ChangePersonalInformation = React.createClass({
 
         //Last name validation style
         var lastNameDivState = "form-group";
-        var lastNameGlyphState = null;        
+        var lastNameGlyphState = null;
         if(this.state.lastNameHasChanged && this.state.lastName.length > 0){
             lastNameDivState = lastNameDivState + " has-feedback " + (this.state.validLastName ? "has-success" : "has-error");
             lastNameGlyphState = "glyphicon form-control-feedback " + (this.state.validLastName ? "glyphicon-ok" : "glyphicon-remove");
@@ -180,7 +152,7 @@ var ChangePersonalInformation = React.createClass({
 
         //Email validation style
         var emailDivState = "form-group";
-        var emailGlyphState = null;        
+        var emailGlyphState = null;
         if(this.state.emailHasChanged){
             emailDivState = emailDivState + " has-feedback " + (this.state.validEmail ? "has-success" : "has-error");
             emailGlyphState = "glyphicon form-control-feedback " + (this.state.validEmail ? "glyphicon-ok" : "glyphicon-remove");
@@ -188,14 +160,14 @@ var ChangePersonalInformation = React.createClass({
 
         //Disable submit button if bad information is provided
         var disableSubmit = (
-                                (this.state.firstName.length == 0 || this.state.validFirstName) && 
+                                (this.state.firstName.length == 0 || this.state.validFirstName) &&
                                 (this.state.lastName.length == 0 || this.state.validLastName) &&
-                                this.state.validEmail && 
+                                this.state.validEmail &&
                                 (
                                     this.state.firstNameHasChanged ||
                                     this.state.lastNameHasChanged ||
                                     this.state.emailHasChanged
-                                ) 
+                                )
                                 ? "" : "disabled");
 
         //Error/success message
@@ -231,7 +203,7 @@ var ChangePersonalInformation = React.createClass({
                         <input type="text" className="form-control" id="lastName" value={this.state.lastName} onChange={this.validateName}/>
                         <span className={lastNameGlyphState}></span>
                     </div>
-                </div>           
+                </div>
                 { /* Email */ }
                 <div className={emailDivState}>
                     <label htmlFor="email" className="col-sm-3 control-label ">
@@ -241,7 +213,7 @@ var ChangePersonalInformation = React.createClass({
                         <input type="text" className="form-control" value={this.state.email} onChange={this.validateEmail}/>
                         <span className={emailGlyphState}></span>
                     </div>
-                </div>  
+                </div>
 
                 <div className="form-group">
                     <div className="col-sm-offset-3 col-sm-2">

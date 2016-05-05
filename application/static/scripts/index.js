@@ -29,6 +29,7 @@ var Container = React.createClass({
             history: [],
             language: "en",
             dbEdition: "en",
+            user: null,
             sortAlphabetically: true,
             favoriteTerms: null
         };
@@ -176,9 +177,16 @@ var Container = React.createClass({
             });
         }
     },
+
     componentWillMount: function() {
         this.getConcept(this.state.selectedTerm);
+        //Get user data if logged in
+        if(cookie.load('userId') != null){
+            this.getUser();
+            this.getFavoriteTerms();
+        }
     },
+    
     /**
      * Called when the url is to be assigned the value of e
      * @param e
@@ -446,6 +454,7 @@ var Container = React.createClass({
         this.updateSelectedTerm(this.props.concept_id, false);
         this.clearHistory();
     },
+
     /**
      * Called when a user has been logged in, uid is the token sent from the server
      * @param uid
@@ -459,13 +468,53 @@ var Container = React.createClass({
         cookie.save('userId', uid,{path: '/'});
         //Get the users favorite terms
         this.getFavoriteTerms();
+        //Get user data
+        this.getUser();
     },
+
     /**
      * Called when a user has logged out
      */
     onLogout: function(){
-        this.setState({isLoggedIn: false, content: "diagram", userId: ''});
+        this.setState({
+            isLoggedIn: false,
+            content: "diagram",
+            userId: '',
+            user: null
+        });
         cookie.remove('userId', {path: '/'});
+    },
+
+    /**
+    * Returns user data for the logged in user
+    */
+    getUser: function () {
+        $.ajax({
+            method: "GET",
+            url: this.props.url + "/user_info",
+            headers: {
+                "Authorization": cookie.load("userId")
+            },
+            success: function (data) {
+                console.log("Successfully collected user data");
+                this.setState({
+                    user: {
+                        firstName: (data.first_name != null ? data.first_name : ""),
+                        lastName: (data.last_name != null ? data.last_name : ""),
+                        dbEdition: data.db_edition,
+                        siteLang: data.site_lang,
+                        email: data.email
+                    }
+                });
+            }.bind(this),
+            error: function (textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log("Failed getting user info.");
+            },
+            contentType: "application/json",
+            dataType: "json"
+        });
     },
 
    /**
@@ -590,10 +639,6 @@ var Container = React.createClass({
     },
 
     render: function() {
-        //Get favorite terms if not yet done
-        if(this.state.favoriteTerms == null){
-            this.getFavoriteTerms();
-        }
         var content = null;
         switch(this.state.content){
             case "diagram":
