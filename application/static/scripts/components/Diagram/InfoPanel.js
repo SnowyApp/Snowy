@@ -112,7 +112,7 @@ var InfoPanel = React.createClass({
                     relations.push({
                         name: name,
                         type: data[i].type_name,
-                        charType: "(Inferred)" //TODO: Fix real data
+                        charType: data[i].char_type
                     });
                 }
                 //Check if component is mounted. This has to be done because the user
