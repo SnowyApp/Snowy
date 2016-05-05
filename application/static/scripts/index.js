@@ -30,6 +30,7 @@ var Container = React.createClass({
             history: [],
             language: "en",
             dbEdition: "en",
+            user: null,
             sortAlphabetically: true,
             favoriteTerms: null,
             diagramView: "hierarchy"
@@ -178,9 +179,16 @@ var Container = React.createClass({
             });
         }
     },
+
     componentWillMount: function() {
         this.getConcept(this.state.selectedTerm);
+        //Get user data if logged in
+        if(cookie.load('userId') != null){
+            this.getUser();
+            this.getFavoriteTerms();
+        }
     },
+
     /**
      * Called when the url is to be assigned the value of e
      * @param e
@@ -448,6 +456,7 @@ var Container = React.createClass({
         this.updateSelectedTerm(this.props.concept_id, false);
         this.clearHistory();
     },
+
     /**
      * Called when a user has been logged in, uid is the token sent from the server
      * @param uid
@@ -461,23 +470,86 @@ var Container = React.createClass({
         cookie.save('userId', uid,{path: '/'});
         //Get the users favorite terms
         this.getFavoriteTerms();
+        //Get user data
+        this.getUser();
     },
+
     /**
      * Called when a user has logged out
      */
     onLogout: function(){
-        this.setState({isLoggedIn: false, content: "diagram", userId: ''});
+        this.setState({
+            isLoggedIn: false,
+            content: "diagram",
+            userId: '',
+            user: null
+        });
         cookie.remove('userId', {path: '/'});
     },
 
     /**
-     * Sets the sites language to language
-     */
+    * Returns user data for the logged in user
+    */
+    getUser: function () {
+        $.ajax({
+            method: "GET",
+            url: this.props.url + "/user_info",
+            headers: {
+                "Authorization": cookie.load("userId")
+            },
+            success: function (data) {
+                console.log("Successfully collected user data");
+                this.setState({
+                    user: {
+                        firstName: (data.first_name != null ? data.first_name : ""),
+                        lastName: (data.last_name != null ? data.last_name : ""),
+                        email: data.email
+                    },
+                    dbEdition: (data.db_edition != null ? data.db_edition : this.props.defaultEdition),
+                    language: (data.site_lang != null ? data.site_lang : this.props.defaultLanguage)
+                });
+            }.bind(this),
+            error: function (textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log("Failed getting user info.");
+            },
+            contentType: "application/json",
+            dataType: "json"
+        });
+    },
+
+   /**
+    * Sets the sites language to language
+    */
     setLanguage: function(language){
         this.setState({
             language: language
         });
-        //TODO: If user is logged in, save to database
+        //Save to database if logged in
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "PUT",
+                url: this.props.url + "/user_info",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "first_name": this.state.user.firstName,
+                    "last_name": this.state.user.lastName,
+                    "site_lang": language,
+                    "db_edition": this.state.dbEdition,
+                    "email": this.state.user.email
+                }),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed to update user language.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
     /**
@@ -487,7 +559,30 @@ var Container = React.createClass({
         this.setState({
             dbEdition: edition
         });
-        //TODO: If user is logged in, save to database
+        //Save to database if logged in
+        if (cookie.load('userId') != null) {
+            $.ajax({
+                method: "PUT",
+                url: this.props.url + "/user_info",
+                headers: {
+                    "Authorization": cookie.load("userId")
+                },
+                data: JSON.stringify({
+                    "first_name": this.state.user.firstName,
+                    "last_name": this.state.user.lastName,
+                    "site_lang": this.state.dbEdition,
+                    "db_edition": edition,
+                    "email": this.state.user.email
+                }),
+                error: function (textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log("Failed to update user language.");
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
     },
 
     /**
@@ -512,7 +607,6 @@ var Container = React.createClass({
 
         return s;
     },
-    //var test = "[{\"concept_id\":138875005,\"id\":0,\"depth\":0,\"name\":\"SNOMED CT Concept\",\"x\":-352,\"y\":273,\"children\":[{\"concept_id\":260787004,\"id\":8,\"depth\":1,\"name\":\"Physical object (physical object)\",\"x\":237,\"y\":293,\"parent\":138875005,\"children\":[]}]}]";
 
     /**
      * Return a Javascript object of the diagram given in JSON.
@@ -593,10 +687,7 @@ var Container = React.createClass({
     },
 
     render: function() {
-        //Get favorite terms if not yet done
-        if(this.state.favoriteTerms == null){
-            this.getFavoriteTerms();
-        }
+        //var language = (cookie.load('userId') != null ? this.state.user.language : this.state.language);
         var content = null;
         switch(this.state.content) {
             case "diagram":
@@ -630,6 +721,8 @@ var Container = React.createClass({
                             url={this.state.serverUrl}
                             language={this.state.language}
                             dbEdition={this.state.dbEdition}
+                            user={this.state.user}
+                            updateUser={this.getUser}
                           />
                 break;
             default:
@@ -689,6 +782,6 @@ var Container = React.createClass({
 });
 
 ReactDOM.render(
-    <Container concept_id={conceptId} url={matteUrl}  />,
+    <Container concept_id={conceptId} url={matteUrl} defaultEdition="int20150731" defaultLanguage="en" />,
     document.getElementById('content')
 );

@@ -20,28 +20,6 @@ var FavoriteDiagrams = React.createClass({
         dateSort:           React.PropTypes.func
     },
 
-    //TODO: REMOVE THIS FUNCTION
-    saveDiagram: function() {
-        $.ajax({
-            type: "POST",
-            method: "POST",
-            headers: {
-                "Authorization" : cookie.load("userId")
-            },
-            url: this.props.url + "/diagram",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "data": JSON.stringify({test: "333"}),
-                "created": new Date().toString(),
-                "name": "Diagram 2"
-            }),
-            error: function(xhr) {
-                console.log(xhr);
-                console.log("Could not store diagram.");
-            }.bind(this)
-        });
-    },
-
     getInitialState: function(){
         return({
             diagrams: [],
@@ -153,7 +131,7 @@ var FavoriteDiagrams = React.createClass({
                             name: data[i].name,
                             created: new Date(data[i].created),
                             modified: new Date(data[i].modified),
-                            data: data[i].data
+                            description: data[i].description
                         });
                     }
                     this.setState({
@@ -194,6 +172,7 @@ var FavoriteDiagrams = React.createClass({
                         id={diagram.id}
                         date={dateString}
                         data={diagram.data}
+                        description={diagram.description}
                         openDiagram={this.props.openDiagram}
                         removeDiagram={this.removeDiagram}
                     />

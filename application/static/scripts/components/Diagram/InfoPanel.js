@@ -112,7 +112,7 @@ var InfoPanel = React.createClass({
                     relations.push({
                         name: name,
                         type: data[i].type_name,
-                        charType: "(Inferred)" //TODO: Fix real data
+                        charType: data[i].char_type
                     });
                 }
                 //Check if component is mounted. This has to be done because the user
@@ -218,22 +218,25 @@ var InfoPanel = React.createClass({
 
     render: function(){
         //Check if data is set yet, otherwise return
-        if(this.props.data.length == 0) return null;
+        if(this.props.data === undefined || this.props.data.length == 0) return null;
 
-        var saveTermButton = (this.state.isFavorited ?
-                                <button
-                                    type="button"
-                                    className="btn btn-danger btn-sm saveTermButton"
-                                    onClick={this.props.removeFavoriteTerm.bind(null, this.props.data[0].concept_id)}>
-                                    {this.dict[this.props.language]["removeFavorite"]}
-                                </button>
-                                :
-                                <button
-                                    type="button"
-                                    className="btn btn-success btn-sm saveTermButton"
-                                    onClick={this.addFavorite.bind(null,{id: this.props.data[0].concept_id, name: this.props.data[0].name})}>
-                                    {this.dict[this.props.language]["saveFavorite"]}
-                                </button>)
+        var saveTermButton = null;
+        if(cookie.load('userId') != null){
+            saveTermButton = (this.state.isFavorited ?
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger btn-sm saveTermButton"
+                                        onClick={this.props.removeFavoriteTerm.bind(null, this.props.data[0].concept_id)}>
+                                        {this.dict[this.props.language]["removeFavorite"]}
+                                    </button>
+                                    :
+                                    <button
+                                        type="button"
+                                        className="btn btn-success btn-sm saveTermButton"
+                                        onClick={this.addFavorite.bind(null,{id: this.props.data[0].concept_id, name: this.props.data[0].name})}>
+                                        {this.dict[this.props.language]["saveFavorite"]}
+                                    </button>)
+        }
 
         var showParents = null;
         if(this.state.parents.length > 0){
@@ -290,7 +293,6 @@ var InfoPanel = React.createClass({
         } else {
             showRelations = {display: "none"};
         }
-
         return (
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
@@ -325,7 +327,7 @@ var InfoPanel = React.createClass({
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">{this.dict[this.props.language]["conceptType"]}:</td>
-                                    <td className="termInfoData">(Fully defined)</td>
+                                    <td className="termInfoData">{this.props.data[0].definitionStatus}</td>
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">Status:</td>
