@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+// Maximum width of text before starting new line
 const TEXT_MAX_WIDTH = 230;
 // Width of the nodes
 const NODE_WIDTH = 250;
@@ -10,10 +11,12 @@ const LEVEL_MARGIN = 10;
 const NODE_HEIGHT = 50;
 // Margin between attributes and concepts (length of arrows)
 const WIDTH_MARGIN = 20;
-
+// Styling according to SNOMED CT diagramming guidelines
 const CONCEPT_COLOR = '#99CCFF';
 const DEFINED_CONCEPT_COLOR = '#CCCCFF';
 const DEFINED_CONCEPT_BORDER = 4;
+// The current level we are drawing on
+var level = 0;
 
 var ConceptDefinitionDiagram = React.createClass({
     propTypes:{
