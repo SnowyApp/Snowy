@@ -141,7 +141,6 @@ CREATE TABLE complex_map_refset(
     CONSTRAINT complex_map_refset_pk PRIMARY KEY(id, effective_time, active)
 );
 
-
 -- Create a new type that stores concept data
 DROP TYPE IF EXISTS concept_result CASCADE;
 CREATE TYPE concept_result AS (id BIGINT, full_term TEXT, syn_term TEXT, definition_status BIGINT, active INT);
