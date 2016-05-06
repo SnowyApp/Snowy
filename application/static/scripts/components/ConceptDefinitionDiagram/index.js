@@ -184,7 +184,6 @@ var ConceptDefinitionDiagram = React.createClass({
      * Draw the diagram.
      */
     draw: function(data) {
-        console.log(data);
         var x = START_X;
         var y = START_Y;
         // fetch the svg element
