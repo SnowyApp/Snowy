@@ -22,7 +22,6 @@
     "react-draggable": "^2.0.0-beta3",
     "react-page-click": "^2.1.0",
     "react-split-pane": "^0.1.37",
-    "svgsaver": "^0.6.1",
     "webpack": "^1.13.0"
   },
   "devDependencies": {

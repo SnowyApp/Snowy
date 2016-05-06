@@ -180,6 +180,11 @@ var ConceptDefinitionDiagram = React.createClass({
         // fetch the svg element
         var svg = d3.select(ReactDOM.findDOMNode(this));
         svg.selectAll("*").remove();
+        svg.attr({
+            'xmlns': 'http://www.w3.org/2000/svg',
+            'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+            version: '1.1'
+        });
 
         var diagram = svg.append("g")
             .attr("class", "nodes")
