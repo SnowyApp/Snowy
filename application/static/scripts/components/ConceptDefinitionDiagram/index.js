@@ -22,7 +22,6 @@ const START_X = 20;
 const START_Y = 20;
 
 
-
 var ConceptDefinitionDiagram = React.createClass({
     propTypes:{
         serverUrl: React.PropTypes.string,
@@ -180,10 +179,20 @@ var ConceptDefinitionDiagram = React.createClass({
         var y = START_Y;
         // fetch the svg element
         var svg = d3.select(ReactDOM.findDOMNode(this));
-            svg.selectAll("*").remove();
+        svg.selectAll("*").remove();
+
         var diagram = svg.append("g")
-                .attr("class", "nodes");
+            .attr("class", "nodes")
+            .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1 + ')');
+
+        function zoomed() {
+            diagram.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+        }
+        var zoom = d3.behavior.zoom().on('zoom', zoomed);
+        svg.call(zoom).on('dblclick.zoom', null);
+
         this.initMarkers(svg);
+
         // sorts relations by group_id
         var sortedRelations = this.sortRelations(data.relations);
         // draw the root node
