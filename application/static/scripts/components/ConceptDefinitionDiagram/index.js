@@ -568,11 +568,11 @@ var ConceptDefinitionDiagram = React.createClass({
             // use the full name if possible, if not available use the synonym
             // and if neither is defined use a default "NO NAME" name.
             .text(function() {
-                if (concept.full == null &&
-                    concept.synonym == null) {
+                if ((concept.full == null || concept.full == "" ) &&
+                    (concept.synonym == null || concept.synonym == "")) {
                     return "NO NAME";
                 }
-                else if (concept.full == null) {
+                else if (concept.full == null || concept.full == "") {
                     return concept.synonym;
                 }
                 return concept.full;
