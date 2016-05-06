@@ -6,6 +6,8 @@ import Draggable from 'react-draggable';
 var diagram = require("./d3Diagram");
 var InfoPanel = require('./InfoPanel');
 var SaveDiagram = require('./SaveDiagram');
+var ConceptDefinitionDiagram = require('../ConceptDefinitionDiagram/index');
+
 
 var Diagram = React.createClass({
     propTypes: {
@@ -37,7 +39,8 @@ var Diagram = React.createClass({
         return {
             data: [],
             view:  'vertical',
-            showInfoPanel: false
+            showInfoPanel: false,
+            diagramView: "hierarchy"
         };
     },
 
@@ -112,6 +115,28 @@ var Diagram = React.createClass({
     */
     render: function() {
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
+        var content = null;
+        switch(this.state.diagramView){
+            case "hierarchy":
+                content =
+                <div className="d3diagram"
+                     ref={ (ref) => this._d3 = ref}>
+                </div>;
+                break;
+            case "definition":
+                content =
+                    <ConceptDefinitionDiagram
+                        serverUrl={this.props.url}
+                        concept_id={this.props.selectedTerm}
+                    />
+                break;
+            default:
+                content =
+                    <div className="d3diagram"
+                         ref={ (ref) => this._d3 = ref}>
+                    </div>;
+                break;
+        }
         return (
             <div className="diagram">
                 <Button
@@ -133,9 +158,7 @@ var Diagram = React.createClass({
                     language={this.props.language}
                     saveDiagram={this.props.saveDiagram}
                 />
-                <div className="d3diagram"
-                    ref={ (ref) => this._d3 = ref}>
-                </div>
+                {content}
 
                 //Button to open info panel
                 <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span>

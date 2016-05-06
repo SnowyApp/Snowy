@@ -5,7 +5,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 var Diagram = require('./components/Diagram/index');
-var ConceptDefinitionDiagram = require('./components/ConceptDefinitionDiagram/index');
 var Bar = require('./components/Bar/index');
 var Navigation = require('./components/Navigation/index');
 var ProfilePage = require('./components/ProfilePage/index');
@@ -32,8 +31,7 @@ var Container = React.createClass({
             dbEdition: "en",
             user: null,
             sortAlphabetically: true,
-            favoriteTerms: null,
-            diagramView: "definition"
+            favoriteTerms: null
         };
     },
 
@@ -691,60 +689,47 @@ var Container = React.createClass({
         var content = null;
         switch(this.state.content) {
             case "diagram":
-                if (this.state.diagramView == "definition") {
-                    content = <ConceptDefinitionDiagram
-                        serverUrl={this.state.serverUrl}
-                        concept_id={this.state.selectedTerm}
+                content = <Diagram
+                    ref={ (ref) => this._diagram = ref }
+                    data={this.state.data}
+                    update={this.updateSelectedTerm}
+                    updateConceptChildren={this.updateConceptChildren}
+                    language={this.state.language}
+                    url={this.state.serverUrl}
+                    favoriteTerms={this.state.favoriteTerms}
+                    removeFavoriteTerm={this.removeFavoriteTerm}
+                    addFavoriteTerm={this.addFavoriteTerm}
+                    saveDiagram={this.saveDiagram}
+                    selectedTerm={this.state.selectedTerm}
                     />
-                } else {
-                    content = <Diagram
-                        ref={ (ref) => this._diagram = ref }
-                        data={this.state.data}
-                        update={this.updateSelectedTerm}
-                        updateConceptChildren={this.updateConceptChildren}
-                        language={this.state.language}
-                        url={this.state.serverUrl}
-                        favoriteTerms={this.state.favoriteTerms}
-                        removeFavoriteTerm={this.removeFavoriteTerm}
-                        addFavoriteTerm={this.addFavoriteTerm}
-                        saveDiagram={this.saveDiagram}
-                    />
-                }
                 break;
             case "profile":
                 content = <ProfilePage
-                            removeFavoriteTerm={this.removeFavoriteTerm}
-                            removeid={this.removeById}
-                            favoriteTerms={this.state.favoriteTerms}
-                            openTerm={this.updateSelectedTerm}
-                            openDiagram={this.loadDiagram}
-                            url={this.state.serverUrl}
-                            language={this.state.language}
-                            dbEdition={this.state.dbEdition}
-                            user={this.state.user}
-                            updateUser={this.getUser}
-                          />
+                    removeFavoriteTerm={this.removeFavoriteTerm}
+                    removeid={this.removeById}
+                    favoriteTerms={this.state.favoriteTerms}
+                    openTerm={this.updateSelectedTerm}
+                    openDiagram={this.loadDiagram}
+                    url={this.state.serverUrl}
+                    language={this.state.language}
+                    dbEdition={this.state.dbEdition}
+                    user={this.state.user}
+                    updateUser={this.getUser}
+                />
                 break;
-            default:
-                if (this.state.diagramView == "definition") {
-                    content = <ConceptDefinitionDiagram
-                        serverUrl={this.state.serverUrl}
-                        concept_id={this.state.selectedTerm}
+                content = <Diagram
+                    ref={ (ref) => this._diagram = ref }
+                    data={this.state.data}
+                    update={this.updateSelectedTerm}
+                    updateConceptChildren={this.updateConceptChildren}
+                    language={this.state.language}
+                    url={this.state.serverUrl}
+                    favoriteTerms={this.state.favoriteTerms}
+                    removeFavoriteTerm={this.removeFavoriteTerm}
+                    addFavoriteTerm={this.addFavoriteTerm}
+                    saveDiagram={this.saveDiagram}
+                    selectedTerm={this.state.selectedTerm}
                     />
-                } else {
-                    content = <Diagram
-                        ref={ (ref) => this._diagram = ref }
-                        data={this.state.data}
-                        update={this.updateSelectedTerm}
-                        updateConceptChildren={this.updateConceptChildren}
-                        language={this.state.language}
-                        url={this.state.serverUrl}
-                        favoriteTerms={this.state.favoriteTerms}
-                        removeFavoriteTerm={this.removeFavoriteTerm}
-                        addFavoriteTerm={this.addFavoriteTerm}
-                        saveDiagram={this.saveDiagram}
-                    />
-                }
                 break;
         }
         return (
