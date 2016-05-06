@@ -87,5 +87,6 @@ def rel_data(cid):
     for res in data:
         print(res["full"])
         print(res["group_id"])
+        print(res["type_name"])
         print()
 
