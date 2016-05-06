@@ -211,7 +211,7 @@ var ConceptDefinitionDiagram = React.createClass({
         this.connectElements(diagram, rel, conj, "right", "left", "LineMarker");
         // draw all the parents
         for (var i in sortedRelations) {
-            if (sortedRelations[i].type_name == 'Is a') {
+            if (sortedRelations[i].type_name == "Is a (attribute)") {
                 conc = this.drawConcept(diagram, sortedRelations[i], x, y);
                 this.connectElements(diagram, conj, conc, "bottom", "left", "ClearMarker");
                 y += LEVEL_MARGIN;
@@ -220,7 +220,7 @@ var ConceptDefinitionDiagram = React.createClass({
         // draw all ungrouped attributes
         for (var i in sortedRelations) {
             if (sortedRelations[i].group_id == 0) {
-                if (sortedRelations[i].type_name != 'Is a') {
+                if (sortedRelations[i].type_name != "Is a (attribute)") {
                     conc = this.drawAttribute(diagram, sortedRelations[i], x, y);
                     this.connectElements(diagram, conj, conc, "bottom", "left", "BlackMarker");
                     y += LEVEL_MARGIN;
