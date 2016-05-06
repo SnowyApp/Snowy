@@ -18,6 +18,7 @@ UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 # Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
 SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id, a.type_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
+SELECT_CONCEPT_TERM_QUERY = "SELECT term FROM description WHERE concept_id=%s;"
 
 # Token queries
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
@@ -518,13 +519,14 @@ class Concept():
 
     @staticmethod
     def get_attribute(type_id):
-        if type_id == 363698007:
-            return "Finding site"
-        elif type_id == 116676008:
-            return "Associated morphology"
-        elif type_id == 116680003:
-            return "Is a"
-        else:
+        cur = get_db().cursor()
+        try:
+            cur.execute(SELECT_CONCEPT_TERM_QUERY, (type_id,))
+            name = cur.fetchone()[0]
+            cur.close()
+            return name
+        except Exception as e:
+            print(e)
             return "UNDEFINED (PROBABLE ERROR SERVER SIDE)"
 
     def get_definition_status(self):
