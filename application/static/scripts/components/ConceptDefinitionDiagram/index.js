@@ -226,7 +226,7 @@ var ConceptDefinitionDiagram = React.createClass({
             }
         }
         // draw every relation and connect them to the conjunction
-        if (sortedRelations[0].group_id != null) {
+        if (sortedRelations[0] != null) {
             var groupId = sortedRelations[0].group_id;
             var newGroupId;
             var innerX = x;
