@@ -141,6 +141,28 @@ CREATE TABLE complex_map_refset(
     CONSTRAINT complex_map_refset_pk PRIMARY KEY(id, effective_time, active)
 );
 
+
+-- Create a new type that stores concept data
+DROP TYPE IF EXISTS concept_result CASCADE;
+CREATE TYPE concept_result AS (id BIGINT, full_term TEXT, syn_term TEXT, definition_status BIGINT, active INT);
+
+-- Function that retrieves the concept with the given id
+DROP FUNCTION IF EXISTS get_concept(BIGINT);
+CREATE OR REPLACE FUNCTION get_concept(cid BIGINT)
+RETURNS concept_result AS $$
+DECLARE
+    result concept_result;
+    tmp BIGINT;
+BEGIN
+    SELECT definition_status_id, active INTO result.definition_status, result.active FROM concept WHERE id=cid;
+    SELECT DISTINCT A.term, A.effective_time INTO result.full_term, tmp FROM description A join language_refset B ON A.id=B.referenced_component_id WHERE A.type_id=900000000000003001 AND A.concept_id=cid AND A.active=1 ORDER BY A.effective_time DESC LIMIT 1;
+
+    SELECT DISTINCT A.term, A.effective_time INTO result.syn_term, tmp FROM description A join language_refset B ON A.id=B.referenced_component_id AND A.type_id=900000000000013009 WHERE A.concept_id=cid AND A.active=1 ORDER BY A.effective_time DESC LIMIT 1;
+    result.id = cid;
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
 COPY concept(id, effective_time, active, module_id, definition_status_id)
 FROM '/Users/simon/Projects/96tddd-code/database/SnomedCT_RF2Release_INT_20150731/Full/Terminology/sct2_Concept_Full_INT_20150731.txt'
 WITH (FORMAT csv, HEADER true, DELIMITER '	');
