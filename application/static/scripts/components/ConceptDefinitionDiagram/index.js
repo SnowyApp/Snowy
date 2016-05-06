@@ -60,7 +60,7 @@ var ConceptDefinitionDiagram = React.createClass({
      * Render the contents of the ConceptGraph
      */
     render: function() {
-        return <svg width="100%" height="100%" id="svgDiagram"></svg>;
+        return <svg width="100%" height="100%" className="definition"></svg>;
     },
 
     /**

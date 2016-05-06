@@ -7,7 +7,7 @@ var diagram = require("./d3Diagram");
 var InfoPanel = require('./InfoPanel');
 var SaveDiagram = require('./SaveDiagram');
 var ConceptDefinitionDiagram = require('../ConceptDefinitionDiagram/index');
-
+var Export = require('../Export/index');
 
 var Diagram = React.createClass({
     propTypes: {
@@ -162,6 +162,7 @@ var Diagram = React.createClass({
                     saveDiagram={this.props.saveDiagram}
                     diagramView={this.state.diagramView}
                 />
+                <Export language={this.props.language} selectedTerm={this.props.selectedTerm} diagramView={this.state.diagramView}/>
                 <div className={this.state.diagramView == "definition" ? "hiddenDiagram" : "d3diagram"}
                      ref={ (ref) => this._d3 = ref}>
                 </div>

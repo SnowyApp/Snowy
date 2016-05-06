@@ -168,7 +168,7 @@ d3Chart.create = function(element, props, state) {
         .on('zoom', zoomed);
 
     svg = d3.select(element).append('svg')
-        .attr('class', 'd3')
+        .attr('class', 'hierarchy')
         .attr({
             'xmlns': 'http://www.w3.org/2000/svg',
             'xmlns:xlink': 'http://www.w3.org/1999/xlink',

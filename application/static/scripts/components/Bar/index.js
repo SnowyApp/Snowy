@@ -10,7 +10,6 @@ var LogOut = require('../LogOut/index');
 var RegisterForm = require('../RegisterForm/index');
 var LoginForm = require('../LoginForm/index');
 var Search = require('../Search/index');
-var Export = require('../Export/index');
 
 var Bar = React.createClass({
     propTypes: {
@@ -179,7 +178,6 @@ var Bar = React.createClass({
                             </MenuItem>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Export language={this.props.language} selectedTerm={this.props.selectedTerm}/>
                     {navButtons}
                 </ButtonToolbar>
             </div>

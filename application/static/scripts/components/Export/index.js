@@ -11,7 +11,8 @@ const MARGIN = 20;
 var Export = React.createClass({
     propTypes: {
         language: React.PropTypes.string,
-        selectedTerm: React.PropTypes.number
+        selectedTerm: React.PropTypes.number,
+        diagramView: React.PropTypes.string
     },
     dict: {
         se: {
@@ -29,14 +30,14 @@ var Export = React.createClass({
         var svgsaver = new Svgsaver();
 
         // Clones the svg node so that we don't modify it
-        var svg = d3.select("svg").node();
+        var svg = d3.select("svg." + this.props.diagramView).node();
         var svgClone = svg.cloneNode(true);
 
         // Resets the position and zoom in the cloned diagram
         svgClone.firstChild.setAttribute("transform", 'translate(0,0)scale(1)');
 
         // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
-        var bb=d3.select('body').selectAll('.nodes').node().getBBox();
+        var bb=d3.select("svg." + this.props.diagramView).selectAll('.nodes').node().getBBox();
         var bbx=bb.x - MARGIN;
         var bby=bb.y - MARGIN;
         var bbw=bb.width + 2*MARGIN;
@@ -60,14 +61,14 @@ var Export = React.createClass({
         var svgsaver = new Svgsaver();
 
         // Clones the svg node so that we don't modify it
-        var svg = d3.select("svg").node();
+        var svg = d3.select("svg." + this.props.diagramView).node();
         var svgClone = svg.cloneNode(true);
 
         // Resets the position and zoom in the cloned diagram
         svgClone.firstChild.setAttribute("transform", 'translate(0,0)scale(1)');
 
         // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
-        var bb=d3.select('body').selectAll('.nodes').node().getBBox();
+        var bb=d3.select("svg." + this.props.diagramView).selectAll('.nodes').node().getBBox();
         var bbx=bb.x - MARGIN;
         var bby=bb.y - MARGIN;
         var bbw=bb.width + 2*MARGIN;
