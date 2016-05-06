@@ -132,20 +132,23 @@ var Diagram = React.createClass({
     */
     render: function() {
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
+        /*
         var content = null;
         switch(this.state.diagramView){
             case "hierarchy":
                 content =
-                <div className="d3diagram"
-                     ref={ (ref) => this._d3 = ref}>
-                </div>;
+                    <div className="d3diagram"
+                        ref={ (ref) => this._d3 = ref}>
+                    </div>;
                 break;
             case "definition":
                 content =
-                    <ConceptDefinitionDiagram
-                        serverUrl={this.props.url}
-                        concept_id={this.props.selectedTerm}
-                    />;
+                    <div className="conceptDiagram">
+                        <ConceptDefinitionDiagram
+                            serverUrl={this.props.url}
+                            concept_id={this.props.selectedTerm}
+                        />
+                    </div>;
                 break;
             default:
                 content =
@@ -154,6 +157,8 @@ var Diagram = React.createClass({
                     </div>;
                 break;
         }
+        */
+
         return (
             <div className="diagram">
                 <Button
@@ -184,7 +189,15 @@ var Diagram = React.createClass({
                     saveDiagram={this.props.saveDiagram}
                     diagramView={this.state.diagramView}
                 />
-                {content}
+                <div className="d3diagram"
+                     ref={ (ref) => this._d3 = ref} hidden={this.state.diagramView == "definition"}>
+                </div>
+                <div className="conceptDiagram" hidden={this.state.diagramView == "hierarchy"}>
+                    <ConceptDefinitionDiagram
+                        serverUrl={this.props.url}
+                        concept_id={this.props.selectedTerm}
+                    />
+                </div>
 
                 //Button to open info panel
                 <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span>
