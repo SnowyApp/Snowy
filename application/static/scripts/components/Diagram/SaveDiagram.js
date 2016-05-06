@@ -150,6 +150,7 @@ var SaveDiagram = React.createClass({
                         className="save-diagram"
                         bsStyle="primary"
                         onClick={this.toggleSavePanel}
+                        disabled = {this.props.diagramView == "definition"}
                     >
                         {this.dict[this.props.language]["saveDiagram"]}
                     </Button>

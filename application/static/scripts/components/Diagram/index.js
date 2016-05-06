@@ -158,17 +158,20 @@ var Diagram = React.createClass({
             <div className="diagram">
                 <Button
                     bsStyle="primary"
-                    onClick={this.reset}>
+                    onClick={this.reset}
+                    disabled = {this.state.diagramView == "definition"}>
                     {this.dict[this.props.language]["reset"]}
                 </Button>
                 <Button
                     bsStyle="primary"
-                    onClick={this.resetZoom}>
+                    onClick={this.resetZoom}
+                    disabled = {this.state.diagramView == "definition"}>
                     {this.dict[this.props.language]["resetZoom"]}
                 </Button>
                 <Button
                     bsStyle="primary"
-                    onClick={this.changeView}>
+                    onClick={this.changeView}
+                    disabled = {this.state.diagramView == "definition"}>
                     {this.dict[this.props.language]["VHView"]}
                 </Button>
                 <Button
@@ -179,6 +182,7 @@ var Diagram = React.createClass({
                 <SaveDiagram
                     language={this.props.language}
                     saveDiagram={this.props.saveDiagram}
+                    diagramView={this.state.diagramView}
                 />
                 {content}
 
