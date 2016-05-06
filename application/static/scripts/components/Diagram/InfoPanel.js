@@ -331,7 +331,7 @@ var InfoPanel = React.createClass({
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">Status:</td>
-                                    <td className="termInfoData">(Active)</td>
+                                    <td className="termInfoData">{this.props.data[0].status}</td>
                                 </tr>
                             </tbody>
                         </table>

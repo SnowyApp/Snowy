@@ -74,7 +74,8 @@ var Container = React.createClass({
                             "children": this.sortConcepts(children,
                                 this.state.sortAlphabetically),
                             "id": 0,
-                            "definitionStatus": rootResult[0].definition_status
+                            "definitionStatus": rootResult[0].definition_status,
+                            "status": (rootResult[0].active == 1 ? "Active" : "Inactive")
                         }
                     ];
 
