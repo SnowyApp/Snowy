@@ -17,6 +17,9 @@ const DEFINED_CONCEPT_BORDER = 4;
 const RELATION_RADIUS = 25;
 // Radius of conjunction 
 const CONJUNCTION_RADIUS = 10;
+// Start positions of root node on the svg document
+const START_X = 20;
+const START_Y = 20;
 
 
 
@@ -182,8 +185,8 @@ var ConceptDefinitionDiagram = React.createClass({
      */
     draw: function(data) {
         console.log(data);
-        var x = 0;
-        var y = 0;
+        var x = START_X;
+        var y = START_Y;
         // fetch the svg element
         var svg = d3.select(ReactDOM.findDOMNode(this));
         this.initMarkers(svg);
