@@ -42,7 +42,7 @@ SELECT_PARENTS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.typ
                             JOIN language_refset C ON B.id=C.referenced_component_id 
                             JOIN concept D ON B.concept_id=D.id 
                             WHERE A.source_id=%s AND A.type_id=116680003 AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
-SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id 
+SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id, A.relationship_group 
                             FROM relationship A 
                             JOIN description B ON A.destination_id=B.concept_id 
                             JOIN language_refset C ON B.id=C.referenced_component_id 
@@ -377,6 +377,7 @@ class Concept():
         self.definition_status_id = 0
         self.active = 1
         self.parents = None
+        self.group_id = None
         if type_id:
             self.type_name = Concept.get_attribute(self.type_id)
         else:
@@ -390,7 +391,7 @@ class Concept():
         self.type_name = Concept.get_attribute(self.type_id)
 
     @staticmethod
-    def concepts_from_cursor(cur):
+    def concepts_from_cursor(cur, group=False):
         """
         Returns the different concepts that the cursor points to
         """
@@ -413,6 +414,10 @@ class Concept():
                 concept.full_term = data[1]
             else:
                 concept.syn_term = data[1]
+
+            if group:
+                concept.group_id = data[5]
+
         if concept is not None:
             result += [concept]
 
@@ -435,14 +440,14 @@ class Concept():
             return None
 
     @staticmethod
-    def fetch_relations(cid, query):
+    def fetch_relations(cid, query, group=False):
         """
         Fetch data on relations. 
         """
         cur = get_db().cursor()
         try:
             cur.execute(query, (cid,))
-            result = Concept.concepts_from_cursor(cur)
+            result = Concept.concepts_from_cursor(cur, group)
             cur.close()
             return result
         except Exception as e:
@@ -468,7 +473,7 @@ class Concept():
         """
         Returns the relations for the given concept.
         """
-        return Concept.fetch_relations(cid, SELECT_RELATIONS_QUERY)
+        return Concept.fetch_relations(cid, SELECT_RELATIONS_QUERY, True)
 
     @staticmethod
     def get_concept(cid):
@@ -540,6 +545,8 @@ class Concept():
             res["char_type"] = "inferred"
         if self.parents:
             res["parents"] = [parent.to_json() for parent in self.parents]
+        if self.group_id is not None:
+            res["group_id"] = self.group_id
 
         return res
 
