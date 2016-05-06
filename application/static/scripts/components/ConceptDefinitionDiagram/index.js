@@ -104,6 +104,10 @@ var ConceptDefinitionDiagram = React.createClass({
             }.bind(this)
         });
     },
+    /**
+     * Initiate markers
+     * @param element
+     */
     initMarkers: function(element){
         var defs = element.append('defs');
         defs.append('marker')
@@ -190,7 +194,7 @@ var ConceptDefinitionDiagram = React.createClass({
         var rel = this.drawRelationalOperator(svg, data, x, y);
         x += (NODE_MARGIN + RELATION_RADIUS * 2);
         // connect the root node and the relational operator
-        this.connectElements(svg, conc, rel, "bottom", "left", "BlackMarker");
+        this.connectElements(svg, conc, rel, "bottom-root", "left", "BlackMarker");
         // draw the conjunction
         var conj = this.drawConjunction(svg, data, x, y);
         x += (NODE_MARGIN + CONJUNCTION_RADIUS * 2);
@@ -222,18 +226,25 @@ var ConceptDefinitionDiagram = React.createClass({
             var newGroupId;
             var innerX = x;
             var innerConj;
+            // go through every attribute which is not of type 'Is a' and has a group_id > 0
             for (var i in sortedRelations) {
                 newGroupId = sortedRelations[i].group_id;
                 if (sortedRelations[i].group_id != 0){
+                    // if we are on a new group of which we have not started drawing yet
                     if (groupId != newGroupId) {
+                        innerX = x;
                         groupId = newGroupId;
+                        // draw the attribute group and connect it to the conjunction
                         conc = this.drawAttributeGroup(svg, sortedRelations[i], x, y);
                         this.connectElements(svg, conj, conc, "bottom", "left", "BlackMarker");
+                        // create an inner conjunction marker for the attribute group
                         innerX += RELATION_RADIUS*2 + NODE_MARGIN;
                         innerConj = this.drawConjunction(svg, sortedRelations[i], innerX, y);
+                        // connect the attribute group to the inner conjunction marker
                         this.connectElements(svg, conc, innerConj, "right", "left", "BlackMarker");
                         innerX += CONJUNCTION_RADIUS*2 + NODE_MARGIN;
                     }
+                    // draw attributes and connect them to the inner conjunction marker
                     conc = this.drawAttribute(svg, sortedRelations[i], innerX, y);
                     this.connectElements(svg, innerConj, conc, "bottom", "left", "BlackMarker");
                     y += LEVEL_MARGIN;
@@ -241,6 +252,15 @@ var ConceptDefinitionDiagram = React.createClass({
             }
         }
     },
+    /**
+     * Connect elements fig1 and fig2 from side1 to side2 och respective elements
+     * @param svg
+     * @param fig1
+     * @param fig2
+     * @param side1
+     * @param side2
+     * @param endMarker
+     */
     connectElements: function(svg, fig1, fig2, side1, side2, endMarker){
         var fig1cx = parseFloat(fig1.attr("x"));
         var fig1cy = parseFloat(fig1.attr("y"));
@@ -268,6 +288,10 @@ var ConceptDefinitionDiagram = React.createClass({
             case 'bottom':
                 originY = fig1cy + fig1ch;
                 originX = fig1cx + (fig1cw/2);
+                break;
+            case 'bottom-root':
+                originY = fig1cy + fig1ch;
+                originX = fig1cx + 50;
                 break;
             case 'left':
                 originX = fig1cx - markerCompensation1;
@@ -311,7 +335,14 @@ var ConceptDefinitionDiagram = React.createClass({
                 [originX, destinationY], [destinationX, destinationY]])
             .attr('marker-end', 'url(#' + endMarker + ')');
     },
-
+    /**
+     * Draw attribute group on element
+     * @param element
+     * @param concept
+     * @param x
+     * @param y
+     * @returns {*}
+     */
     drawAttributeGroup: function(element, concept, x, y){
         var g = element.append("g")
             .attr("class", "relational")
@@ -328,7 +359,14 @@ var ConceptDefinitionDiagram = React.createClass({
 
         return g;
     },
-
+    /**
+     * Draw conjunction marker on element
+     * @param element
+     * @param concept
+     * @param x
+     * @param y
+     * @returns {*}
+     */
     drawConjunction: function(element, concept, x, y){
         var centerY = y + NODE_HEIGHT/2 - CONJUNCTION_RADIUS;
         var conj = element.append("circle")
@@ -341,7 +379,14 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("fill", "black");
         return conj;
     },
-
+    /**
+     * Draw relational operator on element
+     * @param element
+     * @param concept
+     * @param x
+     * @param y
+     * @returns {*}
+     */
     drawRelationalOperator: function(element, concept, x, y){
         var g = element.append("g")
             .attr("class", "relational")
@@ -414,7 +459,14 @@ var ConceptDefinitionDiagram = React.createClass({
         // return the grouping element
         return g;
     },
-
+    /**
+     * Draw an attribute connected to a concept on element
+     * @param element
+     * @param concept
+     * @param x
+     * @param y
+     * @returns {*}
+     */
     drawAttribute: function(element, concept, x, y) {
         var g = element.append("g")
             .attr("class", "attribute")
@@ -528,7 +580,7 @@ var ConceptDefinitionDiagram = React.createClass({
     },
 
     /**
-     * Draw a concept rectangle in given grouping element.
+     * Draw a attribute rectangle in given grouping element.
      */
     drawAttributeRectangle: function(group) {
 
