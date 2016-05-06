@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
-import FileSaver from 'browser-filesaver';
+import FileSaver from 'filesaverjs';
+require('blueimp-canvas-to-blob/js/canvas-to-blob.js');
 
 const MARGIN = 20;
 
@@ -76,7 +77,7 @@ var Export = React.createClass({
             context.drawImage(image, 0, 0);
             if (typeof canvas.toBlob !== 'undefined' && typeof window.saveAs !== 'undefined') {
                 canvas.toBlob(function (blob) {
-                    saveAs(blob, name);
+                    FileSaver.saveAs(blob, name);
                 });
             } else {
                 this.saveUri(canvas.toDataURL('image/png'), name);
@@ -95,7 +96,7 @@ var Export = React.createClass({
         var el = this.getSVG();
         if (typeof window.saveAs !== 'undefined' && typeof Blob == 'function') {
             // Saves the svg to the desktop
-            saveAs(this.getBlob(el), this.props.selectedTerm.toString() + ".svg");
+            FileSaver.saveAs(this.getBlob(el), this.props.selectedTerm.toString() + ".svg");
         }else{
             this.saveUri(this.getUri(el), new Date().toJSON().slice(0,10) + ".svg");
         }
