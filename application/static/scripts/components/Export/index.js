@@ -6,6 +6,8 @@ import MenuItem from 'react-bootstrap/lib/MenuItem';
 import FileSaver from 'browser-filesaver';
 var Svgsaver = require('svgsaver');
 
+const MARGIN = 20;
+
 var Export = React.createClass({
     propTypes: {
         language: React.PropTypes.string,
@@ -35,10 +37,10 @@ var Export = React.createClass({
 
         // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
         var bb=d3.select('body').selectAll('.nodes').node().getBBox();
-        var bbx=bb.x;
-        var bby=bb.y;
-        var bbw=bb.width;
-        var bbh=bb.height;
+        var bbx=bb.x - MARGIN;
+        var bby=bb.y - MARGIN;
+        var bbw=bb.width + 2*MARGIN;
+        var bbh=bb.height + 2*MARGIN;
         var vb=[bbx,bby,bbw,bbh];
         svgClone.setAttribute("viewBox", vb.join(" ") );
         svgClone.setAttribute('width', bbw);
@@ -66,10 +68,10 @@ var Export = React.createClass({
 
         // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
         var bb=d3.select('body').selectAll('.nodes').node().getBBox();
-        var bbx=bb.x;
-        var bby=bb.y;
-        var bbw=bb.width;
-        var bbh=bb.height;
+        var bbx=bb.x - MARGIN;
+        var bby=bb.y - MARGIN;
+        var bbw=bb.width + 2*MARGIN;
+        var bbh=bb.height + 2*MARGIN;
         var vb=[bbx,bby,bbw,bbh];
         svgClone.setAttribute("viewBox", vb.join(" ") );
         svgClone.setAttribute('width', bbw);

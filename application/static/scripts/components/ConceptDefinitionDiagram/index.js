@@ -61,7 +61,7 @@ var ConceptDefinitionDiagram = React.createClass({
      * Render the contents of the ConceptGraph
      */
     render: function() {
-        return <svg width="100%" height="100%"></svg>;
+        return <svg width="100%" height="100%" id="svgDiagram"></svg>;
     },
 
     /**
@@ -181,28 +181,30 @@ var ConceptDefinitionDiagram = React.createClass({
         // fetch the svg element
         var svg = d3.select(ReactDOM.findDOMNode(this));
             svg.selectAll("*").remove();
+        var diagram = svg.append("g")
+                .attr("class", "nodes");
         this.initMarkers(svg);
         // sorts relations by group_id
         var sortedRelations = this.sortRelations(data.relations);
         // draw the root node
-        var conc = this.drawConcept(svg, data, x, y);
+        var conc = this.drawConcept(diagram, data, x, y);
         x += 150;
         y += LEVEL_MARGIN;
         // draw the relational operator
-        var rel = this.drawRelationalOperator(svg, data, x, y);
+        var rel = this.drawRelationalOperator(diagram, data, x, y);
         x += (NODE_MARGIN + RELATION_RADIUS * 2);
         // connect the root node and the relational operator
-        this.connectElements(svg, conc, rel, "bottom-root", "left", "BlackMarker");
+        this.connectElements(diagram, conc, rel, "bottom-root", "left", "BlackMarker");
         // draw the conjunction
-        var conj = this.drawConjunction(svg, data, x, y);
+        var conj = this.drawConjunction(diagram, data, x, y);
         x += (NODE_MARGIN + CONJUNCTION_RADIUS * 2);
         // connect the relational operator and the conjunction
-        this.connectElements(svg, rel, conj, "right", "left", "LineMarker");
+        this.connectElements(diagram, rel, conj, "right", "left", "LineMarker");
         // draw all the parents
         for (var i in sortedRelations) {
             if (sortedRelations[i].type_name == 'Is a') {
-                conc = this.drawConcept(svg, sortedRelations[i], x, y);
-                this.connectElements(svg, conj, conc, "bottom", "left", "ClearMarker");
+                conc = this.drawConcept(diagram, sortedRelations[i], x, y);
+                this.connectElements(diagram, conj, conc, "bottom", "left", "ClearMarker");
                 y += LEVEL_MARGIN;
             }
         }
@@ -210,8 +212,8 @@ var ConceptDefinitionDiagram = React.createClass({
         for (var i in sortedRelations) {
             if (sortedRelations[i].group_id == 0) {
                 if (sortedRelations[i].type_name != 'Is a') {
-                    conc = this.drawAttribute(svg, sortedRelations[i], x, y);
-                    this.connectElements(svg, conj, conc, "bottom", "left", "BlackMarker");
+                    conc = this.drawAttribute(diagram, sortedRelations[i], x, y);
+                    this.connectElements(diagram, conj, conc, "bottom", "left", "BlackMarker");
                     y += LEVEL_MARGIN;
                 }
             } else {
@@ -233,18 +235,18 @@ var ConceptDefinitionDiagram = React.createClass({
                         innerX = x;
                         groupId = newGroupId;
                         // draw the attribute group and connect it to the conjunction
-                        conc = this.drawAttributeGroup(svg, sortedRelations[i], x, y);
-                        this.connectElements(svg, conj, conc, "bottom", "left", "BlackMarker");
+                        conc = this.drawAttributeGroup(diagram, sortedRelations[i], x, y);
+                        this.connectElements(diagram, conj, conc, "bottom", "left", "BlackMarker");
                         // create an inner conjunction marker for the attribute group
                         innerX += RELATION_RADIUS*2 + NODE_MARGIN;
-                        innerConj = this.drawConjunction(svg, sortedRelations[i], innerX, y);
+                        innerConj = this.drawConjunction(diagram, sortedRelations[i], innerX, y);
                         // connect the attribute group to the inner conjunction marker
-                        this.connectElements(svg, conc, innerConj, "right", "left", "BlackMarker");
+                        this.connectElements(diagram, conc, innerConj, "right", "left", "BlackMarker");
                         innerX += CONJUNCTION_RADIUS*2 + NODE_MARGIN;
                     }
                     // draw attributes and connect them to the inner conjunction marker
-                    conc = this.drawAttribute(svg, sortedRelations[i], innerX, y);
-                    this.connectElements(svg, innerConj, conc, "bottom", "left", "BlackMarker");
+                    conc = this.drawAttribute(diagram, sortedRelations[i], innerX, y);
+                    this.connectElements(diagram, innerConj, conc, "bottom", "left", "BlackMarker");
                     y += LEVEL_MARGIN;
                 }
             }
