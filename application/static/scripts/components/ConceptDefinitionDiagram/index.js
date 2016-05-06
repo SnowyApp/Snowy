@@ -440,6 +440,10 @@ var ConceptDefinitionDiagram = React.createClass({
         this.drawConceptText(g, concept);
         // Change the width of the rectangle, to fit entire text + margin
         var textWidth = g.select("text.name").node().getBBox().width;
+        var idWidth = g.select("text.id").node().getBBox().width;
+        if(idWidth > textWidth){
+            textWidth = idWidth;
+        }
         var totalWidth = textWidth + WIDTH_MARGIN;
         g.select("rect.outer").attr("width", totalWidth);
         g.select("rect.inner").attr("width", (concept.definition_status == "Primitive") ?
