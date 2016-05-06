@@ -171,14 +171,6 @@ var ConceptDefinitionDiagram = React.createClass({
             return (a.group_id > b.group_id) ? 1 : ((b.group_id > a.group_id) ? -1 : 0);
         });
     },
-    /**
-     * Groups data based on group_id
-     * @param data
-     * @returns {*}
-     */
-    groupRelations: function(data) {
-        return null;
-    },
 
     /**
      * Draw the diagram.
