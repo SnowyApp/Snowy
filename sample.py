@@ -81,3 +81,11 @@ def get_diagram():
 
 def get_diagram(id):
     return json.loads(requests.get(url + "/diagram/" + str(id), headers=auth).text)
+
+def rel_data(cid):
+    data = get_relations(cid)
+    for res in data:
+        print(res["full"])
+        print(res["group_id"])
+        print()
+
