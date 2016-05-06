@@ -42,6 +42,9 @@ def get_relations(id):
 def get_parents(id):
     return json.loads(requests.get(url + "/get_parents/" + str(id)).text)
 
+def get_grandparents(id):
+    return json.loads(requests.get(url + "/get_grandparents/" + str(id)).text)
+
 def get_concept(id):
     return json.loads(requests.get(url + "/concept/" + str(id)).text)
 
