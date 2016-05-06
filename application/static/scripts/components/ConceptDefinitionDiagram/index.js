@@ -8,7 +8,7 @@ const NODE_HEIGHT = 50;
 // Margin between attributes and concepts (length of arrows)
 const NODE_MARGIN = 20;
 // Margin between the text and the outline of the node
-const WIDTH_MARGIN = 20;
+const WIDTH_MARGIN = 25;
 // Styling according to SNOMED CT diagramming guidelines
 const DEFINED_CONCEPT_BORDER = 4;
 // Radius of circle
@@ -16,8 +16,6 @@ const RELATION_RADIUS = 25;
 // Radius of conjunction 
 const CONJUNCTION_RADIUS = 10;
 
-// The current level we are drawing on
-var level = 0;
 
 var ConceptDefinitionDiagram = React.createClass({
     propTypes:{
@@ -199,15 +197,38 @@ var ConceptDefinitionDiagram = React.createClass({
         x += (NODE_MARGIN + CONJUNCTION_RADIUS*2);
         // connect the relational operator and the conjunction
         this.connectElements(svg, rel, conj, "right", "left", "LineMarker");
+        // draw all the parents
+        for(var i in data.relations) {
+            if (data.relations[i].type_name == 'Is a'){
+                conc = this.drawConcept(svg, data.relations[i], x, y);
+                this.connectElements(svg, conj, conc, "bottom", "left", "ClearMarker");
+                y += LEVEL_MARGIN;
+            }
+        }
+        // draw all ungrouped attributes
+        for(var i in data.relations){
+            if(data.relations[i].group_id == 0 && data.relations[i].type_name != 'Is a'){
+                conc = this.drawAttribute(svg, data.relations[i], x, y);
+                this.connectElements(svg, conj, conc, "bottom", "left", "BlackMarker");
+                y += LEVEL_MARGIN;
+            }
+        }
+        /*
         // draw every relation and connect them to the conjunction
         var groupId = sortedRelations[0].group_id;
         var newGroupId;
         for(var i in sortedRelations) {
             newGroupId = sortedRelations[i].group_id;
+            if(groupId != newGroupId){
+                // draw group
+                // draw conjunction
+                // increase x and y
+            }
             conc = this.drawConcept(svg, sortedRelations[i], x, y);
             this.connectElements(svg, conj, conc, "bottom", "left", "ClearMarker");
             y += LEVEL_MARGIN;
         }
+        */
     },
     connectElements: function(svg, fig1, fig2, side1, side2, endMarker){
         var fig1cx = parseFloat(fig1.attr("x"));
@@ -281,7 +302,20 @@ var ConceptDefinitionDiagram = React.createClass({
     },
 
     drawAttributeGroup: function(element, concept, x, y){
+        var g = element.append("g")
+            .attr("class", "relational")
+            .attr("x", x)
+            .attr("y", y)
+            .attr('transform', 'translate(' + x + ', ' + y + ')' );
 
+        g.append("circle")
+            .attr("r", RELATION_RADIUS)
+            .attr("cx",RELATION_RADIUS)
+            .attr("cy",RELATION_RADIUS)
+            .attr("fill", "white")
+            .attr("stroke", "black");
+
+        return g;
     },
 
     drawConjunction: function(element, concept, x, y){
@@ -370,6 +404,37 @@ var ConceptDefinitionDiagram = React.createClass({
         return g;
     },
 
+    drawAttribute: function(element, concept, x, y) {
+        var g = element.append("g")
+            .attr("class", "attribute")
+            .attr("x", x)
+            .attr("y", y)
+            .attr('transform', 'translate(' + x + ', ' + y + ')' );
+
+        // draw a rectangle and text
+        this.drawAttributeRectangle(g);
+        this.drawAttributeId(g, concept);
+        this.drawAttributeText(g, concept);
+        // Change the width of the rectangle, to fit entire text + margin
+        var textWidth = g.select("text.name").node().getBBox().width;
+        var totalWidth = textWidth + WIDTH_MARGIN;
+        g.select("rect.outer").attr("width", totalWidth);
+        g.select("rect.inner").attr("width", totalWidth - DEFINED_CONCEPT_BORDER*2);
+        // If the definition_status is defined, center the inner rect
+        g.select("rect.inner").attr("x", DEFINED_CONCEPT_BORDER);
+        g.select("rect.inner").attr("y", DEFINED_CONCEPT_BORDER);
+        g.select("text.name").attr("x", totalWidth/2);
+        g.select("text.id").attr("x", totalWidth/2);
+
+        var conceptX = x + totalWidth + NODE_MARGIN;
+        console.log(x + "," + conceptX);
+
+        var conc = this.drawConcept(element, concept, conceptX, y);
+        // return the grouping element
+        this.connectElements(element, g, conc , "right", "left", "BlackMarker");
+        return g;
+    },
+
     /**
      * Draw a concept rectangle in given grouping element.
      */
@@ -448,6 +513,75 @@ var ConceptDefinitionDiagram = React.createClass({
                 }
                 return concept.full;
             })
+
+            .style("fill-opacity", 1);
+    },
+
+    /**
+     * Draw a concept rectangle in given grouping element.
+     */
+    drawAttributeRectangle: function(group) {
+
+        group.append("rect")
+            .attr("class", "outer")
+            .attr("width", 50)
+            .attr("height", NODE_HEIGHT)
+            .attr("rx",(NODE_HEIGHT)/2)
+            .attr("ry",(NODE_HEIGHT)/2)
+            // apply the correct colours depending on definition status
+            .style("fill", "white")
+            .style('stroke', 'black');
+
+        /** Set an inner rect which is a copy of outer if the definition_status is primitive
+         *  Otherwise, it will be a blue rect inside of a white rect
+         */
+        group.append("rect")
+            .attr("class", "inner")
+            .attr("width", 50)
+            .attr("height", NODE_HEIGHT - DEFINED_CONCEPT_BORDER*2)
+            .attr("rx",(NODE_HEIGHT - DEFINED_CONCEPT_BORDER*2)/2)
+            .attr("ry",(NODE_HEIGHT - DEFINED_CONCEPT_BORDER*2)/2)
+            // apply the correct colours depending on definition status
+            .style("fill", ConceptDefinitionDiagram.ATTRIBUTE_COLOR)
+            .style('stroke', 'black');
+
+    },
+    /**
+     * Draw id inside given grouping element.
+     */
+    drawAttributeId: function(group, concept) {
+        group.append("text")
+            // position text centered in the concept
+            .attr("class", "id")
+            .attr("y", NODE_HEIGHT/4)
+            .attr("x", 50)
+            .attr("text-anchor", "middle")
+            .attr("dy", ".35em")
+            .attr("font-family", "Helvetica, Arial, Sans-Serif")
+            .attr("font-size", 10)
+
+            // use the full name if possible, if not available use the synonym
+            // and if neither is defined use a default "NO NAME" name.
+            .text(concept.type_id)
+
+            .style("fill-opacity", 1);
+    },
+    /**
+     * Draw text inside given grouping element.
+     */
+    drawAttributeText: function(group, concept) {
+        group.append("text")
+            // position text centered in the concept
+            .attr("class", "name")
+            .attr("y", 3*NODE_HEIGHT/4)
+            .attr("x", 50)
+            .attr("text-anchor", "middle")
+            .attr("dy", ".35em")
+            .attr("font-family", "Helvetica, Arial, Sans-Serif")
+
+            // use the full name if possible, if not available use the synonym
+            // and if neither is defined use a default "NO NAME" name.
+            .text(concept.type_name)
 
             .style("fill-opacity", 1);
     }

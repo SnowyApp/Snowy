@@ -12,7 +12,7 @@ var ProfilePage = require('./components/ProfilePage/index');
 
 
 var matteUrl = 'http://hem.ulmstedt.net:5000';
-const conceptId = 123703002;
+const conceptId = 176401009;
 
 /**
  *   Contains the subcomponents of the webpage
