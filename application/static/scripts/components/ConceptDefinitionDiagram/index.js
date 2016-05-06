@@ -9,12 +9,15 @@ const NODE_HEIGHT = 50;
 const NODE_MARGIN = 20;
 // Margin between the text and the outline of the node
 const WIDTH_MARGIN = 30;
+// Margin between the text and the outline of the node
+const HEIGHT_MARGIN = 5;
 // Styling according to SNOMED CT diagramming guidelines
 const DEFINED_CONCEPT_BORDER = 4;
 // Radius of circle
 const RELATION_RADIUS = 25;
 // Radius of conjunction 
 const CONJUNCTION_RADIUS = 10;
+
 
 
 var ConceptDefinitionDiagram = React.createClass({
@@ -535,7 +538,7 @@ var ConceptDefinitionDiagram = React.createClass({
         group.append("text")
             // position text centered in the concept
             .attr("class", "id")
-            .attr("y", NODE_HEIGHT/4)
+            .attr("y", NODE_HEIGHT/4 + HEIGHT_MARGIN)
             .attr("x", 50)
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
@@ -557,7 +560,7 @@ var ConceptDefinitionDiagram = React.createClass({
         group.append("text")
             // position text centered in the concept
             .attr("class", "name")
-            .attr("y", 3*NODE_HEIGHT/4)
+            .attr("y", 3*NODE_HEIGHT/4 - HEIGHT_MARGIN)
             .attr("x", 50)
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
@@ -615,7 +618,7 @@ var ConceptDefinitionDiagram = React.createClass({
         group.append("text")
             // position text centered in the concept
             .attr("class", "id")
-            .attr("y", NODE_HEIGHT/4)
+            .attr("y", NODE_HEIGHT/4 + HEIGHT_MARGIN)
             .attr("x", 50)
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
@@ -635,7 +638,7 @@ var ConceptDefinitionDiagram = React.createClass({
         group.append("text")
             // position text centered in the concept
             .attr("class", "name")
-            .attr("y", 3*NODE_HEIGHT/4)
+            .attr("y", 3*NODE_HEIGHT/4 - HEIGHT_MARGIN)
             .attr("x", 50)
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
