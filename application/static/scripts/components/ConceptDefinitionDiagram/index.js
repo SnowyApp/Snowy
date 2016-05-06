@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 // The margin between every level of attributes and concepts
-const LEVEL_MARGIN = 100;
+const LEVEL_MARGIN = 75;
 // Height of the nodes
 const NODE_HEIGHT = 50;
 // Margin between attributes and concepts (length of arrows)
@@ -15,8 +15,6 @@ const DEFINED_CONCEPT_BORDER = 4;
 const RELATION_RADIUS = 25;
 // Radius of conjunction 
 const CONJUNCTION_RADIUS = 10;
-
-
 
 // The current level we are drawing on
 var level = 0;
@@ -108,21 +106,6 @@ var ConceptDefinitionDiagram = React.createClass({
             }.bind(this)
         });
     },
-    /**
-     * Retrieve relations to concept with given id.
-     */
-    getRelations: function(conceptId) {
-        return $.ajax({
-            type: "GET",
-            method: "GET",
-            url: this.props.serverUrl + "/get_relations/" + conceptId,
-            dataType: "json",
-            error: function() {
-                console.log("Could not get relations for Concept Definition" +
-                    " Diagram.");
-            }.bind(this)
-        });
-    },
     initMarkers: function(element){
         var defs = element.append('defs');
         defs.append('marker')
@@ -170,6 +153,24 @@ var ConceptDefinitionDiagram = React.createClass({
             .append('svg:path')
             .attr('d', 'M 0 10 L 20 10');
     },
+    /**
+     * Sorts data based on the group_id, with smallest numbers first
+     * @param concepts
+     * @returns {*}
+     */
+    sortRelations: function(data) {
+        return data.sort(function(a, b) {
+            return (a.group_id > b.group_id) ? 1 : ((b.group_id > a.group_id) ? -1 : 0);
+        });
+    },
+    /**
+     * Groups data based on group_id
+     * @param data
+     * @returns {*}
+     */
+    groupRelations: function(data) {
+        return null;
+    },
 
     /**
      * Draw the diagram.
@@ -181,20 +182,31 @@ var ConceptDefinitionDiagram = React.createClass({
         // fetch the svg element
         var svg = d3.select(ReactDOM.findDOMNode(this));
         this.initMarkers(svg);
-
-        // draw the concept
+        // sorts relations by group_id
+        var sortedRelations = this.sortRelations(data.relations);
+        var groupedRelations = this.groupRelations(sortedRelations);
+        // draw the root node
         var conc = this.drawConcept(svg, data, x, y);
-        x += 200;
+        x += 150;
         y += LEVEL_MARGIN;
+        // draw the relational operator
         var rel = this.drawRelationalOperator(svg, data, x, y);
-        this.connectElements(svg, conc, rel, "bottom", "left", "ClearMarker");
-        x += 100;
+        x += (NODE_MARGIN + RELATION_RADIUS*2);
+        // connect the root node and the relational operator
+        this.connectElements(svg, conc, rel, "bottom", "left", "BlackMarker");
+        // draw the conjunction
         var conj = this.drawConjunction(svg, data, x, y);
+        x += (NODE_MARGIN + CONJUNCTION_RADIUS*2);
+        // connect the relational operator and the conjunction
         this.connectElements(svg, rel, conj, "right", "left", "LineMarker");
-        x += 100;
-        for(var i in data.relations) {
-            this.drawConcept(svg, data.relations[i], x, y);
-            x += 200;
+        // draw every relation and connect them to the conjunction
+        var groupId = sortedRelations[0].group_id;
+        var newGroupId;
+        for(var i in sortedRelations) {
+            newGroupId = sortedRelations[i].group_id;
+            conc = this.drawConcept(svg, sortedRelations[i], x, y);
+            this.connectElements(svg, conj, conc, "bottom", "left", "ClearMarker");
+            y += LEVEL_MARGIN;
         }
     },
     connectElements: function(svg, fig1, fig2, side1, side2, endMarker){
@@ -309,8 +321,6 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("font-size", 30)
             .attr("font-family", "Helvetica, Arial, Sans-Serif")
 
-            // use the full name if possible, if not available use the synonym
-            // and if neither is defined use a default "NO NAME" name.
             .text( (concept.definition_status == "Primitive") ? "⊑" : "≡")
             .style("fill-opacity", 1);
 
