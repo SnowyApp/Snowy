@@ -22,12 +22,14 @@ var Diagram = React.createClass({
         se: {
             'reset':        'Reset',
             'resetZoom':    'Återställ zoom',
-            'VHView':       'Vertikal/Horisontell vy'
+            'VHView':       'Vertikal/Horisontell vy',
+            'diagramView':  'Byt diagram vy'
         },
         en: {
             'reset':        'Reset',
             'resetZoom':    'Reset zoom',
-            'VHView':       'Vertical/Horizontal view'
+            'VHView':       'Vertical/Horizontal view',
+            'diagramView':  'Change diagram view'
         }
     },
 
@@ -105,6 +107,21 @@ var Diagram = React.createClass({
             showInfoPanel: !this.state.showInfoPanel
         });
     },
+    /**
+     * Toggles between the two diagram types
+     */
+    toggleDiagramView: function() {
+        if (this.state.diagramView == "definition") {
+            this.setState({
+                diagramView: "hierarchy"
+            });
+        }else{
+            this.setState({
+                diagramView: "definition"
+            });
+        }
+
+    },
 
     componentWillUnmount: function() {
         diagram.destroy();
@@ -128,7 +145,7 @@ var Diagram = React.createClass({
                     <ConceptDefinitionDiagram
                         serverUrl={this.props.url}
                         concept_id={this.props.selectedTerm}
-                    />
+                    />;
                 break;
             default:
                 content =
@@ -153,6 +170,11 @@ var Diagram = React.createClass({
                     bsStyle="primary"
                     onClick={this.changeView}>
                     {this.dict[this.props.language]["VHView"]}
+                </Button>
+                <Button
+                    bsStyle="primary"
+                    onClick={this.toggleDiagramView}>
+                    {this.dict[this.props.language]["diagramView"]}
                 </Button>
                 <SaveDiagram
                     language={this.props.language}

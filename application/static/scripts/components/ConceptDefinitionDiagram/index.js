@@ -180,6 +180,7 @@ var ConceptDefinitionDiagram = React.createClass({
         var y = START_Y;
         // fetch the svg element
         var svg = d3.select(ReactDOM.findDOMNode(this));
+            svg.selectAll("*").remove();
         this.initMarkers(svg);
         // sorts relations by group_id
         var sortedRelations = this.sortRelations(data.relations);
