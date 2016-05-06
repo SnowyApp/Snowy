@@ -245,7 +245,7 @@ var Container = React.createClass({
                                 "parent": node.concept_id,
                                 "children": null,
                                 "id": this._diagram.getId(),
-                                "definitionStatus": node.definitionStatus
+                                "definitionStatus": res[i].definition_status
                             }
                         );
                     }
