@@ -205,6 +205,22 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(resp_data[0]['definition_status'], "Primitive")
 
 
+    def test_get_grandparents(self):
+        """
+        Tests the grandparent functionality of the application.
+        """
+        resp = self.app.get('/get_grandparents/416540001')
+        self.assertEqual(resp.status_code, 200)
+
+        # Check so that the retrieved data is ok
+        resp_data = json.loads(resp.data.decode("utf-8"))
+        self.assertEqual(len(resp_data), 1)
+        self.assertEqual(len(resp_data[0]["parents"]), 1)
+        self.assertEqual(resp_data[0]["parents"][0]["id"], 363787002)
+        self.assertEqual(resp_data[0]["parents"][0]["definition_status"], "Primitive")
+        self.assertEqual(resp_data[0]["parents"][0]["full"], "Observable entity (observable entity)")
+
+
     def test_diagram(self):
         """
         Tests so that the diagrams work ok.
