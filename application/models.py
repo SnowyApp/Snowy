@@ -18,6 +18,7 @@ UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 # Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
 SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id, a.type_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
+SELECT_CONCEPT_TERM_QUERY = "SELECT term FROM description WHERE concept_id=%s;"
 
 # Token queries
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
@@ -42,7 +43,7 @@ SELECT_PARENTS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.typ
                             JOIN language_refset C ON B.id=C.referenced_component_id 
                             JOIN concept D ON B.concept_id=D.id 
                             WHERE A.source_id=%s AND A.type_id=116680003 AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
-SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id 
+SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id, A.relationship_group 
                             FROM relationship A 
                             JOIN description B ON A.destination_id=B.concept_id 
                             JOIN language_refset C ON B.id=C.referenced_component_id 
@@ -375,6 +376,9 @@ class Concept():
         self.full_term = full_term
         self.type_id = type_id
         self.definition_status_id = 0
+        self.active = 1
+        self.parents = None
+        self.group_id = None
         if type_id:
             self.type_name = Concept.get_attribute(self.type_id)
         else:
@@ -388,35 +392,64 @@ class Concept():
         self.type_name = Concept.get_attribute(self.type_id)
 
     @staticmethod
-    def fetch_relations(cid, query):
+    def concepts_from_cursor(cur, group=False):
+        """
+        Returns the different concepts that the cursor points to
+        """
+        result = []
+        concept = None
+        for data in cur:
+            # Create a concept if needed
+            if concept is None:
+                concept = Concept(data[0])
+                concept.set_type_id(data[3])
+                concept.definition_status_id = data[4]
+            elif concept.id != data[0]:
+                result += [concept]
+                concept = Concept(data[0])
+                concept.set_type_id(data[3])
+                concept.definition_status_id = data[4]
+
+            # Set the right term
+            if data[2] == 900000000000003001:
+                concept.full_term = data[1]
+            else:
+                concept.syn_term = data[1]
+
+            if group:
+                concept.group_id = data[5]
+
+        if concept is not None:
+            result += [concept]
+
+        return result
+
+    @staticmethod
+    def get_grandparents(cid):
+        """
+        Retrieves the grandparents for the provided context.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(SELECT_PARENTS_QUERY, (cid,))
+            result = Concept.concepts_from_cursor(cur)
+            for concept in result:
+                concept.parents = Concept.get_grandparents(concept.id)
+            return result
+        except Exception as e:
+            print(e)
+            return None
+
+    @staticmethod
+    def fetch_relations(cid, query, group=False):
         """
         Fetch data on relations. 
         """
         cur = get_db().cursor()
         try:
             cur.execute(query, (cid,))
-            result = []
-            concept = None
-            for data in cur:
-                # Create a concept if needed
-                if concept is None:
-                    concept = Concept(data[0])
-                    concept.set_type_id(data[3])
-                    concept.definition_status_id = data[4]
-                elif concept.id != data[0]:
-                    result += [concept]
-                    concept = Concept(data[0])
-                    concept.set_type_id(data[3])
-                    concept.definition_status_id = data[4]
-
-                # Set the right term
-                if data[2] == 900000000000003001:
-                    concept.full_term = data[1]
-                else:
-                    concept.syn_term = data[1]
-            if concept is not None:
-                result += [concept]
-
+            result = Concept.concepts_from_cursor(cur, group)
+            cur.close()
             return result
         except Exception as e:
             print(e)
@@ -441,7 +474,7 @@ class Concept():
         """
         Returns the relations for the given concept.
         """
-        return Concept.fetch_relations(cid, SELECT_RELATIONS_QUERY)
+        return Concept.fetch_relations(cid, SELECT_RELATIONS_QUERY, True)
 
     @staticmethod
     def get_concept(cid):
@@ -457,6 +490,7 @@ class Concept():
             else:
                 concept = Concept(data[0], data[2], data[1])
                 concept.definition_status_id = data[3]
+                concept.active = data[4]
                 return concept
 
         except Exception as e:
@@ -485,13 +519,14 @@ class Concept():
 
     @staticmethod
     def get_attribute(type_id):
-        if type_id == 363698007:
-            return "Finding site"
-        elif type_id == 116676008:
-            return "Associated morphology"
-        elif type_id == 116680003:
-            return "Is a"
-        else:
+        cur = get_db().cursor()
+        try:
+            cur.execute(SELECT_CONCEPT_TERM_QUERY, (type_id,))
+            name = cur.fetchone()[0]
+            cur.close()
+            return name
+        except Exception as e:
+            print(e)
             return "UNDEFINED (PROBABLE ERROR SERVER SIDE)"
 
     def get_definition_status(self):
@@ -501,19 +536,24 @@ class Concept():
         """
         Returns a JSON representation of the concept.
         """
-        if not self.type_name:
-            return {"id": self.id,
-                    "synonym": self.syn_term,
-                    "full": self.full_term,
-                    "definition_status": self.get_definition_status()}
-        else:
-            return {"id": self.id,
-                    "synonym": self.syn_term,
-                    "full": self.full_term,
-                    "type_id": self.type_id,
-                    "type_name": self.type_name,
-                     "char_type": "inferred",
-                    "definition_status": self.get_definition_status()}
+        res = {"id": self.id,
+                "synonym": self.syn_term,
+                "full": self.full_term,
+                "definition_status": self.get_definition_status(),
+                "active": self.active}
+        if self.type_name:
+            res["type_id"] = self.type_id
+            res["type_name"] = self.type_name
+            res["char_type"] = "inferred"
+        if self.parents:
+            res["parents"] = [parent.to_json() for parent in self.parents]
+        if self.group_id is not None:
+            res["group_id"] = self.group_id
+
+        return res
+
+
+
 
     def __str__(self):
         """

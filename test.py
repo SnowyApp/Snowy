@@ -181,7 +181,7 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(len(resp_data), 6)
         self.assertEqual(resp_data[0]['id'], 420412004)
         self.assertEqual(resp_data[0]['synonym'], "Pseudoacanthocephalidae")
-        self.assertEqual(resp_data[0]['type_name'], "Is a")
+        self.assertEqual(resp_data[0]['type_name'], "Is a (attribute)")
         self.assertEqual(resp_data[0]['type_id'], 116680003)
         self.assertEqual(resp_data[0]['full'], "Family Pseudoacanthocephalidae (organism)")
         self.assertEqual(resp_data[0]['definition_status'], "Primitive")
@@ -199,10 +199,26 @@ class TestApplication(unittest.TestCase):
         self.assertEqual(len(resp_data), 1)
         self.assertEqual(resp_data[0]['type_id'], 116680003)
         self.assertEqual(resp_data[0]['synonym'], "Procedure")
-        self.assertEqual(resp_data[0]['type_name'], "Is a")
+        self.assertEqual(resp_data[0]['type_name'], "Is a (attribute)")
         self.assertEqual(resp_data[0]['full'], "Procedure (procedure)")
         self.assertEqual(resp_data[0]['id'], 71388002)
         self.assertEqual(resp_data[0]['definition_status'], "Primitive")
+
+
+    def test_get_grandparents(self):
+        """
+        Tests the grandparent functionality of the application.
+        """
+        resp = self.app.get('/get_grandparents/416540001')
+        self.assertEqual(resp.status_code, 200)
+
+        # Check so that the retrieved data is ok
+        resp_data = json.loads(resp.data.decode("utf-8"))
+        self.assertEqual(len(resp_data), 1)
+        self.assertEqual(len(resp_data[0]["parents"]), 1)
+        self.assertEqual(resp_data[0]["parents"][0]["id"], 363787002)
+        self.assertEqual(resp_data[0]["parents"][0]["definition_status"], "Primitive")
+        self.assertEqual(resp_data[0]["parents"][0]["full"], "Observable entity (observable entity)")
 
 
     def test_diagram(self):

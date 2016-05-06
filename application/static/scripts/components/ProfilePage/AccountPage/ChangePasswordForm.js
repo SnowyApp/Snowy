@@ -30,9 +30,6 @@ var ChangePasswordForm = React.createClass({
     */
     handleSubmit: function(e){
         e.preventDefault();
-        //TODO: Calls to database goes here
-        //inputs can be found in the states (newPassword, currPassword)
-
         if (cookie.load('userId') != null) {
             $.ajax({
                 method: "PUT",
@@ -165,7 +162,7 @@ var ChangePasswordForm = React.createClass({
             currPassword: input
         });
     },
-    
+
     render: function(){
         const passwordStrength = this.state.passwordStrength;
         //Password strength
@@ -179,7 +176,7 @@ var ChangePasswordForm = React.createClass({
         const pwStrengthBarClass = "progress-bar pwStrengthBar";
         const pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"];
         var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[passwordStrength];
-        
+
         //Default bar color
         const barStyle = [
             {backgroundColor: "gray"},
@@ -201,14 +198,14 @@ var ChangePasswordForm = React.createClass({
                 barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             case 3:
-                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]}; 
+                barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
             case 4:
                 barStyle[i] = {backgroundColor: PWSTR_COLOR[passwordStrength]};
                 break;
-            }    
+            }
         }
-        
+
         //Matching passwords
         var repeatDivState = "form-group";
         var repeatGlyphState = null;
@@ -262,7 +259,7 @@ var ChangePasswordForm = React.createClass({
                         <span className={repeatGlyphState}></span>
                     </div>
                 </div>
-            
+
                 <div className="form-group">
                     <label htmlFor="inputPassword3" className="col-sm-3 control-label ">
                         {this.props.dict[this.props.language]["currentPassword"]}

@@ -304,7 +304,7 @@ var InfoPanel = React.createClass({
                 <div className="panel-body infoPanelBody">
                     {saveTermButton}
 
-                    {/* General info TODO: Fix real data for concept type and status*/}
+                    {/* General info TODO: Fix real data for status*/}
                     <h3>
                         {this.dict[this.props.language]["generalInfo"]}
                     </h3>
@@ -331,7 +331,7 @@ var InfoPanel = React.createClass({
                                 </tr>
                                 <tr className="termInfo">
                                     <td className="termInfoName">Status:</td>
-                                    <td className="termInfoData">(Active)</td>
+                                    <td className="termInfoData">{this.props.data[0].status}</td>
                                 </tr>
                             </tbody>
                         </table>

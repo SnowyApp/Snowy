@@ -72,7 +72,8 @@ var Container = React.createClass({
                             "children": this.sortConcepts(children,
                                 this.state.sortAlphabetically),
                             "id": 0,
-                            "definitionStatus": rootResult[0].definition_status
+                            "definitionStatus": rootResult[0].definition_status,
+                            "status": (rootResult[0].active == 1 ? "Active" : "Inactive")
                         }
                     ];
 
@@ -242,7 +243,7 @@ var Container = React.createClass({
                                 "parent": node.concept_id,
                                 "children": null,
                                 "id": this._diagram.getId(),
-                                "definitionStatus": node.definitionStatus
+                                "definitionStatus": res[i].definition_status
                             }
                         );
                     }
@@ -734,7 +735,7 @@ var Container = React.createClass({
         }
         return (
             <div className="wrapper">
-                <SplitPane split="vertical" defaultSize={370} minSize={10} maxSize={700}>
+                <SplitPane split="vertical" defaultSize={350} minSize={10} maxSize={700}>
                     <Navigation
                         data={this.state.data}
                         url={this.state.serverUrl}

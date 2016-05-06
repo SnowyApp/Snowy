@@ -253,6 +253,18 @@ def get_parents(cid):
     return json.dumps([concept.to_json() for concept in parents])
 
 
+@app.route('/get_grandparents/<int:cid>', methods=['GET'])
+def get_grandparents(cid):
+    """
+    Returns the grandparents of the relation.
+    """
+    grandparents = Concept.get_grandparents(cid)
+    if grandparents is None:
+        abort(500)
+
+    return json.dumps([concept.to_json() for concept in grandparents])
+
+
 @app.route('/get_names/<int:concept_id>', methods=['GET'])
 def get_concept_names(concept_id):
     """
