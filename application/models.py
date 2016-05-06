@@ -376,6 +376,7 @@ class Concept():
         self.type_id = type_id
         self.definition_status_id = 0
         self.active = 1
+        self.parents = None
         if type_id:
             self.type_name = Concept.get_attribute(self.type_id)
         else:
@@ -389,6 +390,51 @@ class Concept():
         self.type_name = Concept.get_attribute(self.type_id)
 
     @staticmethod
+    def concepts_from_cursor(cur):
+        """
+        Returns the different concepts that the cursor points to
+        """
+        result = []
+        concept = None
+        for data in cur:
+            # Create a concept if needed
+            if concept is None:
+                concept = Concept(data[0])
+                concept.set_type_id(data[3])
+                concept.definition_status_id = data[4]
+            elif concept.id != data[0]:
+                result += [concept]
+                concept = Concept(data[0])
+                concept.set_type_id(data[3])
+                concept.definition_status_id = data[4]
+
+            # Set the right term
+            if data[2] == 900000000000003001:
+                concept.full_term = data[1]
+            else:
+                concept.syn_term = data[1]
+        if concept is not None:
+            result += [concept]
+
+        return result
+
+    @staticmethod
+    def get_grandparents(cid):
+        """
+        Retrieves the grandparents for the provided context.
+        """
+        cur = get_db().cursor()
+        try:
+            cur.execute(SELECT_PARENTS_QUERY, (cid,))
+            result = Concept.concepts_from_cursor(cur)
+            for concept in result:
+                concept.parents = Concept.get_grandparents(concept.id)
+            return result
+        except Exception as e:
+            print(e)
+            return None
+
+    @staticmethod
     def fetch_relations(cid, query):
         """
         Fetch data on relations. 
@@ -396,28 +442,8 @@ class Concept():
         cur = get_db().cursor()
         try:
             cur.execute(query, (cid,))
-            result = []
-            concept = None
-            for data in cur:
-                # Create a concept if needed
-                if concept is None:
-                    concept = Concept(data[0])
-                    concept.set_type_id(data[3])
-                    concept.definition_status_id = data[4]
-                elif concept.id != data[0]:
-                    result += [concept]
-                    concept = Concept(data[0])
-                    concept.set_type_id(data[3])
-                    concept.definition_status_id = data[4]
-
-                # Set the right term
-                if data[2] == 900000000000003001:
-                    concept.full_term = data[1]
-                else:
-                    concept.syn_term = data[1]
-            if concept is not None:
-                result += [concept]
-
+            result = Concept.concepts_from_cursor(cur)
+            cur.close()
             return result
         except Exception as e:
             print(e)
@@ -503,21 +529,22 @@ class Concept():
         """
         Returns a JSON representation of the concept.
         """
-        if not self.type_name:
-            return {"id": self.id,
-                    "synonym": self.syn_term,
-                    "full": self.full_term,
-                    "definition_status": self.get_definition_status(),
-                    "active": self.active}
-        else:
-            return {"id": self.id,
-                    "synonym": self.syn_term,
-                    "full": self.full_term,
-                    "type_id": self.type_id,
-                    "type_name": self.type_name,
-                     "char_type": "inferred",
-                    "definition_status": self.get_definition_status(),
-                    "active": self.active}
+        res = {"id": self.id,
+                "synonym": self.syn_term,
+                "full": self.full_term,
+                "definition_status": self.get_definition_status(),
+                "active": self.active}
+        if self.type_name:
+            res["type_id"] = self.type_id
+            res["type_name"] = self.type_name
+            res["char_type"] = "inferred"
+        if self.parents:
+            res["parents"] = [parent.to_json() for parent in self.parents]
+
+        return res
+
+
+
 
     def __str__(self):
         """
