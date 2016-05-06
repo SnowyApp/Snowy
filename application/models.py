@@ -375,6 +375,7 @@ class Concept():
         self.full_term = full_term
         self.type_id = type_id
         self.definition_status_id = 0
+        self.active = 1
         if type_id:
             self.type_name = Concept.get_attribute(self.type_id)
         else:
@@ -457,6 +458,7 @@ class Concept():
             else:
                 concept = Concept(data[0], data[2], data[1])
                 concept.definition_status_id = data[3]
+                concept.active = data[4]
                 return concept
 
         except Exception as e:
@@ -505,7 +507,8 @@ class Concept():
             return {"id": self.id,
                     "synonym": self.syn_term,
                     "full": self.full_term,
-                    "definition_status": self.get_definition_status()}
+                    "definition_status": self.get_definition_status(),
+                    "active": self.active}
         else:
             return {"id": self.id,
                     "synonym": self.syn_term,
@@ -513,7 +516,8 @@ class Concept():
                     "type_id": self.type_id,
                     "type_name": self.type_name,
                      "char_type": "inferred",
-                    "definition_status": self.get_definition_status()}
+                    "definition_status": self.get_definition_status(),
+                    "active": self.active}
 
     def __str__(self):
         """
