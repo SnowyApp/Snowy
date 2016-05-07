@@ -175,7 +175,7 @@ var Diagram = React.createClass({
                     onClick={this.toggleFullscreen}>
                     {this.state.fullscreen ? this.dict[this.props.language]["exitFullscreen"] : this.dict[this.props.language]["fullscreen"]}
                 </Button>
-                <Export language={this.props.language} selectedTerm={this.props.selectedTerm} diagramView={this.state.diagramView}/>
+                <Export language={this.props.language} selectedTerm={this.props.selectedTerm} diagramView={this.state.diagramView} toggleFullscreen={this.toggleFullscreen}/>
                 <div className={this.state.diagramView == "definition" ? "hiddenDiagram" : "d3diagram"}
                      ref={ (ref) => this._d3 = ref}>
                 </div>
@@ -252,6 +252,7 @@ var Diagram = React.createClass({
             });
         }
     },
+
     toggleFullscreen: function() {
         const elem = document.getElementById('diagram');
         if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
