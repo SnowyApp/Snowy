@@ -15,8 +15,9 @@ CREATE TABLE relationship(
 
 DROP TABLE IF EXISTS description CASCADE;
 CREATE TABLE description(
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     concept_id BIGINT NOT NULL REFERENCES concept(id),
     term TEXT NOT NULL,
-    type_id TEXT NOT NULL
+    type_id TEXT NOT NULL,
+    acceptability_id BIGINT NOT NULL
 );
