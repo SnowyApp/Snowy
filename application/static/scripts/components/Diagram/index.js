@@ -20,29 +20,35 @@ var Diagram = React.createClass({
     //Dictionary for supported languages
     dict: {
         se: {
-            'reset':        'Reset',
-            'resetZoom':    'Återställ zoom',
-            'VHView':       'Vertikal/Horisontell vy',
-            'diagramView':  'Byt diagram vy'
+            'reset':            'Reset',
+            'resetZoom':        'Återställ zoom',
+            'VHView':           'Vertikal/Horisontell vy',
+            'diagramView':      'Byt diagram vy',
+            'fullscreen':       'Helskärm',
+            'exitFullscreen':   'Avsluta helskärmsläge'
         },
         en: {
-            'reset':        'Reset',
-            'resetZoom':    'Reset zoom',
-            'VHView':       'Vertical/Horizontal view',
-            'diagramView':  'Change diagram view'
+            'reset':            'Reset',
+            'resetZoom':        'Reset zoom',
+            'VHView':           'Vertical/Horizontal view',
+            'diagramView':      'Change diagram view',
+            'fullscreen':       'Fullscreen',
+            'exitFullscreen':   'Exit fullscreen'
+
         }
     },
 
     /**
-    * Set the state of data and domain to given props or default values if not
-    * given.
-    */
+     * Set the state of data and domain to given props or default values if not
+     * given.
+     */
     getInitialState: function() {
         return {
             data: [],
             view:  'vertical',
             showInfoPanel: false,
-            diagramView: "hierarchy"
+            diagramView: "hierarchy",
+            fullscreen: false
         };
     },
 
@@ -60,7 +66,7 @@ var Diagram = React.createClass({
 
     componentDidMount: function() {
         diagram.create(this._d3, { onClick: this.onNodeClick },
-                this.getDiagramState());
+            this.getDiagramState());
     },
 
     componentDidUpdate: function(prevProps, prevState) {
@@ -73,10 +79,10 @@ var Diagram = React.createClass({
             diagram.create(element, { onClick: this.onNodeClick },
                 this.getDiagramState());
         } else if (prevState.view !== undefined &&
-                prevState.view != this.state.view) {
+            prevState.view != this.state.view) {
             diagram.destroy();
             diagram.create(element, { onClick: this.onNodeClick },
-                    this.getDiagramState());
+                this.getDiagramState());
         }
         else if (prevProps.data != this.props.data){
             diagram.update(element, this.getDiagramState());
@@ -99,9 +105,9 @@ var Diagram = React.createClass({
         }
     },
 
-   /**
-    * Toggles between showing/hiding the info panel
-    */
+    /**
+     * Toggles between showing/hiding the info panel
+     */
     toggleInfoPanel: function(){
         this.setState({
             showInfoPanel: !this.state.showInfoPanel
@@ -128,12 +134,12 @@ var Diagram = React.createClass({
     },
 
     /**
-    * Render the diagram from the current state.
-    */
+     * Render the diagram from the current state.
+     */
     render: function() {
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
         return (
-            <div className="diagram">
+            <div className="diagram" id="diagram">
                 <Button
                     bsStyle="primary"
                     onClick={this.reset}
@@ -162,6 +168,12 @@ var Diagram = React.createClass({
                     saveDiagram={this.props.saveDiagram}
                     diagramView={this.state.diagramView}
                 />
+                <Button
+                    id="fullscreenButton"
+                    bsStyle = "primary"
+                    onClick={this.toggleFullscreen}>
+                    {this.state.fullscreen ? this.dict[this.props.language]["exitFullscreen"] : this.dict[this.props.language]["fullscreen"]}
+                </Button>
                 <Export language={this.props.language} selectedTerm={this.props.selectedTerm} diagramView={this.state.diagramView}/>
                 <div className={this.state.diagramView == "definition" ? "hiddenDiagram" : "d3diagram"}
                      ref={ (ref) => this._d3 = ref}>
@@ -237,7 +249,38 @@ var Diagram = React.createClass({
             this.setState({
                 view: 'vertical'
             });
-      }
+        }
+    },
+    toggleFullscreen: function() {
+        const elem = document.getElementById('diagram');
+        if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+            this.setState({
+                fullscreen: true
+            });
+        }
+        else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+            this.setState({
+                fullscreen: false
+            });
+        }
     }
 });
 
