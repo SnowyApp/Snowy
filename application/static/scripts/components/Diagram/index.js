@@ -138,8 +138,9 @@ var Diagram = React.createClass({
      */
     render: function() {
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
+        const diagramId = "diagram" + (this.state.fullscreen ? "-fullscreen" : "");
         return (
-            <div className="diagram" id="diagram">
+            <div className="diagram" id="diagram" >
                 <Button
                     bsStyle="primary"
                     onClick={this.reset}

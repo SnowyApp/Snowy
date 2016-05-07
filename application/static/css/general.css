@@ -26,9 +26,16 @@ section {
 
 .diagram {
     position: absolute;
-    top: 50px;
     bottom: 0;
     width: 100%;
+}
+
+#diagram{
+    top: 50px;
+}
+
+#diagram-fullscreen{
+    top: 0;
 }
 
 .bar {
