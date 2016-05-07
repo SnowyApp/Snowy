@@ -1,11 +1,19 @@
 import psycopg2
 import sys
 
-SELECT_CONCEPT_IDS_QUERY = "SELECT DISTINCT id FROM concept WHERE active=1";
-SELECT_CONCEPT_QUERY = """SELECT id, definition_status_id FROM concept WHERE active=1 AND id=%s ORDER BY effective_time ASC LIMIT 1"""
+SELECT_CONCEPT_IDS_QUERY = "SELECT DISTINCT id FROM concept WHERE active=1"
+SELECT_CONCEPT_QUERY = """SELECT id, definition_status_id FROM concept WHERE active=1 AND id=%s ORDER BY effective_time DESC LIMIT 1"""
 INSERT_CONCEPT_STATEMENT = "INSERT INTO concept VALUES (%s, %s)"
 
-def transfer_concept(concept_id, old_db, new_db):
+SELECT_RELATION_IDS_QUERY = "SELECT DISTINCT id FROM relationship WHERE active=1"
+SELECT_RELATION_QUERY = "select source_id, destination_id, relationship_group, type_id from relationship where active=1 and id=%s order by effective_time desc limit 1"
+INSERT_RELATION_STATEMENT = "insert into relationship (source_id, destination_id, group_id, type_id) VALUES (%s, %s, %s, %s)"
+
+SELECT_DESC_IDS_QUERY = "select distinct id from description where active=1"
+SELECT_DESC_QUERY = "select distinct a.effective_time, a.id, a.concept_id, a.term, a.type_id, b.acceptability_id from description a join language_refset b on a.id=b.referenced_component_id and b.active=1 and a.active=1 and a.id=%s order by a.effective_time desc limit 10;"
+INSERT_DESC_STATEMENT = "insert into description (id, concept_id, term, type_id, acceptability_id) VALUES (%s, %s, %s, %s, %s)"
+
+def transfer_specific(data_id, old_db, new_db, SELECT_QUERY, INSERT_STATEMENT, scale = 0):
     """
     Transfers the concept with concept_id from the old database to the new.
     """
@@ -13,32 +21,27 @@ def transfer_concept(concept_id, old_db, new_db):
     dest_cur = new_db.cursor()
     try:
         # Fetch the data from temporary database
-        data_cur.execute(SELECT_CONCEPT_QUERY, (concept_id,))
+        data_cur.execute(SELECT_QUERY, (data_id,))
         data = data_cur.fetchone()
         data_cur.close()
 
         # Insert the data into the new database
-        dest_cur.execute(INSERT_CONCEPT_STATEMENT, (data[0], data[1]))
+        dest_cur.execute(INSERT_STATEMENT, data[scale:])
         dest_cur.close()
     except Exception as e:
-        print("Error occured for id " + str(concept_id) + ": " + str(e))
+        print("Error occured for id " + str(data_id) + ": " + str(e))
 
-def transfer_concepts(old_db, new_db):
-    """
-    Transfers all the concepts from old_db to new_db.
-    """
-    print("Transfering concepts")
+def transfer_type(old_db, new_db, ID_QUERY, SELECT_QUERY, INSERT_STATEMENT, scale=0):
     id_cur = old_db.cursor()
-    id_cur.execute(SELECT_CONCEPT_IDS_QUERY)
+    id_cur.execute(ID_QUERY)
     total = id_cur.rowcount
     count = 0
     for res in id_cur:
-        transfer_concept(res[0], old_db, new_db)
+        transfer_specific(res[0], old_db, new_db, SELECT_QUERY, INSERT_STATEMENT, scale)
         count += 1
         print("\r{0:.2f}".format(count*100/total) + "%", end="")
     print()
     id_cur.close()
-    new_db.commit()
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
@@ -47,6 +50,18 @@ if __name__ == "__main__":
         exit(1)
 
     old_db = psycopg2.connect("dbname=" + sys.argv[1] + " user=" + "simon")
+    old_db.autocommit = True;
     new_db = psycopg2.connect("dbname=" + sys.argv[2] + " user=" + "simon")
+    new_db.autocommit = True;
     
-    transfer_concepts(old_db, new_db)
+    print("Transfering concepts")
+    #transfer_type(old_db, new_db, SELECT_CONCEPT_IDS_QUERY, SELECT_CONCEPT_QUERY, INSERT_CONCEPT_STATEMENT)
+    print("Completed!")
+
+    print("Transfering relations")
+    #transfer_type(old_db, new_db, SELECT_RELATION_IDS_QUERY, SELECT_RELATION_QUERY, INSERT_RELATION_STATEMENT)
+    print("Comleted!")
+
+    print("Transfering descriptions")
+    transfer_type(old_db, new_db, SELECT_DESC_IDS_QUERY, SELECT_DESC_QUERY, INSERT_DESC_STATEMENT, 1)
+    print("Comleted!")
