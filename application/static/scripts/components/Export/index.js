@@ -98,7 +98,7 @@ var Export = React.createClass({
             // Saves the svg to the desktop
             FileSaver.saveAs(this.getBlob(el), this.props.selectedTerm.toString() + ".svg");
         }else{
-            this.saveUri(this.getUri(el), new Date().toJSON().slice(0,10) + ".svg");
+            this.saveUri(this.getUri(el), this.props.selectedTerm.toString() + ".svg");
         }
     },
 
@@ -108,7 +108,7 @@ var Export = React.createClass({
      */
     exportPNG: function(){
         var el = this.getSVG();
-        var name = new Date().toJSON().slice(0,10) + ".png";
+        var name = this.props.selectedTerm.toString() + ".svg";
         this.savePNG(this.getUri(el), name);
     },
     render: function(){

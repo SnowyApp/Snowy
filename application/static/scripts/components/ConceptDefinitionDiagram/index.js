@@ -414,19 +414,64 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("cy",RELATION_RADIUS)
             .attr("fill", "white")
             .attr("stroke", "black");
+        if(concept.definition_status == "Primitive"){
+            g.append("line")
+                .attr('x1', RELATION_RADIUS/2)
+                .attr('y1', RELATION_RADIUS - RELATION_RADIUS/3)
+                .attr('x2', 3*RELATION_RADIUS/2)
+                .attr('y2', RELATION_RADIUS - RELATION_RADIUS/3)
+                .attr("stroke", "black")
+                .attr("strokeWidth", 2);
 
-        g.append("text")
-            // position text centered in the concept
-            .attr("class", "name")
-            .attr("text-anchor", "middle")
-            .attr("x",RELATION_RADIUS)
-            .attr("y",RELATION_RADIUS)
-            .attr("dy", ".35em")
-            .attr("font-size", 30)
-            .attr("font-family", "Helvetica, Arial, Sans-Serif")
+            g.append("line")
+                .attr('x1', RELATION_RADIUS/2)
+                .attr('y1', RELATION_RADIUS - RELATION_RADIUS/3)
+                .attr('x2', RELATION_RADIUS/2)
+                .attr('y2', RELATION_RADIUS + RELATION_RADIUS/3 - RELATION_RADIUS/6)
+                .attr("stroke", "black")
+                .attr("strokeWidth", 2);
 
-            .text( (concept.definition_status == "Primitive") ? "⊑" : "≡")
-            .style("fill-opacity", 1);
+            g.append("line")
+                .attr('x1', RELATION_RADIUS/2)
+                .attr('y1', RELATION_RADIUS + RELATION_RADIUS/3 - RELATION_RADIUS/6)
+                .attr('x2', 3*RELATION_RADIUS/2)
+                .attr('y2', RELATION_RADIUS + RELATION_RADIUS/3 - RELATION_RADIUS/6)
+                .attr("stroke", "black")
+                .attr("strokeWidth", 2);
+
+            g.append("line")
+                .attr('x1', RELATION_RADIUS/2)
+                .attr('y1', RELATION_RADIUS + RELATION_RADIUS/3)
+                .attr('x2', 3*RELATION_RADIUS/2)
+                .attr('y2', RELATION_RADIUS + RELATION_RADIUS/3)
+                .attr("stroke", "black")
+                .attr("strokeWidth", 2);
+        }else{
+            g.append("line")
+                .attr('x1', RELATION_RADIUS/2)
+                .attr('y1', RELATION_RADIUS - RELATION_RADIUS/3)
+                .attr('x2', 3*RELATION_RADIUS/2)
+                .attr('y2', RELATION_RADIUS - RELATION_RADIUS/3)
+                .attr("stroke", "black")
+                .attr("strokeWidth", 2);
+
+            g.append("line")
+                .attr('x1', RELATION_RADIUS/2)
+                .attr('y1', RELATION_RADIUS)
+                .attr('x2', 3*RELATION_RADIUS/2)
+                .attr('y2', RELATION_RADIUS)
+                .attr("stroke", "black")
+                .attr("strokeWidth", 2);
+
+            g.append("line")
+                .attr('x1', RELATION_RADIUS/2)
+                .attr('y1', RELATION_RADIUS + RELATION_RADIUS/3)
+                .attr('x2', 3*RELATION_RADIUS/2)
+                .attr('y2', RELATION_RADIUS + RELATION_RADIUS/3)
+                .attr("stroke", "black")
+                .attr("strokeWidth", 2);
+
+        }
 
         return g;
     },
