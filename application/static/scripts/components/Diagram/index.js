@@ -18,16 +18,18 @@ var Diagram = React.createClass({
     //Dictionary for supported languages
     dict: {
         se: {
-            'reset':        'Reset',
-            'resetZoom':    'Återställ zoom',
-            'VHView':       'Vertikal/Horisontell vy',
-            'fullscreen':   'Helskärm'
+            'reset':            'Reset',
+            'resetZoom':        'Återställ zoom',
+            'VHView':           'Vertikal/Horisontell vy',
+            'fullscreen':       'Helskärm',
+            'exitFullscreen':   'Avsluta helskärmsläge'
         },
         en: {
-            'reset':        'Reset',
-            'resetZoom':    'Reset zoom',
-            'VHView':       'Vertical/Horizontal view',
-            'fullscreen':   'Fullscreen'
+            'reset':            'Reset',
+            'resetZoom':        'Reset zoom',
+            'VHView':           'Vertical/Horizontal view',
+            'fullscreen':       'Fullscreen',
+            'exitFullscreen':   'Exit fullscreen'
         }
     },
 
@@ -39,7 +41,8 @@ var Diagram = React.createClass({
         return {
             data: [],
             view:  'vertical',
-            showInfoPanel: false
+            showInfoPanel: false,
+            fullscreen: false
         };
     },
 
@@ -139,7 +142,7 @@ var Diagram = React.createClass({
                     id="fullscreenButton"
                     bsStyle = "primary"
                     onClick={this.toggleFullscreen}>
-                    {this.dict[this.props.language]["fullscreen"]}
+                    {this.state.fullscreen ? this.dict[this.props.language]["exitFullscreen"] : this.dict[this.props.language]["fullscreen"]}
                 </Button>
                 <div className="d3diagram"
                      ref={ (ref) => this._d3 = ref}>
@@ -225,6 +228,9 @@ var Diagram = React.createClass({
             } else if (elem.webkitRequestFullscreen) {
                 elem.webkitRequestFullscreen();
             }
+            this.setState({
+                fullscreen: true
+            });
         }
         else {
             if (document.exitFullscreen) {
@@ -236,6 +242,9 @@ var Diagram = React.createClass({
             } else if (document.webkitExitFullscreen) {
                 document.webkitExitFullscreen();
             }
+            this.setState({
+                fullscreen: false
+            });
         }
     }
 });
