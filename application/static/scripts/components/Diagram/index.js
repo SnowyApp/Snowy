@@ -252,10 +252,14 @@ var Diagram = React.createClass({
             });
         }
     },
-
+    /**
+     * Toggle between fullscreen and normal view
+     */
     toggleFullscreen: function() {
         const elem = document.getElementById('diagram');
+        //If the document is not currently in fullscreen, activate fullscreen
         if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            //There's a different fullscreen api call for each browser
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
             } else if (elem.msRequestFullscreen) {
@@ -269,6 +273,7 @@ var Diagram = React.createClass({
                 fullscreen: true
             });
         }
+        //If fullscreen is activated, go back to normal
         else {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
