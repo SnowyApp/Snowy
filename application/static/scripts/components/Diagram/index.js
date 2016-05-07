@@ -175,7 +175,7 @@ var Diagram = React.createClass({
                     onClick={this.toggleFullscreen}>
                     {this.state.fullscreen ? this.dict[this.props.language]["exitFullscreen"] : this.dict[this.props.language]["fullscreen"]}
                 </Button>
-                <Export language={this.props.language} selectedTerm={this.props.selectedTerm} diagramView={this.state.diagramView} toggleFullscreen={this.toggleFullscreen}/>
+                <Export language={this.props.language} selectedTerm={this.props.selectedTerm} diagramView={this.state.diagramView} exitFullscreen={this.exitFullscreen}/>
                 <div className={this.state.diagramView == "definition" ? "hiddenDiagram" : "d3diagram"}
                      ref={ (ref) => this._d3 = ref}>
                 </div>
@@ -251,6 +251,22 @@ var Diagram = React.createClass({
                 view: 'vertical'
             });
         }
+    },
+
+    exitFullscreen: function() {
+        const elem = document.getElementById('diagram');
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+        this.setState({
+            fullscreen: false
+        });
     },
     /**
      * Toggle between fullscreen and normal view

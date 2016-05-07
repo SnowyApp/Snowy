@@ -93,7 +93,7 @@ var Export = React.createClass({
      * Exports the svg to a file which is downloaded to the user's computer
      */
     exportSVG: function() {
-        this.props.toggleFullscreen();
+        this.props.exitFullscreen();
         var el = this.getSVG();
         if (typeof window.saveAs !== 'undefined' && typeof Blob == 'function') {
             // Saves the svg to the desktop
@@ -108,7 +108,7 @@ var Export = React.createClass({
      * which is downloaded to the user's computer
      */
     exportPNG: function(){
-        this.props.toggleFullscreen();
+        this.props.exitFullscreen();
         var el = this.getSVG();
         var name = this.props.selectedTerm.toString() + ".svg";
         this.savePNG(this.getUri(el), name);
