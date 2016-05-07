@@ -1,7 +1,9 @@
 DROP TABLE IF EXISTS concept CASCADE;
 CREATE TABLE concept(
     id BIGINT NOT NULL PRIMARY KEY,
-    definition_status_id BIGINT
+    definition_status_id BIGINT NOT NULL,
+    preferred_full TEXT,
+    preferred_synonym TEXT
 );
 
 DROP TABLE IF EXISTS relationship CASCADE;
