@@ -20,12 +20,14 @@ var Diagram = React.createClass({
         se: {
             'reset':        'Reset',
             'resetZoom':    'Återställ zoom',
-            'VHView':       'Vertikal/Horisontell vy'
+            'VHView':       'Vertikal/Horisontell vy',
+            'fullscreen':   'Helskärm'
         },
         en: {
             'reset':        'Reset',
             'resetZoom':    'Reset zoom',
-            'VHView':       'Vertical/Horizontal view'
+            'VHView':       'Vertical/Horizontal view',
+            'fullscreen':   'Fullscreen'
         }
     },
 
@@ -137,7 +139,7 @@ var Diagram = React.createClass({
                     id="fullscreenButton"
                     bsStyle = "primary"
                     onClick={this.toggleFullscreen}>
-                    Fullscreen
+                    {this.dict[this.props.language]["fullscreen"]}
                 </Button>
                 <div className="d3diagram"
                      ref={ (ref) => this._d3 = ref}>
