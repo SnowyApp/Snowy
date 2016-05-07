@@ -1,7 +1,6 @@
 DROP TABLE IF EXISTS concept CASCADE;
 CREATE TABLE concept(
-    id BIGSERIAL PRIMARY KEY,
-    concept_id BIGINT NOT NULL,
+    id BIGINT NOT NULL PRIMARY KEY,
     definition_status_id BIGINT
 );
 
