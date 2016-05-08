@@ -110,7 +110,7 @@ var Export = React.createClass({
     exportPNG: function(){
         this.props.exitFullscreen();
         var el = this.getSVG();
-        var name = this.props.selectedTerm.toString() + ".svg";
+        var name = this.props.selectedTerm.toString() + ".png";
         this.savePNG(this.getUri(el), name);
     },
     render: function(){
