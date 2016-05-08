@@ -12,7 +12,7 @@ CREATE TABLE relationship(
     group_id BIGINT NOT NULL,
     source_id BIGINT NOT NULL REFERENCES concept(id),
     type_id BIGINT NOT NULL REFERENCES concept(id),
-    PRIMARY KEY (destination_id, source_id)
+    PRIMARY KEY (destination_id, source_id, type_id)
 );
 
 DROP TABLE IF EXISTS description CASCADE;
