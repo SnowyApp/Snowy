@@ -3,9 +3,5 @@ CREATE USER snowy;
 -- Create the user and snomed data database
 CREATE DATABASE users;
 GRANT ALL PRIVILEGES ON DATABASE users TO snowy;
-CREATE DATABASE INT_20150731;
-GRANT ALL PRIVILEGES ON DATABASE INT_20150731 TO snowy;
-
--- Create the temporary database used for temporary parsing the data
-CREATE DATABASE TMP_INT_20150731;
-GRANT ALL PRIVILEGES ON DATABASE TMP_INT_20150731 TO snowy;
+CREATE DATABASE international;
+GRANT ALL PRIVILEGES ON DATABASE international TO snowy;
