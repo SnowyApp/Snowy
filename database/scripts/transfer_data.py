@@ -55,13 +55,13 @@ if __name__ == "__main__":
     new_db.autocommit = True;
     
     print("Transfering concepts")
-    #transfer_type(old_db, new_db, SELECT_CONCEPT_IDS_QUERY, SELECT_CONCEPT_QUERY, INSERT_CONCEPT_STATEMENT)
+    transfer_type(old_db, new_db, SELECT_CONCEPT_IDS_QUERY, SELECT_CONCEPT_QUERY, INSERT_CONCEPT_STATEMENT)
     print("Completed!")
 
     print("Transfering relations")
-    #transfer_type(old_db, new_db, SELECT_RELATION_IDS_QUERY, SELECT_RELATION_QUERY, INSERT_RELATION_STATEMENT)
-    print("Comleted!")
+    transfer_type(old_db, new_db, SELECT_RELATION_IDS_QUERY, SELECT_RELATION_QUERY, INSERT_RELATION_STATEMENT)
+    print("Completed!")
 
     print("Transfering descriptions")
     transfer_type(old_db, new_db, SELECT_DESC_IDS_QUERY, SELECT_DESC_QUERY, INSERT_DESC_STATEMENT, 1)
-    print("Comleted!")
+    print("Completed!")
