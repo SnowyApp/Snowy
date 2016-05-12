@@ -154,7 +154,7 @@ var Bar = React.createClass({
 
         return (
             <div className="bar">
-                <img className="logotype" src="static/img/Snowy_official_logotype.png"/>
+                <img className="logotype" onClick={this.props.resetRoot} src="static/img/Snowy_official_logotype.png"/>
                 <Search url={this.props.url} update={this.props.update} language={this.props.language}/>
                 <ButtonToolbar id = "buttons">
                     {/* Database edition drop-down */}

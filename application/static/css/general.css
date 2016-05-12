@@ -114,5 +114,6 @@ section {
     margin-top: 11px;
     margin-left: 8px;
 }
-
-
+.logotype:hover {
+    cursor: pointer;
+}
