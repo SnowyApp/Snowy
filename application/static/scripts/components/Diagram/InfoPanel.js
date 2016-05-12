@@ -220,6 +220,7 @@ var InfoPanel = React.createClass({
         //Check if data is set yet, otherwise return
         if(this.props.data === undefined || this.props.data.length == 0) return null;
 
+        //Only show "save favorite" button if user is logged in
         var saveTermButton = null;
         if(cookie.load('userId') != null){
             saveTermButton = (this.state.isFavorited ?
@@ -254,8 +255,9 @@ var InfoPanel = React.createClass({
                 );
             }, this);
         } else {
-            showParents = {display: "none"};
+            showParents = {display: "none"}; //Hide table if there are no parents to show
         }
+
         //Create table rows for all names
         var namesArray = this.state.names.map(function(name){
             return (
@@ -272,6 +274,7 @@ var InfoPanel = React.createClass({
                     </tr>
                 );
         });
+
         var showRelations = null;
         if(this.state.relations.length > 0){
             //Create table rows for all relations
@@ -291,7 +294,7 @@ var InfoPanel = React.createClass({
                     );
             });
         } else {
-            showRelations = {display: "none"};
+            showRelations = {display: "none"}; //Hide table if there are no relations to show
         }
         return (
             <div className="panel panel-info infoPanel">
