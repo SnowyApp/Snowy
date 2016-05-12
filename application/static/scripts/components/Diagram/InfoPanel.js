@@ -174,7 +174,7 @@ var InfoPanel = React.createClass({
     },
 
     /*
-    * Function to call API to get parents of id
+    * Gets all parents for a given id and saves them to the state "parents"
     */
     getParents: function(id){
         $.ajax({
