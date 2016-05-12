@@ -24,7 +24,7 @@ var Navigation = React.createClass({
             }
         );
     },
-    
+
     /**
      * Update the state from given data.
      */
@@ -40,11 +40,11 @@ var Navigation = React.createClass({
             currentID: data[0].concept_id
         });
     },
-    
+
     componentWillReceiveProps: function(nextProps) {
         this.updateState(nextProps.data);
     },
-	
+
    /**
     * Only update component if the data has changed.
     * Removed unused second paremeter nextState.
@@ -62,7 +62,7 @@ var Navigation = React.createClass({
     */
     handleClick: function(id){
         const saveHistory = (this.state.currentID != id);
-        this.props.update(id, saveHistory); 
+        this.props.update(id, saveHistory);
     },
 
     render: function() {
@@ -96,9 +96,9 @@ var Navigation = React.createClass({
         return (
             <nav>
                 <ul className="nav nav-pills nav-stacked" id="logo_id">
-                    <li role="presentation" className="active">                    
+                    <li role="presentation" className="active">
                         <a className="navigation-header">
-                            <span style={backArrow} onClick={this.props.upOneLevel} className="glyphicon glyphicon-triangle-top backArrow linkPointer" aria-hidden="true"> </span>
+                            <span style={backArrow} onClick={this.props.upOneLevel} className="glyphicon glyphicon-circle-arrow-left backArrow linkPointer" aria-hidden="true"> </span>
                             <span onClick={this.props.resetRoot} className="glyphicon glyphicon-home rootLink linkPointer" aria-hidden="true"> </span>
                             <div className="grandparentHeader linkPointer" onClick={this.props.upOneLevel}>
                                 {grandparent}
@@ -107,7 +107,7 @@ var Navigation = React.createClass({
                                 {this.state.currentParent}
                             </div>
                         </a>
-                    </li> 
+                    </li>
                     {ItemArray}
                 </ul>
             </nav>
