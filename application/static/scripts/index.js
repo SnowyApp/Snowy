@@ -41,6 +41,7 @@ var Container = React.createClass({
      * the last node is saved to history.
      */
     getConcept: function(id, saveHistory = true) {
+        this.setCursor("wait");
         $.when(this.getRoot(id), this.getChildren(id))
             .then(function(rootResult, childrenResult) {
                     // get all information about children
@@ -96,7 +97,7 @@ var Container = React.createClass({
                         data: root,
                         selectedTerm: root[0].concept_id
                     });
-
+                this.setCursor("default");
                 }.bind(this)
             );
     },
@@ -420,6 +421,20 @@ var Container = React.createClass({
     updateSelectedTerm: function(conceptId, saveHistory = true){
         this.getConcept(conceptId, saveHistory);
         this.setContent("diagram");
+    },
+
+    /**
+    * Changes the cursor
+    * This is used for displaying a loading animation
+    */
+    setCursor: function (cursorType) {
+        if (cursorType == "wait") {
+            $('body').css('cursor', 'wait');
+            $('a.navLink:hover').css('cursor', 'wait');
+        } else {
+            $('body').css('cursor', 'default');
+            $('a.navLink:hover').css('cursor', 'pointer');
+        }
     },
 
     /**
