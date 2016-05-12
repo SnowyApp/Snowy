@@ -74,6 +74,8 @@ var Export = React.createClass({
         image.onload = function () {
             canvas.width = image.width;
             canvas.height = image.height;
+            context.fillStyle = '#fff';
+            context.fillRect(0, 0, canvas.width, canvas.height);
             context.drawImage(image, 0, 0);
             if (typeof canvas.toBlob !== 'undefined' && typeof window.saveAs !== 'undefined') {
                 canvas.toBlob(function (blob) {
