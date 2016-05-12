@@ -97,7 +97,7 @@ var Container = React.createClass({
                         data: root,
                         selectedTerm: root[0].concept_id
                     });
-                this.setCursor("default");
+                    this.setCursor("default");
                 }.bind(this)
             );
     },
@@ -430,12 +430,13 @@ var Container = React.createClass({
     * This is used for displaying a loading animation
     */
     setCursor: function (cursorType) {
+        console.log(cursorType);
         if (cursorType == "wait") {
             $('body').css('cursor', 'wait');
-            $('a.navLink:hover').css('cursor', 'wait');
+            $('a.navLink').css('cursor', 'wait');
         } else {
             $('body').css('cursor', 'default');
-            $('a.navLink:hover').css('cursor', 'pointer');
+            $('a.navLink').css('cursor', 'pointer');
         }
     },
 
