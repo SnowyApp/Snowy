@@ -306,8 +306,6 @@ var InfoPanel = React.createClass({
                 </div>
                 <div className="panel-body infoPanelBody">
                     {saveTermButton}
-
-                    {/* General info TODO: Fix real data for status*/}
                     <h3>
                         {this.dict[this.props.language]["generalInfo"]}
                     </h3>
