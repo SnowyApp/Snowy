@@ -145,6 +145,7 @@ var SaveDiagram = React.createClass({
         }
 
         return (
+            {/* PageClick closes the saveDiagram panel when the user clicks outside of it */}
             <PageClick onClick={this.hideSavePanel}>
                 <div className="saveDiagramWrapper">
                     <Button
