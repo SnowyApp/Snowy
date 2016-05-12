@@ -8,7 +8,9 @@ require('blueimp-canvas-to-blob/js/canvas-to-blob.js');
 
 const MARGIN = 20;
 
-
+/**
+ * Exports SVG documents to images to the user's desktop
+ */
 var Export = React.createClass({
     propTypes: {
         language: React.PropTypes.string,
@@ -23,6 +25,10 @@ var Export = React.createClass({
             export:       "Export"
         }
     },
+    /**
+     * Returns the svg node of the current svg document on the screen
+     * @returns {*|Node}
+     */
     getSVG: function(){
         // Clones the svg node so that we don't modify it
         var svg = d3.select("svg." + this.props.diagramView).node();
@@ -44,9 +50,19 @@ var Export = React.createClass({
 
         return svgClone;
     },
+    /**
+     * Returns the HTML of the element el
+     * @param el
+     * @returns {*|string}
+     */
     getHTML: function(el){
         return el.outerHTML || new window.XMLSerializer().serializeToString(el);
     },
+    /**
+     * Returns the URI of the element el
+     * @param el
+     * @returns {string}
+     */
     getUri: function(el){
         var html = this.getHTML(el);
         if(typeof window.btoa !== 'undefined'){
@@ -55,6 +71,11 @@ var Export = React.createClass({
         return 'data:image/svg+xml,' + html;
 
     },
+    /**
+     * Saves the image from link with a name of variable filename
+     * @param link
+     * @param filename
+     */
     saveUri: function(link, filename) {
         const DownloadAttributeSupport = (typeof document !== 'undefined') && ('download' in document.createElement('a'));
         if (DownloadAttributeSupport) {
@@ -66,6 +87,11 @@ var Export = React.createClass({
             window.open(link, '_blank', '');
         }
     },
+    /**
+     * Saves a file referenced by link as a PNG with filename of name
+     * @param link
+     * @param name
+     */
     savePNG: function(link, name){
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
@@ -74,6 +100,8 @@ var Export = React.createClass({
         image.onload = function () {
             canvas.width = image.width;
             canvas.height = image.height;
+            context.fillStyle = '#fff';
+            context.fillRect(0, 0, canvas.width, canvas.height);
             context.drawImage(image, 0, 0);
             if (typeof canvas.toBlob !== 'undefined' && typeof window.saveAs !== 'undefined') {
                 canvas.toBlob(function (blob) {
@@ -85,6 +113,11 @@ var Export = React.createClass({
         };
         image.src = link;
     },
+    /**
+     * Returns a Blob from element el
+     * @param el
+     * @returns {*}
+     */
     getBlob: function(el){
         const html = this.getHTML(el);
         return new Blob([html], { type: 'text/xml' });
