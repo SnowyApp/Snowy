@@ -98,7 +98,7 @@ var InfoPanel = React.createClass({
     },
 
     /**
-    * Gets all relations for a given id
+    * Gets all relations for a given id and saves them to state "relations"
     */
     getRelations: function(id){
         $.ajax({
