@@ -135,7 +135,7 @@ var InfoPanel = React.createClass({
     },
 
    /**
-    * Gets all names for a given id
+    * Gets all names for a given id and saves them to the state "names"
     */
     getNames: function(id){
         $.ajax({
