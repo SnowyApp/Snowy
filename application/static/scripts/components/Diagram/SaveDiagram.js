@@ -107,6 +107,7 @@ var SaveDiagram = React.createClass({
     /**
     * This function is sent to saveDiagram so that saveDiagram has a way to let
     * this component know if it failed or succeeded.
+    * This is necessary to be able to update the status message accordingly.
     */
     diagramSaved: function(status){
         if(status){
