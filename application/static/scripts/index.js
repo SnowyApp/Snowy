@@ -758,6 +758,7 @@ var Container = React.createClass({
                             setEdition={this.setEdition}
                             saveDiagram={this.saveDiagram}
                             selectedTerm={this.state.selectedTerm}
+                            resetRoot={this.resetRoot}
                         />
                         {content}
                     </section>

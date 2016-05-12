@@ -24,7 +24,8 @@ var Bar = React.createClass({
         setLanguage: React.PropTypes.func,
         setEdition: React.PropTypes.func,
         saveDiagram: React.PropTypes.func,
-        selectedTerm: React.PropTypes.number
+        selectedTerm: React.PropTypes.number,
+        resetRoot: React.PropTypes.func
     },
     //Dictionary for supported languages
     dict: {
