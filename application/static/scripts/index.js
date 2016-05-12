@@ -230,6 +230,7 @@ var Container = React.createClass({
         }
 
         if (node.children === undefined) {
+            this.setCursor("wait");
             // add children to the node
             $.when(this.getChildren(node.concept_id)).then(
                 function(res) {
@@ -254,6 +255,7 @@ var Container = React.createClass({
                     this.setState({
                         data: tree
                     });
+                this.setCursor("default");
                 }.bind(this)
             );
         } else {
