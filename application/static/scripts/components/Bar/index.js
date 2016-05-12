@@ -13,19 +13,19 @@ var Search = require('../Search/index');
 
 var Bar = React.createClass({
     propTypes: {
-        update: React.PropTypes.func,
-        isLoggedIn: React.PropTypes.bool,
-        onLogin: React.PropTypes.func,
-        onLogout: React.PropTypes.func,
-        url: React.PropTypes.string,
-        setContent: React.PropTypes.func,
-        contentName: React.PropTypes.string,
-        language: React.PropTypes.string,
-        setLanguage: React.PropTypes.func,
-        setEdition: React.PropTypes.func,
-        saveDiagram: React.PropTypes.func,
-        selectedTerm: React.PropTypes.number,
-        resetRoot: React.PropTypes.func
+        update:         React.PropTypes.func,
+        isLoggedIn:     React.PropTypes.bool,
+        onLogin:        React.PropTypes.func,
+        onLogout:       React.PropTypes.func,
+        url:            React.PropTypes.string,
+        setContent:     React.PropTypes.func,
+        contentName:    React.PropTypes.string,
+        language:       React.PropTypes.string,
+        setLanguage:    React.PropTypes.func,
+        setEdition:     React.PropTypes.func,
+        saveDiagram:    React.PropTypes.func,
+        selectedTerm:   React.PropTypes.number,
+        resetRoot:      React.PropTypes.func
     },
     //Dictionary for supported languages
     dict: {
