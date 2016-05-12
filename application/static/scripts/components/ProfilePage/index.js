@@ -47,12 +47,13 @@ var ProfilePage = React.createClass({
             personalInfo:               "Personlig information",
             noSavedTerms:               "Du har inga sparade termer.",
             noSavedDiagrams:            "Du har inga sparade diagram.",
+            m_noDescription:            "Det finns ingen beskrivning för detta diagram.",
             m_wrongPassword:            "Felaktigt lösenord.",
             m_emailTaken:               "Den angivna email-adressen är upptagen.",
             m_updateSuccessful:         "Din information har blivit uppdaterad.",
             m_updatePasswordSuccessful: "Ditt lösenord har uppdaterats.",
             m_failedToUpdate:           "Uppdateringen misslyckades.",
-            passwordStrength:           ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
+            passwordStrength:           ["För kort", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
         },
         en: {
             language:                   "Language",
@@ -76,12 +77,13 @@ var ProfilePage = React.createClass({
             personalInfo:               "Personal information",
             noSavedTerms:               "You don't have any saved terms.",
             noSavedDiagrams:            "You don't have any saved diagrams.",
+            m_noDescription:            "There is no description for this diagram.",
             m_wrongPassword:            "Wrong password.",
             m_emailTaken:               "The provided email is already in use.",
             m_updateSuccessful:         "Your information has been updated.",
             m_updatePasswordSuccessful: "Your password has been updated.",
             m_failedToUpdate:           "Failed to update.",
-            passwordStrength:           ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
+            passwordStrength:           ["Too short", "Weak", "Decent", "Strong", "Very strong"]
         }
     },
 

@@ -27,7 +27,7 @@ var RegisterForm = React.createClass({
             m_regSuccessful:        "Registreringen lyckades.",
             m_regUnsuccessful:      "Registreringen misslyckades.",
             m_registering:          "Registreras...",
-            passwordStrength:       ["Väldigt svagt", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
+            passwordStrength:       ["För kort", "Svagt", "Medel", "Starkt", "Väldigt starkt"]
         },
         en: {
             register:               "Register",
@@ -39,7 +39,7 @@ var RegisterForm = React.createClass({
             m_regSuccessful:        "Registration successful.",
             m_regUnsuccessful:      "Registration unsuccessful.",
             m_registering:          "Registering...",
-            passwordStrength:       ["Very weak", "Weak", "Decent", "Strong", "Very strong"]
+            passwordStrength:       ["Too short", "Weak", "Decent", "Strong", "Very strong"]
         }
     },
     getInitialState: function(){

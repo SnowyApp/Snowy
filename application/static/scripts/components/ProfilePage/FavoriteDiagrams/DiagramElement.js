@@ -48,6 +48,13 @@ var DiagramElement = React.createClass({
     render: function(){
         //Different background colors depending on if the accordion is expanded
         const openCSS = (this.state.isOpen ? {backgroundColor: "#d9edf7"} : null);
+        var description = this.props.description;
+        var hiddenContentStyle = null;
+        if(description.length == 0){
+            description = this.props.dict[this.props.language]["m_noDescription"];
+            hiddenContentStyle = {fontStyle: "italic"};
+        }
+
         return(
             <tbody>
                 <tr style={openCSS} className="favorites">
@@ -80,8 +87,8 @@ var DiagramElement = React.createClass({
                 <tr>
                     <td colSpan="4">
                         <div id={this.props.id} className="panel-collapse collapse" role="tabpanel">
-                            <div className="diagramHidden">
-                                {this.props.description}
+                            <div className="diagramHidden" style={hiddenContentStyle}>
+                                {description}
                             </div>
                         </div>
                     </td>
