@@ -143,9 +143,8 @@ var SaveDiagram = React.createClass({
         } else if (statusMessage.type == "error") {
             statusMessageStyle = {color: "red"}
         }
-
+        {/* PageClick closes the saveDiagram panel when the user clicks outside of it */}
         return (
-            {/* PageClick closes the saveDiagram panel when the user clicks outside of it */}
             <PageClick onClick={this.hideSavePanel}>
                 <div className="saveDiagramWrapper">
                     <Button
