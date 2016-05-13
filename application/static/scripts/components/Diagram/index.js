@@ -9,6 +9,7 @@ var SaveDiagram = require('./SaveDiagram');
 var ConceptDefinitionDiagram = require('../ConceptDefinitionDiagram/index');
 var Export = require('../Export/index');
 
+
 var Diagram = React.createClass({
     propTypes: {
         favoriteTerms:      React.PropTypes.array,
@@ -93,6 +94,14 @@ var Diagram = React.createClass({
      * Set original state from props before rendering.
      */
     componentWillMount: function() {
+        /* Adds an eventlistener to check when fullscreen has changed */
+        if (document.addEventListener)
+        {
+            document.addEventListener('webkitfullscreenchange', this.checkFullscreen, false);
+            document.addEventListener('mozfullscreenchange', this.checkFullscreen, false);
+            document.addEventListener('fullscreenchange', this.checkFullscreen, false);
+            document.addEventListener('MSFullscreenChange', this.checkFullscreen, false);
+        }
         this.update(this.props.data);
     },
 
@@ -269,6 +278,24 @@ var Diagram = React.createClass({
         });
     },
     /**
+     * Makes sure we have set fullscreen state to correct value on fullscreenchange
+     */
+    checkFullscreen : function(){
+            if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement){
+                if(this.state.fullscreen) {
+                    this.setState({
+                        fullscreen: false
+                    });
+                }
+            }else{
+                if(!this.state.fullscreen) {
+                    this.setState({
+                        fullscreen: true
+                    });
+                }
+            }
+    },
+    /**
      * Toggle between fullscreen and normal view
      */
     toggleFullscreen: function() {
@@ -308,3 +335,4 @@ var Diagram = React.createClass({
 });
 
 module.exports = Diagram;
+
