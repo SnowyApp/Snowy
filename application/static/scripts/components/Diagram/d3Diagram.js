@@ -79,14 +79,24 @@ d3Chart._createMenuData = function(element) {
 
                 //If the node have children, put them in another list
                 if (d.children) {
-                    d._children = d.children;
-                    d.children = null;
+                    if(d._children){
+                        d.hideChildren = d.children;
+                        d.children = null;
+                    }else {
+                        d._children = d.children;
+                        d.children = null;
+                    }
                 }
 
                 //Take the children back
                 else {
-                    d.children = d._children;
-                    d._children = null;
+                    if(d.hideChildren){
+                        d.children = d.hideChildren;
+                        d.hideChildren = null;
+                    }else {
+                        d.children = d._children;
+                        d._children = null;
+                    }
                 }
 
                 d3Chart._drawTree(element, d);
