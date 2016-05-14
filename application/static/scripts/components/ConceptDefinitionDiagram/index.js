@@ -625,6 +625,7 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .attr("font-family", "Helvetica, Arial, Sans-Serif")
+            .attr("font-size", 13)
 
             // use the full name if possible, if not available use the synonym
             // and if neither is defined use a default "NO NAME" name.
@@ -703,6 +704,7 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .attr("font-family", "Helvetica, Arial, Sans-Serif")
+            .attr("font-size", 13)
 
             // use the full name if possible, if not available use the synonym
             // and if neither is defined use a default "NO NAME" name.
