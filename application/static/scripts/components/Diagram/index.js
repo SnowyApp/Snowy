@@ -1,3 +1,9 @@
+/**
+ * This is the react-component for the diagram area
+ * The area contains the buttons, diagram and profilepage when either view
+ * is in focus.
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/lib/Button';
@@ -137,7 +143,7 @@ var Diagram = React.createClass({
         }
 
     },
-
+    // Calls on the diagram to remove all its elements
     componentWillUnmount: function() {
         diagram.destroy();
     },
@@ -231,7 +237,7 @@ var Diagram = React.createClass({
     onNodeClick: function(id) {
         this.props.updateConceptChildren(id);
     },
-
+    // Calls on the diagram to reset its zoom
     resetZoom: function(){
         diagram._resetZoom(this._d3);
     },
@@ -243,25 +249,25 @@ var Diagram = React.createClass({
             language: this.props.language
         };
     },
-
+    // Calls on the diagram to reset its positions
     reset: function() {
         var element = this._d3;
         diagram.reset(element, this.getDiagramState());
     },
 
+    // Switches the treeview between vertical and horizontal
     changeView: function(){
         if(this.state.view == 'vertical') {
             this.setState({
                 view: 'horizontal'
             });
-        }
-        else {
+        } else {
             this.setState({
                 view: 'vertical'
             });
         }
     },
-
+    // calls the appropraite document.exitFullscren depending on browser
     exitFullscreen: function() {
         const elem = document.getElementById('diagram');
         if (document.exitFullscreen) {
@@ -281,19 +287,19 @@ var Diagram = React.createClass({
      * Makes sure we have set fullscreen state to correct value on fullscreenchange
      */
     checkFullscreen : function(){
-            if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement){
-                if(this.state.fullscreen) {
-                    this.setState({
-                        fullscreen: false
-                    });
-                }
-            }else{
-                if(!this.state.fullscreen) {
-                    this.setState({
-                        fullscreen: true
-                    });
-                }
+        if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement){
+            if(this.state.fullscreen) {
+                this.setState({
+                    fullscreen: false
+                });
             }
+        } else {
+            if(!this.state.fullscreen) {
+                this.setState({
+                    fullscreen: true
+                });
+            }
+        }
     },
     /**
      * Toggle between fullscreen and normal view
