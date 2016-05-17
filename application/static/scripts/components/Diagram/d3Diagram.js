@@ -7,12 +7,16 @@ import ReactDOM from 'react-dom';
  * transform attribute is used to zoom and move the diagram.
  */
 
+//Init the standard language to english
 var lang = 'en';
 
 var d3Chart = module.exports = {};
 
 var contextMenu = require('./d3-context-menu');
-
+/**
+ * Init a dictionary for the different language options for the context-menu.
+ * Can be accessed by typing dict[lang][option]
+ */
 const dict = {
     se: {
         'removeNode':   'Ta bort nod',
@@ -38,14 +42,12 @@ function tick() {
             .attr('x2', function(d) { return d.target.x + NODE_WIDTH/2 + WIDTH_MARGIN;})
             .attr('y2', function(d) { return d.target.y; });
 
-
         node.attr('transform', function(d) { return 'translate(' + d.x + ', ' + d.y + ')'; });
     } else {
         link.attr('y1', function(d) { return d.source.x + NODE_HEIGHT/2; })
             .attr('x1', function(d) { return d.source.y + NODE_WIDTH;})
             .attr('y2', function(d) { return d.target.x + NODE_HEIGHT/2; })
             .attr('x2', function(d) { return d.target.y; });
-
 
         node.attr('transform', function(d) { return 'translate(' + d.y + ', ' + d.x + ')'; });
     }
@@ -76,7 +78,6 @@ d3Chart._createMenuData = function(element) {
         {
             title: dict[lang]['hideShowChildren'],
             action: function(elm, d){
-
                 //If the node have children, put them in another list
                 if (d.children) {
                     if(d._children){
@@ -87,7 +88,6 @@ d3Chart._createMenuData = function(element) {
                         d.children = null;
                     }
                 }
-
                 //Take the children back
                 else {
                     if(d.hideChildren){
@@ -98,7 +98,6 @@ d3Chart._createMenuData = function(element) {
                         d._children = null;
                     }
                 }
-
                 d3Chart._drawTree(element, d);
             }
         },
@@ -137,12 +136,11 @@ d3Chart._createMenuData = function(element) {
                 }
             }
         }
-
     ];
-
 };
-
+// Init variable to keep track of the id:s of nodes
 var i = 0;
+// Init global variables
 var tree,root,treeView,svg,g,onClick,zoom, link, node;
 
 const TEXT_MAX_WIDTH = 230;
@@ -213,6 +211,7 @@ d3Chart.create = function(element, props, state) {
     }
 
     tree = d3.layout.tree();
+
     if(treeView == 'vertical'){
         tree.nodeSize([NODE_WIDTH + NODE_MARGIN, NODE_HEIGHT]);
     } else {
@@ -383,7 +382,6 @@ d3Chart._drawTree = function(element, data) {
                     d3.selectAll('.selected').classed('selected', false)
                         .selectAll('rect.node').style('fill', 'white');
                 }
-
                 // notify container of click on node
                 onClick(d.id);
             }
@@ -592,14 +590,20 @@ d3Chart._drawTree = function(element, data) {
         }
         tick();
     }
-
+    // Sets the dragging variable in the node to false
     function dragended() {
         d3.select(this).classed('dragging', false);
     }
 
+    /**
+     * Wraps the text everytime the length of it is bigger than the width
+     * @param text is the string to be wrapped
+     * @param width specifies the maximum size of a row
+     */
     function wrap(text, width) {
         text.each(function(d) {
             var text = d3.select(this),
+                //Tokenize the text by splitting at every blankspace
                 words = text.text().split(/\s+/).reverse(),
                 word,
                 line = [],
@@ -609,9 +613,11 @@ d3Chart._drawTree = function(element, data) {
                 y = text.attr('y'),
                 dy = parseFloat(text.attr('dy')),
                 tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
-
-            word = words.pop(); //First word is the id
+            // Pop the first word which is the concept-id
+            word = words.pop();
+            // Add it to the row
             line.push(word);
+            // Add the row to the tspan-element
             tspan.text(line.join(' '));
 
             word = words.pop();
@@ -625,6 +631,11 @@ d3Chart._drawTree = function(element, data) {
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(' '));
+
+                /** If the length of the row is too long
+                 *  We create a new tspan with the remaining words starting
+                 *  at on row down
+                 */
                 if (tspan.node().getComputedTextLength() > width) {
                     line.pop();
                     tspan.text(line.join(' '));
@@ -634,12 +645,17 @@ d3Chart._drawTree = function(element, data) {
             }
             // Save linenumber to move links
             d.lineNumber = lineNumber;
-            // If the text is 2 rows or more, increase the width of the rect
+            // If the text is wrapped rows or more
             if(lineNumber > 0){
+                // Find and increase the height of the current node
                 d3.select(this.parentNode).select('rect.node').attr('height', NODE_HEIGHT + lineNumber*LINE_MARGIN);
+                // If the definition is primitive, then the border also
+                // needs to increase
                 if(d.definitionStatus == 'Primitive'){
                     d3.select(this.parentNode).select('rect.borderNode').attr('height', NODE_HEIGHT + lineNumber*LINE_MARGIN);
                 }
+                // Else it has a double border and must be increased in a
+                // different way
                 else{
                     d3.select(this.parentNode).select('rect.borderNode').attr('height', NODE_HEIGHT + lineNumber*LINE_MARGIN-DEFINED_CONCEPT_BORDER*2);
                 }
