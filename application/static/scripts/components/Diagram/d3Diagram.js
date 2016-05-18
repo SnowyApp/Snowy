@@ -12,7 +12,7 @@ var lang = 'en';
 
 var d3Chart = module.exports = {};
 
-var contextMenu = require('./d3-context-menu');
+var contextMenu = require('./../../D3/d3-context-menu');
 /**
  * Init a dictionary for the different language options for the context-menu.
  * Can be accessed by typing dict[lang][option]
