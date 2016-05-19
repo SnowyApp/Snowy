@@ -128,10 +128,51 @@ var SaveDiagram = React.createClass({
         }
     },
 
-    render: function () {
-        //Show save panel if showSavePanel state is true
-        const showSavePanel = (this.state.showSavePanel ? null : {display: "none"});
+    /*
+    * Returns the diagram name input component
+    */
+    getDiagramNameInput: function () {
+        return (
+            <div className="form-group">
+                <label htmlFor="diagramName">
+                    {this.dict[this.props.language]["name"]}
+                </label>
+                <input
+                    onChange={this.updateName}
+                    type="text"
+                    className="form-control"
+                    placeholder={this.dict[this.props.language]["optionalName"]}
+                    value={this.state.diagramName}
+                />
+            </div>
+        );
+    },
 
+    /*
+    * Returns the diagram description input component
+    */
+    getDiagramDescInput: function () {
+        return (
+            <div className="form-group">
+                <label htmlFor="diagramDesc">
+                    {this.dict[this.props.language]["desc"]}
+                </label>
+                <textarea
+                    onChange={this.updateDesc}
+                    className="form-control diagramDesc"
+                    rows="3"
+                    placeholder={this.dict[this.props.language]["optionalDesc"]}
+                    value={this.state.diagramDesc}
+                >
+                </textarea>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the submit button and status message component
+    */
+    getSubmitButton: function () {
         //Display a status message if statusMessage state is set
         var statusMessage = this.state.statusMessage;
         var statusMessageStyle;
@@ -144,6 +185,37 @@ var SaveDiagram = React.createClass({
         }
 
         return (
+            <div className="form-group">
+                <div className="col-sm-2 saveDiagramSubmitWrapper">
+                    <button type="submit" onClick={this.handleSubmit} className="btn btn-success">
+                        {this.dict[this.props.language]["save"]}
+                    </button>
+                </div>
+                <span style={statusMessageStyle} className="col-sm-10 statusMessage">{this.state.statusMessage.message}</span>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the save panel component
+    */
+    getSavePanel: function () {
+        //Show save panel if showSavePanel state is true
+        const showSavePanel = (this.state.showSavePanel ? null : {display: "none"});
+
+        return (
+            <div style={showSavePanel} className="panel panel-primary saveDiagramPanel">
+                <div className="panel-body">
+                    {this.getDiagramNameInput()}
+                    {this.getDiagramDescInput()}
+                    {this.getSubmitButton()}
+                </div>
+            </div>
+        );
+    },
+
+    render: function () {
+        return (
             <PageClick onClick={this.hideSavePanel}>
                 <div className="saveDiagramWrapper">
                     <Button
@@ -154,45 +226,7 @@ var SaveDiagram = React.createClass({
                     >
                         {this.dict[this.props.language]["saveDiagram"]}
                     </Button>
-                    {/* Save panel */}
-                    <div style={showSavePanel} className="panel panel-primary saveDiagramPanel">
-                        <div className="panel-body">
-                            {/* Save form */}
-                            <div className="form-group">
-                                <label htmlFor="diagramName">
-                                    {this.dict[this.props.language]["name"]}
-                                </label>
-                                <input
-                                    onChange={this.updateName}
-                                    type="text"
-                                    className="form-control"
-                                    placeholder={this.dict[this.props.language]["optionalName"]}
-                                    value={this.state.diagramName}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="diagramName">
-                                    {this.dict[this.props.language]["desc"]}
-                                </label>
-                                <textarea
-                                    onChange={this.updateDesc}
-                                    className="form-control diagramDesc"
-                                    rows="3"
-                                    placeholder={this.dict[this.props.language]["optionalDesc"]}
-                                    value={this.state.diagramDesc}
-                                >
-                                </textarea>
-                            </div>
-                            <div className="form-group">
-                                <div className="col-sm-2 saveDiagramSubmitWrapper">
-                                    <button type="submit" onClick={this.handleSubmit} className="btn btn-success">
-                                        {this.dict[this.props.language]["save"]}
-                                    </button>
-                                </div>
-                                <span style={statusMessageStyle} className="col-sm-10 statusMessage">{this.state.statusMessage.message}</span>
-                            </div>
-                        </div>
-                    </div>
+                    {this.getSavePanel()}
                 </div>
             </PageClick>
         );
