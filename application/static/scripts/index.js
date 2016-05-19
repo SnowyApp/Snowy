@@ -10,7 +10,7 @@ var Navigation = require('./components/Navigation/index');
 var ProfilePage = require('./components/ProfilePage/index');
 
 
-var matteUrl = 'http://hem.ulmstedt.net:5000';
+var serverUrl = 'http://hem.ulmstedt.net:5000';
 const conceptId = 138875005;
 
 /**
@@ -179,7 +179,9 @@ var Container = React.createClass({
             });
         }
     },
-
+    /**
+     * Called just before the component renders, fetch the information needed to draw a diagram
+     */
     componentWillMount: function() {
         this.getConcept(this.state.selectedTerm);
         //Get user data if logged in
@@ -208,7 +210,6 @@ var Container = React.createClass({
             content: content
         });
     },
-
 
     /**
      * Add or remove children of concept from state.
@@ -645,7 +646,6 @@ var Container = React.createClass({
         return children;
     },
 
-
     /**
      * Send diagram to server.
      **/
@@ -786,6 +786,6 @@ var Container = React.createClass({
 });
 
 ReactDOM.render(
-    <Container concept_id={conceptId} url={matteUrl} defaultEdition="int20150731" defaultLanguage="en" />,
+    <Container concept_id={conceptId} url={serverUrl} defaultEdition="int20150731" defaultLanguage="en" />,
     document.getElementById('content')
 );
