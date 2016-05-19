@@ -78,7 +78,7 @@ webpack
 
 from `/application/static/`.
 
-Then start the server by running:
+Then start the server by running(requires Python3 for full functionality):
 
 ```
 python run.py
