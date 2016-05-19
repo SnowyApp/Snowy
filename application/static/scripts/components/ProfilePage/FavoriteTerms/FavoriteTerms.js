@@ -70,13 +70,14 @@ var FavoriteTerms = React.createClass({
         }
     },
 
-    render: function(){
+    /*
+    * Generates and returns all the term table elements
+    */
+    getTermElements: function () {
         //Generate the table rows
-        var TermArray = null;
-        var hideTable = null;
+        var termArray = null;
         if(this.state.terms.length > 0){
-            hideTable = {}; //Show table
-            TermArray = this.state.terms.map(function(term){
+            termArray = this.state.terms.map(function(term){
                 //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
                 var day = ("0" + term.dateAdded.getDate()).slice(-2);
                 var month = ("0" + term.dateAdded.getMonth()).slice(-2);
@@ -95,7 +96,15 @@ var FavoriteTerms = React.createClass({
                     />
                 );
             }, this);
-        } else {
+        }
+
+        return termArray;
+    },
+
+    render: function(){
+        var hideTable = null;
+        const termArray = this.getTermElements();
+        if(termArray == null){
             hideTable = {display: "none"}; //Hide table
         }
 
@@ -154,7 +163,7 @@ var FavoriteTerms = React.createClass({
                             </tr>
                         </thead>
                         <tbody>
-                            {TermArray}
+                            {termArray}
                         </tbody>
                     </table>
                     {this.state.terms.length > 0 ? "" : this.props.dict[this.props.language]["noSavedTerms"]}
