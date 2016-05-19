@@ -21,7 +21,10 @@ const CONJUNCTION_RADIUS = 10;
 const START_X = 20;
 const START_Y = 20;
 
-
+/**
+ * Contains components for creating a Concept Definition Diagram
+ * following the SNOMED CT diagramming guidelines
+ */
 var ConceptDefinitionDiagram = React.createClass({
     propTypes:{
         serverUrl: React.PropTypes.string,
@@ -32,21 +35,20 @@ var ConceptDefinitionDiagram = React.createClass({
         DEFINED_COLOR : "#CCCCFF",
         ATTRIBUTE_COLOR: '#FFFFCC'
     },
-
+    /**
+    * Returns the initial state of the component
+     */
     getInitialState: function() {
         return {};
     },
-
-
     /**
-     *
+     *  Called when the component has mounted
      */
     componentDidMount: function() {
         this.update(this.props);
     },
-
     /**
-     *
+     * Called when the component has received new props
      */
     shouldComponentUpdate: function(props) {
         // no point of doing anything if the same id was given
@@ -55,14 +57,12 @@ var ConceptDefinitionDiagram = React.createClass({
         this.update(props);
         return false;
     },
-
     /**
      * Render the contents of the ConceptGraph
      */
     render: function() {
         return <svg width="100%" height="100%" className="definition"></svg>;
     },
-
     /**
      * Fetch new data and draw diagram..
      */
@@ -77,7 +77,6 @@ var ConceptDefinitionDiagram = React.createClass({
                 this.draw(data);
             }.bind(this));
     },
-
     /**
      * Retrieve the concept with given id.
      */
@@ -93,7 +92,6 @@ var ConceptDefinitionDiagram = React.createClass({
             }.bind(this)
         });
     },
-
     /**
      * Retrieve relations to concept with given id.
      */
@@ -129,7 +127,6 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr('fill', 'black')
             .append('svg:path')
             .attr('d', 'M 0 0 L 20 10 L 0 20 z');
-
         defs.append('marker')
             .attr('id', 'ClearMarker')
             .attr('viewBox', '0 0 22 20')
@@ -144,7 +141,6 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr('fill', 'white')
             .append('svg:path')
             .attr('d', 'M 0 0 L 20 10 L 0 20 z');
-
         defs.append('marker')
             .attr('id', 'LineMarker')
             .attr('viewBox', '0 0 22 20')
@@ -170,7 +166,6 @@ var ConceptDefinitionDiagram = React.createClass({
             return (a.group_id > b.group_id) ? 1 : ((b.group_id > a.group_id) ? -1 : 0);
         });
     },
-
     /**
      * Draw the diagram.
      */
@@ -185,19 +180,15 @@ var ConceptDefinitionDiagram = React.createClass({
             'xmlns:xlink': 'http://www.w3.org/1999/xlink',
             version: '1.1'
         });
-
         var diagram = svg.append("g")
             .attr("class", "nodes")
             .attr('transform', 'translate(' + 0 + ',' + 0 + ')scale(' + 1 + ')');
-
         function zoomed() {
             diagram.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
         }
         var zoom = d3.behavior.zoom().on('zoom', zoomed);
         svg.call(zoom).on('dblclick.zoom', null);
-
         this.initMarkers(svg);
-
         // sorts relations by group_id
         var sortedRelations = this.sortRelations(data.relations);
         // draw the root node
@@ -280,20 +271,16 @@ var ConceptDefinitionDiagram = React.createClass({
         var fig1cy = parseFloat(fig1.attr("y"));
         var fig1cw = fig1.node().getBBox().width;
         var fig1ch = fig1.node().getBBox().height;
-
         var fig2cx = parseFloat(fig2.attr("x"));
         var fig2cy = parseFloat(fig2.attr("y"));
         var fig2cw = fig2.node().getBBox().width;
         var fig2ch = fig2.node().getBBox().height;
-
         var markerCompensation1 = 15;
         var markerCompensation2 = 15;
-
         var originY;
         var originX;
         var destinationY;
         var destinationX;
-
         switch(side1) {
             case 'top':
                 originY = fig1cy;
@@ -320,7 +307,6 @@ var ConceptDefinitionDiagram = React.createClass({
                 originY = fig1cy + (fig1ch/2);
                 break;
         }
-
         switch(side2) {
             case 'top':
                 destinationY = fig2cy;
@@ -363,14 +349,12 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("x", x)
             .attr("y", y)
             .attr('transform', 'translate(' + x + ', ' + y + ')' );
-
         g.append("circle")
             .attr("r", RELATION_RADIUS)
             .attr("cx",RELATION_RADIUS)
             .attr("cy",RELATION_RADIUS)
             .attr("fill", "white")
             .attr("stroke", "black");
-
         return g;
     },
     /**
@@ -407,7 +391,6 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("x", x)
             .attr("y", y)
             .attr('transform', 'translate(' + x + ', ' + y + ')' );
-
         g.append("circle")
             .attr("r", RELATION_RADIUS)
             .attr("cx",RELATION_RADIUS)
@@ -422,7 +405,6 @@ var ConceptDefinitionDiagram = React.createClass({
                 .attr('y2', RELATION_RADIUS - RELATION_RADIUS/3)
                 .attr("stroke", "black")
                 .attr("strokeWidth", 2);
-
             g.append("line")
                 .attr('x1', RELATION_RADIUS/2)
                 .attr('y1', RELATION_RADIUS - RELATION_RADIUS/3)
@@ -430,7 +412,6 @@ var ConceptDefinitionDiagram = React.createClass({
                 .attr('y2', RELATION_RADIUS + RELATION_RADIUS/3 - RELATION_RADIUS/6)
                 .attr("stroke", "black")
                 .attr("strokeWidth", 2);
-
             g.append("line")
                 .attr('x1', RELATION_RADIUS/2)
                 .attr('y1', RELATION_RADIUS + RELATION_RADIUS/3 - RELATION_RADIUS/6)
@@ -438,7 +419,6 @@ var ConceptDefinitionDiagram = React.createClass({
                 .attr('y2', RELATION_RADIUS + RELATION_RADIUS/3 - RELATION_RADIUS/6)
                 .attr("stroke", "black")
                 .attr("strokeWidth", 2);
-
             g.append("line")
                 .attr('x1', RELATION_RADIUS/2)
                 .attr('y1', RELATION_RADIUS + RELATION_RADIUS/3)
@@ -454,7 +434,6 @@ var ConceptDefinitionDiagram = React.createClass({
                 .attr('y2', RELATION_RADIUS - RELATION_RADIUS/3)
                 .attr("stroke", "black")
                 .attr("strokeWidth", 2);
-
             g.append("line")
                 .attr('x1', RELATION_RADIUS/2)
                 .attr('y1', RELATION_RADIUS)
@@ -462,7 +441,6 @@ var ConceptDefinitionDiagram = React.createClass({
                 .attr('y2', RELATION_RADIUS)
                 .attr("stroke", "black")
                 .attr("strokeWidth", 2);
-
             g.append("line")
                 .attr('x1', RELATION_RADIUS/2)
                 .attr('y1', RELATION_RADIUS + RELATION_RADIUS/3)
@@ -470,9 +448,7 @@ var ConceptDefinitionDiagram = React.createClass({
                 .attr('y2', RELATION_RADIUS + RELATION_RADIUS/3)
                 .attr("stroke", "black")
                 .attr("strokeWidth", 2);
-
         }
-
         return g;
     },
 
@@ -494,7 +470,6 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("x", x)
             .attr("y", y)
             .attr('transform', 'translate(' + x + ', ' + y + ')' );
-
         // draw a rectangle and text
         this.drawConceptRectangle(g, concept);
         this.drawConceptId(g, concept);
@@ -536,7 +511,6 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("x", x)
             .attr("y", y)
             .attr('transform', 'translate(' + x + ', ' + y + ')' );
-
         // draw a rectangle and text
         this.drawAttributeRectangle(g);
         this.drawAttributeId(g, concept);
@@ -551,9 +525,7 @@ var ConceptDefinitionDiagram = React.createClass({
         g.select("rect.inner").attr("y", DEFINED_CONCEPT_BORDER);
         g.select("text.name").attr("x", totalWidth/2);
         g.select("text.id").attr("x", totalWidth/2);
-
         var conceptX = x + totalWidth + NODE_MARGIN;
-
         var conc = this.drawConcept(element, concept, conceptX, y);
         // return the grouping element
         this.connectElements(element, g, conc , "right", "left", "BlackMarker");
@@ -564,7 +536,6 @@ var ConceptDefinitionDiagram = React.createClass({
      * Draw a concept rectangle in given grouping element.
      */
     drawConceptRectangle: function(group, concept) {
-
         group.append("rect")
             .attr("class", "outer")
             .attr("width", 50)
@@ -610,7 +581,6 @@ var ConceptDefinitionDiagram = React.createClass({
             .text(function() {
                 return concept.id;
             })
-
             .style("fill-opacity", 1);
     },
     /**
@@ -626,7 +596,6 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("dy", ".35em")
             .attr("font-family", "Helvetica, Arial, Sans-Serif")
             .attr("font-size", 13)
-
             // use the full name if possible, if not available use the synonym
             // and if neither is defined use a default "NO NAME" name.
             .text(function() {
@@ -647,7 +616,6 @@ var ConceptDefinitionDiagram = React.createClass({
      * Draw a attribute rectangle in given grouping element.
      */
     drawAttributeRectangle: function(group) {
-
         group.append("rect")
             .attr("class", "outer")
             .attr("width", 50)
@@ -657,7 +625,6 @@ var ConceptDefinitionDiagram = React.createClass({
             // apply the correct colours depending on definition status
             .style("fill", "white")
             .style('stroke', 'black');
-
         /** Set an inner rect which is a copy of outer if the definition_status is primitive
          *  Otherwise, it will be a blue rect inside of a white rect
          */
@@ -670,7 +637,6 @@ var ConceptDefinitionDiagram = React.createClass({
             // apply the correct colours depending on definition status
             .style("fill", ConceptDefinitionDiagram.ATTRIBUTE_COLOR)
             .style('stroke', 'black');
-
     },
     /**
      * Draw id inside given grouping element.
@@ -685,11 +651,9 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("dy", ".35em")
             .attr("font-family", "Helvetica, Arial, Sans-Serif")
             .attr("font-size", 10)
-
             // use the full name if possible, if not available use the synonym
             // and if neither is defined use a default "NO NAME" name.
             .text(concept.type_id)
-
             .style("fill-opacity", 1);
     },
     /**
@@ -705,11 +669,9 @@ var ConceptDefinitionDiagram = React.createClass({
             .attr("dy", ".35em")
             .attr("font-family", "Helvetica, Arial, Sans-Serif")
             .attr("font-size", 13)
-
             // use the full name if possible, if not available use the synonym
             // and if neither is defined use a default "NO NAME" name.
             .text(concept.type_name)
-
             .style("fill-opacity", 1);
     }
 });
