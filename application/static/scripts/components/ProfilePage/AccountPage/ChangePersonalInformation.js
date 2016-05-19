@@ -115,7 +115,10 @@ var ChangePersonalInformation = React.createClass({
         });
     },
 
-    render: function(){
+    /*
+    * Returns the first name input component
+    */
+    getFirstNameInput: function () {
         //First name validation style
         var firstNameDivState = "form-group";
         var firstNameGlyphState = null;
@@ -124,6 +127,23 @@ var ChangePersonalInformation = React.createClass({
             firstNameGlyphState = "glyphicon form-control-feedback " + (this.state.validFirstName ? "glyphicon-ok" : "glyphicon-remove");
         }
 
+        return (
+            <div className={firstNameDivState}>
+                <label htmlFor="firstName" className="col-sm-3 control-label ">
+                    {this.props.dict[this.props.language]["firstName"]}
+                </label>
+                <div className="col-sm-7">
+                    <input type="text" className="form-control" id="firstName" value={this.state.firstName} onChange={this.validateName}/>
+                    <span className={firstNameGlyphState}></span>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the last name input component
+    */
+    getLastNameInput: function () {
         //Last name validation style
         var lastNameDivState = "form-group";
         var lastNameGlyphState = null;
@@ -132,6 +152,23 @@ var ChangePersonalInformation = React.createClass({
             lastNameGlyphState = "glyphicon form-control-feedback " + (this.state.validLastName ? "glyphicon-ok" : "glyphicon-remove");
         }
 
+        return (
+            <div className={lastNameDivState}>
+                <label htmlFor="lastName" className="col-sm-3 control-label ">
+                    {this.props.dict[this.props.language]["lastName"]}
+                </label>
+                <div className="col-sm-7">
+                    <input type="text" className="form-control" id="lastName" value={this.state.lastName} onChange={this.validateName}/>
+                    <span className={lastNameGlyphState}></span>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the email input component
+    */
+    getEmailInput: function () {
         //Email validation style
         var emailDivState = "form-group";
         var emailGlyphState = null;
@@ -140,6 +177,23 @@ var ChangePersonalInformation = React.createClass({
             emailGlyphState = "glyphicon form-control-feedback " + (this.state.validEmail ? "glyphicon-ok" : "glyphicon-remove");
         }
 
+        return (
+            <div className={emailDivState}>
+                <label htmlFor="email" className="col-sm-3 control-label ">
+                    {this.props.dict[this.props.language]["email"]}
+                </label>
+                <div className="col-sm-7">
+                    <input type="text" className="form-control" value={this.state.email} onChange={this.validateEmail}/>
+                    <span className={emailGlyphState}></span>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the submit button and status message component
+    */
+    getSubmitButton: function () {
         //Disable submit button if bad information is provided
         var disableSubmit = (
                                 (this.state.firstName.length == 0 || this.state.validFirstName) &&
@@ -164,47 +218,25 @@ var ChangePersonalInformation = React.createClass({
                       </span>;
         }
 
+        return (
+            <div className="form-group">
+                <div className="col-sm-offset-3 col-sm-2">
+                    <button type="submit" className="btn btn-success" disabled={disableSubmit}>
+                        {this.props.dict[this.props.language]["update"]}
+                    </button>
+                </div>
+                {message}
+            </div>
+        );
+    },
+
+    render: function(){
         return(
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                { /* First name */ }
-                <div className={firstNameDivState}>
-                    <label htmlFor="firstName" className="col-sm-3 control-label ">
-                        {this.props.dict[this.props.language]["firstName"]}
-                    </label>
-                    <div className="col-sm-7">
-                        <input type="text" className="form-control" id="firstName" value={this.state.firstName} onChange={this.validateName}/>
-                        <span className={firstNameGlyphState}></span>
-                    </div>
-                </div>
-                { /* Last name */ }
-                <div className={lastNameDivState}>
-                    <label htmlFor="lastName" className="col-sm-3 control-label ">
-                        {this.props.dict[this.props.language]["lastName"]}
-                    </label>
-                    <div className="col-sm-7">
-                        <input type="text" className="form-control" id="lastName" value={this.state.lastName} onChange={this.validateName}/>
-                        <span className={lastNameGlyphState}></span>
-                    </div>
-                </div>
-                { /* Email */ }
-                <div className={emailDivState}>
-                    <label htmlFor="email" className="col-sm-3 control-label ">
-                        {this.props.dict[this.props.language]["email"]}
-                    </label>
-                    <div className="col-sm-7">
-                        <input type="text" className="form-control" value={this.state.email} onChange={this.validateEmail}/>
-                        <span className={emailGlyphState}></span>
-                    </div>
-                </div>
-
-                <div className="form-group">
-                    <div className="col-sm-offset-3 col-sm-2">
-                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>
-                            {this.props.dict[this.props.language]["update"]}
-                        </button>
-                    </div>
-                    {message}
-                </div>
+                {this.getFirstNameInput()}
+                {this.getLastNameInput()}
+                {this.getEmailInput()}
+                {this.getSubmitButton()}
             </form>
         );
     }
