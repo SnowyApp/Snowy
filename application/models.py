@@ -243,6 +243,7 @@ class User:
 
     def get_diagram(self, diagram_id):
         """
+        Returns a diagram given the diagram id.
         """
         cur = get_db().cursor()
         try:
@@ -527,6 +528,9 @@ class Concept:
 
     @staticmethod
     def get_attribute(type_id):
+        """
+        Returns the attribute of the concept.
+        """
         cur = get_db().cursor()
         try:
             cur.execute(SELECT_CONCEPT_TERM_QUERY, (type_id,))
@@ -538,6 +542,9 @@ class Concept:
             return "UNDEFINED (PROBABLE ERROR SERVER SIDE)"
 
     def get_definition_status(self):
+        """
+        Returns the definition status of the concept.
+        """
         return "Primitive" if self.definition_status_id == 900000000000074008 else "Fully-defined"
 
     def to_json(self):
