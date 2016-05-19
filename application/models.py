@@ -11,13 +11,16 @@ DB_USER = app.config["DB_USER"]
 # User management queries
 INSERT_USER_STATEMENT = "INSERT INTO usr (email, password_hash) VALUES (%s, %s);"
 SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, db_edition, site_lang FROM usr WHERE email=%s;"
-UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=%s, email=%s, site_lang=%s WHERE email=%s ;"
+UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=%s, email=%s," \
+                        " site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
 
 # Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
-SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id, a.type_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
+SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id," \
+                            " a.type_id from description a join language_refset b on a.id=b.referenced_component_id " \
+                            "where a.concept_id=%s;"
 SELECT_CONCEPT_TERM_QUERY = "SELECT term FROM description WHERE concept_id=%s;"
 
 # Token queries
@@ -29,21 +32,25 @@ INVALIDATE_TOKENS_STATEMENT = "DELETE FROM token WHERE token!=%s"
 # Favorite term queries
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s and concept_id=%s"
-INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term, date_added) VALUES (%s, %s, %s, %s);"
+INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term, date_added) " \
+                                 "VALUES (%s, %s, %s, %s);"
 
 # Relations quries
 SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id, D.definition_status_id 
                             FROM relationship B JOIN description A ON B.source_id=A.concept_id 
                             JOIN language_refset C on A.id=C.referenced_component_id 
                             JOIN concept D ON A.concept_id=D.id 
-                            WHERE B.destination_id=%s AND B.active=1 AND C.active=1 AND B.type_id=116680003 ORDER BY B.source_id;"""
+                            WHERE B.destination_id=%s AND B.active=1 AND C.active=1 AND B.type_id=116680003
+                            ORDER BY B.source_id;"""
 SELECT_PARENTS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id 
                             FROM relationship A 
                             JOIN description B ON A.destination_id=B.concept_id 
                             JOIN language_refset C ON B.id=C.referenced_component_id 
                             JOIN concept D ON B.concept_id=D.id 
-                            WHERE A.source_id=%s AND A.type_id=116680003 AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
-SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id, A.relationship_group 
+                            WHERE A.source_id=%s AND A.type_id=116680003 AND A.active=1 AND B.active=1 AND C.active=1
+                            ORDER BY B.concept_id;"""
+SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id,
+                            A.relationship_group
                             FROM relationship A 
                             JOIN description B ON A.destination_id=B.concept_id 
                             JOIN language_refset C ON B.id=C.referenced_component_id 
@@ -51,7 +58,8 @@ SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.t
                             WHERE a.source_id=%s AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
 
 # Diagram queries
-INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, description, user_email) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id"
+INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, description, user_email) " \
+                           "VALUES (%s, %s, %s, %s, %s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s, description=%s WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 SELECT_DIAGRAM_BY_ID_QUERY = "SELECT * FROM diagram WHERE user_email=%s and id=%s;"
@@ -83,7 +91,7 @@ def close_db(error):
         g.postgres_db.close()
 
 
-class User():
+class User:
     """
     A user of the browser.
     """
@@ -225,7 +233,8 @@ class User():
             result = []
             cur.execute(SELECT_DIAGRAM_QUERY, (self.email,))
             for data in cur:
-                result += [{"id": data[0], 'name': data[2], 'description': data[3], 'created': data[4], 'modified': data[5]}]
+                result += [{"id": data[0], 'name': data[2], 'description': data[3], 'created': data[4],
+                            'modified': data[5]}]
             cur.close()
             return result
         except Exception as e:
@@ -311,7 +320,7 @@ class User():
                 "site_lang": self.site_lang}
 
 
-class Token():
+class Token:
     """
     Represents a user token.
     """
@@ -365,7 +374,7 @@ class Token():
             print(str(e))
 
 
-class Concept():
+class Concept:
     """
     Represents a concept in the Snomed CT database
     """
