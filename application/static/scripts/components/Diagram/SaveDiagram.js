@@ -37,7 +37,6 @@ var SaveDiagram = React.createClass({
             errorMessage:       "Diagram could not be saved",
             savingMessage:      "Saving diagram..."
         }
-
     },
 
     getInitialState() {
@@ -130,10 +129,10 @@ var SaveDiagram = React.createClass({
     },
 
     render: function () {
-        //Show save panel?
+        //Show save panel if showSavePanel state is true
         const showSavePanel = (this.state.showSavePanel ? null : {display: "none"});
 
-        //Display a status message?
+        //Display a status message if statusMessage state is set
         var statusMessage = this.state.statusMessage;
         var statusMessageStyle;
         if(statusMessage.type == "success"){
@@ -143,7 +142,7 @@ var SaveDiagram = React.createClass({
         } else if (statusMessage.type == "error") {
             statusMessageStyle = {color: "red"}
         }
-        {/* PageClick closes the saveDiagram panel when the user clicks outside of it */}
+
         return (
             <PageClick onClick={this.hideSavePanel}>
                 <div className="saveDiagramWrapper">

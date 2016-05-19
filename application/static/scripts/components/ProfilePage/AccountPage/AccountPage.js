@@ -18,6 +18,9 @@ var AccountPage = React.createClass({
         updateUser:     React.PropTypes.func
     },
 
+    /*
+    * Gets and sets the initial state of the component
+    */
     getInitialState: function(){
         return ({
             nameOpen: false,
@@ -28,7 +31,7 @@ var AccountPage = React.createClass({
     },
 
    /**
-    * Toggles between +/- expand glyph
+    * Toggles between showing +/- expand glyph
     */
     openAcc: function(acc){
         const disableTime = 400;
@@ -60,11 +63,78 @@ var AccountPage = React.createClass({
         }
     },
 
-    render: function(){
-        // +/- expand glyphs based on state
+    /*
+    * Returns the component for changing personal information
+    */
+    getPersonalInformationComponent: function () {
+        // Show +/- expand glyph based on state
         var expandNameClass = "glyphicon expandGlyph " + (this.state.nameOpen ? "glyphicon-minus" : "glyphicon-plus");
+
+        return (
+            <div className="col-sm-12">
+                <div className="panel-group accountSettingsPanel">
+                    <div className="panel panel-primary">
+                        <div className="panel-heading">
+                            <h4 className="panel-title">
+                            <a onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse">
+                                {this.props.dict[this.props.language]["personalInfo"]}
+                                <span className={expandNameClass} aria-hidden="true"></span>
+                            </a>
+                            </h4>
+                        </div>
+                        <div id="nameCollapse" className="panel-collapse collapse">
+                            <div className="panel-body">
+                                <ChangePersonalInformation
+                                    url={this.props.url}
+                                    dict={this.props.dict}
+                                    language={this.props.language}
+                                    dbEdition={this.props.dbEdition}
+                                    user={this.props.user}
+                                    updateUser={this.props.updateUser}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the change password component
+    */
+    getChangePasswordComponent: function () {
+        // Show +/- expand glyph based on state
         var expandPasswordClass = "glyphicon expandGlyph " + (this.state.passwordOpen ? "glyphicon-minus" : "glyphicon-plus");
 
+        return (
+            <div className="col-sm-12">
+                <div className="panel-group accountSettingsPanel">
+                    <div className="panel panel-primary">
+                        <div className="panel-heading">
+                            <h4 className="panel-title">
+                            <a onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse">
+                                {this.props.dict[this.props.language]["password"]}
+                                <span className={expandPasswordClass} aria-hidden="true"></span>
+                            </a>
+                            </h4>
+                        </div>
+                        <div id="passwordCollapse" className="panel-collapse collapse">
+                            <div className="panel-body">
+                                <ChangePasswordForm
+                                    url={this.props.url}
+                                    dict={this.props.dict}
+                                    language={this.props.language}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    },
+
+    render: function(){
         return(
             <div>
                 <h1>
@@ -73,59 +143,8 @@ var AccountPage = React.createClass({
                 </h1>
                 <hr className="profileHr"/>
                 <div className="accountPageWrapper">
-
-                    {/* PERSONAL INFORMATION */}
-                    <div className="col-sm-12">
-                        <div className="panel-group accountSettingsPanel">
-                            <div className="panel panel-primary">
-                                <div className="panel-heading">
-                                    <h4 className="panel-title">
-                                    <a onClick={this.openAcc.bind(null, "name")} data-toggle="collapse" href="#nameCollapse">
-                                        {this.props.dict[this.props.language]["personalInfo"]}
-                                        <span className={expandNameClass} aria-hidden="true"></span>
-                                    </a>
-                                    </h4>
-                                </div>
-                                <div id="nameCollapse" className="panel-collapse collapse">
-                                    <div className="panel-body">
-                                        <ChangePersonalInformation
-                                            url={this.props.url}
-                                            dict={this.props.dict}
-                                            language={this.props.language}
-                                            dbEdition={this.props.dbEdition}
-                                            user={this.props.user}
-                                            updateUser={this.props.updateUser}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* PASSWORD */}
-                    <div className="col-sm-12">
-                        <div className="panel-group accountSettingsPanel">
-                            <div className="panel panel-primary">
-                                <div className="panel-heading">
-                                    <h4 className="panel-title">
-                                    <a onClick={this.openAcc.bind(null, "password")} data-toggle="collapse" href="#passwordCollapse">
-                                        {this.props.dict[this.props.language]["password"]}
-                                        <span className={expandPasswordClass} aria-hidden="true"></span>
-                                    </a>
-                                    </h4>
-                                </div>
-                                <div id="passwordCollapse" className="panel-collapse collapse">
-                                    <div className="panel-body">
-                                        <ChangePasswordForm
-                                            url={this.props.url}
-                                            dict={this.props.dict}
-                                            language={this.props.language}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {this.getPersonalInformationComponent()}
+                    {this.getChangePasswordComponent()}
                 </div>
             </div>
         );

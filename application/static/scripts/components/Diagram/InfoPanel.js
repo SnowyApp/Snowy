@@ -59,6 +59,9 @@ var InfoPanel = React.createClass({
         }
     },
 
+    /*
+    * Gets and sets the initial state of the component
+    */
     getInitialState: function(){
         return ({
             parents: [],
@@ -70,6 +73,7 @@ var InfoPanel = React.createClass({
 
     componentWillReceiveProps: function(nextProps){
         this.props = nextProps;
+        //Get new info from database when a new root node is provided
         this.getParents(this.props.data[0].concept_id);
         this.getNames(this.props.data[0].concept_id);
         this.getRelations(this.props.data[0].concept_id);
@@ -163,6 +167,9 @@ var InfoPanel = React.createClass({
                     });
                 }
             }.bind(this),
+            /*
+            * If API call fails, print error messages to console
+            */
             error: function (textStatus, errorThrown) {
                 console.log(textStatus);
                 console.log(errorThrown);
