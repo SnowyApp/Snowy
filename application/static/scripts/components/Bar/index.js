@@ -6,15 +6,18 @@ import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import Dropdown from 'react-bootstrap/lib/Dropdown';
 
-/* Logout component */
+// Logout component
 var LogOut = require('../LogOut/index');
-/* RegisterForm component */
+// RegisterForm component
 var RegisterForm = require('../RegisterForm/index');
-/* LoginForm component */
+// LoginForm component
 var LoginForm = require('../LoginForm/index');
-/* Search component */
+// Search component
 var Search = require('../Search/index');
 
+/**
+ * Contains and handles the buttons on the navigation bar
+ */
 var Bar = React.createClass({
     propTypes: {
         update:         React.PropTypes.func,

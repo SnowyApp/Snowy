@@ -17,6 +17,7 @@ var Export = React.createClass({
         selectedTerm: React.PropTypes.number,
         diagramView: React.PropTypes.string
     },
+    // Dictionary used for the export button
     dict: {
         se: {
             export:       "Exportera"
@@ -38,15 +39,15 @@ var Export = React.createClass({
         svgClone.firstChild.setAttribute("transform", 'translate(0,0)scale(1)');
 
         // Sets the viewbox, width and height of the cloned svg element to that of "nodes"
-        var bb = d3.select("svg." + this.props.diagramView).selectAll('.nodes').node().getBBox();
-        var bbx = bb.x - MARGIN;
-        var bby = bb.y - MARGIN;
-        var bbw = bb.width + 2 * MARGIN;
-        var bbh = bb.height + 2 * MARGIN;
-        var vb = [bbx, bby, bbw, bbh];
-        svgClone.setAttribute("viewBox", vb.join(" "));
-        svgClone.setAttribute('width', bbw);
-        svgClone.setAttribute('height', bbh);
+        var boundingBox = d3.select("svg." + this.props.diagramView).selectAll('.nodes').node().getBBox();
+        var boundingBoxX = boundingBox.x - MARGIN;
+        var boundingBoxY = boundingBox.y - MARGIN;
+        var boundingBoxW = boundingBox.width + 2 * MARGIN;
+        var boundingBoxH = boundingBox.height + 2 * MARGIN;
+        var viewBox = [boundingBoxX, boundingBoxY, boundingBoxW, boundingBoxH];
+        svgClone.setAttribute("viewBox", viewBox.join(" "));
+        svgClone.setAttribute('width', boundingBoxW);
+        svgClone.setAttribute('height', boundingBoxH);
 
         return svgClone;
     },
@@ -69,7 +70,6 @@ var Export = React.createClass({
             return 'data:image/svg+xml;base64,' + window.btoa(html);
         }
         return 'data:image/svg+xml,' + html;
-
     },
     /**
      * Saves the image from link with a name of variable filename
@@ -95,7 +95,6 @@ var Export = React.createClass({
     savePNG: function(link, name){
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
-
         const image = new Image();
         image.onload = function () {
             canvas.width = image.width;
