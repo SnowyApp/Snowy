@@ -1,3 +1,6 @@
+"""
+Contains tests to be run on the application
+"""
 import application
 import json
 import unittest
