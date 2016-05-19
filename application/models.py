@@ -15,7 +15,6 @@ UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=
                         " site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
-
 # Procedure used to get the concept
 GET_CONCEPT_PROCEDURE = "get_concept"
 SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id," \
@@ -65,6 +64,7 @@ SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 SELECT_DIAGRAM_BY_ID_QUERY = "SELECT * FROM diagram WHERE user_email=%s and id=%s;"
 DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
 
+
 def connect_db():
     """
     Connects to the database.
@@ -95,7 +95,8 @@ class User:
     """
     A user of the browser.
     """
-    def __init__(self, email, password_hash, first_name = "", last_name = "", db_edition = "en", site_lang = "en"):
+
+    def __init__(self, email, password_hash, first_name="", last_name="", db_edition="en", site_lang="en"):
         self.email = email
         self.password_hash = password_hash
         self.first_name = first_name
@@ -107,7 +108,7 @@ class User:
         """ Checks if the password matches the stored hash """
         return check_password_hash(self.password_hash, plain_pass)
 
-    def generate_token(self,expiration=5184000):
+    def generate_token(self, expiration=5184000):
         """
         Generates a token for the user.
         """
@@ -164,7 +165,7 @@ class User:
         """
         cur = get_db().cursor()
         try:
-            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, db_edition, email, site_lang,self.email))
+            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, db_edition, email, site_lang, self.email))
             get_db().commit()
             self.email = email
             self.first_name = first_name
@@ -184,7 +185,7 @@ class User:
         cur = get_db().cursor()
         p_hash = generate_password_hash(new_password, salt_length=12)
         try:
-            cur.execute(UPDATE_PASSWORD_STATEMENT, (p_hash,self.email))
+            cur.execute(UPDATE_PASSWORD_STATEMENT, (p_hash, self.email))
             get_db().commit()
             cur.close()
             return True
@@ -192,20 +193,19 @@ class User:
             print(e)
             return False
 
-
-    def invalidate_tokens(self,token):
+    def invalidate_tokens(self, token):
         """
         Invalidate all tokens but token.
         """
         cur = get_db().cursor()
         try:
-            cur.execute(INVALIDATE_TOKENS_STATEMENT, (token, ))
+            cur.execute(INVALIDATE_TOKENS_STATEMENT, (token,))
             get_db().commit()
             cur.close()
         except Exception as e:
             print(e)
 
-    def store_diagram(self, data, name, date, description, did = None):
+    def store_diagram(self, data, name, date, description, did=None):
         """
         Stores a diagram for the user.
         """
@@ -270,7 +270,6 @@ class User:
             print(e)
             return False
 
- 
     @staticmethod
     def create_user(email, password):
         """
@@ -378,8 +377,8 @@ class Concept:
     """
     Represents a concept in the Snomed CT database
     """
-    
-    def __init__(self, cid, syn_term = "", full_term = "", type_id = 0):
+
+    def __init__(self, cid, syn_term="", full_term="", type_id=0):
         self.id = cid
         self.syn_term = syn_term
         self.full_term = full_term
@@ -517,10 +516,10 @@ class Concept:
             result = []
             for desc in cur:
                 result += [{
-                            "name": desc[1],
-                            "type": "Synonym" if desc[3]==900000000000013009 else "Full",
-                            "acceptability": "Preferred" if desc[2]==900000000000548007 else "Acceptable"
-                            }]
+                    "name": desc[1],
+                    "type": "Synonym" if desc[3] == 900000000000013009 else "Full",
+                    "acceptability": "Preferred" if desc[2] == 900000000000548007 else "Acceptable"
+                }]
             return result
         except Exception as e:
             print(e)
@@ -539,17 +538,17 @@ class Concept:
             return "UNDEFINED (PROBABLE ERROR SERVER SIDE)"
 
     def get_definition_status(self):
-        return "Primitive" if self.definition_status_id==900000000000074008 else "Fully-defined"
+        return "Primitive" if self.definition_status_id == 900000000000074008 else "Fully-defined"
 
     def to_json(self):
         """
         Returns a JSON representation of the concept.
         """
         res = {"id": self.id,
-                "synonym": self.syn_term,
-                "full": self.full_term,
-                "definition_status": self.get_definition_status(),
-                "active": self.active}
+               "synonym": self.syn_term,
+               "full": self.full_term,
+               "definition_status": self.get_definition_status(),
+               "active": self.active}
         if self.type_name:
             res["type_id"] = self.type_id
             res["type_name"] = self.type_name
@@ -560,9 +559,6 @@ class Concept:
             res["group_id"] = self.group_id
 
         return res
-
-
-
 
     def __str__(self):
         """
