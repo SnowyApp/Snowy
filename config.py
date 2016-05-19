@@ -5,7 +5,7 @@ Contains configuration constants for the backend.
 STATIC_FOLDER = 'static'
 # The path to the static folder
 STATIC_URL_PATH = ''
-# Used for generating a token
+# A key used to make sure unauthorized users cannot modify sessions
 SECRET_KEY = 'tkar8j;h{)*JYLUJ#IEonareinskJ@{*(L{ONOEINIDC'
 # The name of the database stored locally
 DB_NAME = "snomedct"
