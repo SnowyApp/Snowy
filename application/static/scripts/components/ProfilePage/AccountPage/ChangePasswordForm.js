@@ -163,22 +163,13 @@ var ChangePasswordForm = React.createClass({
         });
     },
 
-    render: function(){
-        const passwordStrength = this.state.passwordStrength;
-        //Password strength
-        var passwordDivState = "form-group";
-        var passwordGlyphState = null;
-        if(this.state.newPassword.length > 0){
-            passwordDivState = passwordDivState + " has-feedback " + (passwordStrength > 0 ? "has-success" : "has-error");
-            passwordGlyphState = "glyphicon form-control-feedback " + (passwordStrength > 0 ? "glyphicon-ok" : "glyphicon-remove");
-        }
-
-        const pwStrengthBarClass = "progress-bar pwStrengthBar";
-        const pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"];
-        var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[passwordStrength];
-
+    /*
+    * Gets the CSS for the password strength bars depending on password strength
+    * @passwordStrength Strength of the password (0-4)
+    */
+    getPasswordStrengthCSS: function (passwordStrength) {
         //Default bar color
-        const barStyle = [
+        var barStyle = [
             {backgroundColor: "gray"},
             {backgroundColor: "gray"},
             {backgroundColor: "gray"},
@@ -206,6 +197,71 @@ var ChangePasswordForm = React.createClass({
             }
         }
 
+        return barStyle;
+    },
+
+    /*
+    * Returns the password input component
+    */
+    getPasswordInput: function () {
+        const passwordStrength = this.state.passwordStrength;
+
+        //Password strength
+        var passwordDivState = "form-group";
+        var passwordGlyphState = null;
+        if(this.state.newPassword.length > 0){
+            passwordDivState = passwordDivState + " has-feedback " + (passwordStrength > 0 ? "has-success" : "has-error");
+            passwordGlyphState = "glyphicon form-control-feedback " + (passwordStrength > 0 ? "glyphicon-ok" : "glyphicon-remove");
+        }
+
+        return (
+            <div className={passwordDivState}>
+                <label htmlFor="newPassword" className="col-sm-3 control-label">
+                    {this.props.dict[this.props.language]["newPassword"]}
+                </label>
+                <div className="col-sm-7">
+                    <input type="password" id="newPassword" className="form-control" onChange={this.checkPasswordStrength} />
+                    <span className={passwordGlyphState}></span>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the password strength bar
+    */
+    getPasswordStrengthBar: function () {
+        const passwordStrength = this.state.passwordStrength;
+
+        const pwStrengthBarClass = "progress-bar pwStrengthBar";
+        const pwStrengthBarColor = ["pwStrength0Color", "pwStrength1Color", "pwStrength2Color", "pwStrength3Color", "pwStrength4Color"];
+        var pwStrengthBarTextClass = "pwStrengthText " + pwStrengthBarColor[passwordStrength];
+
+        //Get password strength bar CSS
+        const barStyle = this.getPasswordStrengthCSS(passwordStrength);
+
+        return (
+            <div className="col-sm-7 col-sm-offset-3" >
+                <div className="progress validationBar">
+                    <div className={pwStrengthBarClass} style={barStyle[0]} role="progressbar"></div>
+                    <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                    <div className={pwStrengthBarClass} style={barStyle[1]} role="progressbar"></div>
+                    <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                    <div className={pwStrengthBarClass} style={barStyle[2]} role="progressbar"></div>
+                    <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
+                    <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
+                </div>
+                <div className={pwStrengthBarTextClass}>
+                    {(this.state.newPassword.length > 0 ? this.props.dict[this.props.language]["passwordStrength"][passwordStrength] : "")}
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the repeat password input component
+    */
+    getRepeatPasswordInput: function () {
         //Matching passwords
         var repeatDivState = "form-group";
         var repeatGlyphState = null;
@@ -213,8 +269,42 @@ var ChangePasswordForm = React.createClass({
             repeatDivState = repeatDivState + " has-feedback " + (this.state.matchingPasswords ? "has-success" : "has-error");
             repeatGlyphState = "glyphicon form-control-feedback " + (this.state.matchingPasswords ? "glyphicon-ok" : "glyphicon-remove");
         }
+
+        return (
+            <div className={repeatDivState}>
+                <label htmlFor="repeatPassword" className="col-sm-3 control-label">
+                    {this.props.dict[this.props.language]["repeat"]}
+                </label>
+                <div className="col-sm-7">
+                    <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
+                    <span className={repeatGlyphState}></span>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the current password input component
+    */
+    getCurrentPasswordInput: function () {
+        return (
+            <div className="form-group">
+                <label htmlFor="inputPassword3" className="col-sm-3 control-label ">
+                    {this.props.dict[this.props.language]["currentPassword"]}
+                </label>
+                <div className="col-sm-7">
+                    <input type="password" id="currPassword" className="form-control" onChange={this.updateCurrPasswordState}/>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the submit button and status message
+    */
+    getSubmitButton: function () {
         //Disable submit button if insufficient information is provided
-        var disableSubmit = (this.state.newPassword == this.state.repeatPassword && passwordStrength > 0 && this.state.currPassword.length > 0 ? "" : "disabled");
+        var disableSubmit = (this.state.newPassword == this.state.repeatPassword && this.state.passwordStrength > 0 && this.state.currPassword.length > 0 ? "" : "disabled");
 
         var message = "";
         if(this.state.successMessage.length > 0){
@@ -223,59 +313,26 @@ var ChangePasswordForm = React.createClass({
             message = <span className="col-sm-6 errorMessage">{this.state.errorMessage}</span>;
         }
 
+        return (
+            <div className="form-group">
+                <div className="col-sm-offset-3 col-sm-2">
+                    <button type="submit" className="btn btn-success" disabled={disableSubmit}>
+                        {this.props.dict[this.props.language]["update"]}
+                    </button>
+                </div>
+                {message}
+            </div>
+        );
+    },
+
+    render: function(){
         return(
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                <div className={passwordDivState}>
-                    <label htmlFor="newPassword" className="col-sm-3 control-label">
-                        {this.props.dict[this.props.language]["newPassword"]}
-                    </label>
-                    <div className="col-sm-7">
-                        <input type="password" id="newPassword" className="form-control" onChange={this.checkPasswordStrength} />
-                        <span className={passwordGlyphState}></span>
-                    </div>
-                </div>
-
-                <div className="col-sm-7 col-sm-offset-3" >
-                    <div className="progress validationBar">
-                        <div className={pwStrengthBarClass} style={barStyle[0]} role="progressbar"></div>
-                        <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
-                        <div className={pwStrengthBarClass} style={barStyle[1]} role="progressbar"></div>
-                        <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
-                        <div className={pwStrengthBarClass} style={barStyle[2]} role="progressbar"></div>
-                        <div className="progress-bar pwStrengthSpace" role="progressbar"></div>
-                        <div className={pwStrengthBarClass} style={barStyle[3]} role="progressbar"></div>
-                    </div>
-                    <div className={pwStrengthBarTextClass}>
-                        {(this.state.newPassword.length > 0 ? this.props.dict[this.props.language]["passwordStrength"][passwordStrength] : "")}
-                    </div>
-                </div>
-
-                <div className={repeatDivState}>
-                    <label htmlFor="repeatPassword" className="col-sm-3 control-label">
-                        {this.props.dict[this.props.language]["repeat"]}
-                    </label>
-                    <div className="col-sm-7">
-                        <input type="password" id="repeatPassword" className="form-control" onChange={this.updateRepeatedPassword} />
-                        <span className={repeatGlyphState}></span>
-                    </div>
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="inputPassword3" className="col-sm-3 control-label ">
-                        {this.props.dict[this.props.language]["currentPassword"]}
-                    </label>
-                    <div className="col-sm-7">
-                        <input type="password" id="currPassword" className="form-control" onChange={this.updateCurrPasswordState}/>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div className="col-sm-offset-3 col-sm-2">
-                        <button type="submit" className="btn btn-success" disabled={disableSubmit}>
-                            {this.props.dict[this.props.language]["update"]}
-                        </button>
-                    </div>
-                    {message}
-                </div>
+                {this.getPasswordInput()}
+                {this.getPasswordStrengthBar()}
+                {this.getRepeatPasswordInput()}
+                {this.getCurrentPasswordInput()}
+                {this.getSubmitButton()}
             </form>
         );
     }

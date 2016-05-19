@@ -148,12 +148,13 @@ var FavoriteDiagrams = React.createClass({
         }
     },
 
-    render: function(){
+    /*
+    * Generates and returns all the diagram table elements
+    */
+    getDiagramElements: function () {
         //Generate the diagram elements
         var diagramArray = null;
-        var hideTable = null;
         if(this.state.diagrams.length > 0){
-            hideTable = {}; //Show table
             diagramArray = this.state.filteredDiagrams.map(function(diagram){
                 //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
                 var day = ("0" + diagram.modified.getDate()).slice(-2);
@@ -177,7 +178,15 @@ var FavoriteDiagrams = React.createClass({
                     />
                 );
             }, this);
-        }else {
+        }
+
+        return diagramArray;
+    },
+
+    render: function(){
+        var hideTable = null;
+        const diagramArray = this.getDiagramElements();
+        if(diagramArray == null){
             hideTable = {display: "none"}; //Hide table
         }
 
