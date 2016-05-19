@@ -139,17 +139,51 @@ var LoginForm = React.createClass({
         });
     },
 
-    
-    render: function(){
-        //Valid email
+    /*
+    * Returns the email input component
+    */
+    getEmailInput: function () {
+        //Adjust CSS depending on if the email is valid
         var emailDivState = "form-group";
         var emailGlyphState = null;
         if(this.state.email.length > 0){
             emailDivState = emailDivState + " has-feedback " + (this.state.validEmail ? "has-success" : "has-error");
             emailGlyphState = "glyphicon form-control-feedback " + (this.state.validEmail ? "glyphicon-ok" : "glyphicon-remove");
-        }        
+        }
 
-        
+        return (
+            <div className={emailDivState}>
+                <label htmlFor="newPassword" className="col-sm-3 control-label">
+                    {this.dict[this.props.language]["email"]}
+                </label>
+                <div className="col-sm-8">
+                    <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
+                    <span className={emailGlyphState}></span>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the password input component
+    */
+    getPasswordInput: function () {
+        return (
+            <div className="form-group">
+                <label htmlFor="newPassword" className="col-sm-3 control-label">
+                    {this.dict[this.props.language]["password"]}
+                </label>
+                <div className="col-sm-8">
+                    <input type="password" id="password" onChange={this.updatePassword} className="form-control"/>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the submit button and error message component
+    */
+    getSubmitButton: function () {
         //Disable submit button if insufficient information is provided
         var disableSubmit = (this.state.validEmail ? "" : "disabled");
 
@@ -159,6 +193,19 @@ var LoginForm = React.createClass({
             message = <span className="col-sm-6 errorMessage">{this.state.errorMessage}</span>;
         }
 
+        return (
+            <div className="form-group">
+                <div className="col-sm-offset-3 col-sm-2">
+                    <button type="submit" className="btn btn-success" disabled={disableSubmit}>
+                        {this.dict[this.props.language]["login"]}
+                    </button>
+                </div>
+                {message}
+            </div>
+        );
+    },
+
+    render: function(){
         return(
             <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header className="bg-primary" closeButton>
@@ -168,35 +215,9 @@ var LoginForm = React.createClass({
                 </Modal.Header>
                 <Modal.Body>
                     <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                        {/* Email */}
-                        <div className={emailDivState}>
-                            <label htmlFor="newPassword" className="col-sm-3 control-label">
-                                {this.dict[this.props.language]["email"]}
-                            </label>
-                            <div className="col-sm-8">
-                                <input type="text" id="email" onChange={this.validateEmail} className="form-control"/>
-                                <span className={emailGlyphState}></span>
-                            </div>
-                        </div>
-                        {/* Password */}
-                        <div className="form-group">
-                            <label htmlFor="newPassword" className="col-sm-3 control-label">
-                                {this.dict[this.props.language]["password"]}
-                            </label>
-                            <div className="col-sm-8">
-                                <input type="password" id="password" onChange={this.updatePassword} className="form-control"/>
-                            </div>
-                        </div>
-
-                        {/* Submit */}
-                        <div className="form-group">
-                            <div className="col-sm-offset-3 col-sm-2">
-                                <button type="submit" className="btn btn-success" disabled={disableSubmit}>
-                                    {this.dict[this.props.language]["login"]}
-                                </button>
-                            </div>
-                            {message}
-                        </div>
+                        {this.getEmailInput()}
+                        {this.getPasswordInput()}
+                        {this.getSubmitButton()}
                     </form>
                 </Modal.Body>
             </Modal>
@@ -204,11 +225,3 @@ var LoginForm = React.createClass({
     }
 });
 module.exports = LoginForm;
-
-
-
-
-
-
-
-
