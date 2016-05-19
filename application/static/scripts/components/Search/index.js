@@ -157,6 +157,10 @@ var Search = React.createClass({
         update:       React.PropTypes.func,
         language:     React.PropTypes.string
     },
+    /**
+     * Set initial value of all states
+     * @returns {{query: string, searchData: Array, searchHistory: (*|Array), lastData: Array, lastSearch: string}}
+     */
     getInitialState:function(){
         return{
             query:'',
