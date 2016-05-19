@@ -223,29 +223,101 @@ var InfoPanel = React.createClass({
         this.props.addFavoriteTerm(args.id, args.name);
     },
 
-    render: function(){
-        //Check if data is set yet, otherwise return
-        if(this.props.data === undefined || this.props.data.length == 0) return null;
+    /*
+    * Returns div containing general term info
+    */
+    getGeneralInfo: function () {
+        return (
+            <div>
+                <h3>
+                    {this.dict[this.props.language]["generalInfo"]}
+                </h3>
+                <div className="well">
+                    <table className="termInfo">
+                        <tbody>
+                            <tr className="termInfo">
+                                <td className="termInfoName">{this.dict[this.props.language]["name"]}:</td>
+                                <td className="termInfoData">{this.props.data[0].name}</td>
+                            </tr>
+                            <tr className="termInfo">
+                                <td className="termInfoName">ID:</td>
+                                <td className="termInfoData">{this.props.data[0].concept_id}</td>
+                            </tr>
+                            <tr className="termInfo">
+                                <td className="termInfoName">{this.dict[this.props.language]["children"]}:</td>
+                                <td className="termInfoData">
+                                    {(this.props.data[0].children !== undefined ? this.props.data[0].children.length : 0)}
+                                </td>
+                            </tr>
+                            <tr className="termInfo">
+                                <td className="termInfoName">{this.dict[this.props.language]["conceptType"]}:</td>
+                                <td className="termInfoData">{this.props.data[0].definitionStatus}</td>
+                            </tr>
+                            <tr className="termInfo">
+                                <td className="termInfoName">Status:</td>
+                                <td className="termInfoData">{this.props.data[0].status}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    },
 
-        //Only show "save favorite" button if user is logged in
-        var saveTermButton = null;
-        if(cookie.load('userId') != null){
-            saveTermButton = (this.state.isFavorited ?
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger btn-sm saveTermButton"
-                                        onClick={this.props.removeFavoriteTerm.bind(null, this.props.data[0].concept_id)}>
-                                        {this.dict[this.props.language]["removeFavorite"]}
-                                    </button>
-                                    :
-                                    <button
-                                        type="button"
-                                        className="btn btn-success btn-sm saveTermButton"
-                                        onClick={this.addFavorite.bind(null,{id: this.props.data[0].concept_id, name: this.props.data[0].name})}>
-                                        {this.dict[this.props.language]["saveFavorite"]}
-                                    </button>)
-        }
+    /*
+    * Returns table containing all the terms names
+    */
+    getNamesTable: function () {
+        //Create table rows for all names
+        var namesArray = this.state.names.map(function(name){
+            return (
+                    <tr key={name.name}>
+                        <td>
+                            {name.type}
+                        </td>
+                        <td>
+                            {name.name}
+                        </td>
+                        <td>
+                            {name.acceptability}
+                        </td>
+                    </tr>
+                );
+        });
 
+        return (
+            <div>
+                <h3>
+                    {this.dict[this.props.language]["names"]}
+                </h3>
+                <div className="well">
+                    <table className="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th id="name_type" className="namesTable">
+                                    {this.dict[this.props.language]["type"]}
+                                </th>
+                                <th id="name_name" className="namesTable">
+                                    {this.dict[this.props.language]["name"]}
+                                </th>
+                                <th id="name_acceptability" className="namesTable">
+                                    {this.dict[this.props.language]["acceptability"]}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {namesArray}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns table containing all the terms parents
+    */
+    getParentsTable: function () {
         var showParents = null;
         if(this.state.parents.length > 0){
             //Create table rows for all parents
@@ -265,23 +337,34 @@ var InfoPanel = React.createClass({
             showParents = {display: "none"}; //Hide table if there are no parents to show
         }
 
-        //Create table rows for all names
-        var namesArray = this.state.names.map(function(name){
-            return (
-                    <tr key={name.name}>
-                        <td>
-                            {name.type}
-                        </td>
-                        <td>
-                            {name.name}
-                        </td>
-                        <td>
-                            {name.acceptability}
-                        </td>
-                    </tr>
-                );
-        });
+        return (
+            <div>
+                <h3 style={showParents}>{this.dict[this.props.language]["parents"]}</h3>
+                <div style={showParents} className="well">
+                    <table style={showParents} className="table table-condensed parentsTable">
+                        <thead>
+                            <tr>
+                                <th id="parent_name" className="parentsTable">
+                                    {this.dict[this.props.language]["name"]}
+                                </th>
+                                <th id="parent_id" className="parentsTable">
+                                    ID
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {parentArray}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    },
 
+    /*
+    * Returns table containing all the terms relations
+    */
+    getRelationsTable: function () {
         var showRelations = null;
         if(this.state.relations.length > 0){
             //Create table rows for all relations
@@ -303,6 +386,64 @@ var InfoPanel = React.createClass({
         } else {
             showRelations = {display: "none"}; //Hide table if there are no relations to show
         }
+
+        return (
+            <div>
+                <h3 style={showRelations}>{this.dict[this.props.language]["relations"]}</h3>
+                <div style={showRelations} className="well">
+                    <table className="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th id="relation_type" className="relationsTable">
+                                    {this.dict[this.props.language]["attribute"]}
+                                </th>
+                                <th id="relation_destination" className="relationsTable">
+                                    {this.dict[this.props.language]["destination"]}
+                                </th>
+                                <th id="relation_chartype" className="relationsTable">
+                                    {this.dict[this.props.language]["charType"]}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {relationsArray}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    },
+
+    /*
+    * Returns the save favorite button
+    */
+    getSaveFavoriteButton: function () {
+        //Only show "save favorite" button if user is logged in
+        var saveTermButton = null;
+        if(cookie.load('userId') != null){
+            saveTermButton = (this.state.isFavorited ?
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger btn-sm saveTermButton"
+                                        onClick={this.props.removeFavoriteTerm.bind(null, this.props.data[0].concept_id)}>
+                                        {this.dict[this.props.language]["removeFavorite"]}
+                                    </button>
+                                    :
+                                    <button
+                                        type="button"
+                                        className="btn btn-success btn-sm saveTermButton"
+                                        onClick={this.addFavorite.bind(null,{id: this.props.data[0].concept_id, name: this.props.data[0].name})}>
+                                        {this.dict[this.props.language]["saveFavorite"]}
+                                    </button>)
+        }
+
+        return saveTermButton;
+    },
+
+    render: function(){
+        //Check if data is set yet, otherwise return
+        if(this.props.data === undefined || this.props.data.length == 0) return null;
+
         return (
             <div className="panel panel-info infoPanel">
                 <div className="panel-heading infoPanelHandle">
@@ -312,101 +453,11 @@ var InfoPanel = React.createClass({
                     </button>
                 </div>
                 <div className="panel-body infoPanelBody">
-                    {saveTermButton}
-                    <h3>
-                        {this.dict[this.props.language]["generalInfo"]}
-                    </h3>
-                    <div className="well">
-                        <table className="termInfo">
-                            <tbody>
-                                <tr className="termInfo">
-                                    <td className="termInfoName">{this.dict[this.props.language]["name"]}:</td>
-                                    <td className="termInfoData">{this.props.data[0].name}</td>
-                                </tr>
-                                <tr className="termInfo">
-                                    <td className="termInfoName">ID:</td>
-                                    <td className="termInfoData">{this.props.data[0].concept_id}</td>
-                                </tr>
-                                <tr className="termInfo">
-                                    <td className="termInfoName">{this.dict[this.props.language]["children"]}:</td>
-                                    <td className="termInfoData">
-                                        {(this.props.data[0].children !== undefined ? this.props.data[0].children.length : 0)}
-                                    </td>
-                                </tr>
-                                <tr className="termInfo">
-                                    <td className="termInfoName">{this.dict[this.props.language]["conceptType"]}:</td>
-                                    <td className="termInfoData">{this.props.data[0].definitionStatus}</td>
-                                </tr>
-                                <tr className="termInfo">
-                                    <td className="termInfoName">Status:</td>
-                                    <td className="termInfoData">{this.props.data[0].status}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    {/* Names */}
-                    <h3>{this.dict[this.props.language]["names"]}
-                    </h3><div className="well">
-                        <table className="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th id="name_type" className="namesTable">
-                                        {this.dict[this.props.language]["type"]}
-                                    </th>
-                                    <th id="name_name" className="namesTable">
-                                        {this.dict[this.props.language]["name"]}
-                                    </th>
-                                    <th id="name_acceptability" className="namesTable">
-                                        {this.dict[this.props.language]["acceptability"]}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {namesArray}
-                            </tbody>
-                        </table>
-                    </div>
-                    {/* Parents */}
-                    <h3 style={showParents}>{this.dict[this.props.language]["parents"]}</h3>
-                    <div style={showParents} className="well">
-                        <table style={showParents} className="table table-condensed parentsTable">
-                            <thead>
-                                <tr>
-                                    <th id="parent_name" className="parentsTable">
-                                        {this.dict[this.props.language]["name"]}
-                                    </th>
-                                    <th id="parent_id" className="parentsTable">
-                                        ID
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {parentArray}
-                            </tbody>
-                        </table>
-                    </div>
-                    {/* Relations */}
-                    <h3 style={showRelations}>{this.dict[this.props.language]["relations"]}</h3>
-                    <div style={showRelations} className="well">
-                        <table className="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th id="relation_type" className="relationsTable">
-                                        {this.dict[this.props.language]["attribute"]}
-                                    </th>
-                                    <th id="relation_destination" className="relationsTable">
-                                        {this.dict[this.props.language]["destination"]}
-                                    </th>
-                                    <th id="relation_chartype" className="relationsTable">
-                                        {this.dict[this.props.language]["charType"]}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {relationsArray}
-                            </tbody>
-                        </table>
-                    </div>
+                    {this.getSaveFavoriteButton()}
+                    {this.getGeneralInfo()}
+                    {this.getNamesTable()}
+                    {this.getParentsTable()}
+                    {this.getRelationsTable()}
                 </div>
             </div>
         );

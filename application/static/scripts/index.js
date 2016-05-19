@@ -430,7 +430,6 @@ var Container = React.createClass({
     * This is used for displaying a loading animation
     */
     setCursor: function (cursorType) {
-        console.log(cursorType);
         if (cursorType == "wait") {
             $('body').css('cursor', 'wait');
             $('a.navLink').css('cursor', 'wait');
