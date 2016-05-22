@@ -43,25 +43,50 @@ def transfer_type(old_db, new_db, ID_QUERY, SELECT_QUERY, INSERT_STATEMENT, scal
     print()
     id_cur.close()
 
+def transfer_name(db):
+    cur = db.cursor()
+    cur.execute("select id from concept")
+    total = cur.rowcount
+    count = 0
+    for res in cur:
+        count += 1
+        row_cur = db.cursor()
+        row_cur.execute("select term, type_id from description where concept_id=%s", (res[0],))
+        full = ""
+        syn = ""
+        for data in row_cur:
+            if data[1] == "900000000000003001":
+                full = data[0]
+            else:
+                syn = data[0]
+
+        row_cur.execute("update concept set preferred_full=%s, preferred_synonym=%s where id=%s", (full, syn, res[0]))
+        print("\r{0:.2f}".format(count*100/total) + "%", end="")
+    print()
+    cur.close()
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Usage: transfer_data.py DATA_DB PRODUCTION_DB")
         print("Example: transfer_data.py tmp_INT_20150731 INT_20150731")
         exit(1)
 
-    old_db = psycopg2.connect("dbname=" + sys.argv[1] + " user=" + "simon")
-    old_db.autocommit = True;
+    #old_db = psycopg2.connect("dbname=" + sys.argv[1] + " user=" + "simon")
+    #old_db.autocommit = True;
     new_db = psycopg2.connect("dbname=" + sys.argv[2] + " user=" + "simon")
     new_db.autocommit = True;
+
+    transfer_name(new_db)
     
-    print("Transfering concepts")
-    transfer_type(old_db, new_db, SELECT_CONCEPT_IDS_QUERY, SELECT_CONCEPT_QUERY, INSERT_CONCEPT_STATEMENT)
-    print("Completed!")
+    #print("Transfering concepts")
+    #transfer_type(old_db, new_db, SELECT_CONCEPT_IDS_QUERY, SELECT_CONCEPT_QUERY, INSERT_CONCEPT_STATEMENT)
+    #print("Completed!")
 
-    print("Transfering relations")
-    transfer_type(old_db, new_db, SELECT_RELATION_IDS_QUERY, SELECT_RELATION_QUERY, INSERT_RELATION_STATEMENT)
-    print("Completed!")
+    #print("Transfering relations")
+    #transfer_type(old_db, new_db, SELECT_RELATION_IDS_QUERY, SELECT_RELATION_QUERY, INSERT_RELATION_STATEMENT)
+    #print("Completed!")
 
-    print("Transfering descriptions")
-    transfer_type(old_db, new_db, SELECT_DESC_IDS_QUERY, SELECT_DESC_QUERY, INSERT_DESC_STATEMENT, 1)
-    print("Completed!")
+    #print("Transfering descriptions")
+    #transfer_type(old_db, new_db, SELECT_DESC_IDS_QUERY, SELECT_DESC_QUERY, INSERT_DESC_STATEMENT, 1)
+    #print("Completed!")
