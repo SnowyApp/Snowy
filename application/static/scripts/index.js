@@ -3,6 +3,7 @@ import SplitPane from 'react-split-pane';
 import cookie from 'react-cookie';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Button from 'react-bootstrap/lib/Button';
 
 var Diagram = require('./components/Diagram/index');
 var Bar = require('./components/Bar/index');
@@ -31,8 +32,20 @@ var Container = React.createClass({
             dbEdition: "en",
             user: null,
             sortAlphabetically: true,
-            favoriteTerms: null
+            favoriteTerms: null,
+            showCookies: true
         };
+    },
+    dict: {
+        se: {
+            cookies:    "Genom att besöka den här hemsidan godkänner du användandet av cookies",
+            understand: "Jag förstår"
+
+        },
+        en: {
+            cookies:    "By visiting this website you accept the usage of cookies",
+            understand: "I understand"
+        }
     },
 
     /**
@@ -701,7 +714,11 @@ var Container = React.createClass({
             }.bind(this)
         });
     },
-
+    hideCookies: function(){
+        this.setState({
+            showCookies: false
+        });
+    },
     render: function() {
         //var language = (cookie.load('userId') != null ? this.state.user.language : this.state.language);
         var content = null;
@@ -752,6 +769,12 @@ var Container = React.createClass({
         }
         return (
             <div className="wrapper">
+                <div className= {this.state.showCookies ? "cookieWrapperShow" : "cookieWrapperHide"}>
+                    <div className= {this.state.showCookies ? "acceptCookiesShow" : "cacceptCookiesHide"} >
+                        {this.dict[this.state.language]["cookies"]}
+                        <Button bsStyle = "primary" onClick={this.hideCookies}>{this.dict[this.state.language]["understand"]}</Button>
+                    </div>
+                </div>
                 <SplitPane split="vertical" defaultSize={350} minSize={10} maxSize={700}>
                     <Navigation
                         data={this.state.data}
