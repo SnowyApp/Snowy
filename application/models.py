@@ -31,17 +31,18 @@ SELECT_CONCEPT_QUERY = "select id, preferred_full, preferred_synonym, definition
 SELECT_CONCEPT_NAME_QUERY = "select distinct concept_id, term, acceptability_id, type_id from description where concept_id=%s"
 SELECT_CONCEPT_TERM_QUERY = "SELECT preferred_full FROM concept WHERE id=%s;"
 
-# Relations quries
-SELECT_CHILDREN_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id from concept a join relationship b on a.id=b.source_id where destination_id=%s and b.type_id=116680003"""
-SELECT_PARENTS_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id from concept a join relationship b on a.id=b.destination_id where source_id=%s and b.type_id=116680003"""
-SELECT_RELATIONS_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id, b.group_id from concept a join relationship b on a.id=b.destination_id where source_id=%s"""
-
 # Diagram queries
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, description, user_email) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id"
 UPDATE_DIAGRAM_STATEMENT = "UPDATE diagram SET data=%s, name=%s, date_modified=%s, description=%s WHERE user_email=%s AND id=%s"
 SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 SELECT_DIAGRAM_BY_ID_QUERY = "SELECT * FROM diagram WHERE user_email=%s and id=%s;"
 DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
+
+
+# Relations quries
+SELECT_CHILDREN_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id from concept a join relationship b on a.id=b.source_id where destination_id=%s and b.type_id=116680003"""
+SELECT_PARENTS_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id from concept a join relationship b on a.id=b.destination_id where source_id=%s and b.type_id=116680003"""
+SELECT_RELATIONS_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id, b.group_id from concept a join relationship b on a.id=b.destination_id where source_id=%s"""
 
 def connect_db(db_name):
     """
