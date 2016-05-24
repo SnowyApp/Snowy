@@ -15,12 +15,6 @@ SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, db_edit
 UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=%s, email=%s, site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
-
-# Procedure used to get the concept
-SELECT_CONCEPT_QUERY = "select id, preferred_full, preferred_synonym, definition_status_id from concept where id=%s;"
-SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id, a.type_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
-SELECT_CONCEPT_TERM_QUERY = "SELECT term FROM description WHERE concept_id=%s;"
-
 # Token queries
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
 DELETE_TOKEN_STATEMENT = "DELETE FROM token WHERE token=%s;"
@@ -31,6 +25,11 @@ INVALIDATE_TOKENS_STATEMENT = "DELETE FROM token WHERE token!=%s"
 SELECT_FAVORITE_TERM_QUERY = "SELECT * FROM favorite_term WHERE user_email=%s;"
 DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s and concept_id=%s"
 INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term, date_added) VALUES (%s, %s, %s, %s);"
+
+# Procedure used to get the concept
+SELECT_CONCEPT_QUERY = "select id, preferred_full, preferred_synonym, definition_status_id from concept where id=%s"
+SELECT_CONCEPT_NAME_QUERY = "select distinct concept_id, term, acceptability_id, type_id from description where concept_id=%s"
+SELECT_CONCEPT_TERM_QUERY = "SELECT preferred_full FROM concept WHERE id=%s;"
 
 # Relations quries
 SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id, D.definition_status_id 
