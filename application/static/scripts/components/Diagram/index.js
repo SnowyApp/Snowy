@@ -156,7 +156,7 @@ var Diagram = React.createClass({
         const diagramId = "diagram" + (this.state.fullscreen ? "-fullscreen" : "");
         return (
             <div className="diagram" id={diagramId}> 
-                <div className="btn-toolbar">
+                <div className="btn-group">
                 <Button
                     onClick={this.reset}
                     disabled = {this.state.diagramView == "definition"}>
@@ -187,7 +187,11 @@ var Diagram = React.createClass({
                     {this.state.fullscreen ? this.dict[this.props.language]["exitFullscreen"] : this.dict[this.props.language]["fullscreen"]}
                 </Button>
                 <Export language={this.props.language} selectedTerm={this.props.selectedTerm} diagramView={this.state.diagramView} exitFullscreen={this.exitFullscreen}/>
-                </div>
+
+
+               </div>
+                <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span>
+ 
                 <div className={this.state.diagramView == "definition" ? "hiddenDiagram" : "d3diagram"}
                      ref={ (ref) => this._d3 = ref}>
                 </div>
@@ -197,8 +201,6 @@ var Diagram = React.createClass({
                         concept_id={this.props.selectedTerm}
                     />
                 </div>
-
-                <span onClick={this.toggleInfoPanel} className="glyphicon glyphicon-info-sign infoPanelButton" aria-hidden="true"></span>
 
                 <Draggable
                     handle=".infoPanelHandle"
