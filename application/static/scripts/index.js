@@ -614,6 +614,7 @@ var Container = React.createClass({
                     "id": diagram[node].id,
                     "depth": diagram[node].depth,
                     "name": diagram[node].name,
+                    "definitionStatus": diagram[node].definitionStatus,
                     "x": diagram[node].x,
                     "y": diagram[node].y,
                     "parent": diagram[node].parent.concept_id,
