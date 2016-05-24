@@ -45,7 +45,7 @@ def transfer_type(old_db, new_db, ID_QUERY, SELECT_QUERY, INSERT_STATEMENT, scal
 
 def transfer_name(db):
     cur = db.cursor()
-    cur.execute("select id from concept")
+    cur.execute("select id from concept order by id")
     total = cur.rowcount
     count = 0
     for res in cur:
