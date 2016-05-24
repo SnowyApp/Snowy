@@ -7,7 +7,7 @@ STATIC_FOLDER = 'static'
 STATIC_URL_PATH = ''
 # A key used to make sure unauthorized users cannot modify sessions
 SECRET_KEY = 'tkar8j;h{)*JYLUJ#IEonareinskJ@{*(L{ONOEINIDC'
-# The name of the database stored locally
-DB_NAME = "snomedct"
-# The name of the user holding the database
+
+DB_SNOMED_NAME = "snomed"
+DB_USERS_NAME = "users"
 DB_USER = "simon"

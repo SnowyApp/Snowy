@@ -43,3 +43,34 @@ CREATE TABLE favorite_term(
         FOREIGN KEY (user_email) REFERENCES usr (email)
 );
 
+
+-- Procedure that adds a favorite term for a user
+CREATE OR REPLACE FUNCTION add_favorite_term(cid BIGINT, email TEXT, term TEXT) 
+RETURNS void AS $$
+DECLARE
+	latest_concept RECORD;
+BEGIN
+    SELECT * FROM concept INTO latest_concept WHERE active=1 AND id=cid ORDER BY effective_time DESC LIMIT 1;
+    INSERT INTO favorite_term (concept_id, user_email, term)
+        VALUES (cid, email, term);
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Procedure that checks if a token is valid
+DROP FUNCTION IF EXISTS is_valid_token(text, text);
+CREATE OR REPLACE FUNCTION is_valid_token(token_info TEXT, email TEXT)
+RETURNS BOOLEAN AS $$
+DECLARE
+    token_id BIGINT;
+BEGIN
+    token_id = -1;
+    SELECT token.id INTO token_id FROM token WHERE token=token_info AND user_email=email;
+    UPDATE token SET accessed = NOW() WHERE id=token_id;
+    IF (token_id != -1)
+        THEN RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
