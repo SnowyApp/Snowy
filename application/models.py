@@ -32,23 +32,9 @@ SELECT_CONCEPT_NAME_QUERY = "select distinct concept_id, term, acceptability_id,
 SELECT_CONCEPT_TERM_QUERY = "SELECT preferred_full FROM concept WHERE id=%s;"
 
 # Relations quries
-SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id, D.definition_status_id 
-                            FROM relationship B JOIN description A ON B.source_id=A.concept_id 
-                            JOIN language_refset C on A.id=C.referenced_component_id 
-                            JOIN concept D ON A.concept_id=D.id 
-                            WHERE B.destination_id=%s AND B.active=1 AND C.active=1 AND B.type_id=116680003 ORDER BY B.source_id;"""
-SELECT_PARENTS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id 
-                            FROM relationship A 
-                            JOIN description B ON A.destination_id=B.concept_id 
-                            JOIN language_refset C ON B.id=C.referenced_component_id 
-                            JOIN concept D ON B.concept_id=D.id 
-                            WHERE A.source_id=%s AND A.type_id=116680003 AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
-SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id, A.relationship_group 
-                            FROM relationship A 
-                            JOIN description B ON A.destination_id=B.concept_id 
-                            JOIN language_refset C ON B.id=C.referenced_component_id 
-                            JOIN concept D ON B.concept_id=D.id 
-                            WHERE a.source_id=%s AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
+SELECT_CHILDREN_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id from concept a join relationship b on a.id=b.source_id where destination_id=%s and b.type_id=116680003"""
+SELECT_PARENTS_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id from concept a join relationship b on a.id=b.destination_id where source_id=%s and b.type_id=116680003"""
+SELECT_RELATIONS_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id, b.group_id from concept a join relationship b on a.id=b.destination_id where source_id=%s"""
 
 # Diagram queries
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, description, user_email) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id"
@@ -410,28 +396,15 @@ class Concept():
         result = []
         concept = None
         for data in cur:
-            # Create a concept if needed
-            if concept is None:
-                concept = Concept(data[0])
-                concept.set_type_id(data[3])
-                concept.definition_status_id = data[4]
-            elif concept.id != data[0]:
-                result += [concept]
-                concept = Concept(data[0])
-                concept.set_type_id(data[3])
-                concept.definition_status_id = data[4]
+            concept = Concept(data[0])
+            concept.set_type_id(data[3])
+            concept.definition_status_id = data[4]
+            concept.full_term = data[1]
+            concept.syn_term = data[2]
 
-            # Set the right term
-            if data[2] == 900000000000003001:
-                concept.full_term = data[1]
-            else:
-                concept.syn_term = data[1]
-
+            result += [concept]
             if group:
                 concept.group_id = data[5]
-
-        if concept is not None:
-            result += [concept]
 
         return result
 
