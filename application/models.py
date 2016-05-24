@@ -5,7 +5,8 @@ from flask import g
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from werkzeug.security import generate_password_hash, check_password_hash
 
-DB_NAME = app.config["DB_NAME"]
+DB_SNOMED_NAME = app.config["DB_SNOMED_NAME"]
+DB_USERS_NAME = app.config["DB_USERS_NAME"]
 DB_USER = app.config["DB_USER"]
 
 # User management queries
@@ -57,30 +58,41 @@ SELECT_DIAGRAM_QUERY = "SELECT * FROM diagram WHERE user_email=%s;"
 SELECT_DIAGRAM_BY_ID_QUERY = "SELECT * FROM diagram WHERE user_email=%s and id=%s;"
 DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
 
-def connect_db():
+def connect_db(db_name):
     """
     Connects to the database.
     """
-    return psycopg2.connect("dbname=" + DB_NAME + " user=" + DB_USER)
+    return psycopg2.connect("dbname=" + db_name + " user=" + DB_USER)
 
 
-def get_db():
+def get_snomed_db():
     """
-    Returns the database connection. If no database connection 
+    Returns the database connection to the selected snomed ct database. If no database connection 
     exists, a new one is created.
     """
-    if not hasattr(g, 'postgres_db'):
-        g.postgres_db = connect_db()
-    return g.postgres_db
+    if not hasattr(g, 'snomed_db'):
+        g.snomed_db = connect_db(DB_SNOMED_NAME)
+    return g.snomed_db
 
+
+def get_users_db():
+    """
+    Returns the database connection to the users database. If no database connection 
+    exists, a new one is created.
+    """
+    if not hasattr(g, 'users_db'):
+        g.users_db = connect_db(DB_USERS_NAME)
+    return g.users_db
 
 @app.teardown_appcontext
 def close_db(error):
     """
     Closes the database again at the end of the request.
     """
-    if hasattr(g, 'postgres_db'):
-        g.postgres_db.close()
+    if hasattr(g, 'snomed_db'):
+        g.snomed_db.close()
+    if hasattr(g, 'users_db'):
+        g.users_db.close()
 
 
 class User():
@@ -110,10 +122,10 @@ class User():
         """
         Adds a favorite term for the user in the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (cid, self.email, term, date_added))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return True
         except Exception as e:
@@ -124,10 +136,10 @@ class User():
         """
         Deletes a favorite term from the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(DELETE_FAVORITE_TERM_STATEMENT, (self.email, cid))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return True
         except Exception as e:
@@ -138,7 +150,7 @@ class User():
         """
         Retrievs all the favorite terms for the user in the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
             result = []
@@ -154,10 +166,10 @@ class User():
         Update the first name, last name and language setting for the user.
         Returns True if the operation succeeded, False otherwise.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, db_edition, email, site_lang,self.email))
-            get_db().commit()
+            get_users_db().commit()
             self.email = email
             self.first_name = first_name
             self.last_name = last_name
@@ -173,11 +185,11 @@ class User():
         """
         Updates the users password.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         p_hash = generate_password_hash(new_password, salt_length=12)
         try:
             cur.execute(UPDATE_PASSWORD_STATEMENT, (p_hash,self.email))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return True
         except Exception as e:
@@ -189,10 +201,10 @@ class User():
         """
         Invalidate all tokens but token.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(INVALIDATE_TOKENS_STATEMENT, (token, ))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
         except Exception as e:
             print(e)
@@ -201,7 +213,7 @@ class User():
         """
         Stores a diagram for the user.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             new_id = 0
             if did:
@@ -209,7 +221,7 @@ class User():
             else:
                 cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, date, date, description, self.email))
                 new_id = cur.fetchone()[0]
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return new_id
         except Exception as e:
@@ -220,7 +232,7 @@ class User():
         """
         Retrieve diagrams for the user.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             result = []
             cur.execute(SELECT_DIAGRAM_QUERY, (self.email,))
@@ -235,7 +247,7 @@ class User():
     def get_diagram(self, diagram_id):
         """
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             result = None
             cur.execute(SELECT_DIAGRAM_BY_ID_QUERY, (self.email, diagram_id))
@@ -251,10 +263,10 @@ class User():
         """
         Delete a diagram for the user.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(DELETE_DIAGRAM_STATEMENT, (cid, self.email))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return True
         except Exception as e:
@@ -267,11 +279,11 @@ class User():
         """
         Creates a user in the database with an email and password.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         p_hash = generate_password_hash(password, salt_length=12)
         try:
             cur.execute(INSERT_USER_STATEMENT, (email, p_hash))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return User(email, p_hash)
         except Exception as e:
@@ -283,7 +295,7 @@ class User():
         Returns True if a user with the provided email is
         registered. False otherwise.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
@@ -294,7 +306,7 @@ class User():
         """
         Retrieves the user with the provided email.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
@@ -324,10 +336,10 @@ class Token():
         """
         Inserts the token into the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(INSERT_TOKEN_STATEMENT, (self.token, self.user_email))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
         except Exception as e:
             pass
@@ -336,7 +348,7 @@ class Token():
         """
         Checks if the token is valid.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.callproc(VALID_TOKEN_PROCEDURE, (self.token, self.user_email))
             token_data = cur.fetchone()
@@ -356,10 +368,10 @@ class Token():
         """
         Deletes the token from the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(DELETE_TOKEN_STATEMENT, (self.token,))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
         except Exception as e:
             print(str(e))
@@ -429,7 +441,7 @@ class Concept():
         """
         Retrieves the grandparents for the provided context.
         """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.execute(SELECT_PARENTS_QUERY, (cid,))
             result = Concept.concepts_from_cursor(cur)
@@ -445,7 +457,7 @@ class Concept():
         """
         Fetch data on relations. 
         """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.execute(query, (cid,))
             result = Concept.concepts_from_cursor(cur, group)
@@ -481,7 +493,7 @@ class Concept():
         """
         Returns the concept with the given concept id.
         """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
             data = cur.fetchone()
@@ -502,7 +514,7 @@ class Concept():
         """
         Returns all the names for the provided term.
         """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.execute(SELECT_CONCEPT_NAME_QUERY, (concept_id,))
             result = []
@@ -519,7 +531,7 @@ class Concept():
 
     @staticmethod
     def get_attribute(type_id):
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.execute(SELECT_CONCEPT_TERM_QUERY, (type_id,))
             name = cur.fetchone()[0]
