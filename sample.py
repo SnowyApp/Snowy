@@ -27,7 +27,7 @@ def delete_favorite_term(id):
     return json.loads(requests.delete(url + "/favorite_term", json={'id': id}, headers=auth).text)
 
 def add_favorite_term(cid, term):
-    data = {"id": cid, "term": term}
+    data = {"id": cid, "term": term, "date_added": "now"}
     return json.loads(requests.post(url + "/favorite_term", json=data, headers=auth).text)
 
 def search(term):
@@ -53,7 +53,7 @@ def get_concept_names(id):
 
 def update_info():
     global auth
-    data = {"first_name": "Simon", "last_name": "Lindblad", "data_lang": "en", "email": "simonlind", "site_lang": "en"}
+    data = {"first_name": "Simon", "last_name": "Lindblad", "db_edition": "en", "email": "simonlind", "site_lang": "en"}
     data = json.loads(requests.put(url + "/user_info", json=data, headers=auth).text)
     auth = {"Authorization": data["token"]}
     return data
@@ -76,7 +76,7 @@ def update_diagram():
 def delete_diagram(id):
     return json.loads(requests.delete(url + "/diagram/" + str(id), headers=auth).text)
 
-def get_diagram():
+def get_diagrams():
     return json.loads(requests.get(url + "/diagram", headers=auth).text)
 
 def get_diagram(id):

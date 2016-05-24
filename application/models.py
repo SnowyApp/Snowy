@@ -17,7 +17,7 @@ UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
 
 
 # Procedure used to get the concept
-GET_CONCEPT_PROCEDURE = "get_concept"
+SELECT_CONCEPT_QUERY = "select id, preferred_full, preferred_synonym, definition_status_id from concept where id=%s;"
 SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id, a.type_id from description a join language_refset b on a.id=b.referenced_component_id where a.concept_id=%s;"
 SELECT_CONCEPT_TERM_QUERY = "SELECT term FROM description WHERE concept_id=%s;"
 
@@ -495,14 +495,14 @@ class Concept():
         """
         cur = get_snomed_db().cursor()
         try:
-            cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
+            cur.execute(SELECT_CONCEPT_QUERY, (cid,))
             data = cur.fetchone()
             if not data:
                 return None
             else:
                 concept = Concept(data[0], data[2], data[1])
                 concept.definition_status_id = data[3]
-                concept.active = data[4]
+                concept.active = 1
                 return concept
 
         except Exception as e:
