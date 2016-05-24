@@ -27,17 +27,17 @@ var Diagram = React.createClass({
     //Dictionary for supported languages
     dict: {
         se: {
-            'reset':            'Reset',
+            'reset':            'Återställ diagram',
             'resetZoom':        'Återställ zoom',
-            'VHView':           'Vertikal/Horisontell vy',
+            'VHView':           'Horisontal',
             'diagramView':      'Byt diagram vy',
             'fullscreen':       'Helskärm',
             'exitFullscreen':   'Avsluta helskärmsläge'
         },
         en: {
-            'reset':            'Reset',
-            'resetZoom':        'Reset zoom',
-            'VHView':           'Vertical/Horizontal view',
+            'reset':            'Reset Diagram',
+            'resetZoom':        'Reset Zoom',
+            'VHView':           'Horizontal',
             'diagramView':      'Change diagram view',
             'fullscreen':       'Fullscreen',
             'exitFullscreen':   'Exit fullscreen'
@@ -155,27 +155,24 @@ var Diagram = React.createClass({
         const showInfoPanel = (this.state.showInfoPanel ? null : {display: "none"});
         const diagramId = "diagram" + (this.state.fullscreen ? "-fullscreen" : "");
         return (
-            <div className="diagram" id={diagramId} >
+            <div className="diagram" id={diagramId}> 
+                <div className="btn-toolbar">
                 <Button
-                    bsStyle="primary"
                     onClick={this.reset}
                     disabled = {this.state.diagramView == "definition"}>
                     {this.dict[this.props.language]["reset"]}
                 </Button>
                 <Button
-                    bsStyle="primary"
                     onClick={this.resetZoom}
                     disabled = {this.state.diagramView == "definition"}>
                     {this.dict[this.props.language]["resetZoom"]}
                 </Button>
                 <Button
-                    bsStyle="primary"
                     onClick={this.changeView}
                     disabled = {this.state.diagramView == "definition"}>
                     {this.dict[this.props.language]["VHView"]}
                 </Button>
                 <Button
-                    bsStyle="primary"
                     onClick={this.toggleDiagramView}>
                     {this.dict[this.props.language]["diagramView"]}
                 </Button>
@@ -186,11 +183,11 @@ var Diagram = React.createClass({
                 />
                 <Button
                     id="fullscreenButton"
-                    bsStyle = "primary"
                     onClick={this.toggleFullscreen}>
                     {this.state.fullscreen ? this.dict[this.props.language]["exitFullscreen"] : this.dict[this.props.language]["fullscreen"]}
                 </Button>
                 <Export language={this.props.language} selectedTerm={this.props.selectedTerm} diagramView={this.state.diagramView} exitFullscreen={this.exitFullscreen}/>
+                </div>
                 <div className={this.state.diagramView == "definition" ? "hiddenDiagram" : "d3diagram"}
                      ref={ (ref) => this._d3 = ref}>
                 </div>
@@ -257,11 +254,20 @@ var Diagram = React.createClass({
 
     // Switches the treeview between vertical and horizontal
     changeView: function(){
+        // update the state and the display name of the button
         if(this.state.view == 'vertical') {
+            this.dict.en.VHView = "Vertical";
+            this.dict.se.VHView = "Vertikal";
+
             this.setState({
                 view: 'horizontal'
             });
-        } else {
+        }
+        else {
+            this.dict.en.VHView = "Horizontal";
+            this.dict.se.VHView = "Horisontal";
+
+            
             this.setState({
                 view: 'vertical'
             });

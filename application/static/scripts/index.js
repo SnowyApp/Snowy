@@ -750,9 +750,13 @@ var Container = React.createClass({
                     />
                 break;
         }
+        // limit the split to a third of the screen
+        var windowWidth = window.innerWidth || 
+            document.documentElement.clientWidth || document.body.clientWidth;
+        var splitMaxWidth = windowWidth * 0.3;
         return (
             <div className="wrapper">
-                <SplitPane split="vertical" defaultSize={350} minSize={10} maxSize={700}>
+                <SplitPane split="vertical" defaultSize={350} minSize={10} maxSize={splitMaxWidth}>
                     <Navigation
                         data={this.state.data}
                         url={this.state.serverUrl}
