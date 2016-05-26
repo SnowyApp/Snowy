@@ -38,12 +38,12 @@ var Container = React.createClass({
     },
     dict: {
         se: {
-            cookies:    "Genom att besöka den här hemsidan godkänner du användandet av cookies",
+            cookies:    "Genom att besöka den här hemsidan godkänner du användandet av cookies ",
             understand: "Jag förstår"
 
         },
         en: {
-            cookies:    "By visiting this website you accept the usage of cookies",
+            cookies:    "By visiting this website you accept the usage of cookies ",
             understand: "I understand"
         }
     },
@@ -715,9 +715,8 @@ var Container = React.createClass({
         });
     },
     hideCookies: function(){
-        this.setState({
-            showCookies: false
-        });
+        cookie.save('acceptCookie', true);
+        this.forceUpdate();
     },
     render: function() {
         //var language = (cookie.load('userId') != null ? this.state.user.language : this.state.language);
@@ -769,8 +768,8 @@ var Container = React.createClass({
         }
         return (
             <div className="wrapper">
-                <div className= {this.state.showCookies ? "cookieWrapperShow" : "cookieWrapperHide"}>
-                    <div className= {this.state.showCookies ? "acceptCookiesShow" : "cacceptCookiesHide"} >
+                <div className= {cookie.load('acceptCookie') ? "cookieWrapperHide" : "cookieWrapperShow"}>
+                    <div className= "acceptCookies">
                         {this.dict[this.state.language]["cookies"]}
                         <Button bsStyle = "primary" onClick={this.hideCookies}>{this.dict[this.state.language]["understand"]}</Button>
                     </div>
