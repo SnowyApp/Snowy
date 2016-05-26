@@ -627,6 +627,7 @@ var Container = React.createClass({
                     "id": diagram[node].id,
                     "depth": diagram[node].depth,
                     "name": diagram[node].name,
+                    "definitionStatus": diagram[node].definitionStatus,
                     "x": diagram[node].x,
                     "y": diagram[node].y,
                     "parent": diagram[node].parent.concept_id,
@@ -766,6 +767,10 @@ var Container = React.createClass({
                     />
                 break;
         }
+        // limit the split to a third of the screen
+        var windowWidth = window.innerWidth || 
+            document.documentElement.clientWidth || document.body.clientWidth;
+        var splitMaxWidth = windowWidth * 0.3;
         return (
             <div className="wrapper">
                 <div className= {cookie.load('acceptCookie') ? "cookieWrapperHide" : "cookieWrapperShow"}>
@@ -774,7 +779,7 @@ var Container = React.createClass({
                         <Button bsStyle = "primary" onClick={this.hideCookies}>{this.dict[this.state.language]["understand"]}</Button>
                     </div>
                 </div>
-                <SplitPane split="vertical" defaultSize={350} minSize={10} maxSize={700}>
+                <SplitPane split="vertical" defaultSize={350} minSize={10} maxSize={splitMaxWidth}>
                     <Navigation
                         data={this.state.data}
                         url={this.state.serverUrl}

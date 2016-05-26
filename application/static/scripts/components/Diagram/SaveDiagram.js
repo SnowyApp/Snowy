@@ -217,10 +217,9 @@ var SaveDiagram = React.createClass({
     render: function () {
         return (
             <PageClick onClick={this.hideSavePanel}>
-                <div className="saveDiagramWrapper">
+                <div className="saveDiagramWrapper btn-group">
                     <Button
                         className="save-diagram"
-                        bsStyle="primary"
                         onClick={this.toggleSavePanel}
                         disabled = {this.props.diagramView == "definition"}
                     >

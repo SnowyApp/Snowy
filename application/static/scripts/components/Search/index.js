@@ -80,7 +80,6 @@ var SearchBox = React.createClass({
                     defaultValue={this.props.search}
                     onKeyUp={this.handleKeyPress}
                 />
-                <Button id="searchButton" onClick={this.doSearch}>{this.dict[this.props.language]["search"]}</Button>
             </div>
         )
     }

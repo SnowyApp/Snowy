@@ -5,7 +5,8 @@ from flask import g
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from werkzeug.security import generate_password_hash, check_password_hash
 
-DB_NAME = app.config["DB_NAME"]
+DB_SNOMED_NAME = app.config["DB_SNOMED_NAME"]
+DB_USERS_NAME = app.config["DB_USERS_NAME"]
 DB_USER = app.config["DB_USER"]
 
 # User management queries
@@ -14,13 +15,6 @@ SELECT_USER_QUERY = "SELECT email, password_hash, first_name, last_name, db_edit
 UPDATE_USER_STATEMENT = "UPDATE usr SET first_name=%s, last_name=%s, db_edition=%s, email=%s," \
                         " site_lang=%s WHERE email=%s ;"
 UPDATE_PASSWORD_STATEMENT = "UPDATE usr SET password_hash=%s WHERE email=%s"
-
-# Procedure used to get the concept
-GET_CONCEPT_PROCEDURE = "get_concept"
-SELECT_CONCEPT_NAME_QUERY = "select distinct a.concept_id, a.term, b.acceptability_id," \
-                            " a.type_id from description a join language_refset b on a.id=b.referenced_component_id " \
-                            "where a.concept_id=%s;"
-SELECT_CONCEPT_TERM_QUERY = "SELECT term FROM description WHERE concept_id=%s;"
 
 # Token queries
 INSERT_TOKEN_STATEMENT = "INSERT INTO token (token, user_email) VALUES (%s, %s);"
@@ -34,27 +28,10 @@ DELETE_FAVORITE_TERM_STATEMENT = "DELETE FROM favorite_term WHERE user_email=%s 
 INSERT_FAVORITE_TERM_STATEMENT = "INSERT INTO favorite_term (concept_id, user_email, term, date_added) " \
                                  "VALUES (%s, %s, %s, %s);"
 
-# Relations quries
-SELECT_CHILDREN_QUERY = """SELECT DISTINCT B.source_id, A.term, A.type_id, B.type_id, D.definition_status_id 
-                            FROM relationship B JOIN description A ON B.source_id=A.concept_id 
-                            JOIN language_refset C on A.id=C.referenced_component_id 
-                            JOIN concept D ON A.concept_id=D.id 
-                            WHERE B.destination_id=%s AND B.active=1 AND C.active=1 AND B.type_id=116680003
-                            ORDER BY B.source_id;"""
-SELECT_PARENTS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id 
-                            FROM relationship A 
-                            JOIN description B ON A.destination_id=B.concept_id 
-                            JOIN language_refset C ON B.id=C.referenced_component_id 
-                            JOIN concept D ON B.concept_id=D.id 
-                            WHERE A.source_id=%s AND A.type_id=116680003 AND A.active=1 AND B.active=1 AND C.active=1
-                            ORDER BY B.concept_id;"""
-SELECT_RELATIONS_QUERY = """SELECT DISTINCT B.concept_id, B.term, B.type_id, A.type_id, D.definition_status_id,
-                            A.relationship_group
-                            FROM relationship A 
-                            JOIN description B ON A.destination_id=B.concept_id 
-                            JOIN language_refset C ON B.id=C.referenced_component_id 
-                            JOIN concept D ON B.concept_id=D.id 
-                            WHERE a.source_id=%s AND A.active=1 AND B.active=1 AND C.active=1 ORDER BY B.concept_id;"""
+# Procedure used to get the concept
+SELECT_CONCEPT_QUERY = "select id, preferred_full, preferred_synonym, definition_status_id from concept where id=%s"
+SELECT_CONCEPT_NAME_QUERY = "select distinct concept_id, term, acceptability_id, type_id from description where concept_id=%s"
+SELECT_CONCEPT_TERM_QUERY = "SELECT preferred_full FROM concept WHERE id=%s;"
 
 # Diagram queries
 INSERT_DIAGRAM_STATEMENT = "INSERT INTO diagram (data, name, date_created, date_modified, description, user_email) " \
@@ -65,30 +42,46 @@ SELECT_DIAGRAM_BY_ID_QUERY = "SELECT * FROM diagram WHERE user_email=%s and id=%
 DELETE_DIAGRAM_STATEMENT = "DELETE FROM diagram WHERE id=%s and user_email=%s"
 
 
-def connect_db():
+# Relations quries
+SELECT_CHILDREN_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id from concept a join relationship b on a.id=b.source_id where destination_id=%s and b.type_id=116680003"""
+SELECT_PARENTS_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id from concept a join relationship b on a.id=b.destination_id where source_id=%s and b.type_id=116680003"""
+SELECT_RELATIONS_QUERY = """select b.source_id, a.preferred_full, a.preferred_synonym, b.type_id, a.definition_status_id, b.group_id from concept a join relationship b on a.id=b.destination_id where source_id=%s"""
+
+def connect_db(db_name):
     """
     Connects to the database.
     """
-    return psycopg2.connect("dbname=" + DB_NAME + " user=" + DB_USER)
+    return psycopg2.connect("dbname=" + db_name + " user=" + DB_USER)
 
 
-def get_db():
+def get_snomed_db():
     """
-    Returns the database connection. If no database connection 
+    Returns the database connection to the selected snomed ct database. If no database connection 
     exists, a new one is created.
     """
-    if not hasattr(g, 'postgres_db'):
-        g.postgres_db = connect_db()
-    return g.postgres_db
+    if not hasattr(g, 'snomed_db'):
+        g.snomed_db = connect_db(DB_SNOMED_NAME)
+    return g.snomed_db
 
+
+def get_users_db():
+    """
+    Returns the database connection to the users database. If no database connection 
+    exists, a new one is created.
+    """
+    if not hasattr(g, 'users_db'):
+        g.users_db = connect_db(DB_USERS_NAME)
+    return g.users_db
 
 @app.teardown_appcontext
 def close_db(error):
     """
     Closes the database again at the end of the request.
     """
-    if hasattr(g, 'postgres_db'):
-        g.postgres_db.close()
+    if hasattr(g, 'snomed_db'):
+        g.snomed_db.close()
+    if hasattr(g, 'users_db'):
+        g.users_db.close()
 
 
 class User:
@@ -119,10 +112,10 @@ class User:
         """
         Adds a favorite term for the user in the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(INSERT_FAVORITE_TERM_STATEMENT, (cid, self.email, term, date_added))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return True
         except Exception as e:
@@ -133,10 +126,10 @@ class User:
         """
         Deletes a favorite term from the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(DELETE_FAVORITE_TERM_STATEMENT, (self.email, cid))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return True
         except Exception as e:
@@ -147,7 +140,7 @@ class User:
         """
         Retrievs all the favorite terms for the user in the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(SELECT_FAVORITE_TERM_QUERY, (self.email,))
             result = []
@@ -163,10 +156,10 @@ class User:
         Update the first name, last name and language setting for the user.
         Returns True if the operation succeeded, False otherwise.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
-            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, db_edition, email, site_lang, self.email))
-            get_db().commit()
+            cur.execute(UPDATE_USER_STATEMENT, (first_name, last_name, db_edition, email, site_lang,self.email))
+            get_users_db().commit()
             self.email = email
             self.first_name = first_name
             self.last_name = last_name
@@ -182,11 +175,11 @@ class User:
         """
         Updates the users password.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         p_hash = generate_password_hash(new_password, salt_length=12)
         try:
-            cur.execute(UPDATE_PASSWORD_STATEMENT, (p_hash, self.email))
-            get_db().commit()
+            cur.execute(UPDATE_PASSWORD_STATEMENT, (p_hash,self.email))
+            get_users_db().commit()
             cur.close()
             return True
         except Exception as e:
@@ -197,10 +190,10 @@ class User:
         """
         Invalidate all tokens but token.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
-            cur.execute(INVALIDATE_TOKENS_STATEMENT, (token,))
-            get_db().commit()
+            cur.execute(INVALIDATE_TOKENS_STATEMENT, (token, ))
+            get_users_db().commit()
             cur.close()
         except Exception as e:
             print(e)
@@ -209,7 +202,7 @@ class User:
         """
         Stores a diagram for the user.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             new_id = 0
             if did:
@@ -217,7 +210,7 @@ class User:
             else:
                 cur.execute(INSERT_DIAGRAM_STATEMENT, (data, name, date, date, description, self.email))
                 new_id = cur.fetchone()[0]
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return new_id
         except Exception as e:
@@ -228,7 +221,7 @@ class User:
         """
         Retrieve diagrams for the user.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             result = []
             cur.execute(SELECT_DIAGRAM_QUERY, (self.email,))
@@ -245,7 +238,7 @@ class User:
         """
         Returns a diagram given the diagram id.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             result = None
             cur.execute(SELECT_DIAGRAM_BY_ID_QUERY, (self.email, diagram_id))
@@ -261,10 +254,10 @@ class User:
         """
         Delete a diagram for the user.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(DELETE_DIAGRAM_STATEMENT, (cid, self.email))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return True
         except Exception as e:
@@ -276,11 +269,11 @@ class User:
         """
         Creates a user in the database with an email and password.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         p_hash = generate_password_hash(password, salt_length=12)
         try:
             cur.execute(INSERT_USER_STATEMENT, (email, p_hash))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
             return User(email, p_hash)
         except Exception as e:
@@ -292,7 +285,7 @@ class User:
         Returns True if a user with the provided email is
         registered. False otherwise.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
@@ -303,7 +296,7 @@ class User:
         """
         Retrieves the user with the provided email.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         cur.execute(SELECT_USER_QUERY, (email,))
         user_data = cur.fetchone()
         cur.close()
@@ -333,10 +326,10 @@ class Token:
         """
         Inserts the token into the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(INSERT_TOKEN_STATEMENT, (self.token, self.user_email))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
         except Exception as e:
             pass
@@ -345,7 +338,7 @@ class Token:
         """
         Checks if the token is valid.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.callproc(VALID_TOKEN_PROCEDURE, (self.token, self.user_email))
             token_data = cur.fetchone()
@@ -365,10 +358,10 @@ class Token:
         """
         Deletes the token from the database.
         """
-        cur = get_db().cursor()
+        cur = get_users_db().cursor()
         try:
             cur.execute(DELETE_TOKEN_STATEMENT, (self.token,))
-            get_db().commit()
+            get_users_db().commit()
             cur.close()
         except Exception as e:
             print(str(e))
@@ -408,28 +401,15 @@ class Concept:
         result = []
         concept = None
         for data in cur:
-            # Create a concept if needed
-            if concept is None:
-                concept = Concept(data[0])
-                concept.set_type_id(data[3])
-                concept.definition_status_id = data[4]
-            elif concept.id != data[0]:
-                result += [concept]
-                concept = Concept(data[0])
-                concept.set_type_id(data[3])
-                concept.definition_status_id = data[4]
+            concept = Concept(data[0])
+            concept.set_type_id(data[3])
+            concept.definition_status_id = data[4]
+            concept.full_term = data[1]
+            concept.syn_term = data[2]
 
-            # Set the right term
-            if data[2] == 900000000000003001:
-                concept.full_term = data[1]
-            else:
-                concept.syn_term = data[1]
-
+            result += [concept]
             if group:
                 concept.group_id = data[5]
-
-        if concept is not None:
-            result += [concept]
 
         return result
 
@@ -438,7 +418,7 @@ class Concept:
         """
         Retrieves the grandparents for the provided context.
         """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.execute(SELECT_PARENTS_QUERY, (cid,))
             result = Concept.concepts_from_cursor(cur)
@@ -454,7 +434,7 @@ class Concept:
         """
         Fetch data on relations. 
         """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.execute(query, (cid,))
             result = Concept.concepts_from_cursor(cur, group)
@@ -490,16 +470,16 @@ class Concept:
         """
         Returns the concept with the given concept id.
         """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
-            cur.callproc(GET_CONCEPT_PROCEDURE, (cid,))
+            cur.execute(SELECT_CONCEPT_QUERY, (cid,))
             data = cur.fetchone()
             if not data:
                 return None
             else:
                 concept = Concept(data[0], data[2], data[1])
                 concept.definition_status_id = data[3]
-                concept.active = data[4]
+                concept.active = 1
                 return concept
 
         except Exception as e:
@@ -511,7 +491,7 @@ class Concept:
         """
         Returns all the names for the provided term.
         """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.execute(SELECT_CONCEPT_NAME_QUERY, (concept_id,))
             result = []
@@ -528,10 +508,7 @@ class Concept:
 
     @staticmethod
     def get_attribute(type_id):
-        """
-        Returns the attribute of the concept.
-        """
-        cur = get_db().cursor()
+        cur = get_snomed_db().cursor()
         try:
             cur.execute(SELECT_CONCEPT_TERM_QUERY, (type_id,))
             name = cur.fetchone()[0]

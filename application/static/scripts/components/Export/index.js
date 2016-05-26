@@ -147,7 +147,7 @@ var Export = React.createClass({
     },
     render: function(){
         return (
-            <DropdownButton bsStyle="primary" title={this.dict[this.props.language]["export"]} id="Export">
+            <DropdownButton title={this.dict[this.props.language]["export"]} id="Export">
                 <MenuItem onClick={this.exportSVG}>SVG</MenuItem>
                 <MenuItem onClick={this.exportPNG}>PNG</MenuItem>
             </DropdownButton>
