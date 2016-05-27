@@ -72,21 +72,21 @@ if __name__ == "__main__":
         print("Example: transfer_data.py tmp_INT_20150731 INT_20150731")
         exit(1)
 
-    #old_db = psycopg2.connect("dbname=" + sys.argv[1] + " user=" + "simon")
-    #old_db.autocommit = True;
+    old_db = psycopg2.connect("dbname=" + sys.argv[1] + " user=" + "simon")
+    old_db.autocommit = True;
     new_db = psycopg2.connect("dbname=" + sys.argv[2] + " user=" + "simon")
     new_db.autocommit = True;
 
     transfer_name(new_db)
     
-    #print("Transfering concepts")
-    #transfer_type(old_db, new_db, SELECT_CONCEPT_IDS_QUERY, SELECT_CONCEPT_QUERY, INSERT_CONCEPT_STATEMENT)
-    #print("Completed!")
+    print("Transfering concepts")
+    transfer_type(old_db, new_db, SELECT_CONCEPT_IDS_QUERY, SELECT_CONCEPT_QUERY, INSERT_CONCEPT_STATEMENT)
+    print("Completed!")
 
-    #print("Transfering relations")
-    #transfer_type(old_db, new_db, SELECT_RELATION_IDS_QUERY, SELECT_RELATION_QUERY, INSERT_RELATION_STATEMENT)
-    #print("Completed!")
+    print("Transfering relations")
+    transfer_type(old_db, new_db, SELECT_RELATION_IDS_QUERY, SELECT_RELATION_QUERY, INSERT_RELATION_STATEMENT)
+    print("Completed!")
 
-    #print("Transfering descriptions")
-    #transfer_type(old_db, new_db, SELECT_DESC_IDS_QUERY, SELECT_DESC_QUERY, INSERT_DESC_STATEMENT, 1)
-    #print("Completed!")
+    print("Transfering descriptions")
+    transfer_type(old_db, new_db, SELECT_DESC_IDS_QUERY, SELECT_DESC_QUERY, INSERT_DESC_STATEMENT, 1)
+    print("Completed!")
