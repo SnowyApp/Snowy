@@ -15,7 +15,7 @@ In order to parse the data, the following steps are required:
 
 1. Obtain a copy of the SNOMED CT data
 2. Write a script that sets up a temporary database (modify database/scripts/import_INT_20150731.sql with your own paths).
-3. run database/setup.sh
+3. run `database/setup.sh`.
 
 After this, the old_snomed database can be removed.
 
