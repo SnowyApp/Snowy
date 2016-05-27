@@ -9,13 +9,13 @@ es = Elasticsearch()
 
 requests.delete("http://localhost:9200/desc")
 
-db = psycopg2.connect("dbname=snomedct user=simon")
+db = psycopg2.connect("dbname=snomed user=simon")
 cur = db.cursor()
-cur.execute("SELECT concept_id,term FROM description;")
+cur.execute("SELECT id, preferred_synonym FROM concept")
 i = 0
+count = cur.rowcount
 for data in cur:
     i += 1
     doc = {"concept_id": data[0], "term": data[1]}
     res = es.index(index="desc", doc_type='concept', id=i, body=doc)
-    if i % 1000 == 0:
-        print("Indexed item " + str(i))
+    print("\r{0:.2f}".format(i*100/count) + "%", end="")
