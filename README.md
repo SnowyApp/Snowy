@@ -4,20 +4,22 @@
 
 ### Database
 To run this application you will need  to setup an API running with access to a postgresql server with SNOMED CT's data.
+The data needs to be parsed and added to the database.
+You'll need one database for the user data, and one for the snomed data.
+Create them:
+- users: Used to store user data.
+- snomed: Used to store snomed data.
+- old_snomed: Used to store temporary snomed file data.
 
-Install postgresql.
+In order to parse the data, the following steps are required:
 
-In `/config.py` change the variables `DB_NAME` and `DB_USER` to match the name of the postgresql database name and user owning that database.
+1. Obtain a copy of the SNOMED CT data
+2. Write a script that sets up a temporary database (modify database/scripts/import_INT_20150731.sql with your own paths).
+3. run database/setup.sh
 
-In `/database/scripts/import_data.sql` change all paths to `SNOMED_CT_RF2Release_INT_20150731` to its location in your filesystem.
+After this, the old_snomed database can be removed.
 
-Finally run,
-
-```
-psql -f setup_database.sql <database-name>
-```
-
-from inside `/database/`. Where `<database-name>` is the name of your postgresql database.
+Configure the database constants in config.py.
 
 ### Elasticsearch
 
