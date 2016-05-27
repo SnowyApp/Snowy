@@ -31,16 +31,12 @@ From the project root run:
 python database/index_data.py
 ```
 
-inside your virtual environment if you are using one.
-
 ### npm
-
 Install necessary node programs by, inside the `/application/static` directory,  running:
 
 ```
 npm install
 ```
-
 
 ### virtualenv
 **Create a virtual environment**
@@ -71,7 +67,6 @@ If you do not want to source the environment you can use paths to **pip** and **
 `virtenv/bin/pip install -r requirements.txt` **and** `virtenv/bin/python3 run.py`
 
 ### Start server
-
 Make sure `bundle.js` is updated by running:
 
 ```
