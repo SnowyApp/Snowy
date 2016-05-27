@@ -7,52 +7,29 @@
         <meta name="description" content="Snomed CT browser with graphical interface">
         <meta name="keywords" content="Snomed,CT,browser">
         <link rel="shortcut icon" type="static/image/png" href="static/img/Snowy_favicon.png">
+
         <!-- Bootstrap css -->
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/css/react-bootstrap/react-bootstrap-table-all.min.css">
 
-        <link rel="stylesheet" href="static/css/general.css" />
-        <link rel="stylesheet" href="static/css/diagram.css" />
-        <link rel="stylesheet" href="static/css/navigation.css" />
-        <link rel="stylesheet" href="static/css/search.css" />
-        <link rel="stylesheet" href="static/css/d3-context-menu.css" />
-        <link rel="stylesheet" href="static/css/forms.css" />
-        <link rel="stylesheet" href="static/css/profile.css" />
-        <link rel="stylesheet" href="static/css/split-pane.css" />
+        <link rel="stylesheet" href="static/css/general.css" >
+        <link rel="stylesheet" href="static/css/diagram.css" >
+        <link rel="stylesheet" href="static/css/navigation.css" >
+        <link rel="stylesheet" href="static/css/search.css" >
+        <link rel="stylesheet" href="static/css/d3-context-menu.css" >
+        <link rel="stylesheet" href="static/css/forms.css" >
+        <link rel="stylesheet" href="static/css/profile.css" >
+        <link rel="stylesheet" href="static/css/split-pane.css" >
+        <link rel="stylesheet" href="static/css/SaveDiagram.css" >
+        <link rel="stylesheet" href="static/css/InfoPanel.css" >
 
-        <!-- React-bootstrap table css -->
-        <link rel="stylesheet" href="static/react-bootstrap/react-bootstrap-table.min.css">
+        <!-- Needed for Microsoft Edge to work with exporting images -->
+        <script src="static/exporting/Blob.js"></script>
+        <script src="static/exporting/canvas-toBlob.js"></script>
+        <script src="static/exporting/FileSaver.js"></script>
 
-        <!-- jQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
-
-        <!-- React -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
-
-        <!-- Babel, javascript compiler  -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-
-        <!-- Bootstrap -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-        <!-- React-bootstrap -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.28.3/react-bootstrap.js"></script>
-
-        <!-- React-bootstrap table -->
-        <script src="static/react-bootstrap/react-bootstrap-table.min.js" ></script>
-        <script> Object.keys(ReactBootstrap).forEach(function (name) { window[name] = ReactBootstrap[name]; }); </script>
-
-        <!-- D3 latest release-->
-        <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-
-        <script type="text/javascript" src="http://gabelerner.github.io/canvg/rgbcolor.js"></script>
-        <script type="text/javascript" src="http://gabelerner.github.io/canvg/StackBlur.js"></script>
-        <script type="text/javascript" src="http://gabelerner.github.io/canvg/canvg.js"></script>
-
-        <script src="static/saving_files/FileSaver.js" ></script>
     </head>
     <body>
-
         <div id="content"></div>
         <script src="static/bundle.js"></script>
 

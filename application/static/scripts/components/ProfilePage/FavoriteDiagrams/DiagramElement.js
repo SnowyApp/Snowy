@@ -1,15 +1,23 @@
-//Temporary fake user
-var fakeUser = {
-    id: 1337,
-    username: "Arnold",
-    email: "arnold@schwarzenegger.com",
-    language: "eng"
-}
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 /**
  * Diagram element in favorite diagrams table
  */
-module.exports = React.createClass({
+var DiagramElement = React.createClass({
+    propTypes: {
+        key:                React.PropTypes.number,
+        name:               React.PropTypes.string,
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        id:                 React.PropTypes.number,
+        date:               React.PropTypes.string,
+        data:               React.PropTypes.string,
+        description:        React.PropTypes.string,
+        openDiagram:        React.PropTypes.func,
+        removeDiagram:      React.PropTypes.func
+    },
+
     getInitialState: function(){
         return ({
             isOpen: false,
@@ -21,7 +29,7 @@ module.exports = React.createClass({
     * Toggles accordion body
     */
     openAcc: function(){
-        var disableTime = 400;
+        const disableTime = 400;
         if(this.state.buttonEnabled){
             //Update states and disable this function for a short time to prevent problems from clicking too fast
             this.setState({
@@ -29,7 +37,7 @@ module.exports = React.createClass({
                 buttonEnabled: false
             })
         }
-        //Reenable function after disableTime ms 
+        //Reenable function after disableTime ms
         setTimeout($.proxy(function(){
             this.setState({
                 buttonEnabled: true
@@ -39,7 +47,14 @@ module.exports = React.createClass({
 
     render: function(){
         //Different background colors depending on if the accordion is expanded
-        var openCSS = (this.state.isOpen ? {backgroundColor: "#d9edf7"} : null);
+        const openCSS = (this.state.isOpen ? {backgroundColor: "#d9edf7"} : null);
+        var description = this.props.description;
+        var hiddenContentStyle = null;
+        if(description.length == 0){
+            description = this.props.dict[this.props.language]["m_noDescription"];
+            hiddenContentStyle = {fontStyle: "italic"};
+        }
+
         return(
             <tbody>
                 <tr style={openCSS} className="favorites">
@@ -72,31 +87,8 @@ module.exports = React.createClass({
                 <tr>
                     <td colSpan="4">
                         <div id={this.props.id} className="panel-collapse collapse" role="tabpanel">
-                            <div className="diagramHidden">
-                                <table className="diagramHidden">
-                                    <tbody>
-                                        <tr>                                    
-                                            <td>id:</td>
-                                            <td>{this.props.id}</td>
-                                        </tr>
-                                        <tr>                                    
-                                            <td>{this.props.dict[fakeUser.language]["date"]}:</td>
-                                            <td>{this.props.date}</td>
-                                        </tr>
-                                        <tr>                                    
-                                            <td>Parameter 1:</td>
-                                            <td>{this.props.parameters.p1}</td>
-                                        </tr>
-                                        <tr>                                    
-                                            <td>Parameter 2:</td>
-                                            <td>{this.props.parameters.p2}</td>
-                                        </tr>      
-                                        <tr>                                    
-                                            <td>Parameter 3:</td>
-                                            <td>{this.props.parameters.p3}</td>
-                                        </tr>                                       
-                                    </tbody>
-                                </table>
+                            <div className="diagramHidden" style={hiddenContentStyle}>
+                                {description}
                             </div>
                         </div>
                     </td>
@@ -105,3 +97,4 @@ module.exports = React.createClass({
         );
     }
 });
+module.exports = DiagramElement;

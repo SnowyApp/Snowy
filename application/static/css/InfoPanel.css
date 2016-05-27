@@ -1,0 +1,111 @@
+/* Info panel css */
+
+.infoPanelWrapper {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.infoPanel {
+    margin-bottom: 0;
+    width: 600px;
+}
+
+.infoPanelBody {
+    padding-top: 0;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.infoPanelButton {
+    font-size: 2.4em;
+    color: #f0ad4e;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.infoPanelButton:hover {
+    cursor: pointer;
+    color: #e08d3e;
+}
+
+.closeButton {
+    margin-top: -6px;
+    font-size: 25px;
+    margin-right: -5px;
+}
+
+/* Prevent selection of text in header when moving the panel */
+.infoPanelHandle {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently not supported by any browser */
+}
+
+.infoPanelHandle:hover {
+    cursor: move;
+}
+
+/* General info */
+
+.saveTermButton {
+    float: right;
+    margin-top: 20px;
+}
+
+.saveTermTooltip {
+    top: 30px; /* This is a bad solution and should probably be fixed later if we have time */
+}
+
+.termInfoName {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 12px;
+}
+
+/* Parents table */
+
+tr.parentsTable:hover {
+    cursor: pointer;
+    background-color: #e0e0e0;
+}
+
+.parentsTable#parent_name {
+    width: 78%;
+}
+
+.parentsTable#parent_id {
+    width: 22%;
+}
+
+/* Names table */
+
+.namesTable#name_type {
+    width: 17%;
+}
+
+.namesTable#name_name {
+    width: 63%;
+}
+
+.namesTable#name_acceptability {
+    width: 20%;
+}
+
+/* Relations table */
+
+.relationsTable#relation_type {
+    width: 25%;
+}
+
+.relationsTable#relation_destination {
+    width: 60%;
+}
+
+.relationsTable#relation_chartype {
+    width: 15%;
+}

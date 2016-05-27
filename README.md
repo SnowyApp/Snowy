@@ -7,18 +7,17 @@ To run this application you will need  to setup an API running with access to a 
 
 Install postgresql.
 
-In `/application/models.py` change the variables `DB_NAME` and `DB_USER` to match the name of the postgresql database name and user owning that database.
+In `/config.py` change the variables `DB_NAME` and `DB_USER` to match the name of the postgresql database name and user owning that database.
 
-In `/sql-scripts/import_data.sql` change all paths to `SNOMED_CT_RF2Release_INT_20150731` to its location in your filesystem.
+In `/database/scripts/import_data.sql` change all paths to `SNOMED_CT_RF2Release_INT_20150731` to its location in your filesystem.
 
 Finally run,
 
 ```
-psql -f schema.sql <database-name>
-psql -f import_data.sql <database-name>
+psql -f setup_database.sql <database-name>
 ```
 
-from inside `/sql-scripts/`. Where `<database-name>` is the name of your postgresql database.
+from inside `/database/`. Where `<database-name>` is the name of your postgresql database.
 
 ### Elasticsearch
 
@@ -27,7 +26,7 @@ Install Elasticsearch and start the Elasticsearch server.
 From the project root run:
 
 ```
-python index_data.py
+python database/index_data.py
 ```
 
 inside your virtual environment if you are using one.
@@ -79,7 +78,7 @@ webpack
 
 from `/application/static/`.
 
-Then start the server by running:
+Then start the server by running(requires Python3 for full functionality):
 
 ```
 python run.py

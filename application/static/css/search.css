@@ -2,19 +2,31 @@
     display: block;
     background-color: white;
     z-index: 99;
-    position: absolute;
+    position: relative;
     width: 250px;
-    margin-left: 125px;
 }
 
 .search input {
     width: 250px;
     line-height: 20px;
     height: 40px;
-
     padding: 5px;
     margin: 5px 10px;
-
     overflow: hidden;
 
+}
+/* Needed for overriding styling from react-bootstrap-table-all.min.css */
+.react-bs-table{
+    border: none;
+    margin: 0;
+    cursor: default;
+}
+
+.react-bs-container-body{
+    cursor: pointer;
+}
+
+#searchButton{
+    position:absolute;
+    margin: 8px 0px;
 }

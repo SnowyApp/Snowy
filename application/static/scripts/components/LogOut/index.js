@@ -1,8 +1,30 @@
 import cookie from 'react-cookie';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Modal from 'react-bootstrap/lib/Modal';
+import Button from 'react-bootstrap/lib/Button';
 
+/**
+ * Logout modal component
+ */
 var LogOut = React.createClass({
+    dict: {
+        se: {
+            logout:                 "Logga ut",
+            logoutConfirmation:     "Är du säker på att du vill logga ut?",
+            yes:                    "Ja",
+            no:                     "Nej"
+        },
+        en: {
+            logout:                 "Log out",
+            logoutConfirmation:     "Are you sure you want to log out?",
+            yes:                    "Yes",
+            no:                     "No"
+        }
+    },
+
     propTypes:{
-        hideLogout: React.PropTypes.func,
+        showLogout: React.PropTypes.func,
         show: React.PropTypes.bool
     },
     getInitialState: function(){
@@ -14,14 +36,22 @@ var LogOut = React.createClass({
             showModal: false
         });
     },
+    /**
+     * Closes the Logout Modal
+     */
     close: function() {
         this.setState({ showModal: false });
-        this.props.hideLogout();
+        this.props.showLogout(false);
     },
-
+    /**
+     * Shows the Logout Modal
+     */
     open: function() {
         this.setState({ showModal: true });
     },
+    /**
+     * Logs a user out from the server, using the token saved in userId
+     */
     logOut: function() {
         if (cookie.load('userId') != null) {
             $.ajax({
@@ -30,10 +60,10 @@ var LogOut = React.createClass({
                 headers: {
                     "Authorization": cookie.load("userId")
                 },
-                success: function (data) {
+                success: function () {
                     this.props.onLogout();
                 }.bind(this),
-                error: function (textStatus, errorThrown) {
+                error: function () {
                     this.props.onLogout();
                 }.bind(this),
                 contentType: "application/json",
@@ -51,14 +81,14 @@ var LogOut = React.createClass({
         return(
             <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header className="bg-primary" closeButton>
-                    <Modal.Title>Log out</Modal.Title>
+                    <Modal.Title>{this.dict[this.props.language]["logout"]}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to log out?
+                    {this.dict[this.props.language]["logoutConfirmation"]}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={this.logOut}>Yes</Button>
-                    <Button bsStyle="primary" onClick={this.close}>No</Button>
+                    <Button onClick={this.logOut}>{this.dict[this.props.language]["yes"]}</Button>
+                    <Button bsStyle="primary" onClick={this.close}>{this.dict[this.props.language]["no"]}</Button>
                 </Modal.Footer>
             </Modal>
         );

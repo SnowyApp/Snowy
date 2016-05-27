@@ -1,4 +1,3 @@
-/* Probably wanna add overflow: auto to this later */
 .profileContent {
     margin: 13px;
 }
@@ -13,22 +12,20 @@
 
 .termPageWrapper {
     max-width: 1000px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .diagramPageWrapper {
     max-width: 1000px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .profileHr {
     margin-top: -8px;
     padding-top: 0px;
 
-}
-
-.langDropdown {
-    float: right;
-    margin-right: 3px;
-    margin-top: -39px;
 }
 
 a.favorites, a.favorites:hover {
@@ -219,6 +216,3 @@ td.favorites {
 .expandGlyph {
     float: right;
 }
-
-
-

@@ -18,7 +18,15 @@ module.exports = {
   },
   externals: {
     // Use external version of React
-    react: 'React',
-    'react-dom': 'ReactDOM'
-  }
+    //react: 'React',
+    //'react-dom': 'ReactDOM'
+  },
+    plugins: [
+        new webpack.ProvidePlugin({
+            d3: 'd3',
+            $: 'jquery',
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        })
+    ]
 };

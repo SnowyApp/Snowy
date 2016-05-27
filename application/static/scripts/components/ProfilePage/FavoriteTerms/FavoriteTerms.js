@@ -1,55 +1,37 @@
 import cookie from 'react-cookie';
-var TermElement = require('./TermElement');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-//Temporary fake user
-var fakeUser = {
-    id: 1337,
-    username: "Arnold",
-    email: "arnold@schwarzenegger.com",
-    language: "eng"
-}
+var TermElement = require('./TermElement');
 
 /**
  * Component that displays favorite terms in a table
  */
-module.exports = React.createClass({
+var FavoriteTerms = React.createClass({
+    propTypes: {
+        removeTerm: React.PropTypes.func,
+        favoriteTerms:      React.PropTypes.array,
+        url:                React.PropTypes.string,
+        dict:               React.PropTypes.object,
+        language:           React.PropTypes.string,
+        terms:              React.PropTypes.array,
+        openTerm:           React.PropTypes.func,
+        nameSort:           React.PropTypes.func,
+        dateSort:           React.PropTypes.func
+    },
+
     getInitialState: function(){
         return (
             {
-                terms: this.props.terms // should be [] later when not using dummy data
+                terms: this.props.favoriteTerms
             }
         );
     },
 
-    componentDidMount: function(){
-        //this.getFavoriteTerms(); //Uncomment to stop using dummy data
-        this.setState({
-            terms: this.props.dateSort(this.state.terms, false),
-            sortBy: 'added',
-            ascending: false
-        });
-    },
-
-   /**
-    * Adds a favorite term to the database
-    */
-    addFavoriteTerm: function(id, name){
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                type: "POST",
-                url: this.props.url + "/favorite_term",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                data: JSON.stringify({"id": id, "term": name}),
-                success: function (data) {
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                },
-                contentType: "application/json",
-                dataType: "json"
+    componentWillReceiveProps: function(nextProps){
+        if(this.props.terms != nextProps.terms){
+            this.setState({
+                terms: nextProps.favoriteTerms
             });
         }
     },
@@ -61,85 +43,46 @@ module.exports = React.createClass({
         var asc = true;
         //If already sorting by header, invert order
         if(this.state.sortBy == header){
-            var asc = !this.state.ascending;
+            asc = !this.state.ascending;
         }
         switch(header){
             case "name":
                 this.setState({
                     terms: this.props.nameSort(this.state.terms, asc),
-                    sortBy: 'name'
+                    sortBy: 'name',
+                    ascending: asc
                 });
                 break;
             case "id":
                 this.setState({
                     terms: this.props.idSort(this.state.terms, asc),
-                    sortBy: 'id'
+                    sortBy: 'id',
+                    ascending: asc
                 });
                 break;
             case "added":
                 this.setState({
                     terms: this.props.dateSort(this.state.terms, asc),
-                    sortBy: 'added'
+                    sortBy: 'added',
+                    ascending: asc
                 });
                 break;
         }
-
-        this.setState({
-            ascending: asc
-        });
-
     },
 
-   /**
-    * Remove element from the term table
+    /*
+    * Generates and returns all the term table elements
     */
-    removeTerm: function(id){
-        //Remove element locally (for responsiveness)
-        this.setState({
-            terms: this.props.removeid(this.state.terms, id)
-        });
-        //TODO: Remove element from database
-    },
-
-   /**
-    * Gets the users favorite terms and saves them to the terms state
-    */
-    getFavoriteTerms: function(){
-        if (cookie.load('userId') != null) {
-            $.ajax({
-                type: "GET",
-                method: "GET",
-                url: this.props.url + "/favorite_term",
-                headers: {
-                    "Authorization": cookie.load("userId")
-                },
-                success: function (data) {
-                    this.setState({
-                        terms: data
-                    });
-                }.bind(this),
-                error: function (textStatus, errorThrown) {
-                    /*console.log(textStatus); TODO: Re-add logs when database works
-                    console.log(errorThrown);*/
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        }
-    },
-
-    render: function(){
+    getTermElements: function () {
         //Generate the table rows
-        var TermArray = null;
-        var hideTable = null;
+        var termArray = null;
         if(this.state.terms.length > 0){
-            hideTable = {}; //Show table
-            TermArray = this.state.terms.map(function(term){
+            termArray = this.state.terms.map(function(term){
                 //Date, "0" together with slice(-2) ensures the date format xxxx-xx-xx (e.g 3 -> 03)
                 var day = ("0" + term.dateAdded.getDate()).slice(-2);
                 var month = ("0" + term.dateAdded.getMonth()).slice(-2);
                 var year = term.dateAdded.getUTCFullYear();
-                
+
                 var dateString = year + "-" + month + "-" + day;
 
                 return(
@@ -148,12 +91,20 @@ module.exports = React.createClass({
                         id={term.id}
                         name={term.name}
                         openTerm={this.props.openTerm}
-                        removeTerm={this.removeTerm}
+                        removeTerm={this.props.removeFavoriteTerm}
                         date={dateString}
                     />
                 );
             }, this);
-        } else {
+        }
+
+        return termArray;
+    },
+
+    render: function(){
+        var hideTable = null;
+        const termArray = this.getTermElements();
+        if(termArray == null){
             hideTable = {display: "none"}; //Hide table
         }
 
@@ -192,7 +143,7 @@ module.exports = React.createClass({
             <div>
                 <h1>
                     <span className="glyphicon glyphicon-heart accHeaderGlyph favoritesGlyph" aria-hidden="true"> </span>
-                    {this.props.dict[fakeUser.language]["savedTerms"]}
+                    {this.props.dict[this.props.language]["savedTerms"]}
                 </h1>
                 <hr className="profileHr"/>
                 <div className="termPageWrapper">
@@ -200,27 +151,25 @@ module.exports = React.createClass({
                         <thead>
                             <tr>
                                 <th id="Term_name" className="favorites" onClick={this.sortBy.bind(this, "name")}>
-                                    {this.props.dict[fakeUser.language]["name"]} {nameSortArrow}
+                                    {this.props.dict[this.props.language]["name"]} {nameSortArrow}
                                 </th>
                                 <th id="Term_id" className="favorites" onClick={this.sortBy.bind(this, "id")}>
                                     ID {idSortArrow}
                                 </th>
                                 <th id="Term_date" className="favorites" onClick={this.sortBy.bind(this, "added")}>
-                                    {this.props.dict[fakeUser.language]["added"]} {dateSortArrow}
+                                    {this.props.dict[this.props.language]["added"]} {dateSortArrow}
                                 </th>
                                 <th id="Term_remove" className="favorites"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {TermArray}
+                            {termArray}
                         </tbody>
                     </table>
-                    {this.state.terms.length > 0 ? "" : this.props.dict[fakeUser.language]["noSavedTerms"]}
+                    {this.state.terms.length > 0 ? "" : this.props.dict[this.props.language]["noSavedTerms"]}
                 </div>
             </div>
         );
     }
 });
-
-
-
+module.exports = FavoriteTerms;

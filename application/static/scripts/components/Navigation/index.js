@@ -1,9 +1,20 @@
 var NavigationItem = require('./NavigationItem');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 /**
  * Navigation panel component
  */
 var Navigation = React.createClass({
+    propTypes: {
+        data:           React.PropTypes.array,
+        url:            React.PropTypes.string,
+        update:         React.PropTypes.func,
+        upOneLevel:     React.PropTypes.func,
+        resetRoot:      React.PropTypes.func,
+        getHistory:     React.PropTypes.func
+    },
+
     getInitialState: function(){
         return (
             {
@@ -13,13 +24,13 @@ var Navigation = React.createClass({
             }
         );
     },
-    
+
     /**
      * Update the state from given data.
      */
     updateState: function(data) {
         // do not try to use uninitialised data
-        if (data === undefined || data[0].children.length == 0)
+        if (data === undefined || data[0].children === undefined || data[0].children.length == 0)
             return;
 
         // update the state with the given data
@@ -29,12 +40,16 @@ var Navigation = React.createClass({
             currentID: data[0].concept_id
         });
     },
-    
+
     componentWillReceiveProps: function(nextProps) {
         this.updateState(nextProps.data);
     },
-	
-    shouldComponentUpdate: function(nextProps, nextState) {
+
+   /**
+    * Only update component if the data has changed.
+    * Removed unused second paremeter nextState.
+    */
+    shouldComponentUpdate: function(nextProps) {
         return nextProps.data != this.props.data;
     },
 
@@ -46,12 +61,12 @@ var Navigation = React.createClass({
     * Handles clicks on the children (callback function)
     */
     handleClick: function(id){
-        var saveHistory = (this.state.currentID != id);
-        this.props.update(id, saveHistory); 
+        const saveHistory = (this.state.currentID != id);
+        this.props.update(id, saveHistory);
     },
 
     render: function() {
-        var history = this.props.getHistory();
+        const history = this.props.getHistory();
         var backArrow;
         var parentMarginLeft;
         //Hide back arrow if there is no history
@@ -66,20 +81,24 @@ var Navigation = React.createClass({
             //Create NavigationItem's for all the children of the current parent node
             var ItemArray = this.state.termChildren.map(function (child) {
                 return (
-                    <NavigationItem key={child.id} id={child.concept_id} name={child.name}
-                                    handleClickCallback={this.handleClick}/>
+                    <NavigationItem
+                        key={child.id}
+                        id={child.concept_id}
+                        name={child.name}
+                        handleClickCallback={this.handleClick}
+                    />
                 );
             }, this);
        }
         //Only display grandparent if there is one
-        var grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
+        const grandparent = (history.length > 0 ? history[history.length-1].name + " >" : "");
 
         return (
             <nav>
-                <ul className="nav nav-pills nav-stacked">
-                    <li role="presentation" className="active">                    
+                <ul className="nav nav-pills nav-stacked" id="logo_id">
+                    <li role="presentation" className="active">
                         <a className="navigation-header">
-                            <span style={backArrow} onClick={this.props.upOneLevel} className="glyphicon glyphicon-triangle-top backArrow linkPointer" aria-hidden="true"> </span>
+                            <span style={backArrow} onClick={this.props.upOneLevel} className="glyphicon glyphicon-circle-arrow-left backArrow linkPointer" aria-hidden="true"> </span>
                             <span onClick={this.props.resetRoot} className="glyphicon glyphicon-home rootLink linkPointer" aria-hidden="true"> </span>
                             <div className="grandparentHeader linkPointer" onClick={this.props.upOneLevel}>
                                 {grandparent}
@@ -88,7 +107,7 @@ var Navigation = React.createClass({
                                 {this.state.currentParent}
                             </div>
                         </a>
-                    </li> 
+                    </li>
                     {ItemArray}
                 </ul>
             </nav>
