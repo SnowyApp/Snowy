@@ -11,7 +11,7 @@ var Navigation = require('./components/Navigation/index');
 var ProfilePage = require('./components/ProfilePage/index');
 
 
-var serverUrl = 'http://hem.ulmstedt.net:5000';
+var serverUrl = 'http://localhost:5000';
 const conceptId = 138875005;
 
 /**
