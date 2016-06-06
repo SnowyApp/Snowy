@@ -30,7 +30,7 @@ var Diagram = React.createClass({
             'reset':            'Återställ diagram',
             'resetZoom':        'Återställ zoom',
             'VHView':           'Horisontal',
-            'diagramView':      'Byt diagram vy',
+            'diagramView':      'Byt diagramvy',
             'fullscreen':       'Helskärm',
             'exitFullscreen':   'Avsluta helskärmsläge'
         },
