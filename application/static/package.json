@@ -14,7 +14,7 @@
     "bootstrap": "^3.3.6",
     "d3": "^3.5.16",
     "filesaverjs": "^0.2.2",
-    "jquery": "^2.2.3",
+    "jquery": "^3.5.0",
     "react": "^0.14.8",
     "react-bootstrap": "^0.29.2",
     "react-bootstrap-table": "^2.1.4",
